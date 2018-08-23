@@ -16,13 +16,15 @@ class CreateAsignacionesTable extends Migration
         Schema::create('tbl_asignaciones', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('id_graduado');
-            $table->unsignedInteger('id_encuestador');
-            $table->unsignedInteger('id_supervisor');
+            $table->unsignedInteger('id_encuestador')->nullable();
+            $table->unsignedInteger('id_supervisor')->nullable();
+            $table->unsignedInteger('id_estado');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('id_graduado')->references('id')->on('tbl_graduados');
             $table->foreign('id_encuestador')->references('id')->on('users');
             $table->foreign('id_supervisor')->references('id')->on('users');
+            $table->foreign('id_estado')->references('id')->on('tbl_estados_encuestas');
         });
     }
 
