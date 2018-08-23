@@ -13,4 +13,8 @@ class EncuestaGraduadoController extends Controller
 
         return view('encuestas_graduados.index', compact('encuestas'));
     }
+
+    public function asignar($id_encuestador, $id_supervisor) {
+        return "El ID del encuestador es el ".$id_encuestador.", y el ID del supervisor es el ".$id_supervisor;
+    }
 }
