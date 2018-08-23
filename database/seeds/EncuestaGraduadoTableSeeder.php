@@ -25,6 +25,8 @@ class EncuestaGraduadoTableSeeder extends Seeder
         $disciplinas = DatosCarreraGraduado::where('id_tipo', $disciplina->id)->pluck('id')->all();
         $areas = DatosCarreraGraduado::where('id_tipo', $area->id)->pluck('id')->all();
 
+        $id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
         for($i=0; $i<150; $i++) {
             $encuesta = EncuestaGraduado::create([
                 'identificacion_graduado' => $faker->numerify('# - ### - ###'),
@@ -40,6 +42,8 @@ class EncuestaGraduadoTableSeeder extends Seeder
                 'codigo_area' => $faker->randomElement($areas),
                 'tipo_de_caso' => 'Muestra'
             ]);
+
+            $encuesta->asignarEstado($id_estado->id);
         }
     }
 }
