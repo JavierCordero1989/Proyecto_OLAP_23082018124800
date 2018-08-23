@@ -101,6 +101,10 @@ Route::group(['middleware'=>['auth']], function() {
   Route::delete('encuestas-graduados/{id}', 'EncuestaGraduadoController@destroy')->name('encuestas-graduados.destroy')/*->middleware('')*/;
 });
 
+//Encuestas de los graduados
+Route::group(['middleware'=>['auth']], function() {
+  Route::get('asignar-encuestas/{id_encuestador}/{id_supervisor}', 'EncuestaGraduadoController@asignar')->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;
+});
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
