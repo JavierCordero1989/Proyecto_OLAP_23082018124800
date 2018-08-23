@@ -1,8 +1,8 @@
-# Plantilla-Laravel
+# Proyecto OLAP
 
 ![Logo de Laravel e Infyom](http://blog.kozzaja.com/wp-content/uploads/2017/01/ominfy.png "Infyom + Laravel")
 
-###### Plantilla con contenido para empezar un proyecto
+###### Este proyecto es para el Observatorio Laboral de Profesiones del CONARE, para administrar la información de lo s graduados en cuanto a las encuestas se refiere.
 
 Al descargar o clonar este repositorio o proyecto, se deben seguir varios pasos para que pueda funcionar todo adecuadamente.
 
