@@ -2,7 +2,7 @@
     <div class="row">
         @foreach($lista_encuestadores as $encuestador)
             <div class="col-md-6">
-                <div class="box box-primary collapsed-box" >
+                <div class="box box-primary {{--collapsed-box--}}" >
                     <!-- Encabezado del cuadro -->
                     <div class="box-header with-border">
                         <h3 class="box-title">
@@ -32,7 +32,7 @@
 
                                     <!-- Boton para minimizar/maximiar cada cuadro -->
                                     <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                        <i class="fa fa-plus"></i>
+                                        <i class="fa fa-minus"></i>
                                     </button>
       
                                 </div>
@@ -51,8 +51,8 @@
                     <div class="box-body">
                         <div class="btn-group col-md-12">
 
-                            <a href="estanqueEspecies/estanque/{{$encuestador->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-plus-square"></i> Especies en el estanque
+                            <a href="{{ route('asignar-encuestas.asignar', [$encuestador->id, Auth::user()->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-plus-square"></i> Asignar Encuestas
                             </a>
 
                             <a href="estanqueEspecies/alimentacion/{{$encuestador->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
