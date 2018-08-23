@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\TiposDatosCarrera;
 use App\DatosCarreraGraduado;
+use DB;
 
 class EncuestaGraduado extends Model
 {
@@ -214,5 +215,12 @@ class EncuestaGraduado extends Model
         ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
         ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
         ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area');
+    }
+
+    public function asignarEstado($id_estado) {
+        DB::table('tbl_asignaciones')->insert([
+            'id_graduado' => $this->id,
+            'id_estado' => $id_estado
+        ]);
     }
 }
