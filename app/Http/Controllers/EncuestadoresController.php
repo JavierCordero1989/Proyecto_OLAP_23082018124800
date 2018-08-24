@@ -51,6 +51,7 @@ class EncuestadoresController extends Controller
         $input = $request->all();
 
         $nuevo_encuestador = User::create([
+            'user_code' => $input['user_code'],
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => bcrypt($input['password'])
@@ -113,6 +114,7 @@ class EncuestadoresController extends Controller
         }
 
         /** Se modifican los datos del objeto enontrado con los datos del Request */
+        $encuestador->user_code = $request->user_code;
         $encuestador->name = $request->name;
         $encuestador->email = $request->email;
         $encuestador->password = bcrypt($request->password);
@@ -141,6 +143,6 @@ class EncuestadoresController extends Controller
 
         /** Se genera un mensaje de exito y se redirige a la ruta index */
         Flash::success('Se ha eliminado el encuestador '.$encuestador->name.' correctamente.');
-        return redirect(route('users.index'));
+        return redirect(route('encuestadores.index'));
     } //Fin de la funcion destroy
 }
