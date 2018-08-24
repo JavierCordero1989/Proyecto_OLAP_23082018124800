@@ -55,11 +55,12 @@
 
             {{-- BRAND BOX --}}
             <div class="col-sm-6 brand">
-                <a href="#" class="logo">Infyom <span>Generator</span></a>
+                <a href="#" class="logo">OLAP <span>CONARE</span></a>
 
                 <div class="heading">
-                    <h2>Laravel 5.4</h2>
-                    <p>Inicio de sesión</p>
+                    <img class="img-responsive center-block" src="{{ asset('img/logo_conare.png') }}" alt="">
+                    {{-- <h2>Laravel 5.4</h2>
+                    <p>Inicio de sesión</p> --}}
                 </div>
 
                 <div class="success-msg">
