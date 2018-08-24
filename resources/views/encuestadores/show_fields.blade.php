@@ -4,6 +4,12 @@
     <p>{!! $encuestador->id !!}</p>
 </div>
 
+<!-- User code Field -->
+<div class="form-group">
+    {!! Form::label('user_code', 'Código:') !!}
+    <p>{!! $encuestador->user_code !!}</p>
+</div>
+
 <!-- Nombre Field -->
 <div class="form-group">
     {!! Form::label('nombre', 'Nombre:') !!}
