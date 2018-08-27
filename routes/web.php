@@ -105,6 +105,7 @@ Route::group(['middleware'=>['auth']], function() {
 Route::group(['middleware'=>['auth']], function() {
   Route::get('asignar-encuestas/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@asignar')->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;
   Route::post('asignar-encuestas-encuestador/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@crearAsignacion')->name('asignar-encuestas.crear-asignacion')  /*->middleware('permission:')*/;
+  Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')->name('asignar-encuestas.lista-encuestas-no-asignadas');
 });
 
 //Plantilla rutas
