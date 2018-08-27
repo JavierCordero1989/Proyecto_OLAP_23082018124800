@@ -56,8 +56,8 @@
                                 <i class="fa fa-plus-square"></i> Asignar Encuestas
                             </a>
 
-                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-spoon"></i> Botón 1
+                            <a href="{{ route('asignar-encuestas.lista-encuestas-no-asignadas', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-spoon"></i> Encuestas asignadas
                             </a>
 
                             <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
