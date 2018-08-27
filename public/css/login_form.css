@@ -42,7 +42,8 @@ section#formHolder {
 .brand {
   padding: 20px;
   /* background: url('https://www.xtrafondos.com/wallpapers/espacio-con-estrellas-2899.jpg'); */
-  background: url('../img/login.jpg');
+  /* background: url('../img/login.jpg'); */
+  background-color: #fff;
   background-size: cover;
   background-position: center center;
   color: var(--color-blanco);
