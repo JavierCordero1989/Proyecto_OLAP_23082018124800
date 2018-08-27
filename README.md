@@ -31,3 +31,7 @@ Todos los cambios anteriores, por supuesto deben ir sin las comillas.
 Se debe tener en la computadora instalado el motor de base de datos mysql o algún otro compatible con Laravel, y tener instalado **composer** también, ya que es indispensable para el proyecto.
 
 Todos los comandos ejecutados por consola, deben ser realizados ubicando la consola dentro de la carpeta del proyecto.
+
+## Posibles problemas
+Si no carga los archivos de estilos o los scripts, se debe realizar la siguiente configuración:
+
