@@ -35,3 +35,4 @@ Todos los comandos ejecutados por consola, deben ser realizados ubicando la cons
 ## Posibles problemas
 Si no carga los archivos de estilos o los scripts, se debe realizar la siguiente configuración:
 
+La versión de PHP  con la que trabaja Laravel es 7.0.29 o menor.
