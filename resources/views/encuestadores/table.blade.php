@@ -56,17 +56,17 @@
                                 <i class="fa fa-plus-square"></i> Asignar Encuestas
                             </a>
 
-                            <a href="estanqueEspecies/alimentacion/{{$encuestador->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-spoon"></i> Alimentación del estanque
+                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-spoon"></i> Botón 1
                             </a>
 
-                            <a href="/estanques/fisico_quimicos/{{$encuestador->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-eyedropper"></i> Físico-Químico
+                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-eyedropper"></i> Botón 2
                             </a>
 
                             {{-- @if (Auth::user()->hasRole('Administrador')) --}}
-                                <a href="estanques/grafico/{{$encuestador->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                    <i class="fa fa-area-chart"></i> Gráficos
+                                <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                    <i class="fa fa-area-chart"></i> Botón 3
                                 </a>
                             {{-- @endif --}}
       
