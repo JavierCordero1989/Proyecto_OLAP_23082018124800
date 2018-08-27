@@ -51,21 +51,21 @@
                     <div class="box-body">
                         <div class="btn-group col-md-12">
 
-                            <a href="estanqueEspecies/estanque/{{$supervisor->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-plus-square"></i> Especies en el estanque
+                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-plus-square"></i> Botón 1
                             </a>
 
-                            <a href="estanqueEspecies/alimentacion/{{$supervisor->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-spoon"></i> Alimentación del estanque
+                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-spoon"></i> Botón 2
                             </a>
 
-                            <a href="/estanques/fisico_quimicos/{{$supervisor->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-eyedropper"></i> Físico-Químico
+                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-eyedropper"></i> Botón 3
                             </a>
 
                             {{-- @if (Auth::user()->hasRole('Administrador')) --}}
-                                <a href="estanques/grafico/{{$supervisor->id}}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                    <i class="fa fa-area-chart"></i> Gráficos
+                                <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                    <i class="fa fa-area-chart"></i> Botón 4
                                 </a>
                             {{-- @endif --}}
       
