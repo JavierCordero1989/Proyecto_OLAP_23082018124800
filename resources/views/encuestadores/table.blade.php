@@ -51,7 +51,8 @@
                     <div class="box-body">
                         <div class="btn-group col-md-12">
 
-                            <a href="{{ route('asignar-encuestas.asignar', [$encuestador->id, Auth::user()->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                            {{-- {{ route('asignar-encuestas.asignar', [$encuestador->id, Auth::user()->id]) }} --}}
+                            <a href="{{ route('asignar-encuestas.asignar', [Auth::user()->id, $encuestador->id ]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
                                 <i class="fa fa-plus-square"></i> Asignar Encuestas
                             </a>
 
