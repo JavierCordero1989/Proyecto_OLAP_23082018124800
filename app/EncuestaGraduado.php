@@ -41,7 +41,8 @@ class EncuestaGraduado extends Model
                         'universidad', 
                         'dcg1.nombre as Grado', 
                         'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area'
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
                     )
             ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
             ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
@@ -64,7 +65,8 @@ class EncuestaGraduado extends Model
                         'universidad', 
                         'dcg1.nombre as Grado', 
                         'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area'
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
                     )
             ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
             ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
@@ -87,7 +89,8 @@ class EncuestaGraduado extends Model
                         'universidad', 
                         'dcg1.nombre as Grado', 
                         'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area'
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
                     )
             ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
             ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
@@ -110,7 +113,8 @@ class EncuestaGraduado extends Model
                         'universidad', 
                         'dcg1.nombre as Grado', 
                         'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area'
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
                     )
             ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
             ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
@@ -133,7 +137,8 @@ class EncuestaGraduado extends Model
                         'universidad', 
                         'dcg1.nombre as Grado', 
                         'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area'
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
                     )
             ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
             ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
@@ -156,7 +161,8 @@ class EncuestaGraduado extends Model
                         'universidad', 
                         'dcg1.nombre as Grado', 
                         'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area'
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
                     )
             ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
             ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
@@ -218,9 +224,63 @@ class EncuestaGraduado extends Model
     }
 
     public function asignarEstado($id_estado) {
-        DB::table('tbl_asignaciones')->insert([
+        $result = DB::table('tbl_asignaciones')->insert([
             'id_graduado' => $this->id,
-            'id_estado' => $id_estado
+            'id_estado' => $id_estado,
+            'created_at' => \Carbon\CArbon::now()
         ]);
+
+        return $result;
+    }
+
+    /** Este método permite asignar una encuesta a un encuestador, registrando así los datos
+     * del encuestador y del supervisor que hizo la asignación.
+     * 
+     * Devuelve un array con dos datos, el estado del proceso, y el mensaje para mostrar al usuario.
+     * El primer valor es el estado, el 1 indica que el proceso salió bien.
+     * El valor -1, indica que el estado NO ASIGNADA no existe.
+     */
+    public function asignarEncuesta($id_supervisor, $id_encuestador, $id_no_asignada, $id_asignada) {
+        /** Si todo sale de bien y los datos son correctos, se procederá a guardar el registro
+         * en la tabla tbl_asignaciones.
+         */
+        $result = DB::table('tbl_asignaciones')
+            ->where('id_graduado', $this->id)
+            ->where('id_estado', $id_no_asignada)
+            ->update([
+                'id_encuestador'=>$id_encuestador, 
+                'id_supervisor'=>$id_supervisor,
+                'id_estado'=>$id_asignada,
+                'updated_at'=>\Carbon\Carbon::now()
+                ]);
+
+        return true;
+    }
+
+    /** Mostrara la lista de encuestas que no han sido asignados */
+    public function scopeListaDeEncuestasSinAsignar($query) {
+        $id_estado_sin_asignar = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
+        return $query
+            ->select(
+                        'tbl_graduados.id',
+                        'identificacion_graduado', 
+                        'token', 
+                        'nombre_completo', 
+                        'annio_graduacion', 
+                        'link_encuesta', 
+                        'sexo', 
+                        'carrera', 
+                        'universidad', 
+                        'dcg1.nombre as Grado', 
+                        'dcg2.nombre as Disciplina', 
+                        'dcg3.nombre as Area',
+                        'tipo_de_caso'
+                    )
+            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
+            ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
+            ->where('a.id_estado', $id_estado_sin_asignar->id);
     }
 }
