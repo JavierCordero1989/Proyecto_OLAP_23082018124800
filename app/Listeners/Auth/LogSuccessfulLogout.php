@@ -27,15 +27,17 @@ class LogSuccessfulLogout
      */
     public function handle(Logout $event)
     {
-        //Se realiza una consulta para obtener el ultimo registro del usuario que esta logueado
-        $id_registro = DB::table('log_users_login')
-            ->select(DB::RAW('max(id) as ID_LOG'))
-            ->where('user_id', $event->user->id)
-            ->first();
-
-        //Se actualiza la tabla en base al ID obtenido
-        DB::table('log_users_login')
-            ->where('id', $id_registro->ID_LOG)
-            ->update(['cierre_sesion' => \Carbon\Carbon::now()]);
+        // DB:table('tbl_bitacora_de_cambios')
+        //     ->insert([
+        //         'transaccion' => 'Salida del usuario del sistema',
+        //         'tabla' => 'users', 
+        //         'id_registro_afectado' => $event->user->id,
+        //         'dato_original' => '',
+        //         'dato_nuevo' => '',
+        //         'fecha_hora_transacción' => \Carbon\Carbon::now(),
+        //         'id_usuario' => $event->user->id,
+        //         'created_at' => \Carbon\Carbon::now(),
+        //         'updated_at' => \Carbon\Carbon::now()
+        //     ]);
     }
 }
