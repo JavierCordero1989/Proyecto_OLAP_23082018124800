@@ -27,10 +27,17 @@ class SuccessfulLogin
      */
     public function handle(Login $event)
     {
-        DB::table('log_users_login')
-        ->insert([
-            'user_id' => $event->user->id,
-            'inicio_sesion' => \Carbon\Carbon::now()
-        ]);
+        DB::table('tbl_bitacora_de_cambios')
+            ->insert([
+                'transaccion' => 'S',
+                'tabla' => 'users', 
+                'id_registro_afectado' => $event->user->id,
+                'dato_original' => '',
+                'dato_nuevo' => '',
+                'fecha_hora_transaccion' => \Carbon\Carbon::now(),
+                'id_usuario' => $event->user->id,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ]);
     }
 }
