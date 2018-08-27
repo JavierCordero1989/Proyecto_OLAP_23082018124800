@@ -214,20 +214,22 @@ class EncuestaGraduado extends Model
                     'sexo', 
                     'carrera', 
                     'universidad', 
-                    'dcg1.codigo as Grado', 
-                    'dcg2.codigo as Disciplina', 
-                    'dcg3.codigo as Area'
+                    'dcg1.nombre as Grado', 
+                    'dcg2.nombre as Disciplina', 
+                    'dcg3.nombre as Area',
+                    'tipo_de_caso'
                 )
         ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
         ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
         ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area');
     }
 
+    /** Coloca la encuesta seleccionada en un estado de no asignada */
     public function asignarEstado($id_estado) {
         $result = DB::table('tbl_asignaciones')->insert([
             'id_graduado' => $this->id,
             'id_estado' => $id_estado,
-            'created_at' => \Carbon\CArbon::now()
+            'created_at' => \Carbon\Carbon::now()
         ]);
 
         return $result;
@@ -257,7 +259,7 @@ class EncuestaGraduado extends Model
         return true;
     }
 
-    /** Mostrara la lista de encuestas que no han sido asignados */
+    /** Mostrara la lista de encuestas que no han sido asignadas */
     public function scopeListaDeEncuestasSinAsignar($query) {
         $id_estado_sin_asignar = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
 
