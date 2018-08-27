@@ -7,9 +7,12 @@
 <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script> --}}
 
 {{-- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> --}}
-<script src="{{ asset('js/datatables/jquery.dataTables.min.js') }}"></script>
+{{-- <script src="{{ asset('js/datatables/jquery.dataTables.min.js') }}"></script> --}}
 {{-- <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script> --}}
-<script src="{{ asset('js/datatables/dataTables.bootstrap.min.js') }}"></script>
+{{-- <script src="{{ asset('js/datatables/dataTables.bootstrap.min.js') }}"></script> --}}
+
+<script src="{{ config('global.js.link_datatables_1') }}"></script>
+<script src="{{ config('global.js.link_datatables_2') }}"></script>
 
 <script>
     var tabla;
