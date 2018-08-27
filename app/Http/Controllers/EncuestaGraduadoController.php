@@ -82,4 +82,10 @@ class EncuestaGraduadoController extends Controller
 
         return redirect(route('encuestadores.index'));
     }
+
+    public function encuestasAsignadasPorEncuestador($id_encuestador) {
+        $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
+        
+        dd($listaDeEncuestas);
+    }
 }

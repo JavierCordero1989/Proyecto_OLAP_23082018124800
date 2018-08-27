@@ -285,4 +285,10 @@ class EncuestaGraduado extends Model
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
             ->where('a.id_estado', $id_estado_sin_asignar->id);
     }
+
+    public function scopeListaEncuestasAsignadasEncuestador($query, $id_encuestador) {
+        $id_estado_asignado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ASIGNADA')->first();
+
+        
+    }
 }
