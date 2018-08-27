@@ -17,7 +17,7 @@
             <th>Disciplina</th>
             <th>Área</th>
             <th>Tipo de caso</th>
-            <th>Opciones</th>
+            {{-- <th>Opciones</th> --}}
         </thead>
         <tbody>
         @foreach($encuestas as $encuesta)
@@ -34,7 +34,7 @@
                 <td>{!! $encuesta->Disciplina !!}</td>
                 <td>{!! $encuesta->Area !!}</td>
                 <td>{!! $encuesta->tipo_de_caso !!}</td>
-                <td>
+                {{-- <td>
                     {!! Form::open(['route' => ['permisos.destroy', $encuesta->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
                         <a href="{!! route('permisos.show', [$encuesta->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-eye-open"></i></a>
@@ -49,7 +49,7 @@
                         ) !!}
                     </div>
                     {!! Form::close() !!}
-                </td>
+                </td> --}}
             </tr>
         @endforeach
         </tbody>
