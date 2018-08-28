@@ -85,3 +85,7 @@
 <li class="{{ Request::is('encuestas-graduados*') ? 'active' : '' }}">
     <a href="{!! route('encuestas-graduados.index') !!}"><i class="fas fa-check"></i><span> Lista de encuestas</span></a>
 </li>
+
+<li class="">
+    <a href="{!! route('graficos.graficos-por-estado') !!}"><i class="fas fa-chart-area"></i><span> Gráficos por estado</span></a>
+</li>
