@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DatosCarreraGraduadoTableSeeder::class);
         $this->call(EstadosEncuestasTableSeeder::class);
         $this->call(EncuestaGraduadoTableSeeder::class);
+        $this->call(ContactosGraduadosTableSeeder::class);
     }
 }
