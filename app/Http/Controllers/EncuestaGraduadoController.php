@@ -86,6 +86,6 @@ class EncuestaGraduadoController extends Controller
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
         
-        dd($listaDeEncuestas);
+        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas'));
     }
 }
