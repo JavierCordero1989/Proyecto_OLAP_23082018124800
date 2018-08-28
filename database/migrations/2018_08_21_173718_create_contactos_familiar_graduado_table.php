@@ -13,14 +13,14 @@ class CreateContactosFamiliarGraduadoTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_contactos_familiar_graduado', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('id_familiar_graduado');
-            $table->string('informacion_contacto');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->foreign('id_familiar_graduado')->references('id')->on('tbl_familiar_graduado');
-        });
+        // Schema::create('tbl_contactos_familiar_graduado', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->unsignedInteger('id_familiar_graduado');
+        //     $table->string('informacion_contacto');
+        //     $table->timestamps();
+        //     $table->softDeletes();
+        //     $table->foreign('id_familiar_graduado')->references('id')->on('tbl_familiar_graduado');
+        // });
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateContactosFamiliarGraduadoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_contactos_familiar_graduado');
+        // Schema::dropIfExists('tbl_contactos_familiar_graduado');
     }
 }

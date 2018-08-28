@@ -13,16 +13,16 @@ class LogUsersLogin extends Migration
      */
     public function up()
     {
-        Schema::create('log_users_login', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->dateTime('inicio_sesion');
-            $table->dateTime('cierre_sesion')->nullable();
-            // $table->timestamps();
-            // $table->softDeletes();
+        // Schema::create('log_users_login', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->integer('user_id')->unsigned();
+        //     $table->dateTime('inicio_sesion');
+        //     $table->dateTime('cierre_sesion')->nullable();
+        //     // $table->timestamps();
+        //     // $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
-        });
+        //     $table->foreign('user_id')->references('id')->on('users');
+        // });
     }
 
     /**
@@ -32,6 +32,6 @@ class LogUsersLogin extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('log_users_login');
+        // Schema::dropIfExists('log_users_login');
     }
 }
