@@ -16,22 +16,24 @@ class CreateGraduadosTable extends Migration
         Schema::create('tbl_graduados', function (Blueprint $table) {
             $table->increments('id');
             $table->string('identificacion_graduado', 20);
-            $table->string('token', 100);
+            $table->string('token', 255);
             $table->string('nombre_completo', 50);
             $table->integer('annio_graduacion');
-            $table->string('link_encuesta', 100);
+            $table->string('link_encuesta', 255);
             $table->char('sexo', 1);
-            $table->string('carrera', 50);
-            $table->string('universidad', 50);
+            $table->unsignedInteger('codigo_carrera');
+            $table->unsignedInteger('codigo_universidad');
             $table->unsignedInteger('codigo_grado');
             $table->unsignedInteger('codigo_disciplina');
             $table->unsignedInteger('codigo_area');
             $table->string('tipo_de_caso', 50);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('codigo_grado')->references('id')->on('tbl_datos_carrera_graduado');
-            $table->foreign('codigo_disciplina')->references('id')->on('tbl_datos_carrera_graduado');
-            $table->foreign('codigo_area')->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_carrera')       ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_universidad')   ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_grado')         ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_disciplina')    ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_area')          ->references('id')->on('tbl_datos_carrera_graduado');
         });
     }
 
