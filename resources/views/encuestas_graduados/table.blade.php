@@ -42,8 +42,8 @@
                     </div>
                 </td>
                 <td>{!! $encuesta->sexo !!}</td>
-                <td>{!! $encuesta->carrera !!}</td>
-                <td>{!! $encuesta->universidad !!}</td>
+                <td>{!! $encuesta->Carrera !!}</td>
+                <td>{!! $encuesta->Universidad !!}</td>
                 <td>{!! $encuesta->Grado !!}</td>
                 <td>{!! $encuesta->Disciplina !!}</td>
                 <td>{!! $encuesta->Area !!}</td>
