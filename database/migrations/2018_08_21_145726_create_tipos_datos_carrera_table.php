@@ -15,7 +15,7 @@ class CreateTiposDatosCarreraTable extends Migration
     {
         Schema::create('tbl_tipos_datos_carrera', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre', 50);
+            $table->string('nombre', 255)->unique();
             $table->timestamps();
             $table->softDeletes();
         });
