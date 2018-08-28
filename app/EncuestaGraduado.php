@@ -18,8 +18,8 @@ class EncuestaGraduado extends Model
         'annio_graduacion',
         'link_encuesta',
         'sexo',
-        'carrera',
-        'universidad',
+        'codigo_carrera',
+        'codigo_universidad',
         'codigo_grado',
         'codigo_disciplina',
         'codigo_area',
@@ -37,17 +37,19 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
-            ->where('dcg1.nombre', $nombre_grado);
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('grado.nombre', $nombre_grado);
     }
 
     /** Este scope permite encontrar todos los graduados por el codigo de grado. */
@@ -61,17 +63,19 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
-            ->where('dcg1.codigo', $codigo_grado);
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('grado.codigo', $codigo_grado);
     }
 
     /** Este scope permite encontrar los graduados por nombre de disciplina. */
@@ -85,17 +89,19 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
-            ->where('dcg2.nombre', $nombre_disciplina);
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('disciplina.nombre', $nombre_disciplina);
     }
 
     /** Este scope permite encontrar todos los graduados por el codigo de disciplina. */
@@ -109,17 +115,19 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
-            ->where('dcg2.codigo', $codigo_disciplina);
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('disciplina.codigo', $codigo_disciplina);
     }
 
     /** Este scope permite encontrar los graduados por nombre de area. */
@@ -133,17 +141,19 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
-            ->where('dcg3.nombre', $nombre_area);
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('area.nombre', $nombre_area);
     }
 
     /** Este scope permite encontrar todos los graduados por el codigo de area. */
@@ -157,17 +167,19 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
-            ->where('dcg3.codigo', $codigo_area);
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('area.codigo', $codigo_area);
     }
 
     public function scopeListaPorIdentificacion($query, $identificacion) {
@@ -192,11 +204,11 @@ class EncuestaGraduado extends Model
     }
 
     public function scopeListaPorCarrera($query, $carrera) {
-        return $query->where('carrera', $carrera);
+        return $query->where('codigo_carrera', $carrera);
     }
 
     public function scopeListaPorUniversidad($query, $universidad) {
-        return $query->where('universidad', $universidad);
+        return $query->where('codigo_universidad', $universidad);
     }
 
     public function scopeListaPorTipoDeCaso($query, $tipo_de_caso) {
@@ -212,16 +224,18 @@ class EncuestaGraduado extends Model
                     'annio_graduacion', 
                     'link_encuesta', 
                     'sexo', 
-                    'carrera', 
-                    'universidad', 
-                    'dcg1.nombre as Grado', 
-                    'dcg2.nombre as Disciplina', 
-                    'dcg3.nombre as Area',
+                    'carrera.nombre as Carrera', 
+                    'universidad.nombre as Universidad', 
+                    'grado.nombre as Grado', 
+                    'disciplina.nombre as Disciplina', 
+                    'area.nombre as Area',
                     'tipo_de_caso'
                 )
-        ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-        ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-        ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area');
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area');
     }
 
     /** Coloca la encuesta seleccionada en un estado de no asignada */
@@ -272,16 +286,18 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera', 
-                        'universidad', 
-                        'dcg1.nombre as Grado', 
-                        'dcg2.nombre as Disciplina', 
-                        'dcg3.nombre as Area',
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as dcg1', 'dcg1.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as dcg2', 'dcg2.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as dcg3', 'dcg3.id', '=', 'tbl_graduados.codigo_area')
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
             ->where('a.id_estado', $id_estado_sin_asignar->id);
     }
@@ -289,6 +305,29 @@ class EncuestaGraduado extends Model
     public function scopeListaEncuestasAsignadasEncuestador($query, $id_encuestador) {
         $id_estado_asignado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ASIGNADA')->first();
 
-        
+                return $query
+            ->select(
+                        'tbl_graduados.id',
+                        'identificacion_graduado', 
+                        'token', 
+                        'nombre_completo', 
+                        'annio_graduacion', 
+                        'link_encuesta', 
+                        'sexo', 
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
+                        'tipo_de_caso'
+                    )
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
+            ->where('a.id_estado', $id_estado_asignado->id)
+            ->where('a.id_encuestador', '=', $id_encuestador);
     }
 }
