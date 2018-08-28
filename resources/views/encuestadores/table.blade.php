@@ -43,7 +43,7 @@
                     <!-- Imagen del cuadro -->
                     <div class="box-body">
                         <div class="col-md-12">
-                            <img class="card-img-top" data-src="img/logo_olap.png" alt="logo de OLAP" style="height: 100%; width: 100%; display: block;" src="{{ asset('img/logo_olap.png') }}" data-holder-rendered="true">
+                            <img class="card-img-top" data-src="{{ config('global.imagen_tarjetas') }}" alt="logo de OLAP" style="height: 100%; width: 100%; display: block;" src="{{ asset(config('global.imagen_tarjetas')) }}" data-holder-rendered="true">
                         </div>
                     </div>
 
@@ -57,7 +57,7 @@
                             </a>
 
                             <a href="{{ route('asignar-encuestas.lista-encuestas-no-asignadas', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-spoon"></i> Encuestas asignadas
+                                <i class="far fa-eye"></i> Encuestas asignadas
                             </a>
 
                             <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
