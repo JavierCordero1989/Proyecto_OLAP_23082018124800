@@ -108,6 +108,11 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')->name('asignar-encuestas.lista-encuestas-no-asignadas');
 });
 
+//Gráficos
+Route::group(['middleware'=>['auth']], function() {
+  Route::get('', 'GraficosController@graficosPorEstado')->name('graficos.graficos-por-estado')  /*->middleware('permission:')*/;
+});
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
