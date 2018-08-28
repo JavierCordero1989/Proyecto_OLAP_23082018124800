@@ -43,5 +43,21 @@
             'link_app' => 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.min.js',
             // 'link_app' => asset('js/app/app.min.js'),
         ],
+        'colores' => [
+            'conare' => [
+                'azul_oscuro'   => '#003865',
+                'azul_claro'    => '#80C6CF',
+                'gris'          => '#CCCCCC',
+                'verde'         => '#62A60A',
+                'naranja'       => '#FF8200'
+            ],
+            'universidad' => [
+                'UCR'   => '#5BC2E7',
+                'TEC'   => '#002855',
+                'UNA'   => '#E4002B',
+                'UNED'  => '#00ADFF',
+                'UTN'   => '#00205B'
+            ]
+        ],
     ];
 ?>
