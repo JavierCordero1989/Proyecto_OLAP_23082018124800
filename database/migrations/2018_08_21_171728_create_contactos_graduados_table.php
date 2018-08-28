@@ -25,8 +25,8 @@ class CreateContactosGraduadosTable extends Migration
         Schema::create('tbl_contactos_graduados', function (Blueprint $table) {
             $table->increments('id');
             $table->string('identificacion_referencia', 50);
-            $table->string('nombre_referencia', 255);
-            $table->string('informacion_contacto', 255);
+            $table->string('nombre_referencia', 191);
+            $table->string('informacion_contacto', 191);
             $table->text('observacion_contacto');
             $table->unsignedInteger('id_graduado');
             $table->timestamps();

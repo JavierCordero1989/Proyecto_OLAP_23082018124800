@@ -15,11 +15,11 @@ class CreateGraduadosTable extends Migration
     {
         Schema::create('tbl_graduados', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('identificacion_graduado', 20);
-            $table->string('token', 255);
+            $table->string('identificacion_graduado', 20)->unique();
+            $table->string('token', 191)->unique();
             $table->string('nombre_completo', 50);
             $table->integer('annio_graduacion');
-            $table->string('link_encuesta', 255);
+            $table->string('link_encuesta', 191)->unique();
             $table->char('sexo', 1);
             $table->unsignedInteger('codigo_carrera');
             $table->unsignedInteger('codigo_universidad');
