@@ -129,14 +129,13 @@ class EncuestadoresController extends Controller
         /** Se obtiene el objeto que corresponda al ID */
         $encuestador = User::find($id);
 
-        /** VALIDAR QUE NO TENGA ENCUESTAS ASIGNADAS PRIMERO */
-
         /** Si el objeto obtenido esta vacio, se envia un mensaje de error y se redirige a la ruta index */
         if(empty($encuestador)) {
             Flash::error('No se ha encontrado el encuestador');
             return redirect(route('encuestadores.index'));
         }
 
+        /* VALIDA QUE EL ENCUESTADOR NO POSEA ENCUESTAS ASIGNADAS ANTES DE ELIMINAR */
         /** Se borra el objeto encontrado */
         $encuestador->deleted_at = Carbon::now();
         $encuestador->save();
