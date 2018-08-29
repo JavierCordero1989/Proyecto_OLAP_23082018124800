@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\TiposDatosCarrera;
 use App\DatosCarreraGraduado;
+use App\ContactoGraduado;
 use DB;
 
 class EncuestaGraduado extends Model
@@ -25,6 +26,112 @@ class EncuestaGraduado extends Model
         'codigo_area',
         'tipo_de_caso'
     ];
+
+    /*  __________________________________________________________________________
+     *  Las siguientes funciones obtienen la lista de las encuestas, filtradas por 
+     *  grados, disciplinas y áreas, según el nombre o el código de cada una.
+     *  _________________________________________________________________________
+     */
+
+    /** Este scope permite encontrar los graduados por nombre de carrera. */
+    public function scopeListaPorNombreCarrera($query, $nombre_carrera) {
+        return $query
+            ->select(
+                        'identificacion_graduado', 
+                        'token', 
+                        'nombre_completo', 
+                        'annio_graduacion', 
+                        'link_encuesta', 
+                        'sexo', 
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
+                        'tipo_de_caso'
+                    )
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('carrera.nombre', $nombre_carrera);
+    }
+
+    /** Este scope permite encontrar todos los graduados por el codigo de carrera. */
+    public function scopeListaPorCodigoCarrera($query, $codigo_carrera) {
+        return $query
+            ->select(
+                        'identificacion_graduado', 
+                        'token', 
+                        'nombre_completo', 
+                        'annio_graduacion', 
+                        'link_encuesta', 
+                        'sexo', 
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
+                        'tipo_de_caso'
+                    )
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('carrera.codigo', $codigo_carrera);
+    }
+
+    /** Este scope permite encontrar los graduados por nombre de universidad. */
+    public function scopeListaPorNombreUniversidad($query, $nombre_universidad) {
+        return $query
+            ->select(
+                        'identificacion_graduado', 
+                        'token', 
+                        'nombre_completo', 
+                        'annio_graduacion', 
+                        'link_encuesta', 
+                        'sexo', 
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
+                        'tipo_de_caso'
+                    )
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('universidad.nombre', $nombre_universidad);
+    }
+
+    /** Este scope permite encontrar todos los graduados por el codigo de universidad. */
+    public function scopeListaPorCodigoUniversidad($query, $codigo_universidad) {
+        return $query
+            ->select(
+                        'identificacion_graduado', 
+                        'token', 
+                        'nombre_completo', 
+                        'annio_graduacion', 
+                        'link_encuesta', 
+                        'sexo', 
+                        'carrera.nombre as Carrera', 
+                        'universidad.nombre as Universidad', 
+                        'grado.nombre as Grado', 
+                        'disciplina.nombre as Disciplina', 
+                        'area.nombre as Area',
+                        'tipo_de_caso'
+                    )
+            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
+            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
+            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
+            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
+            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
+            ->where('universidad.codigo', $codigo_universidad);
+    }
 
     /** Este scope permite encontrar los graduados por nombre de grado. */
     public function scopeListaPorNombreGrado($query, $nombre_grado) {
@@ -181,7 +288,18 @@ class EncuestaGraduado extends Model
             ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
             ->where('area.codigo', $codigo_area);
     }
+    /* _________________________________________________________________________________________
+     * Finaliza la declaración de las funciones para obtener los datos por carrera, universidad,
+     * grado, disciplina y área.
+     * _________________________________________________________________________________________
+     */
 
+    /*
+     * __________________________________________________________________________
+     * Las siguientes funciones filtran las encuestas por diferentes atributos,
+     * por cédula, token, nombre, año de graduación, sexo y tipo del caso
+     * __________________________________________________________________________
+     */
     public function scopeListaPorIdentificacion($query, $identificacion) {
         return $query->where('identificacion_graduado', $identificacion);
     }
@@ -203,21 +321,22 @@ class EncuestaGraduado extends Model
         return $query->where('sexo', $sexo);
     }
 
-    public function scopeListaPorCarrera($query, $carrera) {
-        return $query->where('codigo_carrera', $carrera);
-    }
-
-    public function scopeListaPorUniversidad($query, $universidad) {
-        return $query->where('codigo_universidad', $universidad);
-    }
-
     public function scopeListaPorTipoDeCaso($query, $tipo_de_caso) {
         return $query->where('tipo_de_caso', $tipo_de_caso);
     }
+    /* _______________________________________________________________________________________________
+     * Finaliza la lista de filtros por cédula, token, nombre, año de graduación, sexo y tipo del caso
+     * _______________________________________________________________________________________________
+     */
 
+
+    /** Este query permite obtener la lista de todas las encuestas de la base de datos de 
+     * la tabla tbl_graduados. 
+     */
     public function scopeListaDeGraduados($query) {
         return $query
         ->select(
+                    'tbl_graduados.id',
                     'identificacion_graduado', 
                     'token', 
                     'nombre_completo', 
@@ -240,26 +359,17 @@ class EncuestaGraduado extends Model
 
     /** Coloca la encuesta seleccionada en un estado de no asignada */
     public function asignarEstado($id_estado) {
-        $result = DB::table('tbl_asignaciones')->insert([
+        return DB::table('tbl_asignaciones')->insert([
             'id_graduado' => $this->id,
             'id_estado' => $id_estado,
             'created_at' => \Carbon\Carbon::now()
         ]);
-
-        return $result;
     }
 
     /** Este método permite asignar una encuesta a un encuestador, registrando así los datos
      * del encuestador y del supervisor que hizo la asignación.
-     * 
-     * Devuelve un array con dos datos, el estado del proceso, y el mensaje para mostrar al usuario.
-     * El primer valor es el estado, el 1 indica que el proceso salió bien.
-     * El valor -1, indica que el estado NO ASIGNADA no existe.
      */
     public function asignarEncuesta($id_supervisor, $id_encuestador, $id_no_asignada, $id_asignada) {
-        /** Si todo sale de bien y los datos son correctos, se procederá a guardar el registro
-         * en la tabla tbl_asignaciones.
-         */
         $result = DB::table('tbl_asignaciones')
             ->where('id_graduado', $this->id)
             ->where('id_estado', $id_no_asignada)
@@ -302,6 +412,9 @@ class EncuestaGraduado extends Model
             ->where('a.id_estado', $id_estado_sin_asignar->id);
     }
 
+    /** Obtiene los registros de las encuestas que han sido asignadas a un encuestador mediante
+     * su código.
+     */
     public function scopeListaEncuestasAsignadasEncuestador($query, $id_encuestador) {
         $id_estado_asignado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ASIGNADA')->first();
 
@@ -329,5 +442,13 @@ class EncuestaGraduado extends Model
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
             ->where('a.id_estado', $id_estado_asignado->id)
             ->where('a.id_encuestador', '=', $id_encuestador);
+    }
+
+    public function listaDeContactos() {
+        return ContactoGraduado::obtenerContactosGraduado($this->id)->get();
+    }
+
+    public function contactos() {
+        return $this->hasMany(ContactoGraduado::class, 'id_graduado');
     }
 }
