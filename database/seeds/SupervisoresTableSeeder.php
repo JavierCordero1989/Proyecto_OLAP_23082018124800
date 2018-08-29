@@ -20,7 +20,7 @@ class SupervisoresTableSeeder extends Seeder
             'updated_at' => Carbon::now()
         ]);
 
-        for($i=0; $i<20; $i++) {
+        for($i=0; $i<5; $i++) {
             $user = \App\User::create([
                 'user_code' => ($i+1),
                 'name' => 'Supervisor #'.($i+1),
