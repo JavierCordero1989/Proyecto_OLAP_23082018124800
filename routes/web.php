@@ -110,7 +110,7 @@ Route::group(['middleware'=>['auth']], function() {
 
 //Gráficos
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('', 'GraficosController@graficosPorEstado')->name('graficos.graficos-por-estado')  /*->middleware('permission:')*/;
+  Route::get('graficos-estados', 'GraficosController@graficosPorEstado')->name('graficos.graficos-por-estado')  /*->middleware('permission:')*/;
 });
 
 //Plantilla rutas
