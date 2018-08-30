@@ -425,6 +425,10 @@ function barras(idGrafico, etiquetas, titulo, datos) {
     graficoBarras.Bar(datosGrafico, opcionesGrafico);
 }
 
+var randonNumber = function() {
+    return Math.round(Math.random() * 100);
+};
+
 function pieChart(id_chart) {
     ctxGrafico = $('#'+id_chart).get(0).getContext("2d");
 
@@ -432,25 +436,25 @@ function pieChart(id_chart) {
 
     dataPie = [
         {
-            value: 700,
+            value: randonNumber(),
             color: '#f56954',
             highlight: '#f56954',
             label: 'Ejemplo #1' 
         },
         {
-            value: 500,
+            value: randonNumber(),
             color: '#00a65a',
             highlight: '#00a65a',
             label: 'Ejemplo #2' 
         },
         {
-            value: 90,
+            value: randonNumber(),
             color: '#f39c12',
             highlight: '#f39c12',
             label: 'Ejemplo #3' 
         },
         {
-            value: 120,
+            value: randonNumber(),
             color: '#00c0ef',
             highlight: '#00c0ef',
             label: 'Ejemplo #4' 
