@@ -136,6 +136,11 @@ class EncuestadoresController extends Controller
         }
 
         /* VALIDA QUE EL ENCUESTADOR NO POSEA ENCUESTAS ASIGNADAS ANTES DE ELIMINAR */
+        if(sizeof($encuestador->asignacionesEncuestador) > 0) {
+            Flash::error('No es posible eliminar este encuestador debido a que posee entrevistas asignadas.<br>Debe quitarlas o asignarlas a algún encuestador disponible antes.');
+            return redirect(route('encuestadores.index'));
+        }
+
         /** Se borra el objeto encontrado */
         $encuestador->deleted_at = Carbon::now();
         $encuestador->save();
