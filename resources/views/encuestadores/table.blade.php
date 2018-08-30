@@ -66,7 +66,7 @@
 
                             {{-- @if (Auth::user()->hasRole('Administrador')) --}}
                                 <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                    <i class="fa fa-area-chart"></i> Botón 3
+                                    <i class="fa fa-area-chart"></i> Ver estadísticas
                                 </a>
                             {{-- @endif --}}
       
