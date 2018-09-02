@@ -16,6 +16,18 @@ class DatosCarreraGraduado extends Model
         'id_tipo'
     ];
 
+    public function scopePorCarrera($query) {
+        $id_tipo = TiposDatosCarrera::carrera()->first();
+
+        return $query->where('id_tipo', $id_tipo->id);
+    }
+
+    public function scopePorUniversidad($query) {
+        $id_tipo = TiposDatosCarrera::universidad()->first();
+
+        return $query->where('id_tipo', $id_tipo->id);
+    }
+
     public function scopePorGrado($query) {
         $id_tipo = TiposDatosCarrera::grado()->first();
 
@@ -32,5 +44,9 @@ class DatosCarreraGraduado extends Model
         $id_tipo = TiposDatosCarrera::area()->first();
 
         return $query->where('id_tipo', $id_tipo->id);
+    }
+
+    public function tipo() {
+        return $this->hasOne(TiposDatosCarrera::class, 'id', 'id_tipo');
     }
 }
