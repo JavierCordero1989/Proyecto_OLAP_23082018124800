@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Asignacion;
+use App\ObservacionesGraduado;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -36,5 +37,9 @@ class User extends Authenticatable
 
     public function asignacionesSupervisor() {
         return $this->hasMany(Asignacion::class, 'id_supervisor');
+    }
+
+    public function observaciones() {
+        return $this->hasMany(ObservacionesGraduado::class, 'id_usuario');
     }
 }
