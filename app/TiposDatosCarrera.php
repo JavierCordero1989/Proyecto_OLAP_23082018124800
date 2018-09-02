@@ -12,15 +12,27 @@ class TiposDatosCarrera extends Model
         'nombre'
     ];
 
+    public function scopeCarrera($query) {
+        return $query->where('nombre', 'CARRERA');
+    }
+
+    public function scopeUniversidad($query) {
+        return $query->where('nombre', 'UNIVERSIDAD');
+    }
+
     public function scopeGrado($query) {
-        return $query->where('nombre', 'Grado');
+        return $query->where('nombre', 'GRADO');
     }
 
     public function scopeDisciplina($query) {
-        return $query->where('nombre', 'Disciplina');
+        return $query->where('nombre', 'DISCIPLINA');
     }
 
     public function scopeArea($query) {
-        return $query->where('nombre', 'Area');
+        return $query->where('nombre', 'AREA');
+    }
+
+    public function datoCarrera() {
+        return $this->hasMany(DatosCarreraGraduado::class, 'id_tipo');
     }
 }
