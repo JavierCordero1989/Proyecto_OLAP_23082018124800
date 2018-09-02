@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\TiposDatosCarrera;
 use App\DatosCarreraGraduado;
 use App\ContactoGraduado;
+use App\ObservacionesGraduado;
 use DB;
 
 class EncuestaGraduado extends Model
@@ -450,5 +451,9 @@ class EncuestaGraduado extends Model
 
     public function contactos() {
         return $this->hasMany(ContactoGraduado::class, 'id_graduado');
+    }   
+
+    public function observaciones() {
+        return $this->hasMany(ObservacionesGraduado::class, 'id_graduado');
     }
 }
