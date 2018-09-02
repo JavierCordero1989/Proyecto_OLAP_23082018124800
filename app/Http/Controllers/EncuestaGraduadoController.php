@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\EncuestaGraduado;
 use App\User;
+use App\DatosCarreraGraduado;
 use DB;
 use Flash;
 
@@ -19,8 +20,14 @@ class EncuestaGraduadoController extends Controller
     public function asignar($id_supervisor, $id_encuestador) {
         $encuestasNoAsignadas = EncuestaGraduado::listaDeEncuestasSinAsignar()->get();
 
-        return view('encuestadores.tabla-encuestas-no-asignadas', 
-        compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
+        $carreras = DatosCarreraGraduado::where('id_tipo', 1)       ->pluck('nombre', 'id');
+        $universidades = DatosCarreraGraduado::where('id_tipo', 2)  ->pluck('nombre', 'id');
+        $grados = DatosCarreraGraduado::where('id_tipo', 3)         ->pluck('nombre', 'id');
+        $disciplinas = DatosCarreraGraduado::where('id_tipo', 4)    ->pluck('nombre', 'id');
+        $areas = DatosCarreraGraduado::where('id_tipo', 5)          ->pluck('nombre', 'id');
+
+        return view('encuestadores.lista-filtro-encuestas', 
+            compact('id_supervisor', 'id_encuestador','carreras', 'universidades', 'grados', 'disciplinas', 'areas'));
     }
 
     public function crearAsignacion($id_supervisor, $id_encuestador, Request $request) {
@@ -87,5 +94,31 @@ class EncuestaGraduadoController extends Controller
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
         
         return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas'));
+    }
+
+    public function filtrar_muestra_a_asignar($id_supervisor, $id_encuestador, Request $request) {
+        $input = $request->all();
+
+        if(!is_null($input['carrera'])) {
+            $resultado = EncuestaGraduado::where('codigo_carrera', $input['carrera']);
+        }
+
+        if(!is_null($input['universidad'])) {
+            $resultado->where('codigo_universidad', $input['universidad']);
+        }
+
+        if(!is_null($input['grado'])) {
+            $resultado->where('codigo_grado', $input['grado']);
+        }
+
+        if(!is_null($input['disciplina'])) {
+            $resultado->where('codigo_disciplina', $input['disciplina']);
+        }
+
+        if(!is_null($input['area'])) {
+            $resultado->where('codigo_area', $input['area']);
+        }
+
+        dd($resultado->get());
     }
 }
