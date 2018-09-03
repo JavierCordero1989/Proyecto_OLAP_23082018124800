@@ -49,4 +49,8 @@ class DatosCarreraGraduado extends Model
     public function tipo() {
         return $this->hasOne(TiposDatosCarrera::class, 'id', 'id_tipo');
     }
+
+    public function graduado() {
+        return $this->hasMany(EncuestaGraduado::class, 'id');
+    }
 }
