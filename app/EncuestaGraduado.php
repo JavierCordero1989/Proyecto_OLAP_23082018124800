@@ -428,18 +428,13 @@ class EncuestaGraduado extends Model
                         'annio_graduacion', 
                         'link_encuesta', 
                         'sexo', 
-                        'carrera.nombre as Carrera', 
-                        'universidad.nombre as Universidad', 
-                        'grado.nombre as Grado', 
-                        'disciplina.nombre as Disciplina', 
-                        'area.nombre as Area',
+                        'codigo_carrera', 
+                        'codigo_universidad', 
+                        'codigo_grado', 
+                        'codigo_disciplina', 
+                        'codigo_area',
                         'tipo_de_caso'
                     )
-            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
-            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
-            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area')
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
             ->where('a.id_estado', $id_estado_asignado->id)
             ->where('a.id_encuestador', '=', $id_encuestador);
@@ -456,4 +451,25 @@ class EncuestaGraduado extends Model
     public function observaciones() {
         return $this->hasMany(ObservacionesGraduado::class, 'id_graduado');
     }
+
+    public function carrera() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_carrera');
+    }
+
+    public function universidad() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_universidad');
+    }
+
+    public function grado() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_grado');
+    }
+
+    public function disciplina() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_disciplina');
+    }
+
+    public function area() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_area');
+    }
+
 }
