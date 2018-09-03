@@ -93,14 +93,18 @@ class EncuestaGraduadoController extends Controller
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
         
+        // dd($listaDeEncuestas);
+
         return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas'));
     }
 
     public function filtrar_muestra_a_asignar($id_supervisor, $id_encuestador, Request $request) {
         $input = $request->all();
 
+        $resultado = EncuestaGraduado::select('*');
+
         if(!is_null($input['carrera'])) {
-            $resultado = EncuestaGraduado::where('codigo_carrera', $input['carrera']);
+            $resultado->where('codigo_carrera', $input['carrera']);
         }
 
         if(!is_null($input['universidad'])) {
@@ -119,6 +123,10 @@ class EncuestaGraduadoController extends Controller
             $resultado->where('codigo_area', $input['area']);
         }
 
-        dd($resultado->get());
+        $encuestasNoAsignadas = $resultado->get();
+
+        // dd($encuestasNoAsignadas);
+
+        return view('encuestadores.tabla-encuestas-no-asignadas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
     }
 }
