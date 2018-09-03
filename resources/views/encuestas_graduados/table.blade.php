@@ -50,8 +50,7 @@
                 <td>
                     <!-- Se valida que haya registros de contacto -->
                     @if(sizeof($encuesta->contactos) <= 0)
-                        <a href="#modal-warning" data-toggle="modal">Agregar</a>
-                        @include('modals.modal_agregar_info_contacto_encuesta')
+                        <a href="#" data-toggle="modal">Agregar</a>
                     @else
                         <!-- Dropdown menu para mostrar la informacion de contacto del usuario -->
                         <div class="dropdown">
@@ -66,6 +65,7 @@
                                             <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
                                         </li>
                                     @endforeach
+                                    <li><a href="#">Agregar contacto</a></li>
                                 </ul>
 
                                 <!-- Se agregan los modales mediante un foreach -->

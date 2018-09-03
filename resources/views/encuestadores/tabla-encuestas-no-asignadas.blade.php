@@ -57,11 +57,11 @@
                                             </div>
                                         </td>
                                         <td>{!! $encuesta->sexo !!}</td>
-                                        <td>{!! $encuesta->Carrera !!}</td>
-                                        <td>{!! $encuesta->Universidad !!}</td>
-                                        <td>{!! $encuesta->Grado !!}</td>
-                                        <td>{!! $encuesta->Disciplina !!}</td>
-                                        <td>{!! $encuesta->Area !!}</td>
+                                        <td>{!! $encuesta->carrera->nombre !!}</td>
+                                        <td>{!! $encuesta->universidad->nombre !!}</td>
+                                        <td>{!! $encuesta->grado->nombre !!}</td>
+                                        <td>{!! $encuesta->disciplina->nombre !!}</td>
+                                        <td>{!! $encuesta->area->nombre !!}</td>
                                         <td>
                                             <!-- Se valida que haya registros de contacto -->
                                             @if(sizeof($encuesta->contactos) <= 0)
@@ -80,6 +80,7 @@
                                                                     <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
                                                                 </li>
                                                             @endforeach
+                                                            <li><a href="#">Agregar contacto</a></li>
                                                         </ul>
                         
                                                         <!-- Se agregan los modales mediante un foreach -->
