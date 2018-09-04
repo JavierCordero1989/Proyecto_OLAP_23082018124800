@@ -125,6 +125,50 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('graficos-estados-encuestador/{id_encuestador}', 'GraficosController@graficosPorEstadoEncuestador')->name('graficos.graficos-por-encuestador');
 });
 
+// Rutas para el mantenimiento de las carreras
+Route::group(['prefix'=>'carreras', 'middleware'=>'auth'], function() {
+    Route::get('', 'CarrerasController@index')          ->name('carreras.index')  /*->middleware('permission:')*/;
+    Route::get('/create', 'CarrerasController@create')  ->name('carreras.create') /*->middleware('')*/;
+    Route::post('/store', 'CarrerasController@store')   ->name('carreras.store')  /*->middleware('')*/;
+    Route::get('/{id}', 'CarrerasController@show')      ->name('carreras.show')   /*->middleware('')*/;
+    Route::get('/{id}/edit', 'CarrerasController@edit') ->name('carreras.edit')   /*->middleware('')*/;
+    Route::patch('/{id}', 'CarrerasController@update')  ->name('carreras.update') /*->middleware('')*/;
+    Route::delete('/{id}', 'CarrerasController@destroy')->name('carreras.destroy')/*->middleware('')*/;
+});
+
+// Rutas para el mantenimiento de las universidades
+Route::group(['prefix'=>'universidades', 'middleware'=>'auth'], function() {
+  Route::get('', 'UniversidadesController@index')          ->name('universidades.index')  /*->middleware('permission:')*/;
+  Route::get('/create', 'UniversidadesController@create')  ->name('universidades.create') /*->middleware('')*/;
+  Route::post('/store', 'UniversidadesController@store')   ->name('universidades.store')  /*->middleware('')*/;
+  Route::get('/{id}', 'UniversidadesController@show')      ->name('universidades.show')   /*->middleware('')*/;
+  Route::get('/{id}/edit', 'UniversidadesController@edit') ->name('universidades.edit')   /*->middleware('')*/;
+  Route::patch('/{id}', 'UniversidadesController@update')  ->name('universidades.update') /*->middleware('')*/;
+  Route::delete('/{id}', 'UniversidadesController@destroy')->name('universidades.destroy')/*->middleware('')*/;
+});
+
+// Rutas para el mantenimiento de los grados
+Route::group(['prefix'=>'grados', 'middleware'=>'auth'], function() {
+  Route::get('', 'GradosController@index')          ->name('grados.index')  /*->middleware('permission:')*/;
+  Route::get('/create', 'GradosController@create')  ->name('grados.create') /*->middleware('')*/;
+  Route::post('/store', 'GradosController@store')   ->name('grados.store')  /*->middleware('')*/;
+  Route::get('/{id}', 'GradosController@show')      ->name('grados.show')   /*->middleware('')*/;
+  Route::get('/{id}/edit', 'GradosController@edit') ->name('grados.edit')   /*->middleware('')*/;
+  Route::patch('/{id}', 'GradosController@update')  ->name('grados.update') /*->middleware('')*/;
+  Route::delete('/{id}', 'GradosController@destroy')->name('grados.destroy')/*->middleware('')*/;
+});
+
+// Rutas para el mantenimiento de los grados
+Route::group(['prefix'=>'disciplinas', 'middleware'=>'auth'], function() {
+  Route::get('', 'DisciplinasController@index')          ->name('disciplinas.index')  /*->middleware('permission:')*/;
+  Route::get('/create', 'DisciplinasController@create')  ->name('disciplinas.create') /*->middleware('')*/;
+  Route::post('/store', 'DisciplinasController@store')   ->name('disciplinas.store')  /*->middleware('')*/;
+  Route::get('/{id}', 'DisciplinasController@show')      ->name('disciplinas.show')   /*->middleware('')*/;
+  Route::get('/{id}/edit', 'DisciplinasController@edit') ->name('disciplinas.edit')   /*->middleware('')*/;
+  Route::patch('/{id}', 'DisciplinasController@update')  ->name('disciplinas.update') /*->middleware('')*/;
+  Route::delete('/{id}', 'DisciplinasController@destroy')->name('disciplinas.destroy')/*->middleware('')*/;
+});
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
