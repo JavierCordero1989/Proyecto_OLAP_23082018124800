@@ -15,7 +15,7 @@
                <div class="row">
                    {!! Form::model($encuestador, ['route' => ['encuestadores.update', $encuestador->id], 'method' => 'patch']) !!}
 
-                        @include('encuestadores.fields')
+                        @include('encuestadores.fields-edit')
 
                    {!! Form::close() !!}
                </div>

@@ -1,8 +1,8 @@
-<!-- Id Field -->
-<div class="form-group">
+{{-- <!-- Id Field --> --}}
+{{-- <div class="form-group">
     {!! Form::label('id', 'Id:') !!}
     <p>{!! $encuestador->id !!}</p>
-</div>
+</div> --}}
 
 <!-- User code Field -->
 <div class="form-group">

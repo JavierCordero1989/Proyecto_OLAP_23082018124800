@@ -56,7 +56,7 @@
                                 <i class="fa fa-plus-square"></i> Asignar Encuestas
                             </a>
 
-                            <a href="{{ route('asignar-encuestas.lista-encuestas-no-asignadas', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                            <a href="{{ route('asignar-encuestas.lista-encuestas-asignadas', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
                                 <i class="far fa-eye"></i> Encuestas asignadas
                             </a>
 
@@ -64,11 +64,9 @@
                                 <i class="fa fa-eyedropper"></i> Botón 2
                             </a>
 
-                            {{-- @if (Auth::user()->hasRole('Administrador')) --}}
-                                <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                    <i class="fa fa-area-chart"></i> Ver estadísticas
-                                </a>
-                            {{-- @endif --}}
+                            <a href="{{ route('graficos.graficos-por-encuestador', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                                <i class="fa fa-area-chart"></i> Ver estadísticas
+                            </a>
       
                         </div>
                     </div>

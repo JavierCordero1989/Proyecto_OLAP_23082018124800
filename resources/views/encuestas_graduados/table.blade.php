@@ -48,10 +48,10 @@
                 <td>{!! $encuesta->Disciplina !!}</td>
                 <td>{!! $encuesta->Area !!}</td>
                 <td>
-                    <!-- Se valida que haya registros de contacto -->
+                    {{-- <!-- Se valida que haya registros de contacto -->
                     @if(sizeof($encuesta->contactos) <= 0)
-                        <a href="#" data-toggle="modal">Agregar</a>
-                    @else
+                        <a href="#" data-toggle="modal">Agregar contacto</a>
+                    @else --}}
                         <!-- Dropdown menu para mostrar la informacion de contacto del usuario -->
                         <div class="dropdown">
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -65,7 +65,7 @@
                                             <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
                                         </li>
                                     @endforeach
-                                    <li><a href="#">Agregar contacto</a></li>
+                                    <li><a href="{{ route('encuestas-graduados.agregar-contacto', [$encuesta->id]) }}">Agregar contacto</a></li>
                                 </ul>
 
                                 <!-- Se agregan los modales mediante un foreach -->
@@ -73,7 +73,7 @@
                                     @include('modals.modal_info_contacto')
                                 @endforeach
                         </div>
-                    @endif
+                    {{-- @endif --}}
                 </td>
                 <td>{!! $encuesta->tipo_de_caso !!}</td>
             </tr>
