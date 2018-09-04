@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\User;
 use Flash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 
 class EncuestadoresController extends Controller
 {
@@ -149,4 +152,93 @@ class EncuestadoresController extends Controller
         Flash::success('Se ha eliminado el encuestador '.$encuestador->name.' correctamente.');
         return redirect(route('encuestadores.index'));
     } //Fin de la funcion destroy
+
+    public function cambiar_contrasennia($id_encuestador) {
+        $encuestador = User::find($id_encuestador);
+
+        /** Si el objeto obtenido esta vacio, se envia un mensaje de error y se redirige a la ruta index */
+        if(empty($encuestador)) {
+            Flash::error('Encuestador no encontrado');
+            return redirect(url('home'));
+        }
+
+        return view('encuestadores.cambiar-contrasennia')->with('encuestador', $encuestador);
+    }
+
+    public function actualizar_contrasennia($id_encuestador, Request $request) {
+        $encuestador = User::find($id_encuestador);
+
+        if(Hash::check($request->old_password, $encuestador->password)) {
+            $encuestador->password = bcrypt($request->password1);
+            $encuestador->save();
+
+            return redirect(url('home'));
+        }
+        else {
+            Flash::error('Su contraseña actual no coincide con la registrada.');
+            return redirect(route('encuestadores.cambiar-contrasennia', $id_encuestador));
+        }
+
+        dd($id_encuestador, $request->all());
+    }
+
+    public function lista_de_encuestas($id){
+        $id_encuestador = Crypt::decrypt($id);
+
+        $listaDeEncuestas = \App\EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
+
+        $id_encuestador = Crypt::encrypt($id_encuestador);
+
+        return view('encuestadores.lista-de-encuestas', compact('listaDeEncuestas', 'id_encuestador'));
+    }
+
+    public function agregarContacto($id_encuesta) {
+        return view('encuestadores.agregar-contacto')->with('id_encuesta', $id_encuesta);
+    }
+
+    public function guardarContacto($id_encuesta, $id_encuestador, Request $request) {
+        $id_encuesta = Crypt::decrypt($id_encuesta);
+        $id_encuestador = Crypt::decrypt($id_encuestador);
+        
+        $contacto = \App\ContactoGraduado::create([
+            'identificacion_referencia' => $request->identificacion_referencia,
+            'nombre_referencia'         => $request->nombre_referencia,
+            'informacion_contacto'      => $request->informacion_contacto,
+            'observacion_contacto'      => $request->observacion_contacto,
+            'id_graduado'               => $id_encuesta,
+            'created_at'                => \Carbon\Carbon::now()
+        ]);
+
+        Flash::success('Se ha guardado correctamente la nueva información de contacto.');
+        return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt($id_encuestador)));
+    }
+
+    public function editarContacto($id_contacto) {
+        $contacto = \App\ContactoGraduado::find(Crypt::decrypt($id_contacto));
+
+        if(empty($contacto)) {
+            Flash::error('No existe el contacto que busca');
+            return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt(Auth::user()->id)));
+        }
+
+        return view('encuestadores.modificar-contacto')->with('contacto', $contacto);
+    }
+
+    public function actualizarContacto($id_contacto, Request $request) {
+        $contacto = \App\ContactoGraduado::find(Crypt::decrypt($id_contacto));
+
+        if(empty($contacto)) {
+            Flash::error('No existe el contacto que busca');
+            return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt(Auth::user()->id)));
+        }
+
+        $contacto->identificacion_referencia = $request->identificacion_referencia;
+        $contacto->nombre_referencia = $request->nombre_referencia;
+        $contacto->informacion_contacto= $request->informacion_contacto;
+        $contacto->observacion_contacto = $request->observacion_contacto;
+        $contacto->save();
+
+        Flash::success('El contacto ha sido actualizado correctamente.');
+        return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt(Auth::user()->id)));
+    }
 }
