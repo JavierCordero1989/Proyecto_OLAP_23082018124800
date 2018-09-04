@@ -3,30 +3,31 @@
 @section('title', 'Encuestas sin asignar') 
 
 @section('content')
-    {{-- {!! Form::open(['route' => ['asignar-encuestas.crear-asignacion', 'id_supervisor'=>$id_supervisor,'id_encuestador'=>$id_encuestador]]) !!} --}}
+    {!! Form::open(['route' => ['asignar-encuestas.remover-encuestas', 'id_encuestador'=>$id_encuestador], 'onsubmit' => 'return verificar();']) !!}
         <section class="content-header">
             <h1 class="pull-left">Encuestas asignadas</h1>
             <h1 class="pull-right">
             
-                {!! Form::submit('Asignar encuestas', ['class' => 'btn btn-primary pull-right', 'style' => 'margin-top: -10px;margin-bottom: 5px;']) !!}
+                {!! Form::submit('Quitar encuestas', ['class' => 'btn btn-primary pull-right', 'style' => 'margin-top: -10px;margin-bottom: 5px;']) !!}
                 {{-- <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('asignar-encuestas.crear-asignacion', [$id_supervisor, $id_encuestador]) !!}">Asignar</a> --}}
                 
             </h1>
         </section>
         <div class="content">
             <div class="clearfix"></div>
+            @include('flash::message')
             <div class="clearfix"></div>
             <div class="box-header">
                 <div class="box-body">
 
-                    @section('css')
+                    {{-- @section('css')
                         @include('layouts.datatables_css')
-                    @endsection
+                    @endsection --}}
 
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <th>Identificacion</th>
+                                <th>{!! Form::checkbox('select_all', 0) !!}  Identificacion</th>
                                 <th>Token</th>
                                 <th>Nombre</th>
                                 <th>Año de graduación</th>
@@ -104,9 +105,50 @@
                 </div>
             </div>
         </div>
-    {{-- {!! Form::close() !!} --}}
+    {!! Form::close() !!}
 @endsection
 
 @section('scripts')
-    @include('layouts.datatables_js')
+    {{-- @include('layouts.datatables_js') --}}
+
+    <script>
+        function verificar() {
+            var suma = 0;
+            var checks = document.getElementsByName('encuestas[]');
+
+            for(indice=0, j = checks.length; indice<j; indice++) {
+                if(checks[indice].checked == true){
+                    suma++;
+                }
+            }
+
+            console.log(suma);
+
+            if(suma == 0){
+                alert('Debe seleccionar al menos una encuesta');
+                return false;
+            }
+        }
+
+        // $('[name=select_all]').change(function() {
+        //     alert('El estado del check ha cambiado');
+        // });
+
+        $('[name=select_all]').click(function() {
+            var checks = document.getElementsByName('encuestas[]');
+
+            if($('[name=select_all]').get(0).checked) {
+                console.log('Entra al if');
+                for(indice=0, j = checks.length; indice<j; indice++) {
+                    checks[indice].checked = true;
+                }
+            }
+            else {
+                console.log('Entra al else');
+                for(indice=0, j = checks.length; indice<j; indice++) {
+                    checks[indice].checked = false;
+                }
+            }
+        });
+    </script>
 @endsection
