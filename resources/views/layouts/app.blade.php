@@ -82,7 +82,17 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{!! route('users.edit', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Perfil</a>
+                                    @if(Auth::user()->hasRole('Super Admin'))
+                                        <a href="{!! route('users.edit', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Perfil</a>
+                                    @endif
+
+                                    @if(Auth::user()->hasRole('Encuestador'))
+                                        <a href="{!! route('encuestadores.cambiar-contrasennia', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Cambiar contraseña</a>
+                                    @endif
+
+                                    @if(Auth::user()->hasRole('Supervisor'))
+                                        <a href="{!! route('users.edit', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Perfil</a>
+                                    @endif
                                 </div>
                                 <div class="pull-right">
                                     <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat"
