@@ -15,7 +15,7 @@ class CreateEstadosEncuestasTable extends Migration
     {
         Schema::create('tbl_estados_encuestas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('estado', 100);
+            $table->string('estado', 100)->unique();
             $table->text('descripcion');
             $table->timestamps();
             $table->softDeletes();

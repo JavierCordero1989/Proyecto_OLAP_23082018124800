@@ -31,7 +31,7 @@ class EncuestaGraduadoTableSeeder extends Seeder
 
         $id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
 
-        for($i=0; $i<150; $i++) {
+        for($i=0; $i<500; $i++) {
             $encuesta = EncuestaGraduado::create([
                 'identificacion_graduado' => $faker->numerify('# - ### - ###'),
                 'token' => $faker->uuid,

@@ -22,5 +22,19 @@ class RolesTableSeeder extends Seeder
         ]);
 
         $role->givePermissionTo(Permission::all());
+
+        $supervisor = Role::create([
+            'name' => 'Supervisor',
+            'guard_name' => 'web',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
+
+        $encuestador = Role::create([
+            'name' => 'Encuestador',
+            'guard_name' => 'web',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
     }
 }

@@ -15,7 +15,7 @@ class CreateDatosCarreraGraduadoTable extends Migration
     {
         Schema::create('tbl_datos_carrera_graduado', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('codigo', 50);
+            $table->string('codigo', 50)->unique();
             $table->string('nombre', 191);
             $table->unsignedInteger('id_tipo');
             $table->timestamps();

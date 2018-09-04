@@ -21,19 +21,6 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
             ]);
         }
 
-        // /** Creacion de los tipos */
-        // $tipo1 = TiposDatosCarrera::create([
-        //     'nombre' => 'Grado'
-        // ]);
-
-        // $tipo2 = TiposDatosCarrera::create([
-        //     'nombre' => 'Disciplina'
-        // ]);
-
-        // $tipo3 = TiposDatosCarrera::create([
-        //     'nombre' => 'Área'
-        // ]);
-
         /** Selecciona el ID de los tipos */
         $ids_tipos_datos_carrera = TiposDatosCarrera::pluck('id')->all();
 
@@ -41,7 +28,7 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
         $faker = Faker\Factory::create('es_ES');
 
         /** Creacion de grados, areas y disciplinas */
-        for($i=0; $i<200; $i++) {
+        for($i=0; $i<400; $i++) {
             $datos = DatosCarreraGraduado::create([
                 'codigo' => $faker->numerify('######'),
                 'nombre' => $faker->sentence,

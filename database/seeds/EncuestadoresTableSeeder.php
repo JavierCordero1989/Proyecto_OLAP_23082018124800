@@ -13,14 +13,11 @@ class EncuestadoresTableSeeder extends Seeder
      */
     public function run()
     {
-        $rolEncuestador = Role::create([
-            'name' => 'Encuestador',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
+        $ultimo_id = \App\User::all()->last();
+        $ultimo_id = intval($ultimo_id->user_code);
+        $limite = $ultimo_id + 20;
 
-        for($i=0; $i<20; $i++) {
+        for($i=$ultimo_id; $i<$limite; $i++) {
             $user = \App\User::create([
                 'user_code' => ($i+1),
                 'name' => 'Encuestador #'.($i+1),

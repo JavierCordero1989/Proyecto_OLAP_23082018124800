@@ -19,6 +19,5 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $user->assignRole('Super Admin');
-        // $user->givePermissionTo(Permission::all());
     }
 }
