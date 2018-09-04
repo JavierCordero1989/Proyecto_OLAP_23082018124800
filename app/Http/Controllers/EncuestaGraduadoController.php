@@ -8,6 +8,8 @@ use App\User;
 use App\DatosCarreraGraduado;
 use DB;
 use Flash;
+use App\Asignacion;
+use App\ContactoGraduado;
 
 class EncuestaGraduadoController extends Controller
 {
@@ -17,8 +19,31 @@ class EncuestaGraduadoController extends Controller
         return view('encuestas_graduados.index', compact('encuestas'));
     }
 
+    public function agregarContacto($id_encuesta) {
+        return view('encuestas_graduados.agregar-contacto')->with('id_encuesta', $id_encuesta);
+    }
+
+    public function guardarContacto($id_encuesta, Request $request) {
+
+        $contacto = ContactoGraduado::create([
+            'identificacion_referencia' => $request->identificacion_referencia,
+            'nombre_referencia'         => $request->nombre_referencia,
+            'informacion_contacto'      => $request->informacion_contacto,
+            'observacion_contacto'      => $request->observacion_contacto,
+            'id_graduado'               => $id_encuesta,
+            'created_at'                => \Carbon\Carbon::now()
+        ]);
+
+        Flash::success('Se ha guardado correctamente la nueva información de contacto.');
+        return redirect(route('encuestas-graduados.index'));
+    }
+
+    /** Obtiene todos los datos existentes por carrera, universidad, grado, disciplina y area,
+     * para poder mostrarlos en un combobox para que el encargado de asignar asl encuestas
+     * pueda seleccionar todos los filtros adecuados.
+    */
     public function asignar($id_supervisor, $id_encuestador) {
-        $encuestasNoAsignadas = EncuestaGraduado::listaDeEncuestasSinAsignar()->get();
+        // $encuestasNoAsignadas = EncuestaGraduado::listaDeEncuestasSinAsignar()->get();
 
         $carreras = DatosCarreraGraduado::where('id_tipo', 1)       ->pluck('nombre', 'id');
         $universidades = DatosCarreraGraduado::where('id_tipo', 2)  ->pluck('nombre', 'id');
@@ -30,7 +55,13 @@ class EncuestaGraduadoController extends Controller
             compact('id_supervisor', 'id_encuestador','carreras', 'universidades', 'grados', 'disciplinas', 'areas'));
     }
 
+    /** Recibe las encuestas seleccionadas por la persona que realiza la asignacion, y realiza algunas
+     * validaciones. Primero comprueba que el supervisor que realizó la asignación exista en la base de datos,
+     * luego que el encuestador también exista. Después busca los estados NO ASIGNADA y ASIGNADA para 
+     * cambiar el estado de las encuestas de uno a otra.
+     */
     public function crearAsignacion($id_supervisor, $id_encuestador, Request $request) {
+
         /** Se obtiene el supervisor por el ID */
         $supervisor = User::find($id_supervisor);
 
@@ -92,16 +123,17 @@ class EncuestaGraduadoController extends Controller
 
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
-        
-        // dd($listaDeEncuestas);
 
-        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas'));
+        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas', 'id_encuestador'));
     }
 
+    /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros
+     * que el usuario haya agregado en la vista.
+     */
     public function filtrar_muestra_a_asignar($id_supervisor, $id_encuestador, Request $request) {
         $input = $request->all();
 
-        $resultado = EncuestaGraduado::select('*');
+        $resultado = EncuestaGraduado::listaDeEncuestasSinAsignar();
 
         if(!is_null($input['carrera'])) {
             $resultado->where('codigo_carrera', $input['carrera']);
@@ -128,5 +160,27 @@ class EncuestaGraduadoController extends Controller
         // dd($encuestasNoAsignadas);
 
         return view('encuestadores.tabla-encuestas-no-asignadas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
+    }
+
+    public function removerEncuestas($id_encuestador, Request $request) {
+
+        $encuestasAsignadas = Asignacion::where('id_encuestador', $id_encuestador)->get();
+        $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
+        foreach($encuestasAsignadas as $encuesta) {
+            // echo 'Encuesta: '.$encuesta->id.'<br>';
+            foreach($request->encuestas as $id_desasignada) {
+                if($encuesta->id_graduado == $id_desasignada) {
+                    $encuesta->id_encuestador = null;
+                    $encuesta->id_supervisor = null;
+                    $encuesta->id_estado = $id_no_asignada->id;
+                    $encuesta->updated_at = \Carbon\Carbon::now();
+                    $encuesta->save();
+                }
+            }
+        }
+
+        Flash::success('Se han eliminado las encuestas de este encuestador');
+        return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
     }
 }
