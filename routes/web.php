@@ -77,6 +77,13 @@ Route::group(['middleware'=>['auth']], function() {
     Route::get('encuestadores/{id}/edit', 'EncuestadoresController@edit') ->name('encuestadores.edit')   /*->middleware('')*/;
     Route::patch('encuestadores/{id}', 'EncuestadoresController@update')  ->name('encuestadores.update') /*->middleware('')*/;
     Route::delete('encuestadores/{id}', 'EncuestadoresController@destroy')->name('encuestadores.destroy')/*->middleware('')*/;
+    Route::get('cambiar-contrasennia-encuestador/{id_encuestador}/cambiar', 'EncuestadoresController@cambiar_contrasennia')->name('encuestadores.cambiar-contrasennia');
+    Route::patch('cambiar-contrasennia-encuestador/{id_encuestador}', 'EncuestadoresController@actualizar_contrasennia')->name('encuestadores.actualizar-contrasennia');
+    Route::get('lista-encuestas/{id}', 'EncuestadoresController@lista_de_encuestas')->name('encuestadores.lista-de-encuestas');
+    Route::get('agregar-contacto-encuestador/{id_encuesta}', 'EncuestadoresController@agregarContacto')->name('encuestadores.agregar-contacto');
+    Route::post('agregar-contacto-encuestador/guardar/{id_encuesta}/{id_encuestador}', 'EncuestadoresController@guardarContacto')->name('encuestadores.guardar-contacto');
+    Route::get('modificar-contacto/{id_contacto}/editar', 'EncuestadoresController@editarContacto')->name('encuestadores.modificar-contacto');
+    Route::patch('modificar-contacto/{id_contacto}', 'EncuestadoresController@actualizarContacto')->name('encuestadores.actualizar-contacto');
 });
 
 //Supervisores
@@ -99,19 +106,23 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('encuestas-graduados/{id}/edit', 'EncuestaGraduadoController@edit') ->name('encuestas-graduados.edit')   /*->middleware('')*/;
   Route::patch('encuestas-graduados/{id}', 'EncuestaGraduadoController@update')  ->name('encuestas-graduados.update') /*->middleware('')*/;
   Route::delete('encuestas-graduados/{id}', 'EncuestaGraduadoController@destroy')->name('encuestas-graduados.destroy')/*->middleware('')*/;
+  Route::get('agregar-contacto-encuesta/{id_encuesta}', 'EncuestaGraduadoController@agregarContacto')->name('encuestas-graduados.agregar-contacto');
+  Route::post('agregar-contacto-encuesta/guardar/{id_encuesta}', 'EncuestaGraduadoController@guardarContacto')->name('encuestas-graduados.guardar-contacto');
 });
 
 //Encuestas de los graduados
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('asignar-encuestas/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@asignar')->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;
-  Route::post('asignar-encuestas-encuestador/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@crearAsignacion')->name('asignar-encuestas.crear-asignacion')  /*->middleware('permission:')*/;
-  Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')->name('asignar-encuestas.lista-encuestas-no-asignadas');
-  Route::post('filtrar-muestra/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@filtrar_muestra_a_asignar')->name('asignar-encuestas.filtrar-muestra');
+  Route::get('asignar-encuestas/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@asignar')                      ->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;
+  Route::post('asignar-encuestas-encuestador/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@crearAsignacion') ->name('asignar-encuestas.crear-asignacion')  /*->middleware('permission:')*/;
+  Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')       ->name('asignar-encuestas.lista-encuestas-asignadas');
+  Route::post('filtrar-muestra/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@filtrar_muestra_a_asignar')     ->name('asignar-encuestas.filtrar-muestra');
+  Route::post('remover-encuestas-encuestador/{id_encuestador}', 'EncuestaGraduadoController@removerEncuestas')                ->name('asignar-encuestas.remover-encuestas');
 });
 
 //Gráficos
 Route::group(['middleware'=>['auth']], function() {
   Route::get('graficos-estados', 'GraficosController@graficosPorEstado')->name('graficos.graficos-por-estado')  /*->middleware('permission:')*/;
+  Route::get('graficos-estados-encuestador/{id_encuestador}', 'GraficosController@graficosPorEstadoEncuestador')->name('graficos.graficos-por-encuestador');
 });
 
 //Plantilla rutas
