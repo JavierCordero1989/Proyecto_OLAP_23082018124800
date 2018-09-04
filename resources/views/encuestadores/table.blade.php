@@ -6,7 +6,7 @@
                     <!-- Encabezado del cuadro -->
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            Código de encuestador: {!! $encuestador->user_code !!}
+                            <span>{!! $encuestador->user_code !!}</span> - {!! $encuestador->name !!}
                         </h3>
       
                         <!-- Botones de la parte superior derecha -->

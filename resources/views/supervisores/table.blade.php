@@ -6,7 +6,7 @@
                     <!-- Encabezado del cuadro -->
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            Código de supervisor: {!! $supervisor->id !!}
+                            <span>{!! $supervisor->user_code !!}</span> - {!! $supervisor->name !!}
                         </h3>
       
                         <!-- Botones de la parte superior derecha -->
