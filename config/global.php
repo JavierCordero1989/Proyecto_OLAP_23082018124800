@@ -26,7 +26,8 @@
             'link_all' => 'https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/square/_all.css',
             // 'link_all' => asset('css/app/_all.css'),
             'link_all_2' => 'https://use.fontawesome.com/releases/v5.2.0/css/all.css',
-            // 'link_all_2' => asset('css/app/all.css')
+            // 'link_all_2' => asset('css/app/all.css'),
+            'link_skin_conare' => 'css/app/skin-conare.css'
         ],
         'js' => [
             'link_datatables_1' => 'https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',

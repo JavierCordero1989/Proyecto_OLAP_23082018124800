@@ -49,25 +49,33 @@
 
                     <!-- Botones del cuadro, parte inferior -->
                     <div class="box-body">
-                        <div class="btn-group col-md-12">
+                        <div class="row">
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <a href="{{ route('asignar-encuestas.asignar', [Auth::user()->id, $encuestador->id ]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="fa fa-plus-square"></i> Asignar Encuestas
+                                </a>
+                            </div>
 
-                            {{-- {{ route('asignar-encuestas.asignar', [$encuestador->id, Auth::user()->id]) }} --}}
-                            <a href="{{ route('asignar-encuestas.asignar', [Auth::user()->id, $encuestador->id ]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-plus-square"></i> Asignar Encuestas
-                            </a>
+                            <div class="col-xs-5">
+                                <a href="{{ route('asignar-encuestas.lista-encuestas-asignadas', [$encuestador->id]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="far fa-eye"></i> Encuestas asignadas
+                                </a>
+                            </div>
 
-                            <a href="{{ route('asignar-encuestas.lista-encuestas-asignadas', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="far fa-eye"></i> Encuestas asignadas
-                            </a>
+                        </div>
+                        
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="fa fa-eyedropper"></i> Botón 2
+                                </a>
+                            </div>
 
-                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-eyedropper"></i> Botón 2
-                            </a>
-
-                            <a href="{{ route('graficos.graficos-por-encuestador', [$encuestador->id]) }}" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-area-chart"></i> Ver estadísticas
-                            </a>
-      
+                            <div class="col-xs-5">
+                                <a href="{{ route('graficos.graficos-por-encuestador', [$encuestador->id]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="fa fa-area-chart"></i> Ver estadísticas
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

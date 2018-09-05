@@ -14,7 +14,7 @@
     <a href="{!! route('encuestas-graduados.index') !!}"><i class="fas fa-check"></i><span> Lista de encuestas</span></a>
 </li>
 
-<li class="">
+<li class="{{ Request::is('graficos*') ? 'active' : '' }}">
     <a href="{!! route('graficos.graficos-por-estado') !!}"><i class="fas fa-chart-area"></i><span> Gráficos por estado</span></a>
 </li>
 
@@ -22,7 +22,7 @@
 <li class="treeview">
     <a href="#">
         <i class="fas fa-database"></i>
-        <span>Datos varios</span>
+        <span>Catálogo de datos</span>
         <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
         </span>

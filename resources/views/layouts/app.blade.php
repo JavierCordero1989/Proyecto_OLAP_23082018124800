@@ -25,6 +25,7 @@
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/css/skins/_all-skins.min.css"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/app/_all-skins.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ config('global.css.link_allskins')}}">
+    <link rel="stylesheet" href="{{ asset(config('global.css.link_skin_conare')) }}">
     <!-- Ionicons -->
     {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/app/ionicons.min.css') }}"> --}}
@@ -38,7 +39,7 @@
     @yield('css')
 </head>
 
-<body class="skin-blue sidebar-mini">
+<body class="skin-conare sidebar-mini">
 <div class="wrapper">
     <!-- Main Header -->
     <header class="main-header">

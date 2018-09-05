@@ -49,26 +49,33 @@
 
                     <!-- Botones del cuadro, parte inferior -->
                     <div class="box-body">
-                        <div class="btn-group col-md-12">
+                        <div class="row">
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="fa fa-plus-square"></i> Botón 1
+                                </a>
+                            </div>
 
-                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-plus-square"></i> Botón 1
-                            </a>
+                            <div class="col-xs-5">
+                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="far fa-eye"></i> Botón 2
+                                </a>
+                            </div>
 
-                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-spoon"></i> Botón 2
-                            </a>
+                        </div>
+                        
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-xs-5 col-xs-offset-1">
+                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="fa fa-eyedropper"></i> Botón 3
+                                </a>
+                            </div>
 
-                            <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
-                                <i class="fa fa-eyedropper"></i> Botón 3
-                            </a>
-
-                            {{-- @if (Auth::user()->hasRole('Administrador')) --}}
-                                <a href="#" class="btn btn-info btn-social btn-primary btn-xs col-md-6">
+                            <div class="col-xs-5">
+                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
                                     <i class="fa fa-area-chart"></i> Botón 4
                                 </a>
-                            {{-- @endif --}}
-      
+                            </div>
                         </div>
                     </div>
                 </div>
