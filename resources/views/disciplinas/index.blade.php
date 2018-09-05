@@ -16,7 +16,7 @@
 
         <div class="clearfix"></div>
         <div class="box box-primary">
-            <div class="box-body">
+            <div class="box-body table-responsive">
                 @include('disciplinas.table')
             </div>
         </div>

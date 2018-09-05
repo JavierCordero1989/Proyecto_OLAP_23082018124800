@@ -16,7 +16,7 @@
 
         <div class="clearfix"></div>
         <div class="box-header">
-            <div class="box-body">
+            <div class="box-body table-responsive">
                 @include('encuestas_graduados.table')
             </div>
         </div>

@@ -4,7 +4,7 @@
 
 {{-- {!!$permisos->render()!!} --}}
 
-<table class="table table-responsive">
+<table class="table table-hover">
     <thead>
         <th>Nombre</th>
         <th>Accion</th>

@@ -2,7 +2,7 @@
     @include('layouts.datatables_css')
 @endsection
 
-<table class="table table-responsive" id="subeArchivos-table">
+<table class="table table-hover">
     <thead>
         <th>Código</th>
         <th>Nombre</th>
