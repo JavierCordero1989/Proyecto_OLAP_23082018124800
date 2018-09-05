@@ -2,7 +2,7 @@ html, body {
   height: 100%;
 }
 
-@media (min-width: 992px) and (max-width: 1366px) {
+@media (min-width: 992px) and (max-width: 1500px) {
     body {
         background: -webkit-radial-gradient(center center, circle cover, #28C423, #AFCEAE);
         background: -moz-radial-gradient(center center, circle cover, #28C423, #AFCEAE);
