@@ -49,7 +49,7 @@
     <!-- Script para obtener los datos del formulario y realizar la peticion AJAX -->
     <script>
         function eventoModalFormulario() {
-            $('#modalLoadingLetters').modal('show');
+            // $('#modalLoadingLetters').modal('show');
             return true;
         }
 
