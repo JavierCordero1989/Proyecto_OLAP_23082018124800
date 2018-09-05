@@ -73,6 +73,7 @@ class ExportImportExcelController extends Controller
 
     public function importar_desde_excel(Request $request) {
 
+        sleep(5);
         return response()->json('Ha llegado al controlador');
         /** Si viene un archivo en el request
          * 'archivo_nuevo' => es el nombre del campo que tiene el formulario
