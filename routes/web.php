@@ -158,7 +158,7 @@ Route::group(['prefix'=>'grados', 'middleware'=>'auth'], function() {
   Route::delete('/{id}', 'GradosController@destroy')->name('grados.destroy')/*->middleware('')*/;
 });
 
-// Rutas para el mantenimiento de los grados
+// Rutas para el mantenimiento de las disciplinas
 Route::group(['prefix'=>'disciplinas', 'middleware'=>'auth'], function() {
   Route::get('', 'DisciplinasController@index')          ->name('disciplinas.index')  /*->middleware('permission:')*/;
   Route::get('/create', 'DisciplinasController@create')  ->name('disciplinas.create') /*->middleware('')*/;
@@ -167,6 +167,17 @@ Route::group(['prefix'=>'disciplinas', 'middleware'=>'auth'], function() {
   Route::get('/{id}/edit', 'DisciplinasController@edit') ->name('disciplinas.edit')   /*->middleware('')*/;
   Route::patch('/{id}', 'DisciplinasController@update')  ->name('disciplinas.update') /*->middleware('')*/;
   Route::delete('/{id}', 'DisciplinasController@destroy')->name('disciplinas.destroy')/*->middleware('')*/;
+});
+
+// Rutas para el mantenimiento de las áreas
+Route::group(['prefix'=>'areas', 'middleware'=>'auth'], function() {
+  Route::get('', 'AreasController@index')          ->name('areas.index')  /*->middleware('permission:')*/;
+  Route::get('/create', 'AreasController@create')  ->name('areas.create') /*->middleware('')*/;
+  Route::post('/store', 'AreasController@store')   ->name('areas.store')  /*->middleware('')*/;
+  Route::get('/{id}', 'AreasController@show')      ->name('areas.show')   /*->middleware('')*/;
+  Route::get('/{id}/edit', 'AreasController@edit') ->name('areas.edit')   /*->middleware('')*/;
+  Route::patch('/{id}', 'AreasController@update')  ->name('areas.update') /*->middleware('')*/;
+  Route::delete('/{id}', 'AreasController@destroy')->name('areas.destroy')/*->middleware('')*/;
 });
 
 //Plantilla rutas
