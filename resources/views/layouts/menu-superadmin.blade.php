@@ -44,8 +44,8 @@
             <a href="{!! route('disciplinas.index') !!}"><i class="fa fa-graduation-cap" aria-hidden="true"></i><span>Disciplinas</span></a>
         </li>
 
-        <li class="#">
-            <a href="#"><i class="fa fa-graduation-cap" aria-hidden="true"></i><span>Áreas</span></a>
+        <li class="{{ Request::is('areas*') ? 'active' : '' }}">
+            <a href="{!! route('areas.index') !!}"><i class="fa fa-graduation-cap" aria-hidden="true"></i><span>Áreas</span></a>
         </li>
     </ul>
 </li>
