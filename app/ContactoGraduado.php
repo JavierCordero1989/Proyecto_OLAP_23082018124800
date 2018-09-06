@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\EncuestaGraduado;
+use DB;
 
 class ContactoGraduado extends Model
 {
@@ -23,5 +24,13 @@ class ContactoGraduado extends Model
 
     public function encuestas() {
         return $this->hasOne(EncuestaGraduado::class, 'id', 'id_graduado');
+    }
+
+    public function detalle() {
+        $id_contacto = $this->id;
+
+        $detalle_contactos = DB::table('tbl_detalle_contacto')->where('id_contacto_graduado', $this->id)->get();
+
+        return $detalle_contactos;
     }
 }
