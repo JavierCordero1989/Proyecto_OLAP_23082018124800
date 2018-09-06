@@ -14,8 +14,23 @@
             <div class="modal-body">
                 <p>{!! $contacto->identificacion_referencia !!}&hellip;</p>
                 <p>{!! $contacto->nombre_referencia !!}&hellip;</p>
-                <p>{!! $contacto->informacion_contacto !!}&hellip;</p>
-                <p>{!! $contacto->observacion_contacto !!}&hellip;</p>
+                <p>{!! $contacto->parentezco !!}&hellip;</p>
+                <table class="table table-hover">
+                    <thead>
+                        <th>Contacto</th>
+                        <th>Observación</th>
+                    </thead>
+                    <tbody>
+                        @foreach($contacto->detalle() as $detalle)
+                        
+                            <tr>
+                                <td>{!! $detalle->contacto !!}</td>
+                                <td>{!! $detalle->observacion !!}</td>
+                            </tr>
+                                
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
             <!-- Pie del modal -->

@@ -73,8 +73,12 @@
     @include('layouts.menu-superadmin')
 @endif
 
-@if(Auth::user()->hasRole('Supervisor'))
-    @include('layouts.menu-supervisor')
+@if(Auth::user()->hasRole('Supervisor 1'))
+    @include('layouts.menu-supervisor-1')
+@endif
+
+@if(Auth::user()->hasRole('Supervisor 2'))
+    @include('layouts.menu-supervisor-2')
 @endif
 
 @if(Auth::user()->hasRole('Encuestador'))
