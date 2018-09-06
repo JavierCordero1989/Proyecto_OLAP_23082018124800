@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEstadosEncuestasTable extends Migration
+class CreateDetalleContactosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateEstadosEncuestasTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_estados_encuestas', function (Blueprint $table) {
+        Schema::create('tbl_detalle_contacto', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('estado', 100)->unique();
-            // $table->text('descripcion');
+            $table->string('contacto', 191)->nullable();
+            $table->text('observacion')->nullable();
+            $table->unsignedInteger('id_contacto_graduado');
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('id_contacto_graduado')->references('id')->on('tbl_contactos_graduados');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateEstadosEncuestasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_estados_encuestas');
+        Schema::dropIfExists('tbl_detalle_contacto');
     }
 }

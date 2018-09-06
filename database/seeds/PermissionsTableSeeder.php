@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class PermissionsTableSeeder extends Seeder
@@ -13,202 +14,53 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        //Permisos para los permisos
-        Permission::create([
-            'name' => 'permisos.index',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permisos.create',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permisos.store',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permisos.edit',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permisos.update',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permisos.destroy',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permisos.show',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
+        $permisos = [
+            'permisos.index'            => 'Ver lista de permisos en la BD',
+            'permisos.create'           => 'Crear permisos',
+            'permisos.store'            => 'Almacenar permisos en la BD',
+            'permisos.edit'             => 'Editar datos de permisos',
+            'permisos.update'           => 'Actualizar datos de permisos',
+            'permisos.destroy'          => 'Eliminar permisos de la BD',
+            'permisos.show'             => 'Ver registro de un permiso',
+            'roles.index'               => 'Ver lista de roles en la BD',
+            'roles.create'              => 'Crear roles',
+            'roles.store'               => 'Almacenar roles en la BD',
+            'roles.edit'                => 'Editar datos de roles',
+            'roles.update'              => 'Actualizar datos de roles',
+            'roles.destroy'             => 'Eliminar roles de la BD',
+            'roles.show'                => 'Ver registro de un rol',
+            'users.index'               => 'Ver lista de usuarios en la BD',
+            'users.create'              => 'Crear usuarios',
+            'users.store'               => 'Almacenar usuarios en la BD',
+            'users.edit'                => 'Editar datos de usuarios',
+            'users.update'              => 'Actualizar datos de usuarios',
+            'users.destroy'             => 'Eliminar usuarios de la BD',
+            'users.show'                => 'Ver registro de un usuario',
+            'users.edit_name'           => 'Editar nombre de los usuarios',
+            'users.update_name'         => 'Actualizar nombre de los usuarios',
+            'users.edit_password'       => 'Editar contraseña de los usuarios',
+            'users.update_password'     => 'Actualizar contraseña de los usuarios',
+            'users.index_table'         => 'Ver lista de usuarios',
+            'permissionsToRol.create'   => 'Dar permisos a un rol',
+            'permissionsToRol.store'    => 'Almacenar permisos de un rol',
+            'rolesToUser.create'        => 'Dar roles a un usuario',
+            'rolesToUser.store'         => 'Almacenar roles de un usuario',
+            'excel.create'              => 'Subir archivo muestra de excel a la BD',
+        ];
 
-        //Permisos para los roles
-        Permission::create([
-            'name' => 'roles.index',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'roles.create',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'roles.store',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'roles.edit',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'roles.update',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'roles.destroy',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'roles.show',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
+        foreach($permisos as $permiso => $valor) {
+            // Nombre para ruta amigable
+            $nombreAmigable = $valor;
+            $slug = Str::slug($nombreAmigable);
 
-        //Permisos para los usuarios
-        Permission::create([
-            'name' => 'users.index',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.create',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.store',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.edit',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.update',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.destroy',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.show',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.edit_name',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.update_name',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.edit_password',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.update_password',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'users.index_table',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-
-        //Permisos para asignar permisos a roles
-        Permission::create([
-            'name' => 'permissionsToRol.create',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'permissionsToRol.store',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-
-        //Permisos para asignar roles a usuarios
-        Permission::create([
-            'name' => 'rolesToUser.create',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-        Permission::create([
-            'name' => 'rolesToUser.store',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
-
-        //Permisos para subir archivos de excel a la BD
-        Permission::create([
-            'name' => 'excel.create',
-            'guard_name' => 'web',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
+            Permission::create([
+                'name'              => $permiso,
+                'nombre_amigable'   => $nombreAmigable,
+                'slug'              => $slug,
+                'guard_name'        => 'web',
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now()
+            ]);
+        }
     }
 }

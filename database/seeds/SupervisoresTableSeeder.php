@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Carbon\Carbon;
+use Faker\Factory;
 
 class SupervisoresTableSeeder extends Seeder
 {
@@ -13,19 +14,32 @@ class SupervisoresTableSeeder extends Seeder
      */
     public function run()
     {
-        $ultimo_id = \App\User::all()->last();
-        $ultimo_id = intval($ultimo_id->user_code);
-        $limite = $ultimo_id + 5;
+        $faker = Factory::create('es_ES');
 
-        for($i=$ultimo_id; $i<$limite; $i++) {
+        for($i=0; $i<3; $i++) {
+            $codigo = $faker->numerify('######');
+
             $user = \App\User::create([
-                'user_code' => ($i+1),
-                'name' => 'Supervisor #'.($i+1),
-                'email' => 'supervisor'.($i+1).'@conare.ac.cr',
+                'user_code' => $codigo,
+                'name' => 'Supervisor #'.$codigo,
+                'email' => 'supervisor'.$codigo.'@conare.ac.cr',
                 'password' => bcrypt('secret')
             ]);
 
-            $user->assignRole('Supervisor');
+            $user->assignRole('Supervisor 1');
+        }
+
+        for($i=0; $i<2; $i++) {
+            $codigo = $faker->numerify('######');
+
+            $user = \App\User::create([
+                'user_code' => $codigo,
+                'name' => 'Supervisor #'.$codigo,
+                'email' => 'supervisor'.$codigo.'@conare.ac.cr',
+                'password' => bcrypt('secret')
+            ]);
+
+            $user->assignRole('Supervisor 2');
         }
     }
 }

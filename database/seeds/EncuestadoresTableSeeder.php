@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Carbon\Carbon;
+use Faker\Factory;
 
 class EncuestadoresTableSeeder extends Seeder
 {
@@ -13,15 +14,15 @@ class EncuestadoresTableSeeder extends Seeder
      */
     public function run()
     {
-        $ultimo_id = \App\User::all()->last();
-        $ultimo_id = intval($ultimo_id->user_code);
-        $limite = $ultimo_id + 20;
+        $faker = Factory::create('es_ES');
 
-        for($i=$ultimo_id; $i<$limite; $i++) {
+        for($i=0; $i<18; $i++) {
+            $codigo = $faker->numerify('######');
+
             $user = \App\User::create([
-                'user_code' => ($i+1),
-                'name' => 'Encuestador #'.($i+1),
-                'email' => 'encuestador'.($i+1).'@conare.ac.cr',
+                'user_code' => $codigo,
+                'name' => 'Encuestador #'.$codigo,
+                'email' => 'encuestador'.$codigo.'@conare.ac.cr',
                 'password' => bcrypt('secret')
             ]);
 

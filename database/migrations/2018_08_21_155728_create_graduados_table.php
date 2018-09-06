@@ -26,6 +26,8 @@ class CreateGraduadosTable extends Migration
             $table->unsignedInteger('codigo_grado');
             $table->unsignedInteger('codigo_disciplina');
             $table->unsignedInteger('codigo_area');
+            $table->unsignedInteger('codigo_agrupacion');
+            $table->unsignedInteger('codigo_sector');
             $table->string('tipo_de_caso', 50);
             $table->timestamps();
             $table->softDeletes();
@@ -34,6 +36,8 @@ class CreateGraduadosTable extends Migration
             $table->foreign('codigo_grado')         ->references('id')->on('tbl_datos_carrera_graduado');
             $table->foreign('codigo_disciplina')    ->references('id')->on('tbl_datos_carrera_graduado');
             $table->foreign('codigo_area')          ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_agrupacion')    ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_sector')        ->references('id')->on('tbl_datos_carrera_graduado');
         });
     }
 

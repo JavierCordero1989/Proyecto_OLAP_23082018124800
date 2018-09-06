@@ -13,7 +13,7 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
      */
     public function run()
     {
-        $tipos = ['CARRERA', 'UNIVERSIDAD', 'GRADO', 'DISCIPLINA', 'AREA'];
+        $tipos = ['CARRERA', 'UNIVERSIDAD', 'GRADO', 'DISCIPLINA', 'AREA', 'AGRUPACION', 'SECTOR'];
 
         foreach($tipos as $tipo) {
             $tipo_carrera = Tiposdatoscarrera::create([
@@ -30,7 +30,7 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
         /** Creacion de grados, areas y disciplinas */
         for($i=0; $i<400; $i++) {
             $datos = DatosCarreraGraduado::create([
-                'codigo' => $faker->numerify('######'),
+                'codigo' => $faker->numerify('##########'),
                 'nombre' => $faker->sentence,
                 'id_tipo' => $faker->randomElement($ids_tipos_datos_carrera)
             ]);

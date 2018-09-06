@@ -18,15 +18,32 @@ class ContactosGraduadosTableSeeder extends Seeder
         $faker = Faker\Factory::create('es_ES');
 
         for($i=0; $i<150; $i++) {
+            $identificacion = $faker->randomElement([$faker->numerify('#-###-###'), '']);
+
             DB::table('tbl_contactos_graduados')
                 ->insert([
-                    'identificacion_referencia' => $faker->randomElement([$faker->numerify('#-###-###'), '']),
+                    'identificacion_referencia' => $identificacion,
                     'nombre_referencia'         => $faker->name,
-                    'informacion_contacto'      => $faker->randomElement([$faker->phoneNumber, $faker->email]),
-                    'observacion_contacto'      => $faker->randomElement([$faker->sentence, '']),
+                    // 'informacion_contacto'      => $faker->randomElement([$faker->phoneNumber, $faker->email]),
+                    // 'observacion_contacto'      => $faker->randomElement([$faker->sentence, '']),
+                    'parentezco'                => $faker->randomElement([$faker->word, '']),
                     'id_graduado'               => $faker->randomElement($idsGraduados),
                     'created_at'                => \Carbon\Carbon::now()
                 ]);
+
+            if(($i % 2) == 0) {
+                $recien_ingresado = DB::table('tbl_contactos_graduados')->select('id')->where('identificacion_referencia', $identificacion)->first();
+                
+                for($j=0; $j<3; $j++) {
+                    DB::table('tbl_detalle_contacto')
+                        ->insert([
+                            'contacto'              => $faker->randomElement([$faker->phoneNumber, $faker->email, '']),
+                            'observacion'           => $faker->randomElement([$faker->sentence, '']),
+                            'id_contacto_graduado'  => $recien_ingresado->id,
+                            'created_at'            => \Carbon\Carbon::now()
+                        ]);
+                }
+            }
         }
     }
 }

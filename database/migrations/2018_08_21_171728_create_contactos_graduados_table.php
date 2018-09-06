@@ -26,8 +26,9 @@ class CreateContactosGraduadosTable extends Migration
             $table->increments('id');
             $table->string('identificacion_referencia', 50)->nullable();
             $table->string('nombre_referencia', 191)->nullable();
-            $table->string('informacion_contacto', 191)->nullable();
-            $table->text('observacion_contacto')->nullable();
+            // $table->string('informacion_contacto', 191)->nullable();
+            // $table->text('observacion_contacto')->nullable();
+            $table->string('parentezco', 191)->nullable();
             $table->unsignedInteger('id_graduado');
             $table->timestamps();
             $table->softDeletes();
