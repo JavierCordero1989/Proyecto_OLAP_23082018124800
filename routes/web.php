@@ -180,6 +180,17 @@ Route::group(['prefix'=>'areas', 'middleware'=>'auth'], function() {
   Route::delete('/{id}', 'AreasController@destroy')->name('areas.destroy')/*->middleware('')*/;
 });
 
+// Rutas para el mantenimiento de los detalle de contacto
+Route::group(['prefix'=>'detalles', 'middleware'=>'auth'], function() {
+  Route::get('', 'DetalleController@index')          ->name('detalles.index')  /*->middleware('permission:')*/;
+  Route::get('/create/{id}', 'DetalleController@create')  ->name('detalles.create') /*->middleware('')*/;
+  Route::post('/store/{id}', 'DetalleController@store')   ->name('detalles.store')  /*->middleware('')*/;
+  Route::get('/{id}', 'DetalleController@show')      ->name('detalles.show')   /*->middleware('')*/;
+  Route::get('/{id}/edit', 'DetalleController@edit') ->name('detalles.edit')   /*->middleware('')*/;
+  Route::patch('/{id}', 'DetalleController@update')  ->name('detalles.update') /*->middleware('')*/;
+  Route::delete('/{id}', 'DetalleController@destroy')->name('detalles.destroy')/*->middleware('')*/;
+});
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
