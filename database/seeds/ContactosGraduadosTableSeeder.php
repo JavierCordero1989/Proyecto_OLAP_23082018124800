@@ -19,20 +19,29 @@ class ContactosGraduadosTableSeeder extends Seeder
 
         for($i=0; $i<150; $i++) {
             $identificacion = $faker->randomElement([$faker->numerify('#-###-###'), '']);
+            $nombre = $faker->name;
+            $parentezco = $faker->randomElement([$faker->word, '']);
+            $id_graduado = $faker->randomElement($idsGraduados);
 
             DB::table('tbl_contactos_graduados')
                 ->insert([
                     'identificacion_referencia' => $identificacion,
-                    'nombre_referencia'         => $faker->name,
+                    'nombre_referencia'         => $nombre,
                     // 'informacion_contacto'      => $faker->randomElement([$faker->phoneNumber, $faker->email]),
                     // 'observacion_contacto'      => $faker->randomElement([$faker->sentence, '']),
-                    'parentezco'                => $faker->randomElement([$faker->word, '']),
-                    'id_graduado'               => $faker->randomElement($idsGraduados),
+                    'parentezco'                => $parentezco,
+                    'id_graduado'               => $id_graduado,
                     'created_at'                => \Carbon\Carbon::now()
                 ]);
 
             if(($i % 2) == 0) {
-                $recien_ingresado = DB::table('tbl_contactos_graduados')->select('id')->where('identificacion_referencia', $identificacion)->first();
+                $recien_ingresado = DB::table('tbl_contactos_graduados')
+                    ->select('id')
+                    ->where('identificacion_referencia', $identificacion)
+                    ->where('nombre_referencia', $nombre)
+                    ->where('parentezco', $parentezco)
+                    ->where('id_graduado', $id_graduado)
+                    ->first();
                 
                 for($j=0; $j<3; $j++) {
                     DB::table('tbl_detalle_contacto')

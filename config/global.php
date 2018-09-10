@@ -4,6 +4,7 @@
         'site_title' => 'OLAP',
         'sidebar_title' => 'Sistema OLAP',
         'sidebar_title_min' => 'OLAP',
+        'login_title' => 'CONARE - OLaP',
         'img_app' => 'img/olap.png',
         'imagen_tarjetas' => 'img/logo_olap.png',
         'footer_text' => 'Consejo Nacional de Rectores - OLAP',
