@@ -183,11 +183,11 @@ class EncuestadoresController extends Controller
     }
 
     public function lista_de_encuestas($id){
-        $id_encuestador = Crypt::decrypt($id);
+        $id_encuestador = $id;
 
         $listaDeEncuestas = \App\EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
 
-        $id_encuestador = Crypt::encrypt($id_encuestador);
+        $id_encuestador = $id_encuestador;
 
         return view('encuestadores.lista-de-encuestas', compact('listaDeEncuestas', 'id_encuestador'));
     }
@@ -197,48 +197,51 @@ class EncuestadoresController extends Controller
     }
 
     public function guardarContacto($id_encuesta, $id_encuestador, Request $request) {
-        $id_encuesta = Crypt::decrypt($id_encuesta);
-        $id_encuestador = Crypt::decrypt($id_encuestador);
+        $id_encuesta = $id_encuesta;
+        $id_encuestador = $id_encuestador;
         
         $contacto = \App\ContactoGraduado::create([
             'identificacion_referencia' => $request->identificacion_referencia,
             'nombre_referencia'         => $request->nombre_referencia,
-            'informacion_contacto'      => $request->informacion_contacto,
-            'observacion_contacto'      => $request->observacion_contacto,
+            // 'informacion_contacto'      => $request->informacion_contacto,
+            // 'observacion_contacto'      => $request->observacion_contacto,
+            'parentezco'                => $request->parentezco,
             'id_graduado'               => $id_encuesta,
             'created_at'                => \Carbon\Carbon::now()
         ]);
 
+        $contacto->agregarDetalle($request->informacion_contacto, $request->observacion_contacto);
+
         Flash::success('Se ha guardado correctamente la nueva información de contacto.');
-        return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt($id_encuestador)));
+        return redirect(route('encuestadores.lista-de-encuestas', $id_encuestador));
     }
 
     public function editarContacto($id_contacto) {
-        $contacto = \App\ContactoGraduado::find(Crypt::decrypt($id_contacto));
+        $contacto = \App\ContactoGraduado::find($id_contacto);
 
         if(empty($contacto)) {
             Flash::error('No existe el contacto que busca');
-            return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt(Auth::user()->id)));
+            return redirect(route('encuestadores.lista-de-encuestas', Auth::user()->id));
         }
 
         return view('encuestadores.modificar-contacto')->with('contacto', $contacto);
     }
 
     public function actualizarContacto($id_contacto, Request $request) {
-        $contacto = \App\ContactoGraduado::find(Crypt::decrypt($id_contacto));
+        $contacto = \App\ContactoGraduado::find($id_contacto);
 
         if(empty($contacto)) {
             Flash::error('No existe el contacto que busca');
-            return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt(Auth::user()->id)));
+            return redirect(route('encuestadores.lista-de-encuestas', Auth::user()->id));
         }
 
         $contacto->identificacion_referencia = $request->identificacion_referencia;
         $contacto->nombre_referencia = $request->nombre_referencia;
-        $contacto->informacion_contacto= $request->informacion_contacto;
-        $contacto->observacion_contacto = $request->observacion_contacto;
+        $contacto->parentezco = $request->parentezco;
+        $contacto->updated_at = Carbon::now();
         $contacto->save();
 
         Flash::success('El contacto ha sido actualizado correctamente.');
-        return redirect(route('encuestadores.lista-de-encuestas', Crypt::encrypt(Auth::user()->id)));
+        return redirect(route('encuestadores.lista-de-encuestas', Auth::user()->id));
     }
 }
