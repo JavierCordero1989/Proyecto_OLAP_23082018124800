@@ -4,7 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\EncuestaGraduado;
+use App\DetalleContacto;
 use DB;
+use Carbon\Carbon;
 
 class ContactoGraduado extends Model
 {
@@ -13,8 +15,9 @@ class ContactoGraduado extends Model
     protected $fillable = [
         'identificacion_referencia',
         'nombre_referencia',
-        'informacion_contacto',
-        'observacion_contacto',
+        // 'informacion_contacto',
+        // 'observacion_contacto',
+        'parentezco',
         'id_graduado'
     ];
 
@@ -29,8 +32,19 @@ class ContactoGraduado extends Model
     public function detalle() {
         $id_contacto = $this->id;
 
-        $detalle_contactos = DB::table('tbl_detalle_contacto')->where('id_contacto_graduado', $this->id)->get();
+        $detalle_contactos = DetalleContacto::where('id_contacto_graduado', $this->id)
+            ->whereNull('deleted_at')
+            ->get();
 
         return $detalle_contactos;
+    }
+
+    public function agregarDetalle($contacto, $observacion) {
+        $detalle = DetalleContacto::create([
+            'contacto' => $contacto,
+            'observacion' => $observacion,
+            'id_contacto_graduado' => $this->id,
+            'created_at' => Carbon::now()
+        ]);
     }
 }
