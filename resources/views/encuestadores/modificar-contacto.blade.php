@@ -14,7 +14,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::model($contacto, ['route' => ['encuestadores.actualizar-contacto', Crypt::encrypt($contacto->id)], 'method' => 'patch']) !!}
+                    {!! Form::model($contacto, ['route' => ['encuestadores.actualizar-contacto', $contacto->id], 'method' => 'patch']) !!}
 
                         <!-- Campo para la identificacion de la referencia -->
                         <div class="form-group col-sm-6">
@@ -28,22 +28,16 @@
                             {!! Form::text('nombre_referencia', null, ['class' => 'form-control']) !!}
                         </div>
 
-                        <!-- Campo para el nombre de la referencia -->
+                        <!-- Campo para el parentezco de la referencia -->
                         <div class="form-group col-sm-6">
-                            {!! Form::label('informacion_contacto', 'Información de contacto:') !!}
-                            {!! Form::text('informacion_contacto', null, ['class' => 'form-control']) !!}
-                        </div>
-
-                        <!-- Campo para la observacion -->
-                        <div class="form-group col-sm-6">
-                            {!! Form::label('observacion_contacto', 'Observación:') !!}
-                            {!! Form::textarea('observacion_contacto', null, ['class' => 'form-control', 'rows' => 2, 'cols' => 40]) !!}
+                            {!! Form::label('parentezco', 'Parentezco con el encuestado:') !!}
+                            {!! Form::text('parentezco', null, ['class' => 'form-control']) !!}
                         </div>
 
                         <!-- Submit Field -->
                         <div class="form-group col-sm-12">
                             {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
-                            <a href="{!! route('encuestadores.lista-de-encuestas', Crypt::encrypt([Auth::user()->id])) !!}" class="btn btn-default">Cancelar</a>
+                            <a href="{!! route('encuestadores.lista-de-encuestas', Auth::user()->id) !!}" class="btn btn-default">Cancelar</a>
                         </div>
 
                     {!! Form::close() !!}

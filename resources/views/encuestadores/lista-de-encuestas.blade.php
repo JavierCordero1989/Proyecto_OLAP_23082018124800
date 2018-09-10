@@ -1,8 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Encuestas sin asignar') 
+@section('title', 'Encuestas asignadas') 
 
 @section('content')
+    @if(sizeof($listaDeEncuestas) <= 0)
+        <div class="content">
+            <div class="clearfix"></div>
+                <div class="card-panel">
+                    <div class="card-content text-muted text-center">
+                        <i class="fas fa-grin-beam-sweat fa-10x"></i>
+                        <br>
+                        <p class="fa-2x">
+                            No tienes entrevistas asignadas
+                        </p>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+        </div>
+    @else
         <section class="content-header">
             <h1 class="pull-left">Encuestas asignadas</h1>
             <h1 class="pull-right">
@@ -80,7 +95,7 @@
                                                             <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
                                                         </li>
                                                     @endforeach
-                                                    <li><a href="{!! route('encuestadores.agregar-contacto', Crypt::encrypt($encuesta->id) ) !!}">Agregar contacto</a></li>
+                                                    <li><a href="{!! route('encuestadores.agregar-contacto', $encuesta->id ) !!}">Agregar contacto</a></li>
                                                 </ul>
                 
                                                 <!-- Se agregan los modales mediante un foreach -->
@@ -98,6 +113,7 @@
                 </div>
             </div>
         </div>
+    @endif
 @endsection
 
 @section('scripts')

@@ -120,7 +120,7 @@
                                     @endif
 
                                     @if(Auth::user()->hasRole('Encuestador'))
-                                        <a href="{!! route('encuestadores.cambiar-contrasennia', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Cambiar contraseña</a>
+                                        {{-- <a href="{!! route('encuestadores.cambiar-contrasennia', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Cambiar contraseña</a> --}}
                                     @endif
 
                                     @if(Auth::user()->hasRole('Supervisor'))

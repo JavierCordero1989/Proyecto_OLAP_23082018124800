@@ -14,7 +14,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => ['encuestadores.guardar-contacto', 'id_encuesta'=>$id_encuesta, 'id_encuestador'=>Crypt::encrypt(Auth::user()->id)],'onsubmit'=>'return validar_campos();']) !!}
+                    {!! Form::open(['route' => ['encuestadores.guardar-contacto', 'id_encuesta'=>$id_encuesta, 'id_encuestador'=>Auth::user()->id],'onsubmit'=>'return validar_campos();']) !!}
 
                         <!-- Campo para la identificacion de la referencia -->
                         <div class="form-group col-sm-6">
@@ -26,6 +26,12 @@
                         <div class="form-group col-sm-6">
                             {!! Form::label('nombre_referencia', 'Nombre de la referencia:') !!}
                             {!! Form::text('nombre_referencia', null, ['class' => 'form-control']) !!}
+                        </div>
+
+                        <!-- Campo para el parentezco de la referencia -->
+                        <div class="form-group col-sm-6">
+                            {!! Form::label('parentezco', 'Parentezco con el encuestado:') !!}
+                            {!! Form::text('parentezco', null, ['class' => 'form-control']) !!}
                         </div>
 
                         <!-- Campo para el nombre de la referencia -->
@@ -43,7 +49,7 @@
                         <!-- Submit Field -->
                         <div class="form-group col-sm-12">
                             {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
-                            <a href="{!! route('encuestadores.lista-de-encuestas', Crypt::encrypt([Auth::user()->id])) !!}" class="btn btn-default">Cancelar</a>
+                            <a href="{!! route('encuestadores.lista-de-encuestas', Auth::user()->id) !!}" class="btn btn-default">Cancelar</a>
                         </div>
 
                     {!! Form::close() !!}

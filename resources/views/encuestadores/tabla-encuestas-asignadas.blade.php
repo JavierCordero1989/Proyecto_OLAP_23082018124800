@@ -5,6 +5,7 @@
 @section('content')
     @if(sizeof($listaDeEncuestas) <= 0)
         <!-- MOSTRAR MENSAJE DE NO DATA -->
+        <h1>No hay entrevistas asignadas</h1>
     @else
 
         {!! Form::open(['route' => ['asignar-encuestas.remover-encuestas', 'id_encuestador'=>$id_encuestador], 'onsubmit' => 'return verificar();']) !!}
