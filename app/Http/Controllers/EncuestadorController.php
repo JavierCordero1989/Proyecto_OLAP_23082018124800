@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\EncuestaGraduado;
 use App\ContactoGraduado;
 use App\DetalleContacto;
+use App\ObservacionesGraduado;
 use Carbon\Carbon;
 use Flash;
 use DB;
@@ -36,6 +37,8 @@ class EncuestadorController extends Controller
     }
 
     public function actualizar_entrevista($id_entrevista, Request $request) {
+        // dd($request->all());
+
         $entrevista = EncuestaGraduado::find($id_entrevista);
 
         if(empty($entrevista)) {
@@ -43,7 +46,41 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
         }
 
-        dd($request->all());
+        //Cambiar el estado de la entrevista por el del request
+        $cambio_estado = $entrevista->cambiarEstadoDeEncuesta($request->estados);
+
+        if(!$cambio_estado) {
+            Flash::error('No se ha podido cambiar el estado de la entrevista');
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
+
+        //si no existen observaciones, agregarla, de lo contrario modificar la existente.
+        $observaciones_entrevista = $entrevista->observaciones;
+
+        if(sizeof($observaciones_entrevista) == 0) {
+            //Agregar la observación
+            $nueva_observacion = ObservacionesGraduado::create([
+                'id_graduado' => $entrevista->id,
+                'id_usuario' => Auth::user()->id,
+                'observacion' => $request->observacion,
+                'created_at' => Carbon::now()
+            ]);
+        }
+        else {
+            //Modificar la existente
+            $observacion_existente = ObservacionesGraduado::where('id_graduado', $entrevista->id)->first();
+            $observacion_existente->observacion = $request->observacion;
+            $observacion_existente->updated_at = Carbon::now();
+            $cambio_observacion = $observacion_existente->save();
+
+            if(!$cambio_observacion) {
+                Flash::error('No se ha podido agregar la observación a la entrevista');
+                return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+            }
+        }
+
+        Flash::success('Se han guardado correctamente los cambios');
+        return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
     }
 
     public function agregar_contacto($id_entrevista) {
