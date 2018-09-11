@@ -50,7 +50,7 @@
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
-                    {!! Form::model($entrevista, ['route' => ['encuestador.actualizar-entrevista', $entrevista->id], 'method' => 'patch']) !!}
+                    {!! Form::model($entrevista, ['route' => ['encuestador.actualizar-entrevista', $entrevista->id], 'method' => 'patch', 'onsubmit'=>'return revisar_estado();']) !!}
 
                         <!-- Campo de la Identificación -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
@@ -79,8 +79,18 @@
                         <!-- Campo del link de la encuesta -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
                             {!! Form::label('link_encuesta', 'Link para la encuesta:') !!}
-                            <a href="{!! $entrevista->link_encuesta !!}" target="_blank"><i class="fas fa-eye"></i> Abrir enlace </a>
-                            {{-- {!! Form::text('link_encuesta', null, ['class' => 'form-control', 'disabled']) !!} --}}
+
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlaceEncuesta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="fas fa-link"></i>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownEnlaceEncuesta">
+                                    <li>
+                                        <a href="{!! $entrevista->link_encuesta !!}" target="_blank"><i class="fas fa-eye"></i> {!! $entrevista->link_encuesta !!} </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
                         <!-- Campo del sexo -->
@@ -139,7 +149,7 @@
 
                         <div class="form-group col-sm-4">
                             {!! Form::label('estados', 'Estados:') !!}
-                            {!! Form::select('estados', $estados, null, ['class' => 'form-control', 'placeholder'=>'Elija un estado']) !!}
+                            {!! Form::select('estados', $estados, $entrevista->estado()->id, ['class' => 'form-control', 'placeholder'=>'Elija un estado']) !!}
                         </div>
 
                         <!-- Campo del tipo de caso -->
@@ -158,4 +168,29 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <!-- Script para validar que se elija un estado antes de guardar y que además se consulta si el campo para 
+    observaciones está vacío. -->
+    <script>
+        
+        function revisar_estado() {
+            var valor_estado = $('#estados').val();
+
+            if(valor_estado == "") {
+                alert('Debe seleccionar un estado primero.');
+                return false;
+            }
+            else {
+                var campo_observacion = $('#observacion').val();
+
+                if(campo_observacion == "") {
+                    return confirm('¿Desea dejar el campo para la observación en blanco?');
+                }
+
+                return true;
+            }
+        }
+    </script>
 @endsection
