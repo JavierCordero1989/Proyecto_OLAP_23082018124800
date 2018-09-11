@@ -192,9 +192,18 @@ Route::group(['prefix'=>'detalles', 'middleware'=>'auth'], function() {
 });
 
 Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
-  Route::get('mis-entrevistas/{id_encuestador}', 'EncuestadorController@mis_entrevistas')->name('encuestador.mis-entrevistas');
-  Route::get('realizar-entrevista/{id_entrevista}', 'EncuestadorController@realizar_entrevista')->name('encuestador.realizar-entrevista');
-  Route::patch('actualizar-entrevista/{id_entrevista}', 'EncuestadorController@actualizar_entrevista')->name('encuestador.actualizar-entrevista');
+  Route::get('mis-entrevistas/{id_encuestador}',                                                    'EncuestadorController@mis_entrevistas')                ->name('encuestador.mis-entrevistas');
+  Route::get('realizar-entrevista/{id_entrevista}',                                                 'EncuestadorController@realizar_entrevista')            ->name('encuestador.realizar-entrevista');
+  Route::patch('actualizar-entrevista/{id_entrevista}',                                             'EncuestadorController@actualizar_entrevista')          ->name('encuestador.actualizar-entrevista');
+  Route::get('agregar-contacto-entrevista/{id_entrevista}',                                         'EncuestadorController@agregar_contacto')               ->name('encuestador.agregar-contacto-entrevista');
+  Route::post('agregar-contacto-entrevista-encuestador/guardar/{id_entrevista}/{id_encuestador}',   'EncuestadorController@guardar_contacto')               ->name('encuestador.guardar-contacto-entrevista-encuestador');
+  Route::get('agregar-detalle-contacto/{id_contacto}/{id_entrevista}',                              'EncuestadorController@agregar_detalle_contacto')       ->name('encuestador.agregar-detalle-contacto');
+  Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}',                             'EncuestadorController@guardar_detalle_contacto')       ->name('encuestador.guardar-detalle-contacto');
+  Route::get('editar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}/editar',                'EncuestadorController@editar_detalle_contacto')        ->name('encuestador.editar-detalle-contacto');
+  Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}',                 'EncuestadorController@actualizar_detalle_contacto')    ->name('encuestador.actualizar-detalle-contacto');
+  Route::delete('{id_detalle}/{id_entrevista}',                                                     'EncuestadorController@borrar_detalle_contacto')        ->name('encuestador.borrar-detalle-contacto');
+  Route::get('editar-contacto-entrevista/{id_contacto}/editar/{id_entrevista}',                     'EncuestadorController@editar_contacto_entrevista')     ->name('encuestador.modificar-contacto-entrevista');
+  Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}',           'EncuestadorController@actualizar_contacto_entrevista') ->name('encuestador.actualizar-contacto-entrevista');
 });
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {

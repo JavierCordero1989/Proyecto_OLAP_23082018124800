@@ -10,6 +10,11 @@
     </section>
 
     <div class="content">
+
+        <div class="clearfix"></div>
+            @include('flash::message')
+        <div class="clearfix"></div>
+
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
@@ -49,7 +54,7 @@
                         <!-- Campo del sexo -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
                             {!! Form::label('sexo', 'Sexo:') !!}
-                            {!! Form::text('sexo', null, ['class' => 'form-control', 'disabled']) !!}
+                            {!! Form::text('sexo', ($entrevista->sexo == 'M' ? 'MASCULINO' : ($entrevista->sexo == 'F' ? 'FEMENINO' : 'INDEFINIDO')), ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
                         <!-- Campo de la carrera -->
@@ -101,10 +106,10 @@
                         </div>
 
                         <!-- Campo para el select de los estados -->
-                        <div class="form-group col-sm-4">
+                        {{-- <div class="form-group col-sm-4">
                             {!! Form::label('estados', 'Estados:') !!}
                             {!! Form::select('estados', $estados, null, ['class' => 'form-control', 'placeholder'=>'Elija un estado']) !!}
-                        </div>
+                        </div> --}}
 
                         <!-- Campo para la información de los contactos -->
                         <div class="form-group col-sm-4">
@@ -122,12 +127,12 @@
                                                 <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
                                             </li>
                                         @endforeach
-                                        <li><a href="{!! route('encuestadores.agregar-contacto', $entrevista->id ) !!}">Agregar contacto</a></li>
+                                        <li><a href="{!! route('encuestador.agregar-contacto-entrevista', $entrevista->id ) !!}">Agregar contacto</a></li>
                                     </ul>
 
                                     <!-- Se agregan los modales mediante un foreach -->
                                     @foreach($entrevista->contactos as $contacto) 
-                                        @include('modals.modal_info_contacto')
+                                        @include('vistas-encuestador.modal_info_contacto')
                                     @endforeach
                             </div>
                         </div>
