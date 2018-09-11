@@ -467,4 +467,17 @@ class EncuestaGraduado extends Model
         return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_area');
     }
 
+    public function agrupacion() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_agrupacion');
+    }
+
+    public function sector() {
+        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_sector');
+    }
+
+    public function estado() {
+        $estado_encuesta = DB::table('tbl_estados_encuestas as ee')->select('ee.estado')->join('tbl_asignaciones as a', 'a.id_estado', '=', 'ee.id')->where('a.id_graduado', $this->id)->first();
+
+        return $estado_encuesta->estado;
+    }
 }

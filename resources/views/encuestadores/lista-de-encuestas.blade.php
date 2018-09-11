@@ -33,9 +33,9 @@
             <div class="box-header">
                 <div class="box-body">
 
-                    {{-- @section('css')
+                    @section('css')
                         @include('layouts.datatables_css')
-                    @endsection --}}
+                    @endsection
 
                     <div class="table-responsive">
                         <table class="table">
@@ -53,6 +53,7 @@
                                 <th>Área</th>
                                 <th>Info de contacto</th>
                                 <th>Tipo de caso</th>
+                                <th>Observaciones</th>
                             </thead>
                             <tbody>
                             @foreach($listaDeEncuestas as $encuesta)
@@ -105,6 +106,7 @@
                                         </div>
                                     </td>
                                     <td>{!! $encuesta->tipo_de_caso !!}</td>
+                                    <td><a href="#', $encuesta->id) !!}">{!! $encuesta->estado() !!}</a></td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -117,46 +119,5 @@
 @endsection
 
 @section('scripts')
-    {{-- @include('layouts.datatables_js') --}}
-
-    <script>
-        function verificar() {
-            var suma = 0;
-            var checks = document.getElementsByName('encuestas[]');
-
-            for(indice=0, j = checks.length; indice<j; indice++) {
-                if(checks[indice].checked == true){
-                    suma++;
-                }
-            }
-
-            console.log(suma);
-
-            if(suma == 0){
-                alert('Debe seleccionar al menos una encuesta');
-                return false;
-            }
-        }
-
-        // $('[name=select_all]').change(function() {
-        //     alert('El estado del check ha cambiado');
-        // });
-
-        $('[name=select_all]').click(function() {
-            var checks = document.getElementsByName('encuestas[]');
-
-            if($('[name=select_all]').get(0).checked) {
-                console.log('Entra al if');
-                for(indice=0, j = checks.length; indice<j; indice++) {
-                    checks[indice].checked = true;
-                }
-            }
-            else {
-                console.log('Entra al else');
-                for(indice=0, j = checks.length; indice<j; indice++) {
-                    checks[indice].checked = false;
-                }
-            }
-        });
-    </script>
+    @include('layouts.datatables_js')
 @endsection

@@ -69,4 +69,12 @@ class DatosCarreraGraduado extends Model
     public function graduadoArea() {
         return $this->hasMany(EncuestaGraduado::class, 'codigo_area');
     }
+
+    public function graduadoAgrupacion() {
+        return $this->hasMany(EncuestaGraduado::class, 'codigo_agrupacion');
+    }
+
+    public function graduadoSector() {
+        return $this->hasMany(EncuestaGraduado::class, 'codigo_sector');
+    }
 }

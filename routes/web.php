@@ -191,6 +191,11 @@ Route::group(['prefix'=>'detalles', 'middleware'=>'auth'], function() {
   Route::delete('/{id}', 'DetalleController@destroy')->name('detalles.destroy')/*->middleware('')*/;
 });
 
+Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
+  Route::get('mis-entrevistas/{id_encuestador}', 'EncuestadorController@mis_entrevistas')->name('encuestador.mis-entrevistas');
+  Route::get('realizar-entrevista/{id_entrevista}', 'EncuestadorController@realizar_entrevista')->name('encuestador.realizar-entrevista');
+  Route::patch('actualizar-entrevista/{id_entrevista}', 'EncuestadorController@actualizar_entrevista')->name('encuestador.actualizar-entrevista');
+});
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;

@@ -1,5 +1,5 @@
-<li class="{{ Request::is('encuestadores*') ? 'active' : '' }}">
-    <a href="{!! route('encuestadores.lista-de-encuestas', Auth::user()->id) !!}"><i class="fas fa-list-ul"></i><span> Mis encuestas</span></a>
+<li class="{{ Request::is('encuestador*') ? 'active' : '' }}">
+    <a href="{!! route('encuestador.mis-entrevistas', Auth::user()->id) !!}"><i class="fas fa-list-ul"></i><span> Mis encuestas</span></a>
 </li>
 
 <!-- Menú desplegable para datos de carrera-->
