@@ -82,5 +82,5 @@
 @endif
 
 @if(Auth::user()->hasRole('Encuestador'))
-    @include('layouts.menu-encuestador')
+    @include('vistas-encuestador.menu')
 @endif

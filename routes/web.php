@@ -201,10 +201,12 @@ Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
   Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}',                             'EncuestadorController@guardar_detalle_contacto')       ->name('encuestador.guardar-detalle-contacto');
   Route::get('editar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}/editar',                'EncuestadorController@editar_detalle_contacto')        ->name('encuestador.editar-detalle-contacto');
   Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}',                 'EncuestadorController@actualizar_detalle_contacto')    ->name('encuestador.actualizar-detalle-contacto');
-  Route::delete('{id_detalle}/{id_entrevista}',                                                     'EncuestadorController@borrar_detalle_contacto')        ->name('encuestador.borrar-detalle-contacto');
+  Route::delete('{id_detalle}/{id_entrevista}/borrar',                                              'EncuestadorController@borrar_detalle_contacto')        ->name('encuestador.borrar-detalle-contacto');
   Route::get('editar-contacto-entrevista/{id_contacto}/editar/{id_entrevista}',                     'EncuestadorController@editar_contacto_entrevista')     ->name('encuestador.modificar-contacto-entrevista');
   Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}',           'EncuestadorController@actualizar_contacto_entrevista') ->name('encuestador.actualizar-contacto-entrevista');
+  Route::get('reportes-de-encuestador/graficos/{id_encuestador}' ,                                  'EncuestadorController@reportes_de_encuestador')        ->name('encuestador.reportes-de-encuestador');
 });
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;

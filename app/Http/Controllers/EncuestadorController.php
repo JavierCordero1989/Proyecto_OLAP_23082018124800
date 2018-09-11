@@ -155,4 +155,8 @@ class EncuestadorController extends Controller
         Flash::success('El contacto ha sido actualizado correctamente.');
         return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
     }
+
+    public function reportes_de_encuestador($id_encuestador) {
+        return view('vistas-encuestador.reportes-encuestador');
+    }
 }

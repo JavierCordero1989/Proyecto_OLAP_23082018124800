@@ -4,9 +4,41 @@
 
 @section('content')
     <section class="content-header">
-        <h1>
-            Datos de la entrevista
-        </h1>
+        <div class="row">
+            <div class="col-sm-6">
+                <!-- Campo para la información de los contactos -->
+                <div class="col-sm-12">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle col-sm-12" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fas fa-address-card"></i>
+                            <span class="caret"></span>
+                            Información de contacto
+                        </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
+                                <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
+                                @foreach($entrevista->contactos as $contacto)
+                                    <li>
+                                        <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
+                                    </li>
+                                @endforeach
+                                <li><a href="{!! route('encuestador.agregar-contacto-entrevista', $entrevista->id ) !!}">Agregar contacto</a></li>
+                            </ul>
+
+                            <!-- Se agregan los modales mediante un foreach -->
+                            @foreach($entrevista->contactos as $contacto) 
+                                @include('vistas-encuestador.modal_info_contacto')
+                            @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <!-- Botón para agendar cita -->
+                <a href="#" class="btn btn-primary btn-sm col-sm-12">
+                    <i class="far fa-calendar-plus"></i> Agendar cita
+                </a>
+            </div>
+        </div>
     </section>
 
     <div class="content">
@@ -105,36 +137,15 @@
                             {!! Form::text('tipo_de_caso', null, ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
-                        <!-- Campo para el select de los estados -->
-                        {{-- <div class="form-group col-sm-4">
+                        <div class="form-group col-sm-4">
                             {!! Form::label('estados', 'Estados:') !!}
                             {!! Form::select('estados', $estados, null, ['class' => 'form-control', 'placeholder'=>'Elija un estado']) !!}
-                        </div> --}}
+                        </div>
 
-                        <!-- Campo para la información de los contactos -->
-                        <div class="form-group col-sm-4">
-                            {!! Form::label('info_de_contacto', 'Información de contacto') !!}
-                            <div class="dropdown">
-                                <button class="btn btn-default dropdown-toggle col-sm-12" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <i class="fas fa-address-card"></i>
-                                    <span class="caret"></span>
-                                    Información de contacto
-                                </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
-                                        <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
-                                        @foreach($entrevista->contactos as $contacto)
-                                            <li>
-                                                <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
-                                            </li>
-                                        @endforeach
-                                        <li><a href="{!! route('encuestador.agregar-contacto-entrevista', $entrevista->id ) !!}">Agregar contacto</a></li>
-                                    </ul>
-
-                                    <!-- Se agregan los modales mediante un foreach -->
-                                    @foreach($entrevista->contactos as $contacto) 
-                                        @include('vistas-encuestador.modal_info_contacto')
-                                    @endforeach
-                            </div>
+                        <!-- Campo del tipo de caso -->
+                        <div class="form-group col-sm-12 {{--col-sm-offset-3--}}">
+                            {!! Form::label('observacion', 'Observación:') !!}
+                            {!! Form::textarea('observacion', null, ['class' => 'form-control', 'rows' => 6]) !!}
                         </div>
 
                         <!-- Campo para los botones -->
