@@ -7,6 +7,7 @@ use App\TiposDatosCarrera;
 use App\DatosCarreraGraduado;
 use App\ContactoGraduado;
 use App\ObservacionesGraduado;
+use Carbon\Carbon;
 use DB;
 
 class EncuestaGraduado extends Model
@@ -412,7 +413,7 @@ class EncuestaGraduado extends Model
      * su código.
      */
     public function scopeListaEncuestasAsignadasEncuestador($query, $id_encuestador) {
-        $id_estado_asignado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ASIGNADA')->first();
+        $id_estado_asignado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ENTREVISTA COMPLETA')->first();
 
                 return $query
             ->select(
@@ -431,7 +432,7 @@ class EncuestaGraduado extends Model
                         'tipo_de_caso'
                     )
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
-            ->where('a.id_estado', $id_estado_asignado->id)
+            ->where('a.id_estado', '<>', $id_estado_asignado->id)
             ->where('a.id_encuestador', '=', $id_encuestador);
     }
 
@@ -476,8 +477,16 @@ class EncuestaGraduado extends Model
     }
 
     public function estado() {
-        $estado_encuesta = DB::table('tbl_estados_encuestas as ee')->select('ee.estado')->join('tbl_asignaciones as a', 'a.id_estado', '=', 'ee.id')->where('a.id_graduado', $this->id)->first();
+        $estado_encuesta = DB::table('tbl_estados_encuestas as ee')->select('ee.id','ee.estado')->join('tbl_asignaciones as a', 'a.id_estado', '=', 'ee.id')->where('a.id_graduado', $this->id)->first();
 
-        return $estado_encuesta->estado;
+        return $estado_encuesta;
+    }
+
+    public function cambiarEstadoDeEncuesta($id_estado_nuevo) {
+        $asignacion = Asignacion::where('id_graduado', $this->id)->first();
+        $asignacion->id_estado = $id_estado_nuevo;
+        $asignacion->updated_at = Carbon::now();
+        
+        return $asignacion->save();
     }
 }
