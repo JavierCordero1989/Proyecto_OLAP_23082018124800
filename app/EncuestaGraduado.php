@@ -429,7 +429,11 @@ class EncuestaGraduado extends Model
                         'codigo_grado', 
                         'codigo_disciplina', 
                         'codigo_area',
-                        'tipo_de_caso'
+                        'codigo_agrupacion',
+                        'codigo_sector', 
+                        'tipo_de_caso',
+                        'tbl_graduados.created_at',
+                        'tbl_graduados.updated_at'
                     )
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
             ->where('a.id_estado', '<>', $id_estado_asignado->id)

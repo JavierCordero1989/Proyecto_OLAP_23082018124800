@@ -117,7 +117,7 @@
                                         </a>
                                     </div>
                                     <div class="col-xs-6">
-                                        <a href="modal-ver-detalles-de-entrevista-{{$entrevista->id}}" class="btn btn-default btn-sm col-sm-12">
+                                        <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" class="btn btn-default btn-sm col-sm-12" data-toggle="modal">
                                             <i class="fa fa-plus-square"></i> Ver detalles
                                         </a>
                                         @include('vistas-supervisor-2.modal_ver_detalles_de_entrevista')
