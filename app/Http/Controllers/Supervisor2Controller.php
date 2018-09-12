@@ -205,26 +205,40 @@ class Supervisor2Controller extends Controller
         return view('vistas-supervisor-2.tabla-de-encuestas-filtradas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
     }
 
-    public function remover_encuestas_a_encuestador($id_encuestador, Request $request) {
+    // public function remover_encuestas_a_encuestador($id_encuestador, Request $request) {
 
-        $encuestasAsignadas = Asignacion::where('id_encuestador', $id_encuestador)->get();
-        $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+    //     $encuestasAsignadas = Asignacion::where('id_encuestador', $id_encuestador)->get();
+    //     $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
 
-        foreach($encuestasAsignadas as $encuesta) {
-            // echo 'Encuesta: '.$encuesta->id.'<br>';
-            foreach($request->encuestas as $id_desasignada) {
-                if($encuesta->id_graduado == $id_desasignada) {
-                    $encuesta->id_encuestador = null;
-                    $encuesta->id_supervisor = null;
-                    $encuesta->id_estado = $id_no_asignada->id;
-                    $encuesta->updated_at = \Carbon\Carbon::now();
-                    $encuesta->save();
-                }
-            }
+    //     foreach($encuestasAsignadas as $encuesta) {
+    //         // echo 'Encuesta: '.$encuesta->id.'<br>';
+    //         foreach($request->encuestas as $id_desasignada) {
+    //             if($encuesta->id_graduado == $id_desasignada) {
+    //                 $encuesta->id_encuestador = null;
+    //                 $encuesta->id_supervisor = null;
+    //                 $encuesta->id_estado = $id_no_asignada->id;
+    //                 $encuesta->updated_at = \Carbon\Carbon::now();
+    //                 $encuesta->save();
+    //             }
+    //         }
+    //     }
+
+    //     Flash::success('Se han eliminado las encuestas de este encuestador');
+    //     return redirect(route('supervisor2.encuestas-asignadas-por-encuestador', $id_encuestador));
+    // }
+
+    public function remover_encuestas_a_encuestador($id_entrevista, $id_encuestador) {
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+        $quito_entrevista = $entrevista->desasignarEntrevista();
+        
+        if($quito_entrevista) {
+            Flash::success('Se ha eliminado la entrevista de este encuestador');
+            return redirect(route('supervisor2.encuestas-asignadas-por-encuestador', $id_encuestador));
         }
-
-        Flash::success('Se han eliminado las encuestas de este encuestador');
-        return redirect(route('supervisor2.encuestas-asignadas-por-encuestador', $id_encuestador));
+        else {
+            Flash::error('No se ha podido eliminar la entrevista de este encuestador');
+            return redirect(route('supervisor2.encuestas-asignadas-por-encuestador', $id_encuestador));
+        }
     }
 
     /** Recibe las encuestas seleccionadas por la persona que realiza la asignacion, y realiza algunas

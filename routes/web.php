@@ -219,7 +219,8 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
   Route::get('lista-de-encuestadores/ver-encuestas-asignadas/{id_encuestador}',                           'Supervisor2Controller@encuestas_asignadas_por_encuestador')      ->name('supervisor2.encuestas-asignadas-por-encuestador');
   Route::get('lista-de-encuestadores/graficos-de-estados-por-encuestador/{id_encuestador}',               'Supervisor2Controller@graficos_por_estado_de_encuestador')       ->name('supervisor2.graficos-por-estado-de-encuestador');
   Route::post('lista-de-encuestadores/filtrar-muestra-de-entrevistas/{id_supervisor}/{id_encuestador}',   'Supervisor2Controller@filtrar_muestra_de_entrevistas_a_asignar') ->name('supervisor2.filtrar-muestra-de-entrevistas-a-asignar');
-  Route::post('lista-de-encuestadores/remover-encuestas-encuestador/{id_encuestador}',                    'Supervisor2Controller@remover_encuestas_a_encuestador')          ->name('supervisor2.remover-encuestas-a-encuestador');
+  // Route::post('lista-de-encuestadores/remover-encuestas-encuestador/{id_encuestador}',                    'Supervisor2Controller@remover_encuestas_a_encuestador')          ->name('supervisor2.remover-encuestas-a-encuestador');
+  Route::get('lista-de-encuestadores/remover-encuestas-encuestador/{id_entrevista}/{id_encuestador}',                    'Supervisor2Controller@remover_encuestas_a_encuestador')          ->name('supervisor2.remover-encuestas-a-encuestador');
   Route::post('lista-de-encuestadores/asignar-encuestas-a-encuestador/{id_supervisor}/{id_encuestador}',  'Supervisor2Controller@crear_nueva_asignacion')                   ->name('supervisor2.crear-nueva-asignacion');
   // Route::get('', 'Supervisor2Controller@')->name('');
 });

@@ -5,6 +5,11 @@
 @section('content')
     <div class="box-header">
         <div class="box-body">
+        <div class="clearfix"></div>
+
+        @include('flash::message')
+
+        <div class="clearfix"></div>
             @if(sizeof($listaDeEncuestas) <= 0)
                 <div class="content">
                     <div class="clearfix"></div>
@@ -107,14 +112,15 @@
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <a href="{!! route('encuestador.realizar-entrevista', $entrevista->id) !!}" class="btn btn-danger btn-sm col-sm-12">
+                                        <a href="{!! route('supervisor2.remover-encuestas-a-encuestador', [$entrevista->id, $id_encuestador]) !!}" class="btn btn-danger btn-sm col-sm-12">
                                             <i class="fa fa-plus-square"></i> Quitar entrevista
                                         </a>
                                     </div>
                                     <div class="col-xs-6">
-                                        <a href="#" class="btn btn-default btn-sm col-sm-12">
+                                        <a href="modal-ver-detalles-de-entrevista-{{$entrevista->id}}" class="btn btn-default btn-sm col-sm-12">
                                             <i class="fa fa-plus-square"></i> Ver detalles
                                         </a>
+                                        @include('vistas-supervisor-2.modal_ver_detalles_de_entrevista')
                                     </div>
                                 </div>
                             </div>

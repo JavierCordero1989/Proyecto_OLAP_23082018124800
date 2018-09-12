@@ -482,6 +482,18 @@ class EncuestaGraduado extends Model
         return $estado_encuesta;
     }
 
+    public function desasignarEntrevista() {
+        $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
+        $asignacion = Asignacion::where('id_graduado', $this->id)->first();
+        $asignacion->id_encuestador = null;
+        $asignacion->id_supervisor = null;
+        $asignacion->id_estado = $id_no_asignada->id;
+        $asignacion->updated_at = Carbon::now();
+
+        return $asignacion->save();
+    }
+
     public function cambiarEstadoDeEncuesta($id_estado_nuevo) {
         $asignacion = Asignacion::where('id_graduado', $this->id)->first();
         $asignacion->id_estado = $id_estado_nuevo;
