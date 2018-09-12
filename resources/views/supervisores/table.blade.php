@@ -11,8 +11,9 @@
       
                         <!-- Botones de la parte superior derecha -->
                         <div class="box-tools pull-right">
-                            {!! Form::open(['route' => ['supervisores.destroy', $supervisor->id], 'method' => 'delete']) !!}
-                                <div class='btn-group'>
+                            <div class='btn-group'>
+                                @if(Auth::user()->hasRole('Super Admin', 'Supervisor 1'))
+                                {!! Form::open(['route' => ['supervisores.destroy', $supervisor->id], 'method' => 'delete']) !!}
 
                                     <!-- Boton para ver los datos del supervisor -->
                                     <a href="{!! route('supervisores.show', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
@@ -20,7 +21,6 @@
                                     </a>
       
                                     <!-- Boton para editar los datos del supervisor -->
-                                    {{-- @if (Auth::user()->hasRole('Administrador')) --}}
                                         <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
                                             <i class="glyphicon glyphicon-edit"></i>
                                         </a>
@@ -28,15 +28,15 @@
                                         <!-- Boton para eliminar los datos del supervisor -->
                                         {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs','onclick' => "return confirm('¿Está seguro de querer eliminar?')", 'data-toggle' => 'modal', 'data-target' => '#modal-danger']) !!}
 
-                                    {{-- @endif --}}
+                                {!! Form::close() !!}
+                                @endif
 
-                                    <!-- Boton para minimizar/maximiar cada cuadro -->
-                                    <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
-      
-                                </div>
-                            {!! Form::close() !!}
+                                <!-- Boton para minimizar/maximiar cada cuadro -->
+                                <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+
+                            </div>
                         </div>
                     </div>
 
@@ -51,14 +51,14 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-xs-5 col-xs-offset-1">
-                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
-                                    <i class="fa fa-plus-square"></i> Botón 1
+                                <a href="{{ route('asignar-encuestas.asignar', [Auth::user()->id, $supervisor->id ]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="fa fa-plus-square"></i> Asignar Encuestas
                                 </a>
                             </div>
 
                             <div class="col-xs-5">
-                                <a href="#" class="btn btn-primary btn-sm col-sm-12">
-                                    <i class="far fa-eye"></i> Botón 2
+                                <a href="{{ route('asignar-encuestas.lista-encuestas-asignadas', [$supervisor->id]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                    <i class="far fa-eye"></i> Encuestas asignadas
                                 </a>
                             </div>
 

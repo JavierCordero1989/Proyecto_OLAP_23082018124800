@@ -17,7 +17,7 @@ class CreateObservacionesGraduadoTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('id_graduado');
             $table->unsignedInteger('id_usuario');
-            $table->text('observacion');
+            $table->text('observacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('id_graduado')->references('id')->on('tbl_graduados');

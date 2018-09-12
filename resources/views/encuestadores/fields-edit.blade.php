@@ -1,7 +1,7 @@
 <!-- Codigo del usuario Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('user_code', 'Código:') !!}
-    {!! Form::text('user_code', null, ['class' => 'form-control', 'disabled']) !!}
+    {!! Form::text('user_code', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Nombre Field -->
@@ -19,7 +19,6 @@
 <!-- Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Contraseña:') !!}
-    {{-- {!! Form::password('password',['class' => 'form-control', 'placeholder' => 'Password', 'type' => 'password']) !!} --}}
     {!! Form::password('password', ['class' => 'form-control']) !!}
 </div>
 

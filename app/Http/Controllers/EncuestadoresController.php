@@ -107,6 +107,14 @@ class EncuestadoresController extends Controller
      *  por parametros, modificandolo con los datos del Request.
      */
     public function update($id, Request $request) {
+        $validar_encuestador_repetido = User::where('user_code', $request->user_code)->first();
+
+        if(!is_null($validar_encuestador_repetido)) {
+            Flash::error('Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.');
+            return redirect(route('encuestadores.edit', $id));
+            // return redirect(route('encuestadores.edit', $id))->withErrors(['user_code'=>'Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.']);
+        }
+
         /** Se obtiene el objeto que corresponda al ID */
         $encuestador = User::find($id);
 
@@ -116,12 +124,21 @@ class EncuestadoresController extends Controller
             return redirect(route('encuestadores.index'));
         }
 
-        /** Se modifican los datos del objeto enontrado con los datos del Request */
-        $encuestador->user_code = $request->user_code;
-        $encuestador->name = $request->name;
-        $encuestador->email = $request->email;
-        $encuestador->password = bcrypt($request->password);
-        $encuestador->save();
+        if($request->password == null) {
+            /** Se modifican los datos del objeto enontrado con los datos del Request */
+            $encuestador->user_code = $request->user_code;
+            $encuestador->name = $request->name;
+            $encuestador->email = $request->email;
+            $encuestador->save();
+        }
+        else {
+            /** Se modifican los datos del objeto enontrado con los datos del Request */
+            $encuestador->user_code = $request->user_code;
+            $encuestador->name = $request->name;
+            $encuestador->email = $request->email;
+            $encuestador->password = bcrypt($request->password);
+            $encuestador->save();
+        }
 
         /** Se genera un mensaje de exito y se redirige a la ruta index */
         Flash::success('Se ha modificado con exito');

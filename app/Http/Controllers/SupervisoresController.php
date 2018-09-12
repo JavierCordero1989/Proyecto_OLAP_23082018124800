@@ -21,7 +21,7 @@ class SupervisoresController extends Controller
 
         /** Se guardan todos los que son supervisores dentro del array para llevarlos a la vista */
         foreach($usuarios as $supervisor) {
-            if($supervisor->hasRole('Supervisor')) {
+            if($supervisor->hasRole('Supervisor 1') || $supervisor->hasRole('Supervisor 2')) {
                 array_push($lista_supervisores, $supervisor);
             }
         }

@@ -1,9 +1,5 @@
-<li class="{{ Request::is('excel*') ? 'active' : '' }}">
-    <a href="{!! route('excel.create') !!}"><i class="fas fa-file-excel"></i><span>  Importar archivo de excel</span></a>
-</li>
-
-<li class="{{ Request::is('encuestadores*') ? 'active' : '' }}">
-    <a href="{!! route('encuestadores.index') !!}"><i class="fas fa-check"></i><span> Ver encuestadores</span></a>
+<li class="{{ Request::is('supervisor/2/lista-de-encuestadores*') ? 'active' : '' }}">
+    <a href="{!! route('supervisor2.lista-de-encuestadores') !!}"><i class="fas fa-check"></i><span> Ver encuestadores</span></a>
 </li>
 
 <li class="{{ Request::is('supervisores*') ? 'active' : '' }}">

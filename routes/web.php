@@ -207,6 +207,19 @@ Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
   Route::get('reportes-de-encuestador/graficos/{id_encuestador}' ,                                  'EncuestadorController@reportes_de_encuestador')        ->name('encuestador.reportes-de-encuestador');
 });
 
+Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
+  Route::get('lista-de-encuestadores', 'Supervisor2Controller@lista_de_encuestadores')->name('supervisor2.lista-de-encuestadores');
+  Route::get('lista-de-encuestadores/crear-nuevo-encuestador', 'Supervisor2Controller@crear_nuevo_encuestador')->name('supervisor2.crear-nuevo-encuestador');
+  Route::post('lista-de-encuestadores/almacenar-nuevo-encuestador', 'Supervisor2Controller@almacenar_nuevo_encuestador')->name('supervisor2.almacenar-nuevo-encuestador');
+  Route::get('lista-de-encuestadores/{id_encuestador}', 'Supervisor2Controller@ver_encuestador')->name('supervisor2.ver-encuestador');
+  Route::get('lista-de-encuestadores/{id_encuestador}/editar-encuestador', 'Supervisor2Controller@editar_encuestador')->name('supervisor2.editar-encuestador');
+  Route::patch('lista-de-encuestadores/{id_encuestador}', 'Supervisor2Controller@actualizar_datos_encuestador')->name('supervisor2.actualizar-datos-encuestador');
+  Route::get('lista-de-encuestadores/asignar-encuestas/{id_supervisor}/{id_encuestador}', 'Supervisor2Controller@asignar_encuestas_a_encuestador')->name('supervisor2.asignar-encuestas-a-encuestador');
+  Route::get('lista-de-encuestadores/ver-encuestas-asignadas/{id_encuestador}', 'Supervisor2Controller@encuestas_asignadas_por_encuestador')->name('supervisor2.encuestas-asignadas-por-encuestador');
+  Route::get('lista-de-encuestadores/graficos-de-estados-por-encuestador/{id_encuestador}', 'Supervisor2Controller@graficos_por_estado_de_encuestador')->name('supervisor2.graficos-por-estado-de-encuestador');
+  // Route::get('', 'Supervisor2Controller@')->name('');
+});
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
