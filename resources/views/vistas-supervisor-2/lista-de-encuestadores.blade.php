@@ -6,7 +6,9 @@
     <section class="content-header">
         <h1 class="pull-left">Encuestadores</h1>
         <h1 class="pull-right">
-           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('supervisor2.crear-nuevo-encuestador') !!}">Agregar nuevo</a>
+           {{-- <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('supervisor2.crear-nuevo-encuestador') !!}">Agregar nuevo</a> --}}
+           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="#modal-agregar-nuevo-encuestador" data-toggle="modal" ><i class="fas fa-plus"></i> Nuevo encuestador</a>
+           @include('vistas-supervisor-2.modal_agregar_nuevo_encuestador')
         </h1>
     </section>
     <div class="content">
@@ -99,3 +101,20 @@
     </div>
 @endsection
 
+@section('scripts')
+    <script>
+        function validar_formulario() {
+            var user_code = $('#user_code').val();
+            var name = $('#name').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            if( user_code=="" || name=="" || email=="" || password=="" ) {
+                alert("Debe completar todos los campos del formulario para continuar");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+@endsection

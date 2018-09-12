@@ -15,7 +15,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => ['asignar-encuestas.filtrar-muestra', 'id_supervisor'=>$id_supervisor,'id_encuestador'=>$id_encuestador]]) !!}
+                    {!! Form::open(['route' => ['supervisor2.filtrar-muestra-de-entrevistas-a-asignar', 'id_supervisor'=>$id_supervisor,'id_encuestador'=>$id_encuestador]]) !!}
                         <div class="form-group col-sm-6">
                             {!! Form::label('carrera', 'Carreras:') !!}
                             {!! Form::select('carrera', $carreras, null, ['class' => 'form-control', 'placeholder'=>'Elija una carrera']) !!}

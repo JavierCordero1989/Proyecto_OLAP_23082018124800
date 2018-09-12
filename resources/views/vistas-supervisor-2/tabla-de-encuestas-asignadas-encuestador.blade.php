@@ -19,7 +19,7 @@
         </div>
     @else
 
-        {!! Form::open(['route' => ['asignar-encuestas.remover-encuestas', 'id_encuestador'=>$id_encuestador], 'onsubmit' => 'return verificar();']) !!}
+        {!! Form::open(['route' => ['supervisor2.remover-encuestas-a-encuestador', $id_encuestador], 'onsubmit' => 'return verificar();']) !!}
             <section class="content-header">
                 <h1 class="pull-left">Encuestas asignadas</h1>
                 <h1 class="pull-right">
@@ -44,30 +44,29 @@
                             <table class="table">
                                 <thead>
                                     <th>{!! Form::checkbox('select_all', 0) !!}  Identificacion</th>
-                                    <th>Token</th>
+                                    {{-- <th>Token</th> --}}
                                     <th>Nombre</th>
                                     <th>Año de graduación</th>
-                                    <th>Link para encuesta</th>
+                                    {{-- <th>Link para encuesta</th> --}}
                                     <th>Sexo</th>
                                     <th>Carrera</th>
                                     <th>Universidad</th>
                                     <th>Grado</th>
                                     <th>Disciplina</th>
                                     <th>Área</th>
-                                    <th>Info de contacto</th>
+                                    {{-- <th>Info de contacto</th> --}}
                                     <th>Tipo de caso</th>
                                 </thead>
                                 <tbody>
                                 @foreach($listaDeEncuestas as $encuesta)
                                     <tr>
                                         <td>{!! Form::checkbox('encuestas[]', $encuesta->id) !!} {!! $encuesta->identificacion_graduado !!}</td>
-                                        <td>{!! $encuesta->token !!}</td>
+                                        {{-- <td>{!! $encuesta->token !!}</td> --}}
                                         <td>{!! $encuesta->nombre_completo !!}</td>
                                         <td>{!! $encuesta->annio_graduacion !!}</td>
-                                        <td>
+                                        {{-- <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlaceEncuesta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    {{-- <i class="glyphicon glyphicon-eye-open"></i> --}}
                                                     <i class="fas fa-link"></i>
                                                     <span class="caret"></span>
                                                 </button>
@@ -77,14 +76,14 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                         <td>{!! $encuesta->sexo !!}</td>
                                         <td>{!! $encuesta->carrera->nombre !!}</td>
                                         <td>{!! $encuesta->universidad->nombre !!}</td>
                                         <td>{!! $encuesta->grado->nombre !!}</td>
                                         <td>{!! $encuesta->disciplina->nombre !!}</td>
                                         <td>{!! $encuesta->area->nombre !!}</td>
-                                        <td>
+                                        {{-- <td>
                                             <!-- Se valida que haya registros de contacto -->
                                             @if(sizeof($encuesta->contactos) <= 0)
                                                 <a href="#" data-toggle="modal">Agregar</a>
@@ -111,7 +110,7 @@
                                                         @endforeach
                                                 </div>
                                             @endif
-                                        </td>
+                                        </td> --}}
                                         <td>{!! $encuesta->tipo_de_caso !!}</td>
                                     </tr>
                                 @endforeach

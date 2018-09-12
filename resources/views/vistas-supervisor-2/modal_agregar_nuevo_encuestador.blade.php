@@ -1,23 +1,12 @@
-@extends('layouts.app')
-
-@section('title', "Crear Encuestador")
-
-@section('content')
-    <section class="content-header">
-        <h1>
-            Nuevo encuestador
-        </h1>
-    </section>
-    <div class="content">
-        <div class="clearfix"></div>
-
-        @include('flash::message')
-
-        <div class="clearfix"></div>
-        {{-- @include('adminlte-templates::common.errors') --}}
-        <div class="box box-primary">
-
-            <div class="box-body">
+<div class="modal modal-default fade" id="modal-agregar-nuevo-encuestador">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Agregar nuevo encuestador</h4>
+            </div>
+            <div class="modal-body">
                 <div class="row">
                     {!! Form::open(['route' => 'supervisor2.almacenar-nuevo-encuestador', 'onsubmit'=>'return validar_formulario();']) !!}
 
@@ -67,7 +56,7 @@
                                 {!! Form::submit('Guardar', ['class' => 'btn btn-primary col-xs-12']) !!}
                             </div>
                             <div class="col-xs-3">
-                                <a href="{!! route('supervisor2.lista-de-encuestadores') !!}" class="btn btn-default col-xs-12">Cancelar</a>
+                                <button type="button" class="btn btn-default col-xs-12 pull-left" data-dismiss="modal">Cancelar</button>
                             </div>
                         </div>
                         
@@ -75,23 +64,7 @@
                 </div>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        function validar_formulario() {
-            var user_code = $('#user_code').val();
-            var name = $('#name').val();
-            var email = $('#email').val();
-            var password = $('#password').val();
-
-            if( user_code=="" || name=="" || email=="" || password=="" ) {
-                alert("Debe completar todos los campos del formulario para continuar");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-@endsection
+    <!-- /.modal-dialog -->
+</div>

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\DatosCarreraGraduado;
 use App\EncuestaGraduado;
+use App\Asignacion;
 use App\User;
 use Flash;
+use DB;
 
 class Supervisor2Controller extends Controller
 {
@@ -31,10 +33,10 @@ class Supervisor2Controller extends Controller
         return view('vistas-supervisor-2.lista-de-encuestadores', compact('lista_encuestadores'));
     }
 
-    public function crear_nuevo_encuestador() {
-        /** Se llama a la vista para crear un nuevo registro. No se obtienen datos de la BD. */
-        return view('vistas-supervisor-2.crear-nuevo-encuestador');
-    }
+    // public function crear_nuevo_encuestador() {
+    //     /** Se llama a la vista para crear un nuevo registro. No se obtienen datos de la BD. */
+    //     return view('vistas-supervisor-2.crear-nuevo-encuestador');
+    // }
 
     public function almacenar_nuevo_encuestador(Request $request) {
         /** Dos formas de guardar un objeto:
@@ -48,14 +50,14 @@ class Supervisor2Controller extends Controller
 
         if(!is_null($validar_codigo_encuestador)) {
             Flash::error('El código que ingresó para el encuestador ya se encuestra asignado a alguien más.<br>Por favor, verifique de nuevo.');
-            return redirect(route('supervisor2.crear-nuevo-encuestador'));
+            return redirect(route('supervisor2.lista-de-encuestadores'));
         }
 
         $validar_correo_repetido = User::where('email', $request->email)->first();
 
         if(!is_null($validar_correo_repetido)) {
             Flash::error('Intenta ingresar un email que ya está registrado para otro encuestador.<br>Intente de nuevo.');
-            return redirect(route('supervisor2.crear-nuevo-encuestador'));
+            return redirect(route('supervisor2.lista-de-encuestadores'));
         }
 
         $nuevo_encuestador = User::create([
@@ -170,10 +172,133 @@ class Supervisor2Controller extends Controller
         return view('vistas-supervisor-2.tabla-de-encuestas-asignadas-encuestador', compact('listaDeEncuestas', 'id_encuestador'));
     }
 
+    /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros
+     * que el usuario haya agregado en la vista.
+     */
+    public function filtrar_muestra_de_entrevistas_a_asignar($id_supervisor, $id_encuestador, Request $request) {
+        $input = $request->all();
+
+        $resultado = EncuestaGraduado::listaDeEncuestasSinAsignar();
+
+        if(!is_null($input['carrera'])) {
+            $resultado->where('codigo_carrera', $input['carrera']);
+        }
+
+        if(!is_null($input['universidad'])) {
+            $resultado->where('codigo_universidad', $input['universidad']);
+        }
+
+        if(!is_null($input['grado'])) {
+            $resultado->where('codigo_grado', $input['grado']);
+        }
+
+        if(!is_null($input['disciplina'])) {
+            $resultado->where('codigo_disciplina', $input['disciplina']);
+        }
+
+        if(!is_null($input['area'])) {
+            $resultado->where('codigo_area', $input['area']);
+        }
+
+        $encuestasNoAsignadas = $resultado->get();
+
+        return view('vistas-supervisor-2.tabla-de-encuestas-filtradas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
+    }
+
+    public function remover_encuestas_a_encuestador($id_encuestador, Request $request) {
+
+        $encuestasAsignadas = Asignacion::where('id_encuestador', $id_encuestador)->get();
+        $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
+        foreach($encuestasAsignadas as $encuesta) {
+            // echo 'Encuesta: '.$encuesta->id.'<br>';
+            foreach($request->encuestas as $id_desasignada) {
+                if($encuesta->id_graduado == $id_desasignada) {
+                    $encuesta->id_encuestador = null;
+                    $encuesta->id_supervisor = null;
+                    $encuesta->id_estado = $id_no_asignada->id;
+                    $encuesta->updated_at = \Carbon\Carbon::now();
+                    $encuesta->save();
+                }
+            }
+        }
+
+        Flash::success('Se han eliminado las encuestas de este encuestador');
+        return redirect(route('supervisor2.encuestas-asignadas-por-encuestador', $id_encuestador));
+    }
+
+    /** Recibe las encuestas seleccionadas por la persona que realiza la asignacion, y realiza algunas
+     * validaciones. Primero comprueba que el supervisor que realizó la asignación exista en la base de datos,
+     * luego que el encuestador también exista. Después busca los estados NO ASIGNADA y ASIGNADA para 
+     * cambiar el estado de las encuestas de uno a otra.
+     */
+    public function crear_nueva_asignacion($id_supervisor, $id_encuestador, Request $request) {
+
+        /** Se obtiene el supervisor por el ID */
+        $supervisor = User::find($id_supervisor);
+
+        /** Si el supervisor no se encuentra en la BD */
+        if(empty($supervisor)) {
+            Flash::error('El supervisor con el ID '.$id_supervisor.' no existe');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        /** Se obtiene el encuestador por el ID */
+        $encuestador = User::find($id_encuestador);
+
+        /** Si el encuestador no se encuentra en la BD */
+        if(empty($encuestador)) {
+            Flash::error('El encuestador con el ID '.$id_encuestador.' no existe');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        /** Se consulta si el estado 'NO ASIGNADA' existe en la base de datos */
+        $id_estado_sin_asignar = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
+        /** Mensaje en caso de que el estado NO ASIGNADA no exista */
+        if(is_null($id_estado_sin_asignar)) {
+            Flash::error('El estado \"NO ASIGNADA\" no existe en la base de datos, contacte al administrador para más información.');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        /** Se consulta si el estado 'ASIGNADA' existe en la base de datos */
+        $id_estado_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ASIGNADA')->first();
+
+        /** Mensaje en caso de que el estado ASIGNADA no exista */
+        if(is_null($id_estado_asignada)) {
+            Flash::error('El estado \"ASIGNADA\" no existe en la base de datos, contacte al administrador para más información.');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        $encuestas_no_encontradas = [];
+
+        /** Se hace una busqueda de la encuesta */
+        foreach($request->encuestas as $id_graduado) {
+            $registro_encuesta = EncuestaGraduado::find($id_graduado);
+
+            if(empty($registro_encuesta)) {
+                array_push($encuestas_no_encontradas, $id_graduado);
+            }
+
+            $update = $registro_encuesta->asignarEncuesta($id_supervisor, $id_encuestador, $id_estado_sin_asignar->id, $id_estado_asignada->id);
+        }
+
+        if(sizeof($encuestas_no_encontradas) <= 0) {
+            Flash::success('Se han asignado las encuestas correctamente.');
+        }
+        else {
+            Flash::warning('Algunas encuestas no han sido asignadas: '.$encuestas_no_encontradas);
+        }
+
+        return redirect(route('supervisor2.lista-de-encuestadores'));
+    }
+
+
+
     public function graficos_por_estado_de_encuestador($id_encuestador) {
         return view('vistas-supervisor-2.graficos-por-encuestador');
     }
 
-    
+
 
 }
