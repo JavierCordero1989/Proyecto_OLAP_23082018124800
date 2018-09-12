@@ -75,18 +75,18 @@ class Supervisor2Controller extends Controller
         return redirect(route('supervisor2.lista-de-encuestadores'));
     }
 
-    public function ver_encuestador($id) {
-        /** se obtiene el objeto que corresponda al ID */
-        $encuestador = User::find($id);
+    // public function ver_encuestador($id) {
+    //     /** se obtiene el objeto que corresponda al ID */
+    //     $encuestador = User::find($id);
 
-        /** Si el objeto obtenido esta vacio, se envia un mensaje de error y se redirige a la ruta index */
-        if(empty($encuestador)) {
-            Flash::error('Encuestador no encontrado');
-            return redirect(route('supervisor2.lista-de-encuestadores'));
-        }
-        /** Si el objeto contiene informacion se muestra la vista show con los datos obtenidos del objeto. */
-        return view('vistas-supervisor-2.ver-encuestador', compact('encuestador'));
-    }
+    //     /** Si el objeto obtenido esta vacio, se envia un mensaje de error y se redirige a la ruta index */
+    //     if(empty($encuestador)) {
+    //         Flash::error('Encuestador no encontrado');
+    //         return redirect(route('supervisor2.lista-de-encuestadores'));
+    //     }
+    //     /** Si el objeto contiene informacion se muestra la vista show con los datos obtenidos del objeto. */
+    //     return view('vistas-supervisor-2.ver-encuestador', compact('encuestador'));
+    // }
 
     public function editar_encuestador($id) {
         /** Se obtiene el objeto que corresponda al ID */

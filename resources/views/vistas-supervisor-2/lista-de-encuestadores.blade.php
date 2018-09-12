@@ -35,9 +35,13 @@
                                             <div class='btn-group'>
             
                                                 <!-- Boton para ver los datos del encuestador -->
-                                                <a href="{!! route('supervisor2.ver-encuestador', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
+                                                <a class="btn btn-default btn-xs" href="#modal-agregar-nuevo-encuestador-{{$encuestador->id}}" data-toggle="modal" ><i class="glyphicon glyphicon-eye-open"></i></a>
+
+                                                @include('vistas-supervisor-2.modal_ver_encuestador')
+                                                
+                                                {{-- <a href="{!! route('supervisor2.ver-encuestador', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
                                                     <i class="glyphicon glyphicon-eye-open"></i>
-                                                </a>
+                                                </a> --}}
                     
                                                 <!-- Boton para editar los datos del encuestador -->
                                                 <a href="{!! route('supervisor2.editar-encuestador', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
@@ -52,7 +56,7 @@
                                             </div>
                                         </div>
                                     </div>
-                
+
                                     <!-- Imagen del cuadro -->
                                     <div class="box-body">
                                         <div class="col-md-12">

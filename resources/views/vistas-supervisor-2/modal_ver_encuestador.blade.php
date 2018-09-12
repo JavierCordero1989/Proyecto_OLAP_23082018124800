@@ -1,17 +1,19 @@
-{{-- @extends('layouts.app')
-
-@section('title', 'Datos del encuestador') 
-
-@section('content')
-    <section class="content-header">
-        <h1>
-            Datos del encuestador
-        </h1>
-    </section>
-    <div class="content">
-        <div class="box box-primary">
-            <div class="box-body">
+<div class="modal modal-default fade" id="modal-agregar-nuevo-encuestador-{{$encuestador->id}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Datos detallados del encuestador</h4>
+            </div>
+            <div class="modal-body">
                 <div class="row" style="padding-left: 20px">
+                    {{-- <!-- Id Field --> --}}
+                    {{-- <div class="form-group">
+                        {!! Form::label('id', 'Id:') !!}
+                        <p>{!! $encuestador->id !!}</p>
+                    </div> --}}
+
                     <!-- User code Field -->
                     <div class="form-group">
                         {!! Form::label('user_code', 'Código:') !!}
@@ -39,9 +41,11 @@
                     </div>
 
                     <!--Botón para volver a atrás-->
-                    <a href="{!! route('supervisor2.lista-de-encuestadores') !!}" class="btn btn-default">Volver</a>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Volver</button>
                 </div>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
-@endsection --}}
+    <!-- /.modal-dialog -->
+</div>

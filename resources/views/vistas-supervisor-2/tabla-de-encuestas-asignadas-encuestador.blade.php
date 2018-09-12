@@ -3,130 +3,130 @@
 @section('title', 'Encuestas sin asignar') 
 
 @section('content')
-    @if(sizeof($listaDeEncuestas) <= 0)
-        <div class="content">
-            <div class="clearfix"></div>
-                <div class="card-panel">
-                    <div class="card-content text-muted text-center">
-                        <i class="fas fa-grin-beam-sweat fa-10x"></i>
-                        <br>
-                        <p class="fa-2x">
-                            No tienes entrevistas asignadas
-                        </p>
-                    </div>
+    <div class="box-header">
+        <div class="box-body">
+            @if(sizeof($listaDeEncuestas) <= 0)
+                <div class="content">
+                    <div class="clearfix"></div>
+                        <div class="card-panel">
+                            <div class="card-content text-muted text-center">
+                                <i class="fas fa-grin-beam-sweat fa-10x"></i>
+                                <br>
+                                <p class="fa-2x">
+                                    No tienes entrevistas asignadas
+                                </p>
+                            </div>
+                        </div>
+                    <div class="clearfix"></div>
                 </div>
-            <div class="clearfix"></div>
-        </div>
-    @else
+            @else
 
-        {!! Form::open(['route' => ['supervisor2.remover-encuestas-a-encuestador', $id_encuestador], 'onsubmit' => 'return verificar();']) !!}
-            <section class="content-header">
-                <h1 class="pull-left">Encuestas asignadas</h1>
-                <h1 class="pull-right">
-                
-                    {!! Form::submit('Quitar encuestas', ['class' => 'btn btn-primary pull-right', 'style' => 'margin-top: -10px;margin-bottom: 5px;']) !!}
-                    {{-- <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('asignar-encuestas.crear-asignacion', [$id_supervisor, $id_encuestador]) !!}">Asignar</a> --}}
+            {{-- {!! Form::open(['route' => ['supervisor2.remover-encuestas-a-encuestador', $id_encuestador], 'onsubmit' => 'return verificar();']) !!}
+                <section class="content-header">
+                    <h1 class="pull-left">Encuestas asignadas</h1>
+                    <h1 class="pull-right">
                     
-                </h1>
-            </section>
-            <div class="content">
-                <div class="clearfix"></div>
-                @include('flash::message')
-                <div class="clearfix"></div>
-                <div class="box-header">
-                    <div class="box-body">
-
-                        {{-- @section('css')
-                            @include('layouts.datatables_css')
-                        @endsection --}}
-
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <th>{!! Form::checkbox('select_all', 0) !!}  Identificacion</th>
-                                    {{-- <th>Token</th> --}}
-                                    <th>Nombre</th>
-                                    <th>Año de graduación</th>
-                                    {{-- <th>Link para encuesta</th> --}}
-                                    <th>Sexo</th>
-                                    <th>Carrera</th>
-                                    <th>Universidad</th>
-                                    <th>Grado</th>
-                                    <th>Disciplina</th>
-                                    <th>Área</th>
-                                    {{-- <th>Info de contacto</th> --}}
-                                    <th>Tipo de caso</th>
-                                </thead>
-                                <tbody>
-                                @foreach($listaDeEncuestas as $encuesta)
-                                    <tr>
-                                        <td>{!! Form::checkbox('encuestas[]', $encuesta->id) !!} {!! $encuesta->identificacion_graduado !!}</td>
-                                        {{-- <td>{!! $encuesta->token !!}</td> --}}
-                                        <td>{!! $encuesta->nombre_completo !!}</td>
-                                        <td>{!! $encuesta->annio_graduacion !!}</td>
-                                        {{-- <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlaceEncuesta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <i class="fas fa-link"></i>
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownEnlaceEncuesta">
-                                                    <li>
-                                                        <a href="{!! $encuesta->link_encuesta !!}" target="_blank"><i class="fas fa-eye"></i> {!! $encuesta->link_encuesta !!} </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td> --}}
-                                        <td>{!! $encuesta->sexo !!}</td>
-                                        <td>{!! $encuesta->carrera->nombre !!}</td>
-                                        <td>{!! $encuesta->universidad->nombre !!}</td>
-                                        <td>{!! $encuesta->grado->nombre !!}</td>
-                                        <td>{!! $encuesta->disciplina->nombre !!}</td>
-                                        <td>{!! $encuesta->area->nombre !!}</td>
-                                        {{-- <td>
-                                            <!-- Se valida que haya registros de contacto -->
-                                            @if(sizeof($encuesta->contactos) <= 0)
-                                                <a href="#" data-toggle="modal">Agregar</a>
-                                            @else
-                                                <!-- Dropdown menu para mostrar la informacion de contacto del usuario -->
-                                                <div class="dropdown">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        <i class="fas fa-address-card"></i>
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
-                                                            <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
-                                                            @foreach($encuesta->contactos as $contacto)
-                                                                <li>
-                                                                    <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
-                                                                </li>
-                                                            @endforeach
-                                                            <li><a href="#">Agregar contacto</a></li>
-                                                        </ul>
+                        {!! Form::submit('Quitar encuestas', ['class' => 'btn btn-primary pull-right', 'style' => 'margin-top: -10px;margin-bottom: 5px;']) !!}
                         
-                                                        <!-- Se agregan los modales mediante un foreach -->
-                                                        @foreach($encuesta->contactos as $contacto) 
-                                                            @include('modals.modal_info_contacto')
-                                                        @endforeach
-                                                </div>
-                                            @endif
-                                        </td> --}}
-                                        <td>{!! $encuesta->tipo_de_caso !!}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                    </h1>
+                </section>
+                <div class="content">
+                    <div class="clearfix"></div>
+                    @include('flash::message')
+                    <div class="clearfix"></div>
+                    <div class="box-header">
+                        <div class="box-body">
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <th>{!! Form::checkbox('select_all', 0) !!}  Identificacion</th>
+                                        <th>Nombre</th>
+                                        <th>Año de graduación</th>
+                                        <th>Sexo</th>
+                                        <th>Carrera</th>
+                                        <th>Universidad</th>
+                                        <th>Grado</th>
+                                        <th>Disciplina</th>
+                                        <th>Área</th>
+                                        <th>Tipo de caso</th>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($listaDeEncuestas as $encuesta)
+                                        <tr>
+                                            <td>{!! Form::checkbox('encuestas[]', $encuesta->id) !!} {!! $encuesta->identificacion_graduado !!}</td>
+                                            <td>{!! $encuesta->nombre_completo !!}</td>
+                                            <td>{!! $encuesta->annio_graduacion !!}</td>
+                                            <td>{!! $encuesta->sexo !!}</td>
+                                            <td>{!! $encuesta->carrera->nombre !!}</td>
+                                            <td>{!! $encuesta->universidad->nombre !!}</td>
+                                            <td>{!! $encuesta->grado->nombre !!}</td>
+                                            <td>{!! $encuesta->disciplina->nombre !!}</td>
+                                            <td>{!! $encuesta->area->nombre !!}</td>
+                                            <td>{!! $encuesta->tipo_de_caso !!}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {!! Form::close() !!}
+            {!! Form::close() !!} --}}
 
-    @endif
+                @foreach($listaDeEncuestas as $entrevista)
+                    <div class="col-md-6">
+                        <div class="box box-primary {{--collapsed-box--}}" >
+                            <!-- Encabezado del cuadro -->
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+                                    {!! $entrevista->nombre_completo !!}
+                                </h3>
+
+                                <!-- Botones de la parte superior derecha -->
+                                <div class="box-tools pull-right">
+                                    <div class='btn-group'>
+                                        <!-- Boton para minimizar/maximiar cada cuadro -->
+                                        <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Imagen del cuadro -->
+                            <div class="box-body">
+                                <div class="col-md-12">
+                                    <p>Cédula: {!! $entrevista->identificacion_graduado !!}</p>
+                                    <p>{!! $entrevista->carrera->nombre !!} - {!! $entrevista->universidad->nombre !!}</p>
+                                    <p>Año de graduación: {!! $entrevista->annio_graduacion !!}</p>
+                                </div>
+                            </div>
+
+                            <!-- Botones del cuadro, parte inferior -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <a href="{!! route('encuestador.realizar-entrevista', $entrevista->id) !!}" class="btn btn-danger btn-sm col-sm-12">
+                                            <i class="fa fa-plus-square"></i> Quitar entrevista
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <a href="#" class="btn btn-default btn-sm col-sm-12">
+                                            <i class="fa fa-plus-square"></i> Ver detalles
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
-    {{-- @include('layouts.datatables_js') --}}
 
     <script>
         function verificar() {
