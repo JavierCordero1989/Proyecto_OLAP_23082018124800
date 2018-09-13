@@ -159,8 +159,8 @@ class Supervisor2Controller extends Controller
 
     public function encuestas_asignadas_por_encuestador($id_encuestador) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
-
-        return view('vistas-supervisor-2.modulo-encuestador.tabla-de-encuestas-asignadas-encuestador', compact('listaDeEncuestas', 'id_encuestador'));
+        $encuestador = User::find($id_encuestador);
+        return view('vistas-supervisor-2.modulo-encuestador.tabla-de-encuestas-asignadas-encuestador', compact('listaDeEncuestas', 'encuestador'));
     }
 
     /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros
@@ -347,8 +347,9 @@ class Supervisor2Controller extends Controller
 
     public function encuestas_asignadas_por_supervisor($id_supervisor) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_supervisor)->get();
+        $supervisor = User::find($id_supervisor);
 
-        return view('vistas-supervisor-2.modulo-supervisor.tabla-de-encuestas-asignadas-supervisor', compact('listaDeEncuestas', 'id_supervisor'));
+        return view('vistas-supervisor-2.modulo-supervisor.tabla-de-encuestas-asignadas-supervisor', compact('listaDeEncuestas', 'supervisor'));
     }
 
     /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros

@@ -79,6 +79,9 @@
                 </div>
             {!! Form::close() !!} --}}
 
+                <div class="col-xs-12 text-center">
+                <h4>{{ $encuestador->name }}</h4>
+                </div>
                 @foreach($listaDeEncuestas as $entrevista)
                     <div class="col-md-6">
                         <div class="box box-primary {{--collapsed-box--}}" >
@@ -113,7 +116,7 @@
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <a href="{!! route('supervisor2.remover-encuestas-a-encuestador', [$entrevista->id, $id_encuestador]) !!}" class="btn btn-danger btn-sm col-sm-12">
+                                        <a href="{!! route('supervisor2.remover-encuestas-a-encuestador', [$entrevista->id, $encuestador->id]) !!}" class="btn btn-danger btn-sm col-sm-12">
                                             <i class="fa fa-plus-square"></i> Quitar entrevista
                                         </a>
                                     </div>
