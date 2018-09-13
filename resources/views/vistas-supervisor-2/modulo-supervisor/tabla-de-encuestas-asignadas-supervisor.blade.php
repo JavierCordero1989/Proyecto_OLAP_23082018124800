@@ -5,11 +5,12 @@
 @section('content')
     <div class="box-header">
         <div class="box-body">
-        <div class="clearfix"></div>
 
+        <!-- Caja para el mensaje para errores -->
+        <div class="clearfix"></div>
         @include('flash::message')
-
         <div class="clearfix"></div>
+
             @if(sizeof($listaDeEncuestas) <= 0)
                 <div class="content">
                     <div class="clearfix"></div>
@@ -58,8 +59,8 @@
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <a href="{!! route('supervisor2.remover-encuestas-a-encuestador', [$entrevista->id, $id_supervisor]) !!}" class="btn btn-danger btn-sm col-sm-12">
-                                            <i class="fa fa-plus-square"></i> Quitar entrevista
+                                        <a href="{!! route('supervisor2.remover-encuestas-a-supervisor', [$entrevista->id, $id_supervisor]) !!}" class="btn btn-danger btn-sm col-sm-12">
+                                            <i class="fa fa-minus-square"></i> Quitar entrevista
                                         </a>
                                     </div>
                                     <div class="col-xs-6">
@@ -68,6 +69,14 @@
                                         </a>
                                         @include('vistas-supervisor-2.modulo-supervisor.modal_ver_detalles_de_entrevista')
                                     </div>
+
+                                    @if(Auth::user()->id == $id_supervisor)
+                                        <div class="col-xs-12" style="margin-top: 15px;">
+                                            <a href="#" class="btn btn-primary btn-sm col-xs-6 col-xs-offset-3">
+                                                <i class="fa fa-plus-square"></i> Realizar encuesta
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -78,7 +87,7 @@
     </div>
 @endsection
 
-@section('scripts')
+{{-- @section('scripts')
 
     <script>
         function verificar() {
@@ -98,10 +107,6 @@
                 return false;
             }
         }
-
-        // $('[name=select_all]').change(function() {
-        //     alert('El estado del check ha cambiado');
-        // });
 
         $('[name=select_all]').click(function() {
             var checks = document.getElementsByName('encuestas[]');
@@ -126,4 +131,4 @@
             return confirm('¿Desea quitar la entrevista asignada a este encuestador?');
         });
     </script>
-@endsection
+@endsection --}}

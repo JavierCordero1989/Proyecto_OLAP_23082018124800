@@ -392,5 +392,83 @@ class Supervisor2Controller extends Controller
         return view('vistas-supervisor-2.modulo-supervisor.tabla-de-encuestas-filtradas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_supervisor_asignado'));
     }
 
-    
+    public function remover_encuestas_a_supervisor($id_entrevista, $id_supervisor) {
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+        $quito_entrevista = $entrevista->desasignarEntrevista();
+        
+        if($quito_entrevista) {
+            Flash::success('Se ha eliminado la entrevista de este supervisor');
+            return redirect(route('supervisor2.encuestas-asignadas-por-supervisor', $id_supervisor));
+        }
+        else {
+            Flash::error('No se ha podido eliminar la entrevista de este supervisor');
+            return redirect(route('supervisor2.encuestas-asignadas-por-supervisor', $id_supervisor));
+        }
+    }
+
+    /** Recibe las encuestas seleccionadas por la persona que realiza la asignacion, y realiza algunas
+     * validaciones. Primero comprueba que el supervisor que realizó la asignación exista en la base de datos,
+     * luego que el encuestador también exista. Después busca los estados NO ASIGNADA y ASIGNADA para 
+     * cambiar el estado de las encuestas de uno a otra.
+     */
+    public function crear_nueva_asignacion_a_supervisor($id_supervisor, $id_supervisor_asignado, Request $request) {
+
+        /** Se obtiene el supervisor por el ID */
+        $supervisor = User::find($id_supervisor);
+
+        /** Si el supervisor no se encuentra en la BD */
+        if(empty($supervisor)) {
+            Flash::error('El supervisor con el ID '.$id_supervisor.' no existe');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        /** Se obtiene el encuestador por el ID */
+        $supervisor_asignado = User::find($id_supervisor_asignado);
+
+        /** Si el supervisor asignado no se encuentra en la BD */
+        if(empty($supervisor_asignado)) {
+            Flash::error('El supervisor asignado con el ID '.$id_supervisor_asignado.' no existe');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        /** Se consulta si el estado 'NO ASIGNADA' existe en la base de datos */
+        $id_estado_sin_asignar = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+
+        /** Mensaje en caso de que el estado NO ASIGNADA no exista */
+        if(is_null($id_estado_sin_asignar)) {
+            Flash::error('El estado \"NO ASIGNADA\" no existe en la base de datos, contacte al administrador para más información.');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        /** Se consulta si el estado 'ASIGNADA' existe en la base de datos */
+        $id_estado_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ASIGNADA')->first();
+
+        /** Mensaje en caso de que el estado ASIGNADA no exista */
+        if(is_null($id_estado_asignada)) {
+            Flash::error('El estado \"ASIGNADA\" no existe en la base de datos, contacte al administrador para más información.');
+            return redirect(route('supervisor2.lista-de-encuestadores'));
+        }
+
+        $encuestas_no_encontradas = [];
+
+        /** Se hace una busqueda de la encuesta */
+        foreach($request->encuestas as $id_graduado) {
+            $registro_encuesta = EncuestaGraduado::find($id_graduado);
+
+            if(empty($registro_encuesta)) {
+                array_push($encuestas_no_encontradas, $id_graduado);
+            }
+
+            $update = $registro_encuesta->asignarEncuesta($id_supervisor, $id_encuestador, $id_estado_sin_asignar->id, $id_estado_asignada->id);
+        }
+
+        if(sizeof($encuestas_no_encontradas) <= 0) {
+            Flash::success('Se han asignado las encuestas correctamente.');
+        }
+        else {
+            Flash::warning('Algunas encuestas no han sido asignadas: '.$encuestas_no_encontradas);
+        }
+
+        return redirect(route('supervisor2.lista-de-encuestadores'));
+    }
 }

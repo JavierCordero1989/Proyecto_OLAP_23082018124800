@@ -227,6 +227,8 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
         Route::get('lista-de-supervisores/asignar-encuestas/{id_supervisor}/{id_supervisor_asignado}', 'Supervisor2Controller@asignar_encuestas_a_supervisor')->name('supervisor2.asignar-encuestas-a-supervisor');
         Route::get('lista-de-supervisores/ver-encuestas-asignadas/{id_supervisor}', 'Supervisor2Controller@encuestas_asignadas_por_supervisor')->name('supervisor2.encuestas-asignadas-por-supervisor');
         Route::post('lista-de-supervisores/filtrar-muestra-de-entrevistas/{id_supervisor}/{id_supervisor_asignado}', 'Supervisor2Controller@filtrar_muestra_de_entrevistas_a_asignar_a_supervisor')->name('supervisor2.filtrar-muestra-de-entrevistas-a-asignar-a-supervisor');
+        Route::get('lista-de-supervisores/remover-encuestas-supervisor/{id_entrevista}/{id_supervisor}', 'Supervisor2Controller@remover_encuestas_a_supervisor')->name('supervisor2.remover-encuestas-a-supervisor');
+        Route::post('lista-de-supervisores/asignar-encuestas-a-supervisor/{id_supervisor}/{id_supervisor_asignado}', 'Supervisor2Controller@crear_nueva_asignacion_a_supervisor')->name('supervisor2.crear-nueva-asignacion-a-supervisor');
     });
 });
 

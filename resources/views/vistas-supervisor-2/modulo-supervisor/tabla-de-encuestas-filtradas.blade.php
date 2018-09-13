@@ -3,7 +3,7 @@
 @section('title', 'Encuestas sin asignar') 
 
 @section('content')
-    {!! Form::open(['route' => ['supervisor2.crear-nueva-asignacion', 'id_supervisor'=>$id_supervisor,'id_supervisor_asignado'=>$id_supervisor_asignado], 'onsubmit' => 'return verificar();']) !!}
+    {!! Form::open(['route' => ['supervisor2.crear-nueva-asignacion-a-supervisor', 'id_supervisor'=>$id_supervisor,'id_supervisor_asignado'=>$id_supervisor_asignado], 'onsubmit' => 'return verificar();']) !!}
         <section class="content-header">
             <h1 class="pull-left">Encuestas sin asignar</h1>
             <h1 class="pull-right">
