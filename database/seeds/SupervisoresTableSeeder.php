@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Faker\Factory;
 
@@ -18,11 +19,13 @@ class SupervisoresTableSeeder extends Seeder
 
         for($i=0; $i<3; $i++) {
             $codigo = $faker->numerify('######');
+            $nombre = $faker->name;
+            $email = Str::slug($nombre);
 
             $user = \App\User::create([
                 'user_code' => $codigo,
-                'name' => 'Supervisor #'.$codigo,
-                'email' => 'supervisor'.$codigo.'@conare.ac.cr',
+                'name' => $nombre,
+                'email' => $email.'@conare.ac.cr',
                 'password' => bcrypt('secret')
             ]);
 
@@ -31,11 +34,13 @@ class SupervisoresTableSeeder extends Seeder
 
         for($i=0; $i<2; $i++) {
             $codigo = $faker->numerify('######');
+            $nombre = $faker->name;
+            $email = Str::slug($nombre);
 
             $user = \App\User::create([
                 'user_code' => $codigo,
-                'name' => 'Supervisor #'.$codigo,
-                'email' => 'supervisor'.$codigo.'@conare.ac.cr',
+                'name' => $nombre,
+                'email' => $email.'@conare.ac.cr',
                 'password' => bcrypt('secret')
             ]);
 

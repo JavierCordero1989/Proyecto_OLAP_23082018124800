@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Carbon\Carbon;
 use Faker\Factory;
+use Illuminate\Support\Str;
 
 class EncuestadoresTableSeeder extends Seeder
 {
@@ -18,11 +19,13 @@ class EncuestadoresTableSeeder extends Seeder
 
         for($i=0; $i<18; $i++) {
             $codigo = $faker->numerify('######');
+            $nombre = $faker->name;
+            $email = Str::slug($nombre);
 
             $user = \App\User::create([
                 'user_code' => $codigo,
-                'name' => 'Encuestador #'.$codigo,
-                'email' => 'encuestador'.$codigo.'@conare.ac.cr',
+                'name' => $nombre,
+                'email' => $email.'@conare.ac.cr',
                 'password' => bcrypt('secret')
             ]);
 
