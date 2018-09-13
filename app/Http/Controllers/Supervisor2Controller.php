@@ -419,7 +419,7 @@ class Supervisor2Controller extends Controller
         /** Si el supervisor no se encuentra en la BD */
         if(empty($supervisor)) {
             Flash::error('El supervisor con el ID '.$id_supervisor.' no existe');
-            return redirect(route('supervisor2.lista-de-encuestadores'));
+            return redirect(route('supervisor2.lista-de-supervisores'));
         }
 
         /** Se obtiene el encuestador por el ID */
@@ -428,7 +428,7 @@ class Supervisor2Controller extends Controller
         /** Si el supervisor asignado no se encuentra en la BD */
         if(empty($supervisor_asignado)) {
             Flash::error('El supervisor asignado con el ID '.$id_supervisor_asignado.' no existe');
-            return redirect(route('supervisor2.lista-de-encuestadores'));
+            return redirect(route('supervisor2.lista-de-supervisores'));
         }
 
         /** Se consulta si el estado 'NO ASIGNADA' existe en la base de datos */
@@ -437,7 +437,7 @@ class Supervisor2Controller extends Controller
         /** Mensaje en caso de que el estado NO ASIGNADA no exista */
         if(is_null($id_estado_sin_asignar)) {
             Flash::error('El estado \"NO ASIGNADA\" no existe en la base de datos, contacte al administrador para más información.');
-            return redirect(route('supervisor2.lista-de-encuestadores'));
+            return redirect(route('supervisor2.lista-de-supervisores'));
         }
 
         /** Se consulta si el estado 'ASIGNADA' existe en la base de datos */
@@ -446,7 +446,7 @@ class Supervisor2Controller extends Controller
         /** Mensaje en caso de que el estado ASIGNADA no exista */
         if(is_null($id_estado_asignada)) {
             Flash::error('El estado \"ASIGNADA\" no existe en la base de datos, contacte al administrador para más información.');
-            return redirect(route('supervisor2.lista-de-encuestadores'));
+            return redirect(route('supervisor2.lista-de-supervisores'));
         }
 
         $encuestas_no_encontradas = [];
@@ -459,7 +459,7 @@ class Supervisor2Controller extends Controller
                 array_push($encuestas_no_encontradas, $id_graduado);
             }
 
-            $update = $registro_encuesta->asignarEncuesta($id_supervisor, $id_encuestador, $id_estado_sin_asignar->id, $id_estado_asignada->id);
+            $update = $registro_encuesta->asignarEncuesta($id_supervisor, $id_supervisor_asignado, $id_estado_sin_asignar->id, $id_estado_asignada->id);
         }
 
         if(sizeof($encuestas_no_encontradas) <= 0) {
@@ -469,6 +469,10 @@ class Supervisor2Controller extends Controller
             Flash::warning('Algunas encuestas no han sido asignadas: '.$encuestas_no_encontradas);
         }
 
-        return redirect(route('supervisor2.lista-de-encuestadores'));
+        return redirect(route('supervisor2.lista-de-supervisores'));
+    }
+
+    public function graficos_por_estado_de_supervisor($id_supervisor) {
+        return view('vistas-supervisor-2.modulo-supervisor.graficos-por-supervisor');
     }
 }

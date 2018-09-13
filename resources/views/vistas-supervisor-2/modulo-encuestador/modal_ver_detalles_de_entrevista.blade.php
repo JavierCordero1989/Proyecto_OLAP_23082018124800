@@ -36,7 +36,7 @@
                         <!-- Link para la encuesta -->
                         <div class="col-xs-6">
                             {!! Form::label('link_encuesta', 'Link de la encuesta:') !!}
-                            <p>{!! $entrevista->link_encuesta !!}</p>
+                            <a href="{!! $entrevista->link_encuesta !!}" target="_blank">{!! $entrevista->link_encuesta !!}</a>
                         </div>
     
                         <!-- Sexo del graduado -->

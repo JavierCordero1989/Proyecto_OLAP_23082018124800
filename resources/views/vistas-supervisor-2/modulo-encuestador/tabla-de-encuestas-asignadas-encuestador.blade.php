@@ -102,9 +102,10 @@
                             <!-- Imagen del cuadro -->
                             <div class="box-body">
                                 <div class="col-md-12">
-                                    <p>Cédula: {!! $entrevista->identificacion_graduado !!}</p>
-                                    <p>{!! $entrevista->carrera->nombre !!} - {!! $entrevista->universidad->nombre !!}</p>
-                                    <p>Año de graduación: {!! $entrevista->annio_graduacion !!}</p>
+                                    <p><strong>Cédula:</strong> {!! $entrevista->identificacion_graduado !!}</p>
+                                    <p><strong>Carrera:</strong> {!! $entrevista->carrera->nombre !!}</p>
+                                    <p><strong>Universidad:</strong> {!! $entrevista->universidad->nombre !!}</p>
+                                    <p><strong>Año de graduación:</strong> {!! $entrevista->annio_graduacion !!}</p>
                                 </div>
                             </div>
 
