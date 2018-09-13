@@ -50,13 +50,13 @@
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-xs-5 col-xs-offset-1">
-                                                <a href="{{ route('asignar-encuestas.asignar', [Auth::user()->id, $supervisor->id ]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                                <a href="{{ route('supervisor2.asignar-encuestas-a-supervisor', [Auth::user()->id, $supervisor->id ]) }}" class="btn btn-primary btn-sm col-sm-12">
                                                     <i class="fa fa-plus-square"></i> Asignar Encuestas
                                                 </a>
                                             </div>
                 
                                             <div class="col-xs-5">
-                                                <a href="{{ route('asignar-encuestas.lista-encuestas-asignadas', [$supervisor->id]) }}" class="btn btn-primary btn-sm col-sm-12">
+                                                <a href="{{ route('supervisor2.encuestas-asignadas-por-supervisor', [$supervisor->id]) }}" class="btn btn-primary btn-sm col-sm-12">
                                                     <i class="far fa-eye"></i> Encuestas asignadas
                                                 </a>
                                             </div>

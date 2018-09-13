@@ -32,6 +32,14 @@ class TiposDatosCarrera extends Model
         return $query->where('nombre', 'AREA');
     }
 
+    public function scopeAgrupacion($query) {
+        return $query->where('nombre', 'AGRUPACION');
+    }
+
+    public function scopeSector($query) {
+        return $query->where('nombre', 'SECTOR');
+    }
+
     public function datoCarrera() {
         return $this->hasMany(DatosCarreraGraduado::class, 'id_tipo');
     }

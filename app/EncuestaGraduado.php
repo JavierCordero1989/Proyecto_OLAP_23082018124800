@@ -403,6 +403,8 @@ class EncuestaGraduado extends Model
                         'codigo_grado', 
                         'codigo_disciplina', 
                         'codigo_area',
+                        'codigo_agrupacion',
+                        'codigo_sector',
                         'tipo_de_caso'
                     )
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')

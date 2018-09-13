@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\DatosCarreraGraduado;
 use App\EncuestaGraduado;
 use App\Asignacion;
+use App\TiposDatosCarrera;
 use App\User;
 use Flash;
 use DB;
@@ -307,4 +308,89 @@ class Supervisor2Controller extends Controller
           */
         return view('vistas-supervisor-2.modulo-supervisor.lista-de-supervisores', compact('lista_supervisores'));
     }
+
+    /** Obtiene todos los datos existentes por carrera, universidad, grado, disciplina y area,
+     * para poder mostrarlos en un combobox para que el encargado de asignar asl encuestas
+     * pueda seleccionar todos los filtros adecuados.
+    */
+    public function asignar_encuestas_a_supervisor($id_supervisor, $id_supervisor_asignado) {
+        $id_carrera =       TiposDatosCarrera::carrera()->first();
+        $id_universidad =   TiposDatosCarrera::universidad()->first();
+        $id_grado =         TiposDatosCarrera::grado()->first();
+        $id_disciplina =    TiposDatosCarrera::disciplina()->first();
+        $id_area =          TiposDatosCarrera::area()->first();
+        $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
+        $id_sector =        TiposDatosCarrera::sector()->first();
+
+        $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
+        $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
+        $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
+        $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
+        $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
+        $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
+
+        return view('vistas-supervisor-2.modulo-supervisor.lista-filtro-encuestas', 
+            compact(
+                'id_supervisor', 
+                'id_supervisor_asignado',
+                'carreras', 
+                'universidades', 
+                'grados', 
+                'disciplinas', 
+                'areas', 
+                'agrupaciones', 
+                'sectores'
+            )
+        );
+    }
+
+    public function encuestas_asignadas_por_supervisor($id_supervisor) {
+        $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_supervisor)->get();
+
+        return view('vistas-supervisor-2.modulo-supervisor.tabla-de-encuestas-asignadas-supervisor', compact('listaDeEncuestas', 'id_supervisor'));
+    }
+
+    /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros
+     * que el usuario haya agregado en la vista.
+     */
+    public function filtrar_muestra_de_entrevistas_a_asignar_a_supervisor($id_supervisor, $id_supervisor_asignado, Request $request) {
+        $input = $request->all();
+
+        $resultado = EncuestaGraduado::listaDeEncuestasSinAsignar();
+
+        if(!is_null($input['carrera'])) {
+            $resultado->where('codigo_carrera', $input['carrera']);
+        }
+
+        if(!is_null($input['universidad'])) {
+            $resultado->where('codigo_universidad', $input['universidad']);
+        }
+
+        if(!is_null($input['grado'])) {
+            $resultado->where('codigo_grado', $input['grado']);
+        }
+
+        if(!is_null($input['disciplina'])) {
+            $resultado->where('codigo_disciplina', $input['disciplina']);
+        }
+
+        if(!is_null($input['area'])) {
+            $resultado->where('codigo_area', $input['area']);
+        }
+
+        if(!is_null($input['agrupacion'])) {
+            $resultado->where('codigo_agrupacion', $input['agrupacion']);
+        }
+        
+        if(!is_null($input['sector'])) {
+            $resultado->where('codigo_sector', $input['sector']);
+        }
+
+        $encuestasNoAsignadas = $resultado->get();
+
+        return view('vistas-supervisor-2.modulo-supervisor.tabla-de-encuestas-filtradas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_supervisor_asignado'));
+    }
+
+    
 }
