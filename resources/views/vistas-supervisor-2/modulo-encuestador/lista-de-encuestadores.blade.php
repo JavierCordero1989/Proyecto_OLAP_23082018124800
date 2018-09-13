@@ -8,7 +8,7 @@
         <h1 class="pull-right">
            {{-- <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('supervisor2.crear-nuevo-encuestador') !!}">Agregar nuevo</a> --}}
            <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="#modal-agregar-nuevo-encuestador" data-toggle="modal" ><i class="fas fa-plus"></i> Nuevo encuestador</a>
-           @include('vistas-supervisor-2.modal_agregar_nuevo_encuestador')
+           @include('vistas-supervisor-2.modulo-encuestador.modal_agregar_nuevo_encuestador')
         </h1>
     </section>
     <div class="content">
@@ -37,7 +37,7 @@
                                                 <!-- Boton para ver los datos del encuestador -->
                                                 <a class="btn btn-default btn-xs" href="#modal-agregar-nuevo-encuestador-{{$encuestador->id}}" data-toggle="modal" ><i class="glyphicon glyphicon-eye-open"></i></a>
 
-                                                @include('vistas-supervisor-2.modal_ver_encuestador')
+                                                @include('vistas-supervisor-2.modulo-encuestador.modal_ver_encuestador')
                                                 
                                                 {{-- <a href="{!! route('supervisor2.ver-encuestador', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
                                                     <i class="glyphicon glyphicon-eye-open"></i>

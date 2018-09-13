@@ -78,7 +78,7 @@
 @endif
 
 @if(Auth::user()->hasRole('Supervisor 2'))
-    @include('vistas-supervisor-2.menu')
+    @include('vistas-supervisor-2.modulo-encuestador.menu')
 @endif
 
 @if(Auth::user()->hasRole('Encuestador'))

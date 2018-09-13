@@ -209,20 +209,31 @@ Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
 
 // Rutas para el supervisor 2
 Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
-  Route::get('lista-de-encuestadores',                                                                    'Supervisor2Controller@lista_de_encuestadores')                   ->name('supervisor2.lista-de-encuestadores');
-  // Route::get('lista-de-encuestadores/crear-nuevo-encuestador',                                            'Supervisor2Controller@crear_nuevo_encuestador')                  ->name('supervisor2.crear-nuevo-encuestador');
-  Route::post('lista-de-encuestadores/almacenar-nuevo-encuestador',                                       'Supervisor2Controller@almacenar_nuevo_encuestador')              ->name('supervisor2.almacenar-nuevo-encuestador');
-  // Route::get('lista-de-encuestadores/{id_encuestador}',                                                   'Supervisor2Controller@ver_encuestador')                          ->name('supervisor2.ver-encuestador');
-  Route::get('lista-de-encuestadores/{id_encuestador}/editar-encuestador',                                'Supervisor2Controller@editar_encuestador')                       ->name('supervisor2.editar-encuestador');
-  Route::patch('lista-de-encuestadores/{id_encuestador}',                                                 'Supervisor2Controller@actualizar_datos_encuestador')             ->name('supervisor2.actualizar-datos-encuestador');
-  Route::get('lista-de-encuestadores/asignar-encuestas/{id_supervisor}/{id_encuestador}',                 'Supervisor2Controller@asignar_encuestas_a_encuestador')          ->name('supervisor2.asignar-encuestas-a-encuestador');
-  Route::get('lista-de-encuestadores/ver-encuestas-asignadas/{id_encuestador}',                           'Supervisor2Controller@encuestas_asignadas_por_encuestador')      ->name('supervisor2.encuestas-asignadas-por-encuestador');
-  Route::get('lista-de-encuestadores/graficos-de-estados-por-encuestador/{id_encuestador}',               'Supervisor2Controller@graficos_por_estado_de_encuestador')       ->name('supervisor2.graficos-por-estado-de-encuestador');
-  Route::post('lista-de-encuestadores/filtrar-muestra-de-entrevistas/{id_supervisor}/{id_encuestador}',   'Supervisor2Controller@filtrar_muestra_de_entrevistas_a_asignar') ->name('supervisor2.filtrar-muestra-de-entrevistas-a-asignar');
-  // Route::post('lista-de-encuestadores/remover-encuestas-encuestador/{id_encuestador}',                    'Supervisor2Controller@remover_encuestas_a_encuestador')          ->name('supervisor2.remover-encuestas-a-encuestador');
-  Route::get('lista-de-encuestadores/remover-encuestas-encuestador/{id_entrevista}/{id_encuestador}',                    'Supervisor2Controller@remover_encuestas_a_encuestador')          ->name('supervisor2.remover-encuestas-a-encuestador');
-  Route::post('lista-de-encuestadores/asignar-encuestas-a-encuestador/{id_supervisor}/{id_encuestador}',  'Supervisor2Controller@crear_nueva_asignacion')                   ->name('supervisor2.crear-nueva-asignacion');
-  // Route::get('', 'Supervisor2Controller@')->name('');
+  Route::group(['prefix'=>'encuestadores'], function(){
+    Route::get('lista-de-encuestadores',                                                                    'Supervisor2Controller@lista_de_encuestadores')                   ->name('supervisor2.lista-de-encuestadores');
+    Route::post('lista-de-encuestadores/almacenar-nuevo-encuestador',                                       'Supervisor2Controller@almacenar_nuevo_encuestador')              ->name('supervisor2.almacenar-nuevo-encuestador');
+    Route::get('lista-de-encuestadores/{id_encuestador}/editar-encuestador',                                'Supervisor2Controller@editar_encuestador')                       ->name('supervisor2.editar-encuestador');
+    Route::patch('lista-de-encuestadores/{id_encuestador}',                                                 'Supervisor2Controller@actualizar_datos_encuestador')             ->name('supervisor2.actualizar-datos-encuestador');
+    Route::get('lista-de-encuestadores/asignar-encuestas/{id_supervisor}/{id_encuestador}',                 'Supervisor2Controller@asignar_encuestas_a_encuestador')          ->name('supervisor2.asignar-encuestas-a-encuestador');
+    Route::get('lista-de-encuestadores/ver-encuestas-asignadas/{id_encuestador}',                           'Supervisor2Controller@encuestas_asignadas_por_encuestador')      ->name('supervisor2.encuestas-asignadas-por-encuestador');
+    Route::get('lista-de-encuestadores/graficos-de-estados-por-encuestador/{id_encuestador}',               'Supervisor2Controller@graficos_por_estado_de_encuestador')       ->name('supervisor2.graficos-por-estado-de-encuestador');
+    Route::post('lista-de-encuestadores/filtrar-muestra-de-entrevistas/{id_supervisor}/{id_encuestador}',   'Supervisor2Controller@filtrar_muestra_de_entrevistas_a_asignar') ->name('supervisor2.filtrar-muestra-de-entrevistas-a-asignar');
+    Route::get('lista-de-encuestadores/remover-encuestas-encuestador/{id_entrevista}/{id_encuestador}',     'Supervisor2Controller@remover_encuestas_a_encuestador')          ->name('supervisor2.remover-encuestas-a-encuestador');
+    Route::post('lista-de-encuestadores/asignar-encuestas-a-encuestador/{id_supervisor}/{id_encuestador}',  'Supervisor2Controller@crear_nueva_asignacion')                   ->name('supervisor2.crear-nueva-asignacion');
+  });
+
+  Route::group(['prefix'=>'supervisores'], function(){
+    Route::get('lista-de-supervisores', 'Supervisor2Controller@lista_de_supervisores')->name('supervisor2.lista-de-supervisores');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+    // Route::get('', 'Supervisor2Controller@')->name('');
+  });
+  
 });
 
 //Plantilla rutas

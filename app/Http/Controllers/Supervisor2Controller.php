@@ -12,6 +12,14 @@ use DB;
 
 class Supervisor2Controller extends Controller
 {
+    /*__________________________________________________________________________________________________________*/
+    /*                                                                                                          */
+    /* La siguiente lista de métodos pertenece al módulo para encuestadores que el supervisor 2                 */
+    /* podrá ver, con el cuál podrá ver la lista de encuestadores, modificar sus datos, agregar                 */
+    /* nuevos encuestadores, asignarles entrevistas, quitarselas, ver reportes de datos, entre otras funciones. */
+    /*__________________________________________________________________________________________________________*/
+
+
     public function lista_de_encuestadores() {
         /** Hacer una seleccion de todos los elementos de la BD para llevarlos a la
          *  vista de index.
@@ -30,13 +38,8 @@ class Supervisor2Controller extends Controller
         /** Se regresa a la vista de index en la carpeta deseada, con los datos obtenidos 
          *  desde la base de datos.
           */
-        return view('vistas-supervisor-2.lista-de-encuestadores', compact('lista_encuestadores'));
+        return view('vistas-supervisor-2.modulo-encuestador.lista-de-encuestadores', compact('lista_encuestadores'));
     }
-
-    // public function crear_nuevo_encuestador() {
-    //     /** Se llama a la vista para crear un nuevo registro. No se obtienen datos de la BD. */
-    //     return view('vistas-supervisor-2.crear-nuevo-encuestador');
-    // }
 
     public function almacenar_nuevo_encuestador(Request $request) {
         /** Dos formas de guardar un objeto:
@@ -75,19 +78,6 @@ class Supervisor2Controller extends Controller
         return redirect(route('supervisor2.lista-de-encuestadores'));
     }
 
-    // public function ver_encuestador($id) {
-    //     /** se obtiene el objeto que corresponda al ID */
-    //     $encuestador = User::find($id);
-
-    //     /** Si el objeto obtenido esta vacio, se envia un mensaje de error y se redirige a la ruta index */
-    //     if(empty($encuestador)) {
-    //         Flash::error('Encuestador no encontrado');
-    //         return redirect(route('supervisor2.lista-de-encuestadores'));
-    //     }
-    //     /** Si el objeto contiene informacion se muestra la vista show con los datos obtenidos del objeto. */
-    //     return view('vistas-supervisor-2.ver-encuestador', compact('encuestador'));
-    // }
-
     public function editar_encuestador($id) {
         /** Se obtiene el objeto que corresponda al ID */
         $encuestador = User::find($id);
@@ -101,7 +91,7 @@ class Supervisor2Controller extends Controller
         /** Si el objeto contiene informacion se muestra la vista edit con los datos obtenidos del objeto,
          * esto para poder ver los datos que contiene, y asi poder modificarlos.
          */
-        return view('vistas-supervisor-2.editar-encuestador', compact('encuestador'));
+        return view('vistas-supervisor-2.modulo-encuestador.editar-encuestador', compact('encuestador'));
     }
 
     public function actualizar_datos_encuestador($id, Request $request) {
@@ -162,14 +152,14 @@ class Supervisor2Controller extends Controller
         $disciplinas = DatosCarreraGraduado::where('id_tipo', 4)    ->pluck('nombre', 'id');
         $areas = DatosCarreraGraduado::where('id_tipo', 5)          ->pluck('nombre', 'id');
 
-        return view('vistas-supervisor-2.lista-filtro-de-encuestas', 
+        return view('vistas-supervisor-2.modulo-encuestador.lista-filtro-de-encuestas', 
             compact('id_supervisor', 'id_encuestador','carreras', 'universidades', 'grados', 'disciplinas', 'areas'));
     }
 
     public function encuestas_asignadas_por_encuestador($id_encuestador) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
 
-        return view('vistas-supervisor-2.tabla-de-encuestas-asignadas-encuestador', compact('listaDeEncuestas', 'id_encuestador'));
+        return view('vistas-supervisor-2.modulo-encuestador.tabla-de-encuestas-asignadas-encuestador', compact('listaDeEncuestas', 'id_encuestador'));
     }
 
     /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros
@@ -202,30 +192,8 @@ class Supervisor2Controller extends Controller
 
         $encuestasNoAsignadas = $resultado->get();
 
-        return view('vistas-supervisor-2.tabla-de-encuestas-filtradas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
+        return view('vistas-supervisor-2.modulo-encuestador.tabla-de-encuestas-filtradas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
     }
-
-    // public function remover_encuestas_a_encuestador($id_encuestador, Request $request) {
-
-    //     $encuestasAsignadas = Asignacion::where('id_encuestador', $id_encuestador)->get();
-    //     $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
-
-    //     foreach($encuestasAsignadas as $encuesta) {
-    //         // echo 'Encuesta: '.$encuesta->id.'<br>';
-    //         foreach($request->encuestas as $id_desasignada) {
-    //             if($encuesta->id_graduado == $id_desasignada) {
-    //                 $encuesta->id_encuestador = null;
-    //                 $encuesta->id_supervisor = null;
-    //                 $encuesta->id_estado = $id_no_asignada->id;
-    //                 $encuesta->updated_at = \Carbon\Carbon::now();
-    //                 $encuesta->save();
-    //             }
-    //         }
-    //     }
-
-    //     Flash::success('Se han eliminado las encuestas de este encuestador');
-    //     return redirect(route('supervisor2.encuestas-asignadas-por-encuestador', $id_encuestador));
-    // }
 
     public function remover_encuestas_a_encuestador($id_entrevista, $id_encuestador) {
         $entrevista = EncuestaGraduado::find($id_entrevista);
@@ -307,12 +275,36 @@ class Supervisor2Controller extends Controller
         return redirect(route('supervisor2.lista-de-encuestadores'));
     }
 
-
-
     public function graficos_por_estado_de_encuestador($id_encuestador) {
-        return view('vistas-supervisor-2.graficos-por-encuestador');
+        return view('vistas-supervisor-2.modulo-encuestador.graficos-por-encuestador');
     }
 
+    /*______________________________________________________________________________________________________*/
+    /*                                                                                                      */
+    /* La siguiente lista de métodos pertenece a la parte para administrar la información con respecto      */
+    /* a los supervisores, tales como sus encuestas, como asignarlas y quitarlas, para realizarlas,         */
+    /* modificar los datos, entre otras funciones.                                                          */
+    /*______________________________________________________________________________________________________*/
 
+    /** Metodo index que carga la vista de inicio con los datos de la base de datos. */
+    public function lista_de_supervisores() {
+        /** Hacer una seleccion de todos los elementos de la BD para llevarlos a la
+         *  vista de index.
+         */
+        /** Para que no obtenga los usuarios que han sido dados de baja */
+        $usuarios = User::whereNull('deleted_at')->get();
 
+        $lista_supervisores = [];
+
+        /** Se guardan todos los que son supervisores dentro del array para llevarlos a la vista */
+        foreach($usuarios as $supervisor) {
+            if($supervisor->hasRole('Supervisor 1') || $supervisor->hasRole('Supervisor 2')) {
+                array_push($lista_supervisores, $supervisor);
+            }
+        }
+        /** Se regresa a la vista de index en la carpeta deseada, con los datos obtenidos 
+         *  desde la base de datos.
+          */
+        return view('vistas-supervisor-2.modulo-supervisor.lista-de-supervisores', compact('lista_supervisores'));
+    }
 }
