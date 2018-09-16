@@ -14,7 +14,7 @@ use App\ContactoGraduado;
 class EncuestaGraduadoController extends Controller
 {
     public function index() {
-        $encuestas = EncuestaGraduado::listaDeGraduados()->get();
+        $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('id', 'ASC')->paginate(25);
 
         return view('encuestas_graduados.index', compact('encuestas'));
     }

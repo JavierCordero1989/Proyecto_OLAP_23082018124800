@@ -1,9 +1,10 @@
-@section('css')
+{{-- @section('css')
     @include('layouts.datatables_css')
-@endsection
+@endsection --}}
 
 <table class="table table-hover">
     <thead>
+        <th>ID</th>
         <th>Identificacion</th>
         <th>Token</th>
         <th>Nombre</th>
@@ -22,6 +23,7 @@
     <tbody>
     @foreach($encuestas as $encuesta)
         <tr>
+            <td>{!! $encuesta->id !!}</td>
             <td>{!! $encuesta->identificacion_graduado !!}</td>
             <td>{!! $encuesta->token !!}</td>
             <td>{!! $encuesta->nombre_completo !!}</td>
@@ -79,7 +81,7 @@
     @endforeach
     </tbody>
 </table>
-
-@section('scripts')
+{!! $encuestas->render() !!}
+{{-- @section('scripts')
     @include('layouts.datatables_js')
-@endsection
+@endsection --}}
