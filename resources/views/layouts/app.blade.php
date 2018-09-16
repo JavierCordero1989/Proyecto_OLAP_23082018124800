@@ -155,13 +155,6 @@
     <!-- Main Footer -->
     <footer class="main-footer" style="max-height: 100px;text-align: center">
         <strong>Copyright © 2018 <a href="{{ config('global.footer_link') }}" target="_blank">{{ config('global.footer_text') }}</a>.</strong> Derechos Reservados.
-
-        {{-- <div class="module deepest">
-            <ul class="menu menu-inline">
-                <li class="level1"><a href="" class="level1"><span>Inicio</span></a></li>
-                <li class="level1"><a href="" class="level1"><span>Correo institucional</span></a></li>
-            </ul>
-        </div> --}}
     </footer>
 
 </div>
