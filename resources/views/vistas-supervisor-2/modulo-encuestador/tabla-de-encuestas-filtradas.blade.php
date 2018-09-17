@@ -45,9 +45,12 @@
                                         <td>{!! $entrevista->disciplina->nombre !!}</td>
                                         <td>{!! $entrevista->area->nombre !!}</td>
                                         <td>{!! $entrevista->tipo_de_caso !!}</td>
-                                        <td><a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a></td>
+                                        <td>
+                                            <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a>
+                                            @include('vistas-supervisor-2.modulo-encuestador.modal_ver_detalles_de_entrevista')
+                                        </td>
                                     </tr>
-                                    @include('vistas-supervisor-2.modulo-encuestador.modal_ver_detalles_de_entrevista')
+                                    
                                 @endforeach
                             </tbody>
                         </table>

@@ -23,7 +23,6 @@
                                 <th>{!! Form::checkbox('select_all', 0) !!} Identificacion</th>
                                 <th>Nombre</th>
                                 <th>Año de graduación</th>
-                                <th>Sexo</th>
                                 <th>Carrera</th>
                                 <th>Universidad</th>
                                 <th>Grado</th>
@@ -40,7 +39,6 @@
                                         <td>{!! Form::checkbox('encuestas[]', $entrevista->id) !!} {!! $entrevista->identificacion_graduado !!}</td>
                                         <td>{!! $entrevista->nombre_completo !!}</td>
                                         <td>{!! $entrevista->annio_graduacion !!}</td>
-                                        <td>{!! $entrevista->sexo !!}</td>
                                         <td>{!! $entrevista->carrera->nombre !!}</td>
                                         <td>{!! $entrevista->universidad->nombre !!}</td>
                                         <td>{!! $entrevista->grado->nombre !!}</td>
@@ -49,8 +47,11 @@
                                         <td>{!! $entrevista->agrupacion->nombre !!}</td>
                                         <td>{!! $entrevista->sector->nombre !!}</td>
                                         <td>{!! $entrevista->tipo_de_caso !!}</td>
-                                        <td><a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a></td>
-                                        @include('vistas-supervisor-2.modulo-encuestador.modal_ver_detalles_de_entrevista')
+                                        <td>
+                                            <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a>
+                                            @include('vistas-supervisor-2.modulo-supervisor.modal_ver_detalles_de_entrevista')
+                                        </td>
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>

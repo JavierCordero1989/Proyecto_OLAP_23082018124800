@@ -26,6 +26,8 @@ class EncuestaGraduado extends Model
         'codigo_grado',
         'codigo_disciplina',
         'codigo_area',
+        'codigo_agrupacion',
+        'codigo_sector',
         'tipo_de_caso'
     ];
 
@@ -345,18 +347,17 @@ class EncuestaGraduado extends Model
                     'annio_graduacion', 
                     'link_encuesta', 
                     'sexo', 
-                    'carrera.nombre as Carrera', 
-                    'universidad.nombre as Universidad', 
-                    'grado.nombre as Grado', 
-                    'disciplina.nombre as Disciplina', 
-                    'area.nombre as Area',
-                    'tipo_de_caso'
-                )
-            ->join('tbl_datos_carrera_graduado as carrera', 'carrera.id', '=', 'tbl_graduados.codigo_carrera')
-            ->join('tbl_datos_carrera_graduado as universidad', 'universidad.id', '=', 'tbl_graduados.codigo_universidad')
-            ->join('tbl_datos_carrera_graduado as grado', 'grado.id', '=', 'tbl_graduados.codigo_grado')
-            ->join('tbl_datos_carrera_graduado as disciplina', 'disciplina.id', '=', 'tbl_graduados.codigo_disciplina')
-            ->join('tbl_datos_carrera_graduado as area', 'area.id', '=', 'tbl_graduados.codigo_area');
+                    'codigo_carrera', 
+                    'codigo_universidad', 
+                    'codigo_grado', 
+                    'codigo_disciplina', 
+                    'codigo_area',
+                    'codigo_agrupacion',
+                    'codigo_sector',
+                    'tipo_de_caso',
+                    'created_at',
+                    'updated_at'
+        );
     }
 
     /** Coloca la encuesta seleccionada en un estado de no asignada */

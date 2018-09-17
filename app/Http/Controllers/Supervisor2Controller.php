@@ -21,7 +21,33 @@ class Supervisor2Controller extends Controller
     public function lista_general_de_entrevistas() {
         $entrevistas = EncuestaGraduado::listaDeGraduados()->orderBy('id', 'ASC')->paginate(25);
 
-        return view('vistas-supervisor-2.lista-general-de-entrevistas', compact('entrevistas'));
+        $id_carrera =       TiposDatosCarrera::carrera()->first();
+        $id_universidad =   TiposDatosCarrera::universidad()->first();
+        $id_grado =         TiposDatosCarrera::grado()->first();
+        $id_disciplina =    TiposDatosCarrera::disciplina()->first();
+        $id_area =          TiposDatosCarrera::area()->first();
+        $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
+        $id_sector =        TiposDatosCarrera::sector()->first();
+
+        $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
+        $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
+        $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
+        $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
+        $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
+        $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
+
+        $datos_carreras = [
+            'carreras'      => $carreras,
+            'universidades' => $universidades,
+            'grados'        => $grados,
+            'disciplinas'   => $disciplinas,
+            'areas'         => $areas,
+            'agrupaciones'  => $agrupaciones,
+            'sectores'      => $sectores
+        ];
+
+        return view('vistas-supervisor-2.lista-general-de-entrevistas', compact('entrevistas', 'datos_carreras'));
     }
 
     public function estadisticas_generales() {
@@ -214,6 +240,14 @@ class Supervisor2Controller extends Controller
 
         if(!is_null($input['area'])) {
             $resultado->where('codigo_area', $input['area']);
+        }
+
+        if(!is_null($input['agrupacion'])) {
+            $resultado->where('codigo_agrupacion', $input['agrupacion']);
+        }
+
+        if(!is_null($input['sector'])) {
+            $resultado->where('codigo_sector', $input['sector']);
         }
 
         $encuestasNoAsignadas = $resultado->get();
@@ -673,6 +707,51 @@ class Supervisor2Controller extends Controller
     }
 
     public function agregar_nuevo_caso_entrevista(Request $request) {
-        dd('HOLA QUE HACE');
+
+        
+        $nueva_encuesta = EncuestaGraduado::create([
+            'identificacion_graduado'   => $request->identificacion_graduado,
+            'token'                     => $request->token,
+            'nombre_completo'           => $request->nombre_completo,
+            'annio_graduacion'          => $request->annio_graduacion,
+            'link_encuesta'             => $request->link_encuesta,
+            'sexo'                      => $request->sexo,
+            'codigo_carrera'            => $request->codigo_carrera,
+            'codigo_universidad'        => $request->codigo_universidad,
+            'codigo_grado'              => $request->codigo_grado,
+            'codigo_disciplina'         => $request->codigo_disciplina,
+            'codigo_area'               => $request->codigo_area,
+            'codigo_agrupacion'         => $request->codigo_agrupacion,
+            'codigo_sector'             => $request->codigo_sector,
+            'tipo_de_caso'              => $request->tipo_de_caso
+        ]);
+
+        if($request->agregar_contacto == 1) {
+            return redirect(route('supervisor2.agregar-contacto-nueva-entrevista', $nueva_encuesta->id));
+        }
+        else {
+            Flash::success('Se ha agregado correctamente el nuevo caso de entrevista');
+            return redirect(route('supervisor2.lista-general-de-entrevistas'));
+        }
+    }
+
+    public function agregar_contacto_nueva_entrevista($id_entrevista) {
+        return view('vistas-supervisor-2.agregar-contacto-nueva-entrevista')->with('id_entrevista', $id_entrevista);
+    }
+
+    public function guardar_contacto_nueva_entrevista($id_entrevista, Request $request) {
+        
+        $contacto = ContactoGraduado::create([
+            'identificacion_referencia' => $request->identificacion_referencia,
+            'nombre_referencia'         => $request->nombre_referencia,
+            'parentezco'                => $request->parentezco,
+            'id_graduado'               => $id_entrevista,
+            'created_at'                => \Carbon\Carbon::now()
+        ]);
+
+        $contacto->agregarDetalle($request->informacion_contacto, $request->observacion_contacto);
+
+        Flash::success('Se ha guardado correctamente la nueva información de contacto.');
+        return redirect(route('supervisor2.lista-general-de-entrevistas'));
     }
 }

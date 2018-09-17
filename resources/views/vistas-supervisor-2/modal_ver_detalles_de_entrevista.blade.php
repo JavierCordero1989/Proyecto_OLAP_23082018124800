@@ -73,7 +73,7 @@
                                     </ul>
                                     <!-- Se agregan los modales mediante un foreach -->
                                     @foreach($entrevista->contactos as $contacto) 
-                                        @include('vistas-supervisor-2.modulo-encuestador.modal_info_contacto')
+                                        @include('vistas-supervisor-2.modal_info_contacto')
                                     @endforeach
                                 </div>
                             @endif

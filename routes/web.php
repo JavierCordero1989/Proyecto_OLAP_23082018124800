@@ -245,6 +245,8 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
         Route::get('lista-de-supervisores/estadisticas-generales',                                                          'Supervisor2Controller@estadisticas_generales')                                ->name('supervisor2.estadisticas_generales')  /*->middleware('permission:')*/;
         Route::post('lista-de-supervisores/agregar-nueva-entrevista',                                                       'Supervisor2Controller@agregar_nuevo_caso_entrevista')->name('supervisor2.agregar-nuevo-caso-entrevista');
         // Route::get('lista-de-supervisores/entrevistas-graduados/crear-nueva', 'EncuestaGraduadoController@create')  ->name('encuestas-graduados.create') /*->middleware('')*/;
+        Route::get('lista-de-supervisores/agregar-contacto-nueva-entrevista/{id_entrevista}',                               'Supervisor2Controller@agregar_contacto_nueva_entrevista')                     ->name('supervisor2.agregar-contacto-nueva-entrevista');
+        Route::post('lista-de-supervisores/agregar-contacto-nueva-entrevista/guardar/{id_entrevista}',                      'Supervisor2Controller@guardar_contacto_nueva_entrevista')                     ->name('supervisor2.guardar-contacto-nueva-entrevista');
     });
 });
 

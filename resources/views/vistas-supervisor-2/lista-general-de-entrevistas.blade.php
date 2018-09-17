@@ -2,6 +2,14 @@
 
 @section('title', 'Encuestadores') 
 
+@section('css')
+    <style>
+        .letra_pequennia {
+            font-size: 15px;
+        }
+    </style>
+@endsection
+
 @section('content')
     <section class="content-header">
         <h1 class="pull-left">Lista de encuestas</h1>
@@ -22,73 +30,37 @@
             <div class="box-body table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <th>ID</th>
                         <th>Identificacion</th>
-                        <th>Token</th>
                         <th>Nombre</th>
                         <th>Año de graduación</th>
-                        <th>Link para encuesta</th>
-                        <th>Sexo</th>
                         <th>Carrera</th>
                         <th>Universidad</th>
                         <th>Grado</th>
                         <th>Disciplina</th>
                         <th>Área</th>
-                        <th>Info de contacto</th>
+                        <th>Agrupación</th>
+                        <th>Sector</th>
                         <th>Tipo de caso</th>
+                        <th>Detalles</th>
                     </thead>
                     <tbody>
-                    @foreach($entrevistas as $encuesta)
+                    @foreach($entrevistas as $entrevista)
                         <tr>
-                            <td>{!! $encuesta->id !!}</td>
-                            <td>{!! $encuesta->identificacion_graduado !!}</td>
-                            <td>{!! $encuesta->token !!}</td>
-                            <td>{!! $encuesta->nombre_completo !!}</td>
-                            <td>{!! $encuesta->annio_graduacion !!}</td>
+                            <td>{!! $entrevista->identificacion_graduado !!}</td>
+                            <td>{!! $entrevista->nombre_completo !!}</td>
+                            <td>{!! $entrevista->annio_graduacion !!}</td>
+                            <td>{!! $entrevista->carrera->nombre !!}</td>
+                            <td>{!! $entrevista->universidad->nombre !!}</td>
+                            <td>{!! $entrevista->grado->nombre !!}</td>
+                            <td>{!! $entrevista->disciplina->nombre !!}</td>
+                            <td>{!! $entrevista->area->nombre !!}</td>
+                            <td>{!! $entrevista->agrupacion->nombre !!}</td>
+                            <td>{!! $entrevista->sector->nombre !!}</td>
+                            <td>{!! $entrevista->tipo_de_caso !!}</td>
                             <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlaceEncuesta" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        {{-- <i class="glyphicon glyphicon-eye-open"></i> --}}
-                                        <i class="fas fa-link"></i>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownEnlaceEncuesta">
-                                        <li>
-                                            <a href="{!! $encuesta->link_encuesta !!}" target="_blank"><i class="fas fa-eye"></i> {!! $encuesta->link_encuesta !!} </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a>
+                                @include('vistas-supervisor-2.modal_ver_detalles_de_entrevista')
                             </td>
-                            <td>{!! $encuesta->sexo !!}</td>
-                            <td>{!! $encuesta->Carrera !!}</td>
-                            <td>{!! $encuesta->Universidad !!}</td>
-                            <td>{!! $encuesta->Grado !!}</td>
-                            <td>{!! $encuesta->Disciplina !!}</td>
-                            <td>{!! $encuesta->Area !!}</td>
-                            <td>
-                                <!-- Dropdown menu para mostrar la informacion de contacto del usuario -->
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <i class="fas fa-address-card"></i>
-                                        <span class="caret"></span>
-                                    </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
-                                            <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
-                                            @foreach($encuesta->contactos as $contacto)
-                                                <li>
-                                                    <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
-                                                </li>
-                                            @endforeach
-                                            <li><a href="{{ route('encuestas-graduados.agregar-contacto', [$encuesta->id]) }}">Agregar contacto</a></li>
-                                        </ul>
-            
-                                        <!-- Se agregan los modales mediante un foreach -->
-                                        @foreach($encuesta->contactos as $contacto) 
-                                            @include('modals.modal_info_contacto')
-                                        @endforeach
-                                </div>
-                            </td>
-                            <td>{!! $encuesta->tipo_de_caso !!}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -102,7 +74,25 @@
 @section('scripts')
     <script>
         function validar_formulario() {
+            var identificacion_graduado = $('#identificacion_graduado').val();
+            var nombre_completo         = $('#nombre_completo').val();
+            var annio_graduacion        = $('#token').val();
+            var token                   = $('#annio_graduacion').val();
+            var link_encuesta           = $('#link_encuesta').val();
+            var sexo                    = $('#sexo').val();
 
+            if(identificacion_graduado=="" || nombre_completo==""  || annio_graduacion=="" || token=="" || link_encuesta=="" || sexo=="" ) {
+                alert('Todos los campos deben estar completos');
+                return false
+            }
+            else {
+                var agregar_contacto = confirm('¿Desea agregar un contacto a la entrevista?');
+                if(agregar_contacto) {
+                    $('[name=agregar_contacto]').val(1);
+                }
+
+                return true;
+            }
         }
     </script>
 @endsection
