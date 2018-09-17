@@ -1,9 +1,24 @@
-/*
- * Skin: Yellow
- * ------------
- */
+/* Este es el skin con los colores del CONARE */
+:root {
+  --color-azul-oscuro: #003865;
+  --color-azul-claro: #80C6CF;
+  --color-gris: #CCCCCC;
+  --color-verde: #62A60A;
+  --color-naranja: #FF8200;
+}
+
+@font-face {
+  font-family: 'Syntax';
+  src: url('');
+}
+
+@font-face {
+  font-family: 'Cabin';
+  src: url('https://fonts.googleapis.com/css?family=Cabin');
+}
+
 .skin-conare .main-header .navbar {
-  background-color: #80C6CF;
+  background-color: var(--color-azul-claro);
 }
 .skin-conare .main-header .navbar .nav > li > a {
   color: #ffffff;
@@ -29,7 +44,7 @@
   color: #fff;
 }
 .skin-conare .main-header .navbar .sidebar-toggle:hover {
-  background-color: #003865;
+  background-color: var(--color-azul-oscuro);
 }
 @media (max-width: 767px) {
   .skin-conare .main-header .navbar .dropdown-menu li.divider {
@@ -39,19 +54,19 @@
     color: #fff;
   }
   .skin-conare .main-header .navbar .dropdown-menu li a:hover {
-    background: #003865;
+    background: var(--color-azul-oscuro);
   }
 }
 .skin-conare .main-header .logo {
-  background-color: #003865;
+  background-color: var(--color-azul-oscuro);
   color: #ffffff;
   border-bottom: 0 solid transparent;
 }
 .skin-conare .main-header .logo:hover {
-  background-color: #003865;
+  background-color: var(--color-azul-oscuro);
 }
 .skin-conare .main-header li.user-header {
-  background-color: #80C6CF;
+  background-color: var(--color-azul-claro);
 }
 .skin-conare .content-header {
   background: transparent;
@@ -59,11 +74,11 @@
 .skin-conare .wrapper,
 .skin-conare .main-sidebar,
 .skin-conare .left-side {
-  background-color: #CCCCCC;
+  background-color: var(--color-gris);
 }
 .skin-conare .user-panel > .info,
 .skin-conare .user-panel > .info > a {
-  color: #003865;
+  color: var(--color-azul-oscuro);
 }
 .skin-conare .sidebar-menu > li.header {
   color: #4b646f;
@@ -76,23 +91,23 @@
 .skin-conare .sidebar-menu > li.active > a,
 .skin-conare .sidebar-menu > li.menu-open > a {
   color: #ffffff;
-  background: #003865;
+  background: var(--color-azul-oscuro);
 }
 .skin-conare .sidebar-menu > li.active > a {
-  border-left-color: #80C6CF;
+  border-left-color: var(--color-azul-claro);
 }
 .skin-conare .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
-  background: #CCCCCC;
+  background: var(--color-gris);
 }
 .skin-conare .sidebar a {
-  color: #003865;
+  color: var(--color-azul-oscuro);
 }
 .skin-conare .sidebar a:hover {
   text-decoration: none;
 }
 .skin-conare .sidebar-menu .treeview-menu > li > a {
-  color: #003865;
+  color: var(--color-azul-oscuro);
 }
 .skin-conare .sidebar-menu .treeview-menu > li.active > a,
 .skin-conare .sidebar-menu .treeview-menu > li > a:hover {
