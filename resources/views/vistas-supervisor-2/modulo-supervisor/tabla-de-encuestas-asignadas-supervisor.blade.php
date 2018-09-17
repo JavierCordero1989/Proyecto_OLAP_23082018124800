@@ -76,7 +76,7 @@
 
                                     @if(Auth::user()->id == $supervisor->id)
                                         <div class="col-xs-12" style="margin-top: 15px;">
-                                            <a href="#" class="btn btn-primary btn-sm col-xs-6 col-xs-offset-3">
+                                            <a href="{!! route('supervisor2.realizar-entrevista', $entrevista->id) !!}" class="btn btn-primary btn-sm col-xs-6 col-xs-offset-3">
                                                 <i class="fa fa-plus-square"></i> Realizar encuesta
                                             </a>
                                         </div>

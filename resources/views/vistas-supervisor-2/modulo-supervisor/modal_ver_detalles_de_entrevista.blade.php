@@ -1,5 +1,5 @@
 <div class="modal modal-default fade" id="modal-ver-detalles-de-entrevista-{{$entrevista->id}}">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,6 +9,12 @@
             <div class="modal-body">
                 <div class="row" style="padding-left: 20px">
                     <div class="col-xs-12">
+                        <!-- Caja para el estado actual de la encuesta -->
+                        <div class="col-xs-6">
+                            {!! Form::label('estado_encuesta', 'Estado actual:') !!}
+                            <p>{!! $entrevista->estado()->estado !!}</p>
+                        </div>
+
                         <!-- Identificación del graduado de la entrevista -->
                         <div class="col-xs-6">
                             {!! Form::label('identificacion_graduado', 'Identificación del graduado:') !!}
@@ -45,6 +51,33 @@
                             <p>{!! $entrevista->sexo !!}</p>
                         </div>
     
+                        <!-- Modal para ver la información de detalle de los contactos que pertenecen a la entrevista -->
+                        <div class="col-xs-6">
+                            {!! Form::label('info_de_contacto', 'Información de contacto') !!}
+                            @if(sizeof($entrevista->contactos) <= 0)
+                                <p class="text-danger text-uppercase">Esta entrevista no tiene información de contacto</p>
+                            @else
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <i class="fas fa-address-card"></i>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
+                                        <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
+                                        @foreach($entrevista->contactos as $contacto)
+                                            <li>
+                                                <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <!-- Se agregan los modales mediante un foreach -->
+                                    @foreach($entrevista->contactos as $contacto) 
+                                        @include('vistas-supervisor-2.modulo-supervisor.modal_info_contacto')
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+
                         <!-- Carrera -->
                         <div class="col-xs-6">
                             {!! Form::label('codigo_carrera', 'Carrera:') !!}
