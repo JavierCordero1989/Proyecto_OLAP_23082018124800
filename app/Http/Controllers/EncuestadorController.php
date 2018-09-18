@@ -199,6 +199,7 @@ class EncuestadorController extends Controller
 
         $etiquetas = []; //Arreglo para las etiquetas de los gráficos
         $datos = []; //Arreglo para los datos numéricos para los gráficos
+        $colores_conare = config('global.colores.conare');
         $colores = []; //Arreglo para los colores de las partes del gráfico
         $faker = Factory::create('es_ES'); //Faker para generar datos aleatorios
 
@@ -206,7 +207,7 @@ class EncuestadorController extends Controller
         foreach($datosObtenidos as $dato) {
             $etiquetas[] = $dato->ESTADO; //Guarda el estado en el arreglo
             $datos[] = $dato->TOTAL; //Guardar el total en el arreglo
-            $colores[] = $faker->hexcolor; //Guarda un color aleatorio
+            $colores[] = $faker->randomElement($colores_conare); //Guarda un color aleatorio
         }
 
         //Llama la vista y le pasa los datos.
