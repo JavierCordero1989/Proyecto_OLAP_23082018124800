@@ -69,6 +69,10 @@
     </ul>
 </li> --}}
 
+<li>
+    <img class="img-responsive center-block" src="{{ asset('img/logo_conare.png') }}" alt="" style="width: 200px; margin-top: 15px; margin-bottom: 15px;">
+</li>
+
 @if(Auth::user()->hasRole('Super Admin'))
     @include('layouts.menu-superadmin')
 @endif
