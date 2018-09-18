@@ -539,6 +539,18 @@ class EncuestaGraduado extends Model
             ->groupBy('tbl_graduados.'.$filtro, 'e.estado');
     }
 
+    /** Obtiene el total de las entrevistas asignadas a cada encuestador, por estado, es decir obtiene las encuestas
+     * por encuestador, y saca el total de encuestas asignadas, las completas, etc.
+     */
+    public function scopeTotalEntrevistasPorEstadoPorEncuestador($query, $id_encuestador) {
+        return $query->select('u.name as ENCUESTADOR', 'e.estado as ESTADO', DB::RAW('COUNT(*) as TOTAL'))
+            ->leftJoin('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
+            ->leftJoin('tbl_estados_encuestas as e', 'e.id', '=', 'a.id_estado')
+            ->leftJoin('users as u', 'u.id', '=', 'a.id_encuestador')
+            ->where('u.id', $id_encuestador)
+            ->groupBy('u.name', 'e.estado');
+    }
+
     /** El resultado de esta función se puede ver sin necesidad del método get() de las consultas.
      * Obtiene el total de encuestas almacenadas en la BD
      */

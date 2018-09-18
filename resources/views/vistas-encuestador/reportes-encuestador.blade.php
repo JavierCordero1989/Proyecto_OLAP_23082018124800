@@ -217,11 +217,14 @@
         <script type="text/javascript" src="{{ asset('js/chartDescarga.js') }}"></script>
 
         <script type="text/javascript">
-            // var temperaturas = <?php /*echo json_encode($arrayTemperaturas['datos_temperaturas']);*/ ?>;
+            var labelsPie = <?php echo json_encode($etiquetas); ?>;
+            var dataPie = <?php echo json_encode($datos); ?>;
+            var coloresPie = <?php echo json_encode($colores); ?>;
+
             graficoDeBarras("grafico1");
             graficoDeLineas("grafico2");
             graficoDeDona("grafico3");
-            graficoDePie("grafico4");
+            graficoDePie("grafico4", labelsPie, "Estados por encuestador", dataPie, coloresPie);
             graficoDeBarrasHorizontales("grafico5");
             graficoDeBarrasAgrupadas("grafico6");
         </script>

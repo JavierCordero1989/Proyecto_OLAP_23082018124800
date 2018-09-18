@@ -11,6 +11,7 @@ use App\ObservacionesGraduado;
 use Carbon\Carbon;
 use Flash;
 use DB;
+use Faker\Factory;
 
 class EncuestadorController extends Controller
 {
@@ -194,6 +195,21 @@ class EncuestadorController extends Controller
     }
 
     public function reportes_de_encuestador($id_encuestador) {
-        return view('vistas-encuestador.reportes-encuestador');
+        $datosObtenidos = EncuestaGraduado::totalEntrevistasPorEstadoPorEncuestador($id_encuestador)->get();
+
+        $etiquetas = []; //Arreglo para las etiquetas de los gráficos
+        $datos = []; //Arreglo para los datos numéricos para los gráficos
+        $colores = []; //Arreglo para los colores de las partes del gráfico
+        $faker = Factory::create('es_ES'); //Faker para generar datos aleatorios
+
+        //Recorre la consulta obtenida
+        foreach($datosObtenidos as $dato) {
+            $etiquetas[] = $dato->ESTADO; //Guarda el estado en el arreglo
+            $datos[] = $dato->TOTAL; //Guardar el total en el arreglo
+            $colores[] = $faker->hexcolor; //Guarda un color aleatorio
+        }
+
+        //Llama la vista y le pasa los datos.
+        return view('vistas-encuestador.reportes-encuestador', compact('etiquetas', 'datos', 'colores'));
     }
 }

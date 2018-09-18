@@ -44,13 +44,13 @@ Chart.pluginService.register({
 });
 
 
-function graficoDePie(id_del_grafico) {
+function graficoDePie(id_del_grafico, labels, titulo, datos, colores) {
     var datosGrafico = {
-        labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+        labels: labels,
         datasets: [{
-            label: "Population (millions)",
-            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-            data: [2478,5267,734,784,433]
+            label: titulo,
+            backgroundColor: colores,
+            data: datos
         }]
     };
     /* FIN: se cargan los graficos con los datos de las vistas */
