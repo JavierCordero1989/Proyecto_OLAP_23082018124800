@@ -37,37 +37,6 @@
     {{-- <link rel="stylesheet" href="{{ asset('css/app/all.css') }}"> --}}
     <link rel="stylesheet" href="{{ config('global.css.link_all_2') }}">
     
-    <!-- Estilos con los colores de la paleta de colores del CONARE -->
-    <style>
-        .btn-info {
-            background-color: #003865;
-            border-color: #003865;
-        }
-
-        .btn-info:focus {
-            background-color: #003865;
-            border-color: #003865;
-        }
-
-        .btn-info:hover {
-            background-color: #CCCCCC;
-            border-color: #CCCCCC;
-            color: #000000;
-            transition: 0.5s;
-        }
-
-        .btn-primary {
-            background-color: #80C6CF;
-            border-color: #003865;
-            color: #000000;
-        }
-
-        .btn-primary:hover {
-            background-color: #CCCCCC;
-            color: #000000;
-            transition: 0.5s;
-        }
-    </style>
     @yield('css')
 </head>
 
@@ -154,7 +123,15 @@
 
     <!-- Main Footer -->
     <footer class="main-footer" style="max-height: 100px;text-align: center">
-        <strong>Copyright © 2018 <a href="{{ config('global.footer_link') }}" target="_blank">{{ config('global.footer_text') }}</a>.</strong> Derechos Reservados.
+        <p class="text-center">
+            <strong>Copyright © 2018</strong>
+            <a href="{!! config('global.link_correo_institucional') !!}" target="_blank">{!! config('global.texto_correo_institucional') !!}</a>
+            &nbsp; | &nbsp;
+            <a href="{!! config('global.link_olap') !!}" target="_blank">{!! config('global.texto_olap') !!}</a>
+            &nbsp; | &nbsp;
+            <a href="{!! config('global.link_conare') !!}" target="_blank">{!! config('global.texto_conare') !!}</a>
+        </p>
+        {{-- <strong>Copyright © 2018 <a href="{{ config('global.footer_link') }}" target="_blank">{{ config('global.footer_text') }}</a>.</strong> Derechos Reservados. --}}
     </footer>
 
 </div>

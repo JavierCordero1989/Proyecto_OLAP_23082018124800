@@ -508,4 +508,46 @@ class EncuestaGraduado extends Model
         
         return $asignacion->save();
     }
+
+    /** Obtiene el total de encuestas, por cada estado */
+    public function scopeTotalesPorEstado($query){
+        return $query->select('e.estado', DB::RAW('COUNT(*) as total'))
+            ->leftJoin('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
+            ->leftJoin('tbl_estados_encuestas as e', 'e.id', '=', 'a.id_estado')
+            ->groupBy('e.estado');
+    }
+
+    /** Obtiene el total de encuestas por cada uno de los códigos que se le indiquen por el parámetro $filtro
+     * Dichos parámetros pueden ser codigo_carrera, codigo_universidad, etc.
+     */
+    public function scopeTotalDeEntrevistasPor($query, $filtro){
+        return $query->select('d.nombre', DB::RAW('COUNT(*) as total'))
+            ->join('tbl_datos_carrera_graduado as d', 'd.id', '=', 'tbl_graduados.'.$filtro)
+            ->join('tbl_tipos_datos_carrera as t', 't.id', '=', 'd.id_tipo')
+            ->groupBy('d.nombre');
+    }
+
+    /** Obtiene el total de entrevistas por estado, es decir, por ejemplo, por cada carrera obtiene cuantas
+     * encuestas han sido asignadas, cuantas incompletas, etc. Así mismo se puede filtrar por universidad, por grado, 
+     * por disciplina, por agrupación o sector.
+     */
+    public function scopeTotalPorEstadoPor($query, $filtro){
+        return $query->select('d.nombre', 'e.estado', DB::RAW('COUNT(*) AS Total'))
+            ->leftJoin('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
+            ->leftJoin('tbl_estados_encuestas as e', 'e.id', '=', 'a.id_estado')
+            ->join('tbl_datos_carrera_graduado as d', 'd.id', '=', 'tbl_graduados.'.$filtro)
+            ->groupBy('tbl_graduados.'.$filtro, 'e.estado');
+    }
+
+    /** El resultado de esta función se puede ver sin necesidad del método get() de las consultas.
+     * Obtiene el total de encuestas almacenadas en la BD
+     */
+    public function scopeTotalDeEncuestas($query) {
+        return $query->count('*');
+    }
+
+    
+    // public function scope($query){
+    //     return $query;
+    // }
 }

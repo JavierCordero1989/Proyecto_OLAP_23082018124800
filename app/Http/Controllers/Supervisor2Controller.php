@@ -707,8 +707,6 @@ class Supervisor2Controller extends Controller
     }
 
     public function agregar_nuevo_caso_entrevista(Request $request) {
-
-        
         $nueva_encuesta = EncuestaGraduado::create([
             'identificacion_graduado'   => $request->identificacion_graduado,
             'token'                     => $request->token,
@@ -725,6 +723,8 @@ class Supervisor2Controller extends Controller
             'codigo_sector'             => $request->codigo_sector,
             'tipo_de_caso'              => $request->tipo_de_caso
         ]);
+
+        $nueva_encuesta->asignarEstado(1);
 
         if($request->agregar_contacto == 1) {
             return redirect(route('supervisor2.agregar-contacto-nueva-entrevista', $nueva_encuesta->id));
