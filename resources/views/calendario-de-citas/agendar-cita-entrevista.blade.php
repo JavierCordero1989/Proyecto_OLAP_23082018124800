@@ -20,7 +20,7 @@
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route'=>[$rutas['store'], $datos_a_vista['entrevista']]]) !!}
+                    {!! Form::open(['route'=>[$rutas['store'], $datos_a_vista['entrevista'], $datos_a_vista['encuestador']], 'onsubmit'=>'return validar_submit();']) !!}
                         <div class="form-group col-xs-6 col-xs-offset-3">
                             {!! Form::label('fecha_de_cita', 'Fecha de la cita:') !!}
                             <div class="bfh-datepicker" data-name="fecha_de_cita" data-format="d-m-y" data-min="today"></div>
@@ -37,8 +37,9 @@
                         </div>
 
                         <div class="form-group col-xs-6 col-xs-offset-3">
-                            {!! Form::label('motivo_de_cita', 'Motivo de la cita:') !!}
-                            {!! Form::textarea('motivo_de_cita', null, ['class'=>'form-control']) !!}
+                            {!! Form::label('observacion_de_cita', 'Observación de la cita:') !!}
+                            {!! Form::textarea('observacion_de_cita', null, ['class'=>'form-control', 'maxlength'=>'200', 'cols'=>200, 'rows'=>4]) !!}
+                            <div id="caracteres_restantes"></div>
                         </div>
 
                         <div class="form-group col-sm-6 col-sm-offset-3">
@@ -62,4 +63,37 @@
     <!-- Para prueba -->
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> --}}
     <script type="text/javascript" src="{{ asset('form-helper/js/bootstrap-formhelpers.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            var caracteres_maximos = 200;
+            $('#caracteres_restantes').html(caracteres_maximos + ' caracteres restantes');
+
+            $('#observacion_de_cita').on('keyup', function() {
+                var tamannio_texto = $(this).val().length;
+                var restantes = caracteres_maximos - tamannio_texto;
+
+                $('#caracteres_restantes').html(restantes + ' caracteres restantes');
+            });
+        });
+
+        function validar_submit() {
+            // var fecha = $('[name=fecha_de_cita]').val();
+            // var hora = $('[name=hora_de_cita]').val();
+            var contacto = $('[name=numero_contacto]').val();
+            var observacion = $('[name=observacion_de_cita]').val();
+
+            if(contacto.length == 0) {
+                alert('Debe ingresar un número de teléfono al cuál contactar.');
+                return false;
+            }
+            else {
+                if(observacion.length == 0) {
+                    return confirm('¿Desea dejar el campo para la observación vacío?\n\nTome en cuenta que es información vital para la cita que está agendando.');
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+    </script>
 @endsection

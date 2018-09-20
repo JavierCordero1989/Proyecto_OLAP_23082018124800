@@ -558,7 +558,11 @@ class EncuestaGraduado extends Model
         return $query->count('*');
     }
 
-    
+    public function getRouteKeyName()
+    {
+        return $this->token;
+    }
+
     // public function scope($query){
     //     return $query;
     // }

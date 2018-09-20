@@ -7,13 +7,24 @@ use App\EncuestaGraduado as Entrevista;
 use App\User as Usuario;
 use Flash;
 use Carbon\Carbon;
+use App\CitaCalendario as Cita;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class CalendarioDeCitasController extends Controller
 {
     private $vista_agendar_cita;
 
     public function __construct() {
         $this->vista_agendar_cita = 'calendario-de-citas.agendar-cita-entrevista';
+    }
+
+    public function ver_calendario() {
+        $citas = Cita::all();
+
+        return view('calendario-de-citas.calendario', compact('citas'));
     }
 
     public function agendar_cita_a_entrevista($encuestador, $mal_encuestador, $entrevista, $mal_entrevista) {
@@ -51,7 +62,14 @@ class CalendarioDeCitasController extends Controller
         return view($this->vista_agendar_cita, compact('datos_a_vista', 'rutas'));
     }
 
-    public function guardar_cita_de_entrevista($entrevista, Request $request) {
+    /** 
+     * Guarda una cita dentro de la base de datos con la información recibida en el request
+     * 
+     * @param int $entrevista Es el ID de la entrevista a la cual se desea hacer la cita en la agenda
+     * @param Request $request Información obtenida del formulario de HTML
+     * @return View Vista con los datos de las acciones acontecidas en el proceso
+     */
+    public function guardar_cita_de_entrevista($entrevista, $encuestador, Request $request) {
         // $entrevista_cita = Entrevista::find($entrevista);
 
         // if(empty($entrevista_cita)) {
@@ -60,28 +78,41 @@ class CalendarioDeCitasController extends Controller
         // }
 
         /* Convierte la fecha obtenida en un formato valido para mysql */
-        $hora = $this->convertir_hora_24($request->hora_de_cita);
+        // $hora = $this->convertir_hora_24($request->hora_de_cita);
 
-        $datos = [
-            'ID de encuesta' => $entrevista,
-            'fecha_sin_convetir' => $request->fecha_de_cita, 
-            'fecha_convertida' => $this->convertir_fecha_mysql($request->fecha_de_cita),
-            'hora_12' => $request->hora_de_cita,
-            'hora_24' => $hora,
-            'hora_12_conversion' => $this->convertir_hora_12($hora),
-            'fecha_mysql' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
-            'fecha_hora' => explode(' ', $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita)),
-            'datos_request' => $request->all()
-        ];
+        // $datos = [
+        //     'ID de encuesta' => $entrevista,
+        //     'fecha_sin_convetir' => $request->fecha_de_cita, 
+        //     'fecha_convertida' => $this->convertir_fecha_mysql($request->fecha_de_cita),
+        //     'hora_12' => $request->hora_de_cita,
+        //     'hora_24' => $hora,
+        //     'hora_12_conversion' => $this->convertir_hora_12($hora),
+        //     'fecha_mysql' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
+        //     'fecha_hora' => explode(' ', $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita)),
+        //     'datos_request' => $request->all()
+        // ];
 
-        $datos_fecha = [
-            'fecha' => $datos['fecha_hora'][0], 
-            'hora' => $datos['fecha_hora'][1],
-            'fecha_form' => $this->convertir_fecha_formulario($datos['fecha_hora'][0]),
-            'hora_form' => $this->convertir_hora_12($datos['fecha_hora'][1])
-        ];
+        // $datos_fecha = [
+        //     'fecha' => $datos['fecha_hora'][0], 
+        //     'hora' => $datos['fecha_hora'][1],
+        //     'fecha_form' => $this->convertir_fecha_formulario($datos['fecha_hora'][0]),
+        //     'hora_form' => $this->convertir_hora_12($datos['fecha_hora'][1])
+        // ];
 
-        dd($datos, $datos_fecha);
+        // dd($datos, $datos_fecha);
+
+        $cita = Cita::create([
+            'fecha_hora' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
+            'numero_contacto' => $request->numero_contacto,
+            'observacion' => $request->observacion_de_cita,
+            'id_encuestador' => $encuestador,
+            'id_entrevista' => $entrevista,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
+
+        Flash::success('La cita ha sido guardada con éxito.');
+        return redirect(route('ver-calendario'));
     }
 
     /** Convierte la fecha obtenida en un formato para guardarlo en MYSQL */
