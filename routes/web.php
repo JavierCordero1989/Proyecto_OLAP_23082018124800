@@ -263,6 +263,12 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
     });
 });
 
+// Rutas para el calendario y citas
+Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function() {
+  Route::get('agendar-cita-entrevista/{entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista')->name('calendario.agendar-cita');
+  Route::post('agendar-cita-entrevista/guardar/{entrevista}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')->name('calendario.guardar-cita');
+});
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
