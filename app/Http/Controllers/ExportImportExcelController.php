@@ -57,7 +57,8 @@ class ExportImportExcelController extends Controller
              * $reader->get() nos permite obtener todas las filas de nuestro archivo
              */
             foreach ($reader->get() as $key => $row) {
-                echo $row['cedhermano2'].'<br>';
+
+                echo $row.'<br><br>';
                 // /** campos del archivo excel */
                 // $data = [
                 //     //'campo en base de datos' => 'columna de excel'
