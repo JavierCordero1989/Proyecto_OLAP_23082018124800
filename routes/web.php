@@ -66,7 +66,7 @@ Route::get('asignar-roles-a-usuario/create', 'AssignRolesToUserController@create
 Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store') ->name('rolesToUser.store') ->middleware('permission:rolesToUser.store');
 
 Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel')->name('excel.import');
-Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')->name('excel.create')->middleware(['role:Super Admin', 'permission:excel.create']);
+Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
 
 //Encuestadores
 Route::group(['middleware'=>['auth']], function() {
@@ -117,6 +117,19 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')       ->name('asignar-encuestas.lista-encuestas-asignadas');
   Route::post('filtrar-muestra/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@filtrar_muestra_a_asignar')     ->name('asignar-encuestas.filtrar-muestra');
   Route::post('remover-encuestas-encuestador/{id_encuestador}', 'EncuestaGraduadoController@removerEncuestas')                ->name('asignar-encuestas.remover-encuestas');
+  Route::get('remover-encuestas-encuestador/{id_entrevista}/{id_encuestador}',     'EncuestaGraduadoController@remover_encuestas_a_encuestador')->name('asignar-encuestas.remover-encuestas-a-encuestador');
+  Route::get('realizar-entrevista/{id_entrevista}', 'EncuestaGraduadoController@realizar_entrevista') ->name('asignar-encuestas.realizar-entrevista');
+  Route::get('agregar-contacto-entrevista/{id_entrevista}', 'EncuestaGraduadoController@agregar_contacto')->name('asignar-encuestas.agregar-contacto-entrevista');
+  Route::patch('actualizar-entrevista/{id_entrevista}', 'EncuestaGraduadoController@actualizar_entrevista')->name('asignar-encuestas.actualizar-entrevista');
+  Route::get('agregar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@agregar_detalle_contacto')->name('asignar-encuestas.agregar-detalle-contacto');
+  Route::delete('{id_detalle}/{id_entrevista}/borrar', 'EncuestaGraduadoController@borrar_detalle_contacto')->name('asignar-encuestas.borrar-detalle-contacto');
+  Route::get('editar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}/editar', 'EncuestaGraduadoController@editar_detalle_contacto')->name('asignar-encuestas.editar-detalle-contacto');
+  Route::get('editar-contacto-entrevista/{id_contacto}/editar/{id_entrevista}', 'EncuestaGraduadoController@editar_contacto_entrevista')->name('asignar-encuestas.modificar-contacto-entrevista');
+  Route::post('agregar-contacto-entrevista-supervisor/guardar/{id_entrevista}/{id_supervisor}', 'EncuestaGraduadoController@guardar_contacto')->name('asignar-encuestas.guardar-contacto-entrevista-supervisor');
+  Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@guardar_detalle_contacto')->name('asignar-encuestas.guardar-detalle-contacto');
+  Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_detalle_contacto')->name('asignar-encuestas.actualizar-detalle-contacto');
+  Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_contacto_entrevista')->name('asignar-encuestas.actualizar-contacto-entrevista');
+
 });
 
 //Gráficos

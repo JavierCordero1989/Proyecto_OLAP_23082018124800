@@ -29,26 +29,30 @@
                                 <th>Grado</th>
                                 <th>Disciplina</th>
                                 <th>Área</th>
+                                <th>Agrupación</th>
+                                <th>Sector</th>
                                 <th>Tipo de caso</th>
-                                <th>Detalles</th>
                             </thead>
                             <tbody>
                                 @foreach($encuestasNoAsignadas as $entrevista)
                                     <tr>
-                                        <td>{!! Form::checkbox('encuestas[]', $entrevista->id) !!} {!! $entrevista->identificacion_graduado !!}</td>
+                                        <!-- En esta columna, se crea un enlace para la cedula con los datos detallados de la entrevista -->
+                                        <td>
+                                            {!! Form::checkbox('encuestas[]', $entrevista->id) !!}
+                                            <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">{!! $entrevista->identificacion_graduado !!}</a>
+                                            @include('vistas-supervisor-2.modulo-encuestador.modal_ver_detalles_de_entrevista')
+                                        </td>
                                         <td>{!! $entrevista->nombre_completo !!}</td>
                                         <td>{!! $entrevista->annio_graduacion !!}</td>
-                                        <td>{!! $entrevista->sexo !!}</td>
+                                        <td>{!! $entrevista->sexo == 'M' ? 'MASCULINO' : ($entrevista->sexo == 'F' ? 'FEMENINO' : 'INDEFINIDO') !!}</td>
                                         <td>{!! $entrevista->carrera->nombre !!}</td>
                                         <td>{!! $entrevista->universidad->nombre !!}</td>
                                         <td>{!! $entrevista->grado->nombre !!}</td>
                                         <td>{!! $entrevista->disciplina->nombre !!}</td>
                                         <td>{!! $entrevista->area->nombre !!}</td>
+                                        <td>{!! $entrevista->agrupacion->nombre !!}</td>
+                                        <td>{!! $entrevista->sector->nombre !!}</td>
                                         <td>{!! $entrevista->tipo_de_caso !!}</td>
-                                        <td>
-                                            <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a>
-                                            @include('vistas-supervisor-2.modulo-encuestador.modal_ver_detalles_de_entrevista')
-                                        </td>
                                     </tr>
                                     
                                 @endforeach

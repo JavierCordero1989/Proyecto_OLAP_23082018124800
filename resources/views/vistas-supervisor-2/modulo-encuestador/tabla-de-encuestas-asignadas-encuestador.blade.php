@@ -26,59 +26,6 @@
                 </div>
             @else
 
-            {{-- {!! Form::open(['route' => ['supervisor2.remover-encuestas-a-encuestador', $id_encuestador], 'onsubmit' => 'return verificar();']) !!}
-                <section class="content-header">
-                    <h1 class="pull-left">Encuestas asignadas</h1>
-                    <h1 class="pull-right">
-                    
-                        {!! Form::submit('Quitar encuestas', ['class' => 'btn btn-primary pull-right', 'style' => 'margin-top: -10px;margin-bottom: 5px;']) !!}
-                        
-                    </h1>
-                </section>
-                <div class="content">
-                    <div class="clearfix"></div>
-                    @include('flash::message')
-                    <div class="clearfix"></div>
-                    <div class="box-header">
-                        <div class="box-body">
-
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <th>{!! Form::checkbox('select_all', 0) !!}  Identificacion</th>
-                                        <th>Nombre</th>
-                                        <th>Año de graduación</th>
-                                        <th>Sexo</th>
-                                        <th>Carrera</th>
-                                        <th>Universidad</th>
-                                        <th>Grado</th>
-                                        <th>Disciplina</th>
-                                        <th>Área</th>
-                                        <th>Tipo de caso</th>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($listaDeEncuestas as $encuesta)
-                                        <tr>
-                                            <td>{!! Form::checkbox('encuestas[]', $encuesta->id) !!} {!! $encuesta->identificacion_graduado !!}</td>
-                                            <td>{!! $encuesta->nombre_completo !!}</td>
-                                            <td>{!! $encuesta->annio_graduacion !!}</td>
-                                            <td>{!! $encuesta->sexo !!}</td>
-                                            <td>{!! $encuesta->carrera->nombre !!}</td>
-                                            <td>{!! $encuesta->universidad->nombre !!}</td>
-                                            <td>{!! $encuesta->grado->nombre !!}</td>
-                                            <td>{!! $encuesta->disciplina->nombre !!}</td>
-                                            <td>{!! $encuesta->area->nombre !!}</td>
-                                            <td>{!! $encuesta->tipo_de_caso !!}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {!! Form::close() !!} --}}
-
                 <div class="col-xs-12 text-center">
                 <h4>{{ $encuestador->name }}</h4>
                 </div>

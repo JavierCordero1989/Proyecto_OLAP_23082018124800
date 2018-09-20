@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\EncuestaGraduado;
 use App\User;
 use App\DatosCarreraGraduado;
@@ -10,6 +11,10 @@ use DB;
 use Flash;
 use App\Asignacion;
 use App\ContactoGraduado;
+use App\TiposDatosCarrera;
+use App\ObservacionesGraduado;
+use App\DetalleContacto;
+use Carbon\Carbon;
 
 class EncuestaGraduadoController extends Controller
 {
@@ -43,16 +48,34 @@ class EncuestaGraduadoController extends Controller
      * pueda seleccionar todos los filtros adecuados.
     */
     public function asignar($id_supervisor, $id_encuestador) {
-        // $encuestasNoAsignadas = EncuestaGraduado::listaDeEncuestasSinAsignar()->get();
+        $id_carrera =       TiposDatosCarrera::carrera()->first();
+        $id_universidad =   TiposDatosCarrera::universidad()->first();
+        $id_grado =         TiposDatosCarrera::grado()->first();
+        $id_disciplina =    TiposDatosCarrera::disciplina()->first();
+        $id_area =          TiposDatosCarrera::area()->first();
+        $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
+        $id_sector =        TiposDatosCarrera::sector()->first();
 
-        $carreras = DatosCarreraGraduado::where('id_tipo', 1)       ->pluck('nombre', 'id');
-        $universidades = DatosCarreraGraduado::where('id_tipo', 2)  ->pluck('nombre', 'id');
-        $grados = DatosCarreraGraduado::where('id_tipo', 3)         ->pluck('nombre', 'id');
-        $disciplinas = DatosCarreraGraduado::where('id_tipo', 4)    ->pluck('nombre', 'id');
-        $areas = DatosCarreraGraduado::where('id_tipo', 5)          ->pluck('nombre', 'id');
+        $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
+        $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
+        $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
+        $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
+        $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
+        $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
+
+        $datos_carrera = [
+            'carreras' => $carreras,
+            'universidades' => $universidades,
+            'grados' => $grados,
+            'disciplinas' => $disciplinas,
+            'areas' => $areas,
+            'agrupaciones' => $agrupaciones,
+            'sectores' => $sectores
+        ];
 
         return view('encuestadores.lista-filtro-encuestas', 
-            compact('id_supervisor', 'id_encuestador','carreras', 'universidades', 'grados', 'disciplinas', 'areas'));
+            compact('id_supervisor', 'id_encuestador', 'datos_carrera'));
     }
 
     /** Recibe las encuestas seleccionadas por la persona que realiza la asignacion, y realiza algunas
@@ -123,8 +146,9 @@ class EncuestaGraduadoController extends Controller
 
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
+        $encuestador = User::find($id_encuestador);
 
-        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas', 'id_encuestador'));
+        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas', 'encuestador'));
     }
 
     /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros
@@ -155,9 +179,15 @@ class EncuestaGraduadoController extends Controller
             $resultado->where('codigo_area', $input['area']);
         }
 
-        $encuestasNoAsignadas = $resultado->get();
+        if(!is_null($input['agrupacion'])) {
+            $resultado->where('codigo_agrupacion', $input['agrupacion']);
+        }
 
-        // dd($encuestasNoAsignadas);
+        if(!is_null($input['sector'])) {
+            $resultado->where('codigo_sector', $input['sector']);
+        }
+
+        $encuestasNoAsignadas = $resultado->get();
 
         return view('encuestadores.tabla-encuestas-no-asignadas', compact('encuestasNoAsignadas', 'id_supervisor', 'id_encuestador'));
     }
@@ -182,5 +212,189 @@ class EncuestaGraduadoController extends Controller
 
         Flash::success('Se han eliminado las encuestas de este encuestador');
         return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+    }
+
+    public function remover_encuestas_a_encuestador($id_entrevista, $id_encuestador) {
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+        $quito_entrevista = $entrevista->desasignarEntrevista();
+        
+        if($quito_entrevista) {
+            Flash::success('Se ha eliminado la entrevista de este encuestador');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+        }
+        else {
+            Flash::error('No se ha podido eliminar la entrevista de este encuestador');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+        }
+    }
+
+    public function realizar_entrevista($id_entrevista) {
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+
+        if(empty($entrevista)) {
+            Flash::error('No se ha encontrado la entrevista solicitada.');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
+        }
+        
+        $estados = DB::table('tbl_estados_encuestas')->get()->pluck('estado', 'id');
+
+        return view('encuestadores.realizar-entrevista', compact('entrevista', 'estados'));
+    }
+
+    public function agregar_contacto($id_entrevista) {
+        return view('encuestadores.agregar-contacto-entrevista')->with('id_entrevista', $id_entrevista);
+    }
+
+    public function actualizar_entrevista($id_entrevista, Request $request) {
+        // dd($request->all());
+
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+
+        if(empty($entrevista)) {
+            Flash::error('No se ha encontrado la entrevista solicitada.');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
+        }
+
+        //Cambiar el estado de la entrevista por el del request
+        $cambio_estado = $entrevista->cambiarEstadoDeEncuesta($request->estados);
+
+        if(!$cambio_estado) {
+            Flash::error('No se ha podido cambiar el estado de la entrevista');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        //si no existen observaciones, agregarla, de lo contrario modificar la existente.
+        $observaciones_entrevista = $entrevista->observaciones;
+
+        if(sizeof($observaciones_entrevista) == 0) {
+            //Agregar la observación
+            $nueva_observacion = ObservacionesGraduado::create([
+                'id_graduado' => $entrevista->id,
+                'id_usuario' => Auth::user()->id,
+                'observacion' => $request->observacion,
+                'created_at' => Carbon::now()
+            ]);
+        }
+        else {
+            //Modificar la existente
+            $observacion_existente = ObservacionesGraduado::where('id_graduado', $entrevista->id)->first();
+            $observacion_existente->observacion = $request->observacion;
+            $observacion_existente->updated_at = Carbon::now();
+            $cambio_observacion = $observacion_existente->save();
+
+            if(!$cambio_observacion) {
+                Flash::error('No se ha podido agregar la observación a la entrevista');
+                return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+            }
+        }
+
+        Flash::success('Se han guardado correctamente los cambios');
+        return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
+    }
+
+    public function agregar_detalle_contacto($id_contacto, $id_entrevista) {
+        return view('encuestador.agregar-detalle-contacto', compact('id_contacto', 'id_entrevista'));
+    }
+
+    public function borrar_detalle_contacto($id_detalle_contacto, $id_entrevista) {
+        $detalle = DetalleContacto::find($id_detalle_contacto);
+
+        if(empty($detalle)) {
+            Flash::error('No se ha encontrado el detalle del contacto.');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        $detalle->deleted_at = Carbon::now();
+        $detalle->save();
+
+        Flash::success('La información del contacto se ha eliminado.');
+        return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+    }
+
+    public function editar_detalle_contacto($id_detalle_contacto, $id_entrevista) {
+        $detalle = DetalleContacto::find($id_detalle_contacto);
+
+        if(empty($detalle)) {
+            Flash::error('No se ha encontrado el detalle del contacto.');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        return view('encuestadores.editar-detalle-contacto', compact('detalle', 'id_entrevista'));
+    }
+
+    public function editar_contacto_entrevista($id_contacto, $id_entrevista) {
+        $contacto = ContactoGraduado::find($id_contacto);
+
+        if(empty($contacto)) {
+            Flash::error('No existe el contacto que busca');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        return view('encuestadores.modificar-contacto-entrevista', compact('contacto', 'id_entrevista'));
+    }
+
+    public function guardar_contacto($id_entrevista, $id_supervisor, Request $request) {
+        
+        $contacto = ContactoGraduado::create([
+            'identificacion_referencia' => $request->identificacion_referencia,
+            'nombre_referencia'         => $request->nombre_referencia,
+            'parentezco'                => $request->parentezco,
+            'id_graduado'               => $id_entrevista,
+            'created_at'                => \Carbon\Carbon::now()
+        ]);
+
+        $contacto->agregarDetalle($request->informacion_contacto, $request->observacion_contacto);
+
+        Flash::success('Se ha guardado correctamente la nueva información de contacto.');
+        return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+    }
+
+    public function guardar_detalle_contacto($id_contacto, $id_entrevista, Request $request) {
+        $contacto = ContactoGraduado::find($id_contacto);
+
+        if(empty($contacto)) {
+            Flash::error('No se ha encontrado el contacto.');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        $contacto->agregarDetalle($request->contacto, $request->observacion);
+
+        Flash::success('Se ha agregado información al contacto correctamente.');
+        return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+    }
+
+    public function actualizar_detalle_contacto($id_detalle_contacto, $id_entrevista, Request $request) {
+        $detalle = DetalleContacto::find($id_detalle_contacto);
+
+        if(empty($detalle)) {
+            Flash::error('No se ha encontrado el detalle del contacto.');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        $detalle->contacto = $request->contacto;
+        $detalle->observacion = $request->observacion;
+        $detalle->updated_at = Carbon::now();
+        $detalle->save();
+
+        Flash::success('La información del contacto se ha modificado correctamente.');
+        return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+    }
+
+    public function actualizar_contacto_entrevista($id_contacto, $id_entrevista, Request $request) {
+        $contacto = ContactoGraduado::find($id_contacto);
+
+        if(empty($contacto)) {
+            Flash::error('No existe el contacto que busca');
+            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+        }
+
+        $contacto->identificacion_referencia = $request->identificacion_referencia;
+        $contacto->nombre_referencia = $request->nombre_referencia;
+        $contacto->parentezco = $request->parentezco;
+        $contacto->updated_at = Carbon::now();
+        $contacto->save();
+
+        Flash::success('El contacto ha sido actualizado correctamente.');
+        return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
     }
 }

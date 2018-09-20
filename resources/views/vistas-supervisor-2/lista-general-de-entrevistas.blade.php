@@ -41,12 +41,14 @@
                         <th>Agrupación</th>
                         <th>Sector</th>
                         <th>Tipo de caso</th>
-                        <th>Detalles</th>
                     </thead>
                     <tbody>
                     @foreach($entrevistas as $entrevista)
                         <tr>
-                            <td>{!! $entrevista->identificacion_graduado !!}</td>
+                            <td>
+                                <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">{!! $entrevista->identificacion_graduado !!}</a>
+                                @include('vistas-supervisor-2.modal_ver_detalles_de_entrevista')
+                            </td>
                             <td>{!! $entrevista->nombre_completo !!}</td>
                             <td>{!! $entrevista->annio_graduacion !!}</td>
                             <td>{!! $entrevista->carrera->nombre !!}</td>
@@ -57,10 +59,6 @@
                             <td>{!! $entrevista->agrupacion->nombre !!}</td>
                             <td>{!! $entrevista->sector->nombre !!}</td>
                             <td>{!! $entrevista->tipo_de_caso !!}</td>
-                            <td>
-                                <a href="#modal-ver-detalles-de-entrevista-{{$entrevista->id}}" data-toggle="modal">Ver detalles</a>
-                                @include('vistas-supervisor-2.modal_ver_detalles_de_entrevista')
-                            </td>
                         </tr>
                     @endforeach
                     </tbody>

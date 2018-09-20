@@ -22,74 +22,36 @@
                         <table class="table">
                             <thead>
                                 <th>{!! Form::checkbox('select_all', 0) !!} Identificacion</th>
-                                <th>Token</th>
                                 <th>Nombre</th>
                                 <th>Año de graduación</th>
-                                <th>Link para encuesta</th>
                                 <th>Sexo</th>
                                 <th>Carrera</th>
                                 <th>Universidad</th>
                                 <th>Grado</th>
                                 <th>Disciplina</th>
                                 <th>Área</th>
-                                <th>Info de contacto</th>
+                                <th>Agrupación</th>
+                                <th>Sector</th>
                                 <th>Tipo de caso</th>
                             </thead>
                             <tbody>
                                 @foreach($encuestasNoAsignadas as $encuesta)
                                     <tr>
-                                        <td>{!! Form::checkbox('encuestas[]', $encuesta->id) !!} {!! $encuesta->identificacion_graduado !!}</td>
-                                        <td>{!! $encuesta->token !!}</td>
+                                        <td>
+                                            {!! Form::checkbox('encuestas[]', $encuesta->id) !!}
+                                            <a href="#modal-ver-detalles-de-entrevista-{{$encuesta->id}}" data-toggle="modal">{!! $encuesta->identificacion_graduado !!}</a> 
+                                            @include('modals.modal_ver_detalles_de_entrevista')
+                                        </td>
                                         <td>{!! $encuesta->nombre_completo !!}</td>
                                         <td>{!! $encuesta->annio_graduacion !!}</td>
-                                        <td>
-                                            <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlaceEncuesta-{!! $encuesta->token!!}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    {{-- <i class="glyphicon glyphicon-eye-open"></i> --}}
-                                                    <i class="fas fa-link"></i>
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownEnlaceEncuesta">
-                                                    <li>
-                                                        <a href="{!! $encuesta->link_encuesta !!}" target="_blank"><i class="fas fa-eye"></i> {!! $encuesta->link_encuesta !!} </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
                                         <td>{!! $encuesta->sexo !!}</td>
                                         <td>{!! $encuesta->carrera->nombre !!}</td>
                                         <td>{!! $encuesta->universidad->nombre !!}</td>
                                         <td>{!! $encuesta->grado->nombre !!}</td>
                                         <td>{!! $encuesta->disciplina->nombre !!}</td>
                                         <td>{!! $encuesta->area->nombre !!}</td>
-                                        <td>
-                                            <!-- Se valida que haya registros de contacto -->
-                                            @if(sizeof($encuesta->contactos) <= 0)
-                                                <a href="#">Agregar</a>
-                                            @else
-                                                <!-- Dropdown menu para mostrar la informacion de contacto del usuario -->
-                                                <div class="dropdown">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto-{!! $encuesta->token !!}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        <i class="fas fa-address-card"></i>
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
-                                                            <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
-                                                            @foreach($encuesta->contactos as $contacto)
-                                                                <li>
-                                                                    <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
-                                                                </li>
-                                                            @endforeach
-                                                            <li><a href="#">Agregar contacto</a></li>
-                                                        </ul>
-                        
-                                                        <!-- Se agregan los modales mediante un foreach -->
-                                                        @foreach($encuesta->contactos as $contacto) 
-                                                            @include('modals.modal_info_contacto')
-                                                        @endforeach
-                                                </div>
-                                            @endif
-                                        </td>
+                                        <td>{!! $encuesta->agrupacion->nombre !!}</td>
+                                        <td>{!! $encuesta->sector->nombre !!}</td>
                                         <td>{!! $encuesta->tipo_de_caso !!}</td>
                                     </tr>
                                 @endforeach
@@ -121,10 +83,6 @@
                     return false;
                 }
             }
-
-            // $('[name=select_all]').change(function() {
-            //     alert('El estado del check ha cambiado');
-            // });
 
             $('[name=select_all]').click(function() {
                 var checks = document.getElementsByName('encuestas[]');
