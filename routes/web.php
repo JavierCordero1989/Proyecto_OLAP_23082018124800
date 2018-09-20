@@ -18,7 +18,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
 
 //Rutas para los roles
 Route::group(['middleware'=>['auth']], function() {
@@ -265,7 +265,7 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
 
 // Rutas para el calendario y citas
 Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function() {
-  Route::get('agendar-cita-entrevista/{entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista')->name('calendario.agendar-cita');
+  Route::get('agendar-cita-entrevista/{encuestador}/{mal_encuestador}/{entrevista}/{mal_entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista')->name('calendario.agendar-cita');
   Route::post('agendar-cita-entrevista/guardar/{entrevista}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')->name('calendario.guardar-cita');
 });
 
