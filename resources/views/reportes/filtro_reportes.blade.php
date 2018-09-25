@@ -57,13 +57,18 @@
                 /* Se pone el estado del check selccionado en verdadero */
                 $box.prop("checked", true);
 
-
-
                 var value = $box.attr("value");
-                console.log(value);
-                
                 caja_disciplina = $('#disciplina');
-                console.log(caja_disciplina);
+                caja_disciplina.html('');
+
+                disciplinas.forEach(function(disc) {
+                    if(disc.id_area == value) {
+                        console.log(disc);
+                        
+                        caja_disciplina.append('<input name="disciplinas[]" type="checkbox" value="'+disc.id+'"> '+disc.descriptivo+'<br>');
+                    }
+                });
+                
             } else {
                 $box.prop("checked", false);
             }
