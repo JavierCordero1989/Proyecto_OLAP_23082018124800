@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Disciplina;
 
 class Area extends Model
 {
@@ -12,4 +13,8 @@ class Area extends Model
         'codigo',
         'descriptivo'
     ];
+
+    public function disciplinas() {
+        return $this->hasMany(Disciplina::class, 'id_area');
+    }
 }

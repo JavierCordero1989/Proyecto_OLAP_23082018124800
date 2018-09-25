@@ -18,17 +18,17 @@
                     <h3>Áreas</h3>
                     <div class="col-xs-12">
                         @foreach($areas as $area)
-                            {!! Form::checkbox('areas[]', $area->id) !!} {!! $area->nombre !!} <br>
+                            {!! Form::checkbox('areas[]', $area->id) !!} {!! $area->descriptivo !!} <br>
                         @endforeach
                     </div>
                 </div>
 
                 <div class="col-xs-6">
                     <h3>Disciplinas</h3>
-                    <div class="col-xs-12">
-                        @foreach($disciplinas as $disciplina)
-                            {!! Form::checkbox('disciplinas[]', $disciplina->id) !!} {!! $disciplina->nombre !!} <br>
-                        @endforeach
+                    <div id="disciplina" class="col-xs-12">
+                        {{-- @foreach($disciplinas as $disciplina)
+                            {!! Form::checkbox('disciplinas[]', $disciplina->id) !!} {!! $disciplina->descriptivo !!} <br>
+                        @endforeach --}}
                     </div>
                 </div>
 
@@ -38,4 +38,35 @@
             </div>
         {!! Form::close() !!}
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        //Varibale con las disciplinas obtenidas de la BD
+        var disciplinas = <?php echo json_encode($disciplinas); ?>;
+
+        $("input:checkbox").on('click', function() {
+            // en el manejador, 'this' se refiere al checkbox que disparó el evento
+            var $box = $(this);
+
+            if ($box.is(":checked")) {
+                /* Se selecciona todo el grupo de checkbox que tenga el mismo atributo name */
+                var group = "input:checkbox[name='" + $box.attr("name") + "']";
+                /* Todos los checks se ponen en un estado de seleccionado en falso */
+                $(group).prop("checked", false);
+                /* Se pone el estado del check selccionado en verdadero */
+                $box.prop("checked", true);
+
+
+
+                var value = $box.attr("value");
+                console.log(value);
+                
+                caja_disciplina = $('#disciplina');
+                console.log(caja_disciplina);
+            } else {
+                $box.prop("checked", false);
+            }
+        });
+    </script>
 @endsection

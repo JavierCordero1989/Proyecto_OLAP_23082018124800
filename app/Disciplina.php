@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Area;
 
 class Disciplina extends Model
 {
@@ -13,4 +14,8 @@ class Disciplina extends Model
         'descriptivo',
         'id_area'
     ];
+
+    public function area() {
+        return $this->hasOne(Area::class, 'id', 'id_area');
+    }
 }

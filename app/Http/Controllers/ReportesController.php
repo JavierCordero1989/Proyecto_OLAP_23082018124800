@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DatosCarreraGraduado as Tipo;
+use App\Area;
+use App\Disciplina;
 
 class ReportesController extends Controller
 {
@@ -12,8 +13,8 @@ class ReportesController extends Controller
     }
 
     public function filtro_reportes() {
-        $disciplinas = Tipo::porDisciplina()->get();
-        $areas = Tipo::porArea()->get();
+        $disciplinas = Disciplina::all();
+        $areas = Area::all();
 
         return view('reportes.filtro_reportes', compact('disciplinas', 'areas'));
     }
