@@ -34,8 +34,10 @@ class CreateGraduadosTable extends Migration
             $table->foreign('codigo_carrera')       ->references('id')->on('tbl_datos_carrera_graduado');
             $table->foreign('codigo_universidad')   ->references('id')->on('tbl_datos_carrera_graduado');
             $table->foreign('codigo_grado')         ->references('id')->on('tbl_datos_carrera_graduado');
-            $table->foreign('codigo_disciplina')    ->references('id')->on('tbl_datos_carrera_graduado');
-            $table->foreign('codigo_area')          ->references('id')->on('tbl_datos_carrera_graduado');
+            // $table->foreign('codigo_disciplina')    ->references('id')->on('tbl_datos_carrera_graduado');
+            // $table->foreign('codigo_area')          ->references('id')->on('tbl_datos_carrera_graduado');
+            $table->foreign('codigo_disciplina')    ->references('id')->on('tbl_disciplinas');
+            $table->foreign('codigo_area')          ->references('id')->on('tbl_areas');
             $table->foreign('codigo_agrupacion')    ->references('id')->on('tbl_datos_carrera_graduado');
             $table->foreign('codigo_sector')        ->references('id')->on('tbl_datos_carrera_graduado');
         });

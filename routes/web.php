@@ -265,9 +265,16 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
 
 // Rutas para el calendario y citas
 Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function() {
-  Route::get('', 'CalendarioDeCitasController@ver_calendario')->name('ver-calendario');
+  Route::get('{id_usuario}', 'CalendarioDeCitasController@ver_calendario')->name('ver-calendario');
   Route::get('agendar-cita-entrevista/{encuestador}/{mal_encuestador}/{entrevista}/{mal_entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista')->name('calendario.agendar-cita');
   Route::post('agendar-cita-entrevista/guardar/{entrevista}/{encuestador}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')->name('calendario.guardar-cita');
+});
+
+// Rutas para los reportes 
+Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
+  Route::get('', 'ReportesController@index')->name('reportes.index');
+  Route::get('filtro', 'ReportesController@filtro_reportes')->name('reportes.filtro');
+  Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte')->name('reportes.filtro-encuestas');
 });
 
 //Plantilla rutas

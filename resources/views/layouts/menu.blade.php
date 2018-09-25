@@ -88,3 +88,26 @@
 @if(Auth::user()->hasRole('Encuestador'))
     @include('vistas-encuestador.menu')
 @endif
+
+<li class="">
+    <a href="{!! route('ver-calendario', Auth::user()->id) !!}"><i class="far fa-calendar-alt"></i><span> Calendario de citas</span></a>
+</li>
+
+<li class="treeview">
+        <a href="#">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Reportes</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="#">
+                <a href="{!! route('reportes.index') !!}"><i class="fa fa-edit"></i><span>Reportes</span></a>
+            </li>
+    
+            <li class="#">
+                <a href="{!! route('reportes.filtro') !!}"><i class="fa fa-edit"></i><span>Filtro</span></a>
+            </li>
+        </ul>
+    </li>

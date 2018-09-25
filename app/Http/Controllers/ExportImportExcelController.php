@@ -58,7 +58,15 @@ class ExportImportExcelController extends Controller
              */
             foreach ($reader->get() as $key => $row) {
 
-                echo $row.'<br><br>';
+                
+
+                foreach($row as $llave => $valor) {
+                    if(!sizeof($valor) == 0) {
+                        echo $llave.':'.$valor.'<br>';
+                    }
+                }
+
+                echo '<br><br>';
                 // /** campos del archivo excel */
                 // $data = [
                 //     //'campo en base de datos' => 'columna de excel'

@@ -21,8 +21,22 @@ class CalendarioDeCitasController extends Controller
         $this->vista_agendar_cita = 'calendario-de-citas.agendar-cita-entrevista';
     }
 
-    public function ver_calendario() {
-        $citas = Cita::all();
+    public function ver_calendario($id_usuario) {
+        $user = Usuario::find($id_usuario);
+
+        if(empty($user)) {
+            return redirect(route('home'));
+        }
+
+        $citas;
+        
+        //Si el usuario es un encuestador, que cargue solo las citas hechas por él.
+        if($user->hasRole('Encuestador')) {
+            $citas = Cita::citasDeEncuestador($id_usuario)->get();
+        }
+        else {
+            $citas = Cita::all();
+        }
 
         return view('calendario-de-citas.calendario', compact('citas'));
     }
