@@ -13,31 +13,7 @@ class AreasDisciplinasSeeder extends Seeder
      */
     public function run()
     {
-        // /** Crea el faker para generar datos de prueba */
-        // $faker = Faker\Factory::create('es_ES');
-
-        // /* Para guardar los IDS de las areas que se van creando. */
-        // $ids_areas = [];
-        
-        // /* Se crean 10 areas */
-        // for($i=0; $i<10; $i++) {
-        //     $nueva_area = Area::create([
-        //         'codigo' => $faker->numerify('##########'),
-        //         'descriptivo' => $faker->sentence
-        //     ]);
-
-        //     $ids_areas[] = $nueva_area->id;
-        // }
-
-        // /* Se crean 120 disciplinas */
-        // for($j=0; $j<120; $j++) {
-        //     $nueva_disciplina = Disciplina::create([
-        //         'codigo' => $faker->numerify('##########'),
-        //         'descriptivo' => $faker->sentence,
-        //         'id_area' => $faker->randomElement($ids_areas)
-        //     ]);
-        // }
-
+        // Áreas del catálogo de datos de la División de Planificación Interuniversitaria
         $areas = [
             '1'=>'Artes y Letras',
             '2'=>'Ciencias básicas',
@@ -51,6 +27,7 @@ class AreasDisciplinasSeeder extends Seeder
             '10'=>'Ciencias de la Salud'
         ];
 
+        /* Se recorre el arreglo con las áreas para guardarlas en la BD */
         foreach($areas as $llave => $valor) {
             $nueva_area = Area::create([
                 'codigo'      => $llave,
@@ -58,6 +35,7 @@ class AreasDisciplinasSeeder extends Seeder
             ]);
         }
 
+        // Disciplinas del catálogo de datos de la División de Planificación Interuniversitaria
         $disciplinas = [
             '1' => [
                 '10000'=>'Artes y Letras',
@@ -266,6 +244,10 @@ class AreasDisciplinasSeeder extends Seeder
             ]
         ];
 
+        /* Se recorre el arreglo de disciplinas, la cual contiene como clave el área asociada, y como valor,
+           un arreglo con las disciplinas pertenecientes a dicha área asociada. Luego se recorre el arreglo con las
+           disciplinas por área, para guardarlas en la BD. 
+        */
         foreach($disciplinas as $llave => $disciplina) {
             foreach($disciplina as $key => $value) {
                 $nueva_disciplina = Disciplina::create([
