@@ -3,16 +3,16 @@
 @section('title', 'Filtro')
 
 @section('content')
-    {{-- <section class="content-header">
-        <h1 class="pull-left">
-            <a class="btn btn-primary pull-left" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('reportes.filtro-encuestas') !!}">Generar reporte</a>
-        </h1>
-    </section> --}}
+    {!! Form::open(['route'=>'reportes.filtro-encuestas']) !!}
+        <section class="content-header">
+            <h1 class="pull-left">
+                {!! Form::submit('Generar reporte', ['class' => 'btn btn-primary']) !!}
+            </h1>
+        </section>
 
-    <div class="clearfix"></div>
+        <div class="clearfix"></div>
 
-    <div class="content">
-        {!! Form::open(['route'=>'reportes.filtro-encuestas']) !!}
+        <div class="content">
             <div class="row">
                 
                 <div class="col-xs-3">
@@ -26,57 +26,33 @@
                     </div>
                 </div>
 
-                <div id="contenedor_universidades" class="col-xs-3">
+                <div id="contenedor_universidades" class="col-xs-3 hide">
                     <h3>Universidad</h3>
-                    <div id="contenedor_publicas" class="col-xs-12">
-                        <input type="checkbox" name="universidad[]" value="1"> UCR
-                        <br> 
-                        <input type="checkbox" name="universidad[]" value="2"> UNA
-                        <br> 
-                        <input type="checkbox" name="universidad[]" value="3"> ITCR
-                        <br>  
-                        <input type="checkbox" name="universidad[]" value="4"> UNED
-                        <br> 
-                        <input type="checkbox" name="universidad[]" value="5"> UTN
+                    <div id="contenedor-general-universidades" class="col-xs-12 hide">
+
                     </div>
-                    <div id="contenedor_privadas" class="col-xs-12">
-                        <input type="checkbox" name="universidad[]" value="6"> ULACIT
-                        <br>
-                        <input type="checkbox" name="universidad[]" value="7"> UCIMED
-                        <br>
-                        <input type="checkbox" name="universidad[]" value="8"> UMCA
-                        <br>
-                        <input type="checkbox" name="universidad[]" value="9"> U SJ
-                        <br>
-                        <input type="checkbox" name="universidad[]" value="10"> XXX
+                    {{-- <div id="contenedor_publicas" class="col-xs-12 hide">
+
                     </div>
+                    <div id="contenedor_privadas" class="col-xs-12 hide">
+
+                    </div> --}}
                 </div>
 
-                <div id="contenedor_areas" class="col-xs-3">
+                <div id="contenedor_areas" class="col-xs-3 hide">
                     <h3>Área</h3>
-                    <div class="col-xs-12">
-                        <input type="checkbox" name="areas[]" value="1"> Area 1
-                        <br>
-                        <input type="checkbox" name="areas[]" value="2"> Area 2
-                        <br>
-                        <input type="checkbox" name="areas[]" value="3"> Area 3
-                        <br>
-                        <input type="checkbox" name="areas[]" value="4"> Area 4
-                        <br>
-                        <input type="checkbox" name="areas[]" value="5"> Area 5
+                    <div id="areas" class="col-xs-12">
                     </div>
                 </div>
 
-                <div class="col-xs-12" style="margin-top: 15px;">
-                    {!! Form::submit('Generar reporte', ['class' => 'btn btn-primary']) !!}
-                </div>
             </div>
-        {!! Form::close() !!}
-    </div>
+        </div>
+    {!! Form::close() !!}
 @endsection
 
 @section('scripts')
     <script>
+        // Carga los eventos a cada checkbox
         $(document).ready(function() {
             $('[name="sector[]"]').on('click', function() {
                 evento_sectores($(this));
@@ -105,20 +81,40 @@
                 }
             }
 
-            
-            $.ajax({
-                data: {
-                    check_id : check_seleccionado.attr('value')
-                },
-                url: '{{ route("universidades.sector") }}',
-                type: 'GET',
-                success: function(respuesta_servidor) {
-                    console.log(respuesta_servidor.msj);
-                },
-                error: function(jqXHR, respuesta_servidor, errorThrown) {
-                    alert("AJAX error: " + respuesta_servidor + ' : ' + errorThrown);
-                }
-            });
+            if(check_seleccionado.is(':checked')) {
+                $.ajax({
+                    data: {
+                        check_id : check_seleccionado.attr('value')
+                    },
+                    url: '{{ route("universidades.sector") }}',
+                    type: 'GET',
+                    success: function(respuesta_servidor) {
+                        console.log(respuesta_servidor.msj);
+                        console.log(respuesta_servidor.uni);
+
+                        $('#contenedor_universidades').removeClass('hide');
+                        $('#contenedor-general-universidades').removeClass('hide');
+                        $('#contenedor-general-universidades').html('');
+
+                        var datos_universidades = respuesta_servidor.uni;
+                        datos_universidades.forEach(function(universidad) {
+                            $('#contenedor-general-universidades').append('<input type="checkbox" name="universidades[]" value="'+universidad.id+'"> '+universidad.nombre+'<br>');
+                        });
+
+                        
+                    },
+                    error: function(jqXHR, respuesta_servidor, errorThrown) {
+                        alert("AJAX error: " + respuesta_servidor + ' : ' + errorThrown);
+                    }
+                });
+            }
+            else {
+                $('#contenedor_universidades').removeClass('show');
+                $('#contenedor_universidades').addClass('hide');
+                $('#contenedor-general-universidades').removeClass('show');
+                $('#contenedor-general-universidades').addClass('hide');
+                $('#contenedor-general-universidades').html('');
+            }
         }
 
         function evento_universidades(check_seleccionado) {

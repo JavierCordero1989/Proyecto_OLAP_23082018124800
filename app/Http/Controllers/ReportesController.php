@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Area;
 use App\Disciplina;
+use DB;
+use App\Universidad;
 
 class ReportesController extends Controller
 {
@@ -27,21 +29,28 @@ class ReportesController extends Controller
         if($request->ajax()) {
 
             $msj;
+            $universidades;
 
             switch($request->check_id) {
                 case 1: // TODOS
                     $msj = 'Seleccionó todos';
+                    $universidades = Universidad::where('id_tipo', 2)->get();
                 break;
 
                 case 2: // PÚBLICO
                     $msj = 'Seleccionó público';
+
+                    $universidades = Universidad::obtenerPublicas()->get();
+
                 break;
 
                 case 3: // PRIVADO
                     $msj = 'Seleccionó privado';
+
+                    $universidades = Universidad::obtenerPrivadas()->get();
                 break;
             }
-            return response()->json(array('msj'=>$msj), 200);
+            return response()->json(array('msj'=>$msj, 'uni'=>$universidades), 200);
         }
     }
 }

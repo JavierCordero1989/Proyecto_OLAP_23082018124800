@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\TiposDatosCarrera as Tipo;
 
 class Grado extends Model
 {
@@ -22,5 +23,10 @@ class Grado extends Model
     public function scopeBuscarPorNombre($query, $nombre) {
         $id_tipo = Tipo::select('id')->where('nombre', 'GRADO')->first();
         return $query->where('nombre', 'like', '%'.$nombre.'%')->where('id_tipo', $id_tipo->id);
+    }
+    
+    public function scopeAllData($query) {
+        $id_tipo = Tipo::select('id')->where('nombre', 'GRADO')->first();
+        return $query->where('id_tipo', $id_tipo->id)->get();
     }
 }
