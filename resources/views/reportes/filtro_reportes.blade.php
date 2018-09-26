@@ -14,21 +14,56 @@
     <div class="content">
         {!! Form::open(['route'=>'reportes.filtro-encuestas']) !!}
             <div class="row">
-                <div class="col-xs-6">
-                    <h3>Áreas</h3>
+                
+                <div class="col-xs-3">
+                    <h3>Sector</h3>
                     <div class="col-xs-12">
-                        @foreach($areas as $area)
-                            {!! Form::checkbox('areas[]', $area->id) !!} {!! $area->descriptivo !!} <br>
-                        @endforeach
+                        <input type="checkbox" name="sector[]" value="1"> Todos
+                        <br>
+                        <input type="checkbox" name="sector[]" value="2"> Público
+                        <br>
+                        <input type="checkbox" name="sector[]" value="3"> Privado
                     </div>
                 </div>
 
-                <div class="col-xs-6">
-                    <h3>Disciplinas</h3>
-                    <div id="disciplina" class="col-xs-12">
-                        {{-- @foreach($disciplinas as $disciplina)
-                            {!! Form::checkbox('disciplinas[]', $disciplina->id) !!} {!! $disciplina->descriptivo !!} <br>
-                        @endforeach --}}
+                <div id="contenedor_universidades" class="col-xs-3">
+                    <h3>Universidad</h3>
+                    <div id="contenedor_publicas" class="col-xs-12">
+                        <input type="checkbox" name="universidad[]" value="1"> UCR
+                        <br> 
+                        <input type="checkbox" name="universidad[]" value="2"> UNA
+                        <br> 
+                        <input type="checkbox" name="universidad[]" value="3"> ITCR
+                        <br>  
+                        <input type="checkbox" name="universidad[]" value="4"> UNED
+                        <br> 
+                        <input type="checkbox" name="universidad[]" value="5"> UTN
+                    </div>
+                    <div id="contenedor_privadas" class="col-xs-12">
+                        <input type="checkbox" name="universidad[]" value="6"> ULACIT
+                        <br>
+                        <input type="checkbox" name="universidad[]" value="7"> UCIMED
+                        <br>
+                        <input type="checkbox" name="universidad[]" value="8"> UMCA
+                        <br>
+                        <input type="checkbox" name="universidad[]" value="9"> U SJ
+                        <br>
+                        <input type="checkbox" name="universidad[]" value="10"> XXX
+                    </div>
+                </div>
+
+                <div id="contenedor_areas" class="col-xs-3">
+                    <h3>Área</h3>
+                    <div class="col-xs-12">
+                        <input type="checkbox" name="areas[]" value="1"> Area 1
+                        <br>
+                        <input type="checkbox" name="areas[]" value="2"> Area 2
+                        <br>
+                        <input type="checkbox" name="areas[]" value="3"> Area 3
+                        <br>
+                        <input type="checkbox" name="areas[]" value="4"> Area 4
+                        <br>
+                        <input type="checkbox" name="areas[]" value="5"> Area 5
                     </div>
                 </div>
 
@@ -42,36 +77,56 @@
 
 @section('scripts')
     <script>
-        //Varibale con las disciplinas obtenidas de la BD
-        var disciplinas = <?php echo json_encode($disciplinas); ?>;
+        $(document).ready(function() {
+            $('[name="sector[]"]').on('click', function() {
+                evento_sectores($(this));
+            });
 
-        $("input:checkbox").on('click', function() {
-            // en el manejador, 'this' se refiere al checkbox que disparó el evento
-            var $box = $(this);
+            $('[name="universidad[]"]').on('click', function() {
+                evento_universidades($(this));
+            });
 
-            if ($box.is(":checked")) {
-                /* Se selecciona todo el grupo de checkbox que tenga el mismo atributo name */
-                var group = "input:checkbox[name='" + $box.attr("name") + "']";
-                /* Todos los checks se ponen en un estado de seleccionado en falso */
-                $(group).prop("checked", false);
-                /* Se pone el estado del check selccionado en verdadero */
-                $box.prop("checked", true);
-
-                var value = $box.attr("value");
-                caja_disciplina = $('#disciplina');
-                caja_disciplina.html('');
-
-                disciplinas.forEach(function(disc) {
-                    if(disc.id_area == value) {
-                        console.log(disc);
-                        
-                        caja_disciplina.append('<input name="disciplinas[]" type="checkbox" value="'+disc.id+'"> '+disc.descriptivo+'<br>');
-                    }
-                });
-                
-            } else {
-                $box.prop("checked", false);
-            }
+            $('[name="areas[]"]').on('click', function() {
+                evento_areas($(this))
+            });
         });
+
+        function evento_sectores(check_seleccionado) {
+            // Comprueba que fue seleccionado el check TODOS
+            if(check_seleccionado.attr('value') == 1) {
+                // Si esta checkeado, se activan los demás, si no se desactivan
+                if(check_seleccionado.is(':checked')) {
+                    grupo_checks = $('[name="sector[]"]');
+                    $(grupo_checks).prop("checked", true);
+                }
+                else {
+                    grupo_checks = $('[name="sector[]"]');
+                    $(grupo_checks).prop("checked", false);
+                }
+            }
+
+            
+            $.ajax({
+                data: {
+                    check_id : check_seleccionado.attr('value')
+                },
+                url: '{{ route("universidades.sector") }}',
+                type: 'GET',
+                success: function(respuesta_servidor) {
+                    console.log(respuesta_servidor.msj);
+                },
+                error: function(jqXHR, respuesta_servidor, errorThrown) {
+                    alert("AJAX error: " + respuesta_servidor + ' : ' + errorThrown);
+                }
+            });
+        }
+
+        function evento_universidades(check_seleccionado) {
+            console.log('Universidad: ', check_seleccionado.attr('value'));
+        }
+
+        function evento_areas(check_seleccionado) {
+            console.log('Área: ', check_seleccionado.attr('value'));
+        }
     </script>
 @endsection
