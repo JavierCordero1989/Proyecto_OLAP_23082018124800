@@ -18,4 +18,14 @@ class Disciplina extends Model
     public function area() {
         return $this->hasOne(Area::class, 'id', 'id_area');
     }
+
+    /** Query para buscar una disciplina por código */
+    public function scopeBuscarPorCodigo($query, $codigo) {
+        return $query->where('codigo', $codigo);
+    }
+
+    /** Query para buscar una disciplina por descriptivo */
+    public function scopeBuscarPorDescriptivo($query, $descriptivo) {
+        return $query->where('descriptivo', 'like', '%'.$descriptivo.'%');
+    }
 }

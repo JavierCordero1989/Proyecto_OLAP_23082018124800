@@ -17,4 +17,14 @@ class Area extends Model
     public function disciplinas() {
         return $this->hasMany(Disciplina::class, 'id_area');
     }
+
+    /** Query para buscar un área por código */
+    public function scopeBuscarPorCodigo($query, $codigo) {
+        return $query->where('codigo', $codigo);
+    }
+
+    /** Query para buscar un área por descriptivo */
+    public function scopeBuscarPorDescriptivo($query, $descriptivo) {
+        return $query->where('descriptivo', 'like', '%'.$descriptivo.'%');
+    }
 }

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Carrera extends Model
+class Agrupacion extends Model
 {
     protected $table = 'tbl_datos_carrera_graduado';
 
@@ -15,12 +15,12 @@ class Carrera extends Model
     ];
 
     public function scopeBuscarPorCodigo($query, $codigo) {
-        $id_tipo = Tipo::select('id')->where('nombre', 'CARRERA')->first();
+        $id_tipo = Tipo::select('id')->where('nombre', 'AGRUPACION')->first();
         return $query->where('codigo', $codigo)->where('id_tipo', $id_tipo->id);
     }
 
     public function scopeBuscarPorNombre($query, $nombre) {
-        $id_tipo = Tipo::select('id')->where('nombre', 'CARRERA')->first();
+        $id_tipo = Tipo::select('id')->where('nombre', 'AGRUPACION')->first();
         return $query->where('nombre', 'like', '%'.$nombre.'%')->where('id_tipo', $id_tipo->id);
     }
 }
