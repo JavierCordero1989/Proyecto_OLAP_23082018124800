@@ -16,7 +16,7 @@ class ReportesController extends Controller
         $disciplinas = Disciplina::all();
         $areas = Area::all();
 
-        return view('reportes.filtro_reportes', compact('areas'))->with('disciplinas', json_encode($disciplinas));
+        return view('reportes.filtro_reportes');
     }
 
     public function filtrar_encuestas_para_reporte(Request $request) {
