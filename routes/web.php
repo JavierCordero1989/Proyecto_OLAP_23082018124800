@@ -276,8 +276,23 @@ Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
   Route::get('filtro', 'ReportesController@filtro_reportes')->name('reportes.filtro');
   Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte')->name('reportes.filtro-encuestas');
   Route::get('universidades-por-sector', 'ReportesController@traer_universidades_por_sector')->name('universidades.sector');
+  Route::get('disciplinas-por-areas', 'ReportesController@traer_disciplinas_por_area')->name('disciplinas.area');
 });
 
+Route::get('pruebas', function() {
+  $codigos_area = ['1','2','3','4','5'];
+  $disciplinas = [];
+
+  $area = App\Area::buscarPorCodigo('1')->get();
+
+  // foreach($codigos_area as $cod) {
+  //   $area = App\Area::buscarPorCodigo($cod)->get();
+  //   array_push($disciplinas, $area->disciplinas);
+  // }
+
+  return response()->json(array('area'=>$area));
+  // dd($datos);
+});
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
