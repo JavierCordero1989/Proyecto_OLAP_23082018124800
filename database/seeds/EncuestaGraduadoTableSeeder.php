@@ -6,6 +6,8 @@ use App\DatosCarreraGraduado;
 use App\TiposDatosCarrera;
 use App\Area;
 use App\Disciplina;
+use App\Carrera;
+use App\Agrupacion;
 use Faker\Factory;
 
 class EncuestaGraduadoTableSeeder extends Seeder
@@ -27,14 +29,16 @@ class EncuestaGraduadoTableSeeder extends Seeder
         $agrupacion = TiposDatosCarrera::where('nombre', 'AGRUPACION')->first();
         $sector = TiposDatosCarrera::where('nombre', 'SECTOR')->first();
 
-        $carreras = DatosCarreraGraduado::where('id_tipo', $carrera->id)->pluck('id')->all();
+        // $carreras = DatosCarreraGraduado::where('id_tipo', $carrera->id)->pluck('id')->all();
+        $carreras = Carrera::allData()->pluck('id')->all();
         $universidades = DatosCarreraGraduado::where('id_tipo', $universidad->id)->pluck('id')->all();
         $grados = DatosCarreraGraduado::where('id_tipo', $grado->id)->pluck('id')->all();
         // $disciplinas = DatosCarreraGraduado::where('id_tipo', $disciplina->id)->pluck('id')->all();
         // $areas = DatosCarreraGraduado::where('id_tipo', $area->id)->pluck('id')->all();
         $disciplinas = Disciplina::pluck('id')->all();
         $areas = Area::pluck('id')->all();
-        $agrupaciones = DatosCarreraGraduado::where('id_tipo', $agrupacion->id)->pluck('id')->all();
+        // $agrupaciones = DatosCarreraGraduado::where('id_tipo', $agrupacion->id)->pluck('id')->all();
+        $agrupaciones = Agrupacion::allData()->pluck('id')->all();
         $sectores = DatosCarreraGraduado::where('id_tipo', $sector->id)->pluck('id')->all();
 
         $id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();

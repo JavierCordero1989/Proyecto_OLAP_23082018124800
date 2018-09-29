@@ -6,6 +6,8 @@ use App\DatosCarreraGraduado;
 use App\Sector;
 use App\Universidad;
 use App\Grado;
+use App\Carrera;
+use App\Agrupacion;
 
 class DatosCarreraGraduadoTableSeeder extends Seeder
 {
@@ -71,6 +73,40 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
                 'codigo'  =>$clave,
                 'nombre'  =>$valor,
                 'id_tipo' => 3
+            ]);
+        }
+
+        //Se crean las carreras
+        $faker = Faker\Factory::create();
+        $carreras =[];
+
+        for($i=0; $i<200; $i++) {
+            $carreras[] =$faker->sentence;
+        }
+
+        foreach($carreras as $clave => $valor) {
+            $nueva_carrera = Carrera::create([
+                'codigo'  =>$clave,
+                'nombre'  =>$valor,
+                'id_tipo' => 1
+            ]);
+        }
+
+        //Se crean las agrupaciones
+        $agrupaciones = [
+            '1'=>'UCR',
+            '2'=>'UNED',
+            ''=>'UTN',
+            '4'=>'TEC',
+            '5'=>'UNA',
+            '6'=>'PRIVADO'
+        ];
+
+        foreach ($agrupaciones as $clave => $valor) {
+            $agrupacion = Agrupacion::create([
+                'codigo'  =>$clave,
+                'nombre'  =>$valor,
+                'id_tipo' => 4
             ]);
         }
 

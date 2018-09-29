@@ -32,21 +32,21 @@ class Universidad extends Model
 
     public function scopeObtenerPublicas($query) {
         return $query->whereIn('nombre', [
-                    'Qui laboriosam modi consequatur vero et.',
-                    'Eum consequatur necessitatibus assumenda dolorem.',
-                    'Eos voluptas tempora corporis rerum aut.',
-                    'Omnis rerum sed voluptatum nemo tempora molestiae enim.',
-                    'Et officia ipsum dolore.'
+                    'Universidad de Costa Rica',
+                    'Universidad Nacional',
+                    'Tecnológico de Costa Rica',
+                    'Universidad Estatal a Distancia',
+                    'Universidad Técnica Nacional'
                 ])->where('id_tipo', 2);
     }
 
     public function scopeObtenerPrivadas($query) {
         return $query->whereNotIn('nombre', [
-                    'Qui laboriosam modi consequatur vero et.',
-                    'Eum consequatur necessitatibus assumenda dolorem.',
-                    'Eos voluptas tempora corporis rerum aut.',
-                    'Omnis rerum sed voluptatum nemo tempora molestiae enim.',
-                    'Et officia ipsum dolore.'
+                    'Universidad de Costa Rica',
+                    'Universidad Nacional',
+                    'Tecnológico de Costa Rica',
+                    'Universidad Estatal a Distancia',
+                    'Universidad Técnica Nacional'
                 ])->where('id_tipo', 2);
     }
 }

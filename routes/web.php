@@ -281,18 +281,25 @@ Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
 
 Route::get('pruebas', function() {
   $codigos_area = ['1','2','3','4','5'];
-  $disciplinas = [];
 
-  $area = App\Area::buscarPorCodigo('1')->get();
+  // $disciplinas = [];
 
-  // foreach($codigos_area as $cod) {
-  //   $area = App\Area::buscarPorCodigo($cod)->get();
-  //   array_push($disciplinas, $area->disciplinas);
-  // }
+  // $disciplinas = \App\Disciplina::whereIn('id_area', $codigos_area)->get();
 
-  return response()->json(array('area'=>$area));
-  // dd($datos);
+  foreach($codigos_area as $codigo) {
+    $area = \App\Area::buscarPorCodigo($codigo)->first();
+
+    $disciplinas[$area->descriptivo] = \App\Disciplina::select('codigo','descriptivo')->where('id_area', $codigo)->get();
+  }
+
+  // return response()->json($disciplinas);
+
+  return view('pruebas.prueba')->with('data', json_encode($disciplinas));
 });
+
+Route::post('pruebas', function(\Illuminate\Http\Request $reques) {
+  dd($reques->all());
+})->name('pruebas.from');
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;

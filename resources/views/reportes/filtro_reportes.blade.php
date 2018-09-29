@@ -287,9 +287,7 @@
                 },
                 url: '{{ route("disciplinas.area") }}',
                 success: function(respuesta) {
-                    console.log('SUCCESS-DATOS: ', respuesta.datos);
-                    console.log('SUCCESS-MENSAJE: ', respuesta.mensaje);
-                    console.log('SUCCESS-DISCIPLINAS: ', respuesta.disciplinas);
+                    console.log('SUCCESS-DISCIPLINAS: ', respuesta);
                 },
                 error: function(jqXHR, respuesta_servidor, errorThrown) {
                     alert("ERROR: " + respuesta_servidor + ' : ' + errorThrown);

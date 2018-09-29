@@ -47,7 +47,7 @@ class ReportesController extends Controller
             }
             else if(sizeof($request->valores) == 3) {
                 $mensaje = 'Se seleccionó todo';
-                $universidades = Universidad::where('id_tipo', 2)->get();
+                $universidades = Universidad::allData()->all();
             }
             else {
                 $mensaje = 'PASÓ ALGO MALO';
@@ -67,41 +67,15 @@ class ReportesController extends Controller
 
     public function traer_disciplinas_por_area(Request $request) {
         if($request->ajax()) {
-            $mensaje = '';
-            $datos = $request->valores;
-            $nuevo = [];
+            $codigos_areas = $request->valores;
             $disciplinas = [];
 
-            $otro_array = [];
-
-            if(sizeof($datos) == 0) {
-                $mensaje = 'NINGUNO HA SIDO SELECCIONADO';
+            foreach($codigos_areas as $codigo) {
+                $area = Area::buscarPorCodigo($codigo)->first();
+                $disciplinas[$area->descriptivo] = Disciplina::select('codigo','descriptivo')->where('id_area', $codigo)->get();
             }
-            else {
-                if($datos[0] == '0') {
-                    $mensaje = 'TODOS HA SIDO SELECCIONADO';
-                    $disciplinas = Disciplina::select('codigo', 'descriptivo', 'id_area')->get();
-                }
-                else {
-                    $mensaje = 'ALGUNOS HAN SIDO SELECCIONADOS';
-                    
-                    foreach ($datos as $codigo) {
-                        $area = Area::buscarPorCodigo($codigo)->get();
-                        $disciplinas[] = $area->disciplinas;
-                        $nuevo[] = $codigo;
-                    }
 
-                    // $disciplinas = Collection::make($disciplinas);
-                }
-            }
-                
-            $respuesta = [
-                'mensaje'=>$mensaje,
-                'datos'=>$nuevo,
-                'disciplinas'=>$disciplinas
-            ];
-
-            return response()->json($respuesta);
+            return response()->json($disciplinas);
         }
     }
 }
