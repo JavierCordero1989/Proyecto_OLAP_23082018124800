@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Area;
-use App\Disciplina;
-use DB;
-use App\Universidad;
-use Illuminate\Support\Collection;
 use App\EncuestaGraduado as Entrevista;
+use Illuminate\Support\Collection;
+use Illuminate\Http\Request;
+use App\Universidad;
+use App\Disciplina;
+use App\Area;
+use DB;
 
 class ReportesController extends Controller
 {
