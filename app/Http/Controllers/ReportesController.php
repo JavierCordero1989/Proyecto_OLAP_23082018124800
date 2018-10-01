@@ -13,6 +13,43 @@ use DB;
 class ReportesController extends Controller
 {
     public function index() {
+        $reporte = [
+            'ucr' => [
+                'poblacion' => [
+                    'bachiller' => 100,
+                    'licenciatura' => 100,
+                    'total' => 200
+                ],
+                'muestra' => [
+                    'bachiller' => 100,
+                    'licenciatura' => 100,
+                    'total' => 200
+                ],
+                'entrevistas_realizadas' => [
+                    'bachiller' => 200,
+                    'licenciatura' => 200,
+                    'total' => 200
+                ]
+            ],
+            'una' => [
+                'poblacion' => [
+                    'bachiller' => 100,
+                    'licenciatura' => 100,
+                    'total' => 200
+                ],
+                'muestra' => [
+                    'bachiller' => 100,
+                    'licenciatura' => 100,
+                    'total' => 200
+                ],
+                'entrevistas_realizadas' => [
+                    'bachiller' => 100,
+                    'licenciatura' => 100,
+                    'total' => 200
+                ]
+            ] 
+        ];
+
         return view('reportes.index');
     }
 
