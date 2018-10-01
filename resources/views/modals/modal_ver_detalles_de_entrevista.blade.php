@@ -100,13 +100,13 @@
                         <!-- Disciplina -->
                         <div class="col-xs-6">
                             {!! Form::label('codigo_disciplina', 'Disciplina:') !!}
-                            <p>{!! $encuesta->disciplina->nombre !!}</p>
+                            <p>{!! $encuesta->disciplina->descriptivo !!}</p>
                         </div>
     
                         <!-- Área -->
                         <div class="col-xs-6">
                             {!! Form::label('codigo_area', 'Área:') !!}
-                            <p>{!! $encuesta->area->nombre !!}</p>
+                            <p>{!! $encuesta->area->descriptivo !!}</p>
                         </div>
     
                         <!-- Agrupación -->

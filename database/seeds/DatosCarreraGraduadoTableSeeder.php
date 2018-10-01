@@ -166,8 +166,8 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
         $agrupaciones = [
             '1'=>'UCR',
             '2'=>'UNED',
-            ''=>'UTN',
-            '4'=>'TEC',
+            '3'=>'UTN',
+            '4'=>'ITCR',
             '5'=>'UNA',
             '6'=>'PRIVADO'
         ];

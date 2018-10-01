@@ -15,6 +15,11 @@ class Universidad extends Model
         'id_tipo'
     ];
 
+    public function scopeBuscarPorId($query, $id) {
+        $id_tipo = Tipo::select('id')->where('nombre', 'UNIVERSIDAD')->first();
+        return $query->where('id', $id)->where('id_tipo', $id_tipo->id);
+    }
+
     public function scopeBuscarPorCodigo($query, $codigo) {
         $id_tipo = Tipo::select('id')->where('nombre', 'UNIVERSIDAD')->first();
         return $query->where('codigo', $codigo)->where('id_tipo', $id_tipo->id);

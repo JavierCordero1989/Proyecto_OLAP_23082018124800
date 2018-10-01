@@ -29,8 +29,8 @@
             <td>{!! $encuesta->carrera->nombre !!}</td>
             <td>{!! $encuesta->universidad->nombre !!}</td>
             <td>{!! $encuesta->grado->nombre !!}</td>
-            <td>{!! $encuesta->disciplina->nombre !!}</td>
-            <td>{!! $encuesta->area->nombre !!}</td>
+            <td>{!! $encuesta->disciplina->descriptivo !!}</td>
+            <td>{!! $encuesta->area->descriptivo !!}</td>
             <td>{!! $encuesta->agrupacion->nombre !!}</td>
             <td>{!! $encuesta->sector->nombre !!}</td>
             <td>{!! $encuesta->tipo_de_caso !!}</td>
