@@ -3,11 +3,19 @@
 @section('title', 'Filtro')
 
 @section('css')
+    <style>
+        #menu_areas > li > ul {
+            background-color: #ECF0F5;
+        }
 
+        #menu_areas > li.active > a {
+            border-left-color: var(--color-azul-oscuro);
+        }
+    </style>
 @endsection
 
 @section('content')
-    {!! Form::open(['route'=>'reportes.filtro-encuestas']) !!}
+    {!! Form::open(['route'=>'reportes.filtro-encuestas', 'onsubmit'=>'return validar_form();']) !!}
         <section class="content-header">
             <h1 class="pull-left">
                 {!! Form::submit('Generar reporte', ['class' => 'btn btn-primary']) !!}
@@ -48,7 +56,7 @@
                 <!-- ./Caja para los checkbox para los sectores -->
 
                 <!-- Caja para los checkbox para las universidades -->
-                <div id="contenedor_universidades" class="col-xs-3 hide">
+                <div id="contenedor_universidades" class="col-xs-5 hide">
                     <h3>Universidades</h3>
                     <div id="contenedor-general-universidades" class="col-xs-12">
                     </div>
@@ -56,19 +64,17 @@
                 <!-- ./Caja para los checkbox para las universidades -->
 
                 <!-- Caja para los checkbox para las áreas -->
-                <div id="contenedor_areas" class="col-xs-3 hide">
+                <div id="contenedor_areas" class="col-xs-4 hide">
                     <h3>Áreas</h3>
                     <div id="contenedor-general-areas" class="col-xs-12">
+                        <section class="sidebar">
+                            <ul id="menu_areas" class="sidebar-menu">
+                                <!-- Aquí irán todas las áreas con sus respectivas disciplinas -->
+                            </ul>
+                        </section>
                     </div>
                 </div>
                 <!-- ./Caja para los checkbox para las áreas -->
-
-                <div id="contenedor_disciplinas" class="col-xs-3 hide">
-                    <h3>Disciplinas</h3>
-                    <div id="contenedor_general_disciplinas" class="col-xs-12">
-                        
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -141,19 +147,17 @@
 
                     // Se vacía el contenedor
                     $('#contenedor-general-universidades').html('');
-                    $('#contenedor-general-areas').html('');
+                    $('#menu_areas').html('');
 
                     if(respuesta.datos_obtenidos.length <= 0) {
                         $('#contenedor_universidades').addClass('hide');
                         $('#contenedor_universidades').removeClass('show');
                         $('#contenedor_areas').addClass('hide');
                         $('#contenedor_areas').removeClass('show');
-                        $('#contenedor_disciplinas').addClass('hide');
-                        $('#contenedor_general_disciplinas').removeClass('show');
                     }
                     else {
                         cargarUniversidades(respuesta.datos_obtenidos);
-                        cargarAreas(respuesta.areas);
+                        cargarAreas(respuesta.disciplinas);
                     }
                     
                 },
@@ -223,77 +227,149 @@
             $('#contenedor_areas').removeClass('hide');
             $('#contenedor_areas').addClass('show');
 
-            $('#contenedor-general-areas').append(
-                '<div class="checkbox">'+
-                    '<label class="label-text">'+
-                        '<input type="checkbox" id="seleccionar_areas" name="areas[]" value="0">'+
-                        'Todas'+
-                    '</label>'+
-                '</div>'
-            );
+            var menu = $('#menu_areas'); // Contenedor de las áreas del menú.
 
-            //Se recorre el objeto data, para mostrar su información en la caja de las áreas
-            data.forEach(function(element) {
-                $('#contenedor-general-areas').append(
-                    '<div class="checkbox">'+
-                        '<label class="label-text">'+
-                            '<input type="checkbox" name="areas[]" value="'+element.codigo+'">'+
-                            element.descriptivo+
-                        '</label>'+
-                    '</div>'
-                );
-            });
+            for(var nombre_area in data) {
+                var li = $('<li>', {
+                    'class': 'treeview'
+                }).appendTo(menu);
 
-            //Agregar eventos para los checks recién creados.
-            $('[name="areas[]"]').on('click', function() {
+                var a = $('<a>', {
+                    'href': '#'
+                }).appendTo(li);
+
+                $('<span>', {
+                    'text': nombre_area
+                }).appendTo(a);
+
+                var span_2 = $('<span>', {
+                    'class': 'pull-right-container'
+                }).appendTo(a);
+                
+                $('<i>', {
+                    'class': 'fa fa-angle-left pull-right'
+                }).appendTo(span_2);
+                
+                var ul = $('<ul>', {
+                    'class': 'treeview-menu'
+                }).appendTo(li);
+
+                var li_todos = $('<li>', {
+                    'class': 'checkbox'
+                }).appendTo(ul);
+
+                var label_todos = $('<label>', {
+                    'class': 'label-text'
+                }).appendTo(li_todos);
+
+                label_todos.append('<input type="checkbox" name="disciplinas[]" value="'+nombre_area+'"> Todas');
+
+                for(var disciplina in data[nombre_area]) {
+                    var sub_li = $('<li>', {
+                        'class': 'checkbox'
+                    }).appendTo(ul);
+
+                    var label_check = $('<label>', {
+                        'class': 'label-text'
+                    }).appendTo(sub_li);
+                    
+                    label_check.append('<input type="checkbox" name="disciplinas[]" value="'+(data[nombre_area])[disciplina].codigo+'"> '+(data[nombre_area])[disciplina].descriptivo);
+                }
+            }
+
+            // Agregar eventos para los checks recién creados.
+            $('[name="disciplinas[]"]').on('click', function() {
                 evento_areas($(this))
             });
         }
 
         function evento_areas(check_seleccionado) {
-            console.log('Área: ', check_seleccionado.attr('value'));
-
-            var grupo_checks = $('[name="areas[]"]');
+            // var valor = check_seleccionado.attr('value');
             
-            if(check_seleccionado.attr('value') == 0) {
+            // if(isNaN(check_seleccionado.attr('value'))) {
+            //     console.log('Seleccionó todos');
+
+            //     var padre = check_seleccionado.parents('ul.treeview-menu');
+            //     var hijos = padre.find('input');
+
+            //     console.log('Área: ', valor);
+            //     console.log('Padre: ', padre);
+            //     console.log('Hijos: ', hijos);
+            // }
+
+            // Se obtiene todo el grupo del check que ha sido seleccionado.
+            var grupo_checks = (check_seleccionado.parents('ul.treeview-menu')).find('input');
+            console.log($(grupo_checks[0]).attr('value'));
+
+            // Si el check que se seleccionó no se puede pasar a decimal.
+            if(isNaN(check_seleccionado.attr('value'))) {
                 $(grupo_checks).prop('checked', $(check_seleccionado).prop('checked'));
             }
-
+            
+            // Si el check seleccionado cambia a falso, se deselecciona el de TODAS
             if(false == check_seleccionado.prop('checked')) {
-                $('#seleccionar_areas').prop('checked', false);
+                $(grupo_checks[0]).prop('checked', false);
             }
 
-            if($('[name="areas[]"]:checked').length == $(grupo_checks).length-1) {
-                $("#seleccionar_areas").prop('checked', true);
-            }
-
-            //Se crea un arreglo para guardar los IDS seleccionados.
-            var valores_checks = [];
-
-            //Se recorre el grupo de checks y se comprueba los que están seleccionados.
+            // Se cuentan los checkbox que estén seleccionados.
+            var checkeados = 0;
             grupo_checks.each(function() {
-                if(this.checked) {
-                    // Se agrega el valor del check al arreglo.
-                    valores_checks.push($(this).val());
-                }
+                if($(this).prop('checked')) { checkeados++; }
             });
 
-            $.ajax({
-                cache: false,
-                type: 'get',
-                dataType: 'json',
-                data: {
-                    valores:valores_checks
-                },
-                url: '{{ route("disciplinas.area") }}',
-                success: function(respuesta) {
-                    console.log('SUCCESS-DISCIPLINAS: ', respuesta);
-                },
-                error: function(jqXHR, respuesta_servidor, errorThrown) {
-                    alert("ERROR: " + respuesta_servidor + ' : ' + errorThrown);
-                    console.log('ERROR: ', jqXHR.status);
-                }
+            // Si el total de chequeados coincide con el total de checkbox - 1,
+            // se vuelve a marcar el de TODAS
+            if(checkeados == $(grupo_checks).length-1) {
+                $(grupo_checks[0]).prop('checked', true);
+            }
+        }
+
+        /** 
+         * Valida el formulario para que pueda o no ser acpetado
+         * @returns Verdadero si todo está correcto.
+        */
+        function validar_form() {
+            var cuenta_sector = 0; // Inicia un contador para validar si un sector se seleccionó
+            
+            // Cuenta los checkbox de sector marcados
+            $('[name="sector[]"]').each(function() {
+                if($(this).prop('checked')) { cuenta_sector++; }
             });
+
+            // Si la cuenta resulta ser cero o menor, se mostrará una alerta
+            if(cuenta_sector <= 0) {
+                alert('Debe seleccionar un sector');
+                return false;
+            }
+
+            var cuenta_universidades = 0; // Inicia un contador para validar si una universidad se seleccionó
+
+            // Cuenta los checkbox de universidad marcados
+            $('[name="universidades[]"]').each(function() {
+                if($(this).prop('checked')) { cuenta_universidades++; }
+            });
+
+            // Si la cuenta resulta ser cero o menor, se mostrará una alerta
+            if(cuenta_universidades <= 0) {
+                alert('Debe seleccionar una universidad al menos');
+                return false;
+            }
+
+            var cuenta_disciplinas = 0; // Inicia un contador para validar si una disciplina se seleccionó
+
+            // Cuenta los checkbox de disciplinas marcados
+            $('[name="disciplinas[]"]').each(function() {
+                if($(this).prop('checked')) { cuenta_disciplinas++; }
+            });
+
+            // Si la cuenta resulta ser cero o menor, se mostrará una alerta
+            if(cuenta_disciplinas <= 0) {
+                alert('Debe seleccionar una disciplina al menos.');
+                return false;
+            }
+
+            // Si todo está en regla, puede enviar el formulario
+            return true;
         }
     </script>
 @endsection

@@ -32,21 +32,21 @@ class Universidad extends Model
 
     public function scopeObtenerPublicas($query) {
         return $query->whereIn('nombre', [
-                    'Universidad de Costa Rica',
-                    'Universidad Nacional',
-                    'Tecnológico de Costa Rica',
-                    'Universidad Estatal a Distancia',
-                    'Universidad Técnica Nacional'
+                    'UNIVERSIDAD DE COSTA RICA',
+                    'UNIVERSIDAD NACIONAL',
+                    'INSTITUTO TECNOLOGICO DE COSTA RICA',
+                    'UNIVERSIDAD ESTATAL A DISTANCIA',
+                    'UNIVERSIDAD TECNICA NACIONAL'
                 ])->where('id_tipo', 2);
     }
 
     public function scopeObtenerPrivadas($query) {
         return $query->whereNotIn('nombre', [
-                    'Universidad de Costa Rica',
-                    'Universidad Nacional',
-                    'Tecnológico de Costa Rica',
-                    'Universidad Estatal a Distancia',
-                    'Universidad Técnica Nacional'
+                    'UNIVERSIDAD DE COSTA RICA',
+                    'UNIVERSIDAD NACIONAL',
+                    'INSTITUTO TECNOLOGICO DE COSTA RICA',
+                    'UNIVERSIDAD ESTATAL A DISTANCIA',
+                    'UNIVERSIDAD TECNICA NACIONAL'
                 ])->where('id_tipo', 2);
     }
 }

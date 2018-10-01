@@ -53,49 +53,23 @@ class ReportesController extends Controller
                 $mensaje = 'PASÓ ALGO MALO';
             }
             
-            $areas = Area::select('codigo', 'descriptivo')->get();
-            
+            // Se traen todas las áreas de la base de datos
+            // $areas = Area::all();
+            $areas = Area::select('id', 'codigo', 'descriptivo')->get();
+            $disciplinas = [];
+
+            //Se recorren todas las áreas obtenidas para guardar las disciplinas de cada área.
+            foreach ($areas as $area) {
+                $disciplinas[$area->descriptivo] = $area->disciplinas;
+            }
+
             $datos_respuesta = [
                 'mensaje'=>$mensaje,
                 'datos_obtenidos'=>$universidades,
-                'areas'=>$areas
+                'disciplinas'=>$disciplinas
             ];
 
             return response()->json($datos_respuesta);
-        }
-    }
-
-    public function traer_disciplinas_por_area(Request $request) {
-        if($request->ajax()) {
-            $mensaje = '';
-            $disciplinas = [];
-
-            if(sizeof($request->valores) == 0) {
-                $mensaje = 'Nada ha sido seleccionado';
-            }
-            else {
-                $disciplinas_seleccionadas = $request->valores;
-
-                foreach($disciplinas_seleccionadas as $disciplina) {
-                    $area = Area::buscarPorDescriptivo($disciplina)->first();
-
-                    if(empty($area)) {
-                        $disciplinas[] = \App\Disciplina::buscarPorCodigo($disciplina)->first();
-                    }
-                    else {
-                        foreach($area->disciplinas as $disc_por_area) {
-                            $datos_encontrados[] = $disc_por_area;
-                        }
-                    }
-                }
-            }
-
-            $data = [
-                'mensaje' =>$mensaje,
-                'disciplinas' => $disciplinas
-            ];
-
-            return response()->json(data);
         }
     }
 }

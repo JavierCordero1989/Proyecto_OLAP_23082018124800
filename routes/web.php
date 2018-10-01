@@ -276,20 +276,10 @@ Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
   Route::get('filtro', 'ReportesController@filtro_reportes')->name('reportes.filtro');
   Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte')->name('reportes.filtro-encuestas');
   Route::get('universidades-por-sector', 'ReportesController@traer_universidades_por_sector')->name('universidades.sector');
-  Route::get('disciplinas-por-areas', 'ReportesController@traer_disciplinas_por_area')->name('disciplinas.area');
 });
 
 Route::get('pruebas', function() {
-  $codigos_area = ['1','2','3','4','5'];
 
-  foreach($codigos_area as $codigo) {
-    $area = \App\Area::buscarPorCodigo($codigo)->first();
-
-    // $disciplinas[$area->descriptivo] = \App\Disciplina::select('codigo','descriptivo')->where('id_area', $codigo)->get();
-    $disciplinas[$area->descriptivo] = $area->disciplinas;
-  }
-
-  return view('pruebas.prueba')->with('data', json_encode($disciplinas));
 });
 
 Route::post('pruebas', function(\Illuminate\Http\Request $request) {
