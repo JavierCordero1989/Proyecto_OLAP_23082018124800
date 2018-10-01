@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Area;
+use App\EncuestaGraduado;
 
 class Disciplina extends Model
 {
@@ -27,5 +28,9 @@ class Disciplina extends Model
     /** Query para buscar una disciplina por descriptivo */
     public function scopeBuscarPorDescriptivo($query, $descriptivo) {
         return $query->where('descriptivo', 'like', '%'.$descriptivo.'%');
+    }
+
+    public function entrevistas() {
+        return $this->hasMany(EncuestaGraduado::class, 'codigo_disciplina');
     }
 }

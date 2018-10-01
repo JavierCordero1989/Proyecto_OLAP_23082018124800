@@ -23,7 +23,11 @@ class ReportesController extends Controller
     }
 
     public function filtrar_encuestas_para_reporte(Request $request) {
-        dd($request->all());
+        $sectores = $request->sector;
+        $universidades = $request->universidades;
+        $disciplinas = $request->disciplinas;
+
+        dd($sectores, $universidades, $disciplinas);
     }
 
     public function traer_universidades_por_sector(Request $request) {

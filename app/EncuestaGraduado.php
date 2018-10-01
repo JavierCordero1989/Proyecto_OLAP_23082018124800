@@ -7,6 +7,8 @@ use App\TiposDatosCarrera;
 use App\DatosCarreraGraduado;
 use App\ContactoGraduado;
 use App\ObservacionesGraduado;
+use App\Disciplina;
+use App\Area;
 use Carbon\Carbon;
 use DB;
 
@@ -468,11 +470,13 @@ class EncuestaGraduado extends Model
     }
 
     public function disciplina() {
-        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_disciplina');
+        return $this->hasOne(Disciplina::class, 'id', 'codigo_disciplina');
+        // return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_disciplina');
     }
 
     public function area() {
-        return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_area');
+        // return $this->hasOne(DatosCarreraGraduado::class, 'id', 'codigo_area');
+        return $this->hasOne(Area::class, 'id', 'codigo_area');
     }
 
     public function agrupacion() {
