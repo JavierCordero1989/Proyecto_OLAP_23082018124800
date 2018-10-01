@@ -2,7 +2,7 @@
     return [
         'shortcut-icon'              => 'img/olap.png',
         'site_title'                 => 'OLAP',
-        'sidebar_title'              => 'Sistema OLAP',
+        'sidebar_title'              => 'Sistema OLaP',
         'sidebar_title_min'          => 'OLAP',
         'login_title'                => 'CONARE - OLaP',
         'img_app'                    => 'img/olap.png',

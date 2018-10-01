@@ -63,6 +63,16 @@
                     'class': 'treeview-menu'
                 }).appendTo(li);
 
+                var li_todos = $('<li>', {
+                    'class': 'checkbox'
+                }).appendTo(ul);
+
+                var label_todos = $('<label>', {
+                    'class': 'label-text'
+                }).appendTo(li_todos);
+
+                label_todos.append('<input type="checkbox" name="disciplinas[]" value="'+item+'"> Todas');
+
                 for(var disciplina in data[item]) {
                     var sub_li = $('<li>', {
                         'class': 'checkbox'

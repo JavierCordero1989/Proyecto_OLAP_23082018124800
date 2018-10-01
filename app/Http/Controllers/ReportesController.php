@@ -67,15 +67,35 @@ class ReportesController extends Controller
 
     public function traer_disciplinas_por_area(Request $request) {
         if($request->ajax()) {
-            $codigos_areas = $request->valores;
+            $mensaje = '';
             $disciplinas = [];
 
-            foreach($codigos_areas as $codigo) {
-                $area = Area::buscarPorCodigo($codigo)->first();
-                $disciplinas[$area->descriptivo] = Disciplina::select('codigo','descriptivo')->where('id_area', $codigo)->get();
+            if(sizeof($request->valores) == 0) {
+                $mensaje = 'Nada ha sido seleccionado';
+            }
+            else {
+                $disciplinas_seleccionadas = $request->valores;
+
+                foreach($disciplinas_seleccionadas as $disciplina) {
+                    $area = Area::buscarPorDescriptivo($disciplina)->first();
+
+                    if(empty($area)) {
+                        $disciplinas[] = \App\Disciplina::buscarPorCodigo($disciplina)->first();
+                    }
+                    else {
+                        foreach($area->disciplinas as $disc_por_area) {
+                            $datos_encontrados[] = $disc_por_area;
+                        }
+                    }
+                }
             }
 
-            return response()->json($disciplinas);
+            $data = [
+                'mensaje' =>$mensaje,
+                'disciplinas' => $disciplinas
+            ];
+
+            return response()->json(data);
         }
     }
 }

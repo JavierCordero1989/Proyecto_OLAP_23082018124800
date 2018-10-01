@@ -282,24 +282,38 @@ Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
 Route::get('pruebas', function() {
   $codigos_area = ['1','2','3','4','5'];
 
-  // $disciplinas = [];
-
-  // $disciplinas = \App\Disciplina::whereIn('id_area', $codigos_area)->get();
-
   foreach($codigos_area as $codigo) {
     $area = \App\Area::buscarPorCodigo($codigo)->first();
 
-    $disciplinas[$area->descriptivo] = \App\Disciplina::select('codigo','descriptivo')->where('id_area', $codigo)->get();
+    // $disciplinas[$area->descriptivo] = \App\Disciplina::select('codigo','descriptivo')->where('id_area', $codigo)->get();
+    $disciplinas[$area->descriptivo] = $area->disciplinas;
   }
-
-  // return response()->json($disciplinas);
 
   return view('pruebas.prueba')->with('data', json_encode($disciplinas));
 });
 
-Route::post('pruebas', function(\Illuminate\Http\Request $reques) {
-  dd($reques->all());
+Route::post('pruebas', function(\Illuminate\Http\Request $request) {
+  $datos_encontrados = [];
+
+  if(isset($request->disciplinas)) {
+    $disciplinas = $request->disciplinas;
+
+    foreach($disciplinas as $disciplina) {
+      $area = \App\Area::buscarPorDescriptivo($disciplina)->first();
+
+      if(empty($area)) {
+        $datos_encontrados[] = \App\Disciplina::buscarPorCodigo($disciplina)->first();
+      }
+      else {
+        foreach($area->disciplinas as $disc_por_area) {
+          $datos_encontrados[] = $disc_por_area;
+        }
+      }
+    }
+  }
+  dd($datos_encontrados);
 })->name('pruebas.from');
+
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
 //     Route::get('algo', 'Controller@index')          ->name('algo.index')  /*->middleware('permission:')*/;
