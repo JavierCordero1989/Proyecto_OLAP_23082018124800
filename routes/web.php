@@ -275,7 +275,6 @@ Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
   Route::get('', 'ReportesController@index')->name('reportes.index');
   Route::get('filtro', 'ReportesController@filtro_reportes')->name('reportes.filtro');
   Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte')->name('reportes.filtro-encuestas');
-  Route::get('universidades-por-sector', 'ReportesController@traer_universidades_por_sector')->name('universidades.sector');
 });
 
 Route::get('pruebas', function() {
