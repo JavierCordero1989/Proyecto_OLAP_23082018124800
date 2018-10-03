@@ -23,6 +23,7 @@ class EncuestaGraduadoTableSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create('es_ES');
+        $totalDeDatosGenerados = 400;
 
         // $carrera = TiposDatosCarrera::where('nombre', 'CARRERA')->first();
         // $universidad = TiposDatosCarrera::where('nombre', 'UNIVERSIDAD')->first();
@@ -48,15 +49,19 @@ class EncuestaGraduadoTableSeeder extends Seeder
 
         $id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
 
-        for($i=0; $i<400; $i++) {
+        $identificaciones = $this->generarIdentificaciones($totalDeDatosGenerados);
+        $tokens = $this->generarTokens($totalDeDatosGenerados);
+        $links = $this->generarLinksEncuestas($totalDeDatosGenerados);
+
+        for($i=0; $i<$totalDeDatosGenerados; $i++) {
             $universidad = $faker->randomElement($universidades);
 
             $encuesta = EncuestaGraduado::create([
-                'identificacion_graduado'   => $faker->numerify('# - ### - ###'),
-                'token'                     => $faker->uuid,
+                'identificacion_graduado'   => $identificaciones[$i],
+                'token'                     => $tokens[$i],
                 'nombre_completo'           => $faker->name,
                 'annio_graduacion'          => $faker->numberBetween($min = 2012, $max = 2015),
-                'link_encuesta'             => $faker->url,
+                'link_encuesta'             => $links[$i],
                 'sexo'                      => $faker->randomElement(['M', 'F']),
                 'codigo_carrera'            => $faker->randomElement($carreras),
                 'codigo_universidad'        => $universidad,
@@ -136,5 +141,86 @@ class EncuestaGraduadoTableSeeder extends Seeder
         $agrupacion = Agrupacion::buscarPorNombre($dato)->first();
         $id = $agrupacion->id;
         return $id;
+    }
+
+    /**
+     * Permite generar tantas identificaciones como cantidad sea especificada, sin repeticiones.
+     * @param $cantidad Cantidad de datos aleatorios a generar
+     * @return $identificaciones[] Arreglo con los datos generados.
+     */
+    private function generarIdentificaciones($cantidad) {
+        $identificaciones = []; //Arreglo con los datos
+
+        $faker = Factory::create('es_ES'); //Generador de datos aleatorios
+
+        //Se crea un for del tamaño especificado
+        for($indice=0; $indice<$cantidad; $indice++) {
+            $dato = $faker->numerify('# - ### - ###'); // Se genera el dato aleatorio para la identificacion
+
+            // Se consulta si ya el dato se encuentra en el arreglo
+            while(in_array($dato, $identificaciones)) {
+                // Si ya esta en el arreglo, se vuelve a generar otro dato aleatorio.
+                $dato = $faker->numerify('# - ### - ###');
+            }
+
+            // Se guarda el dato generado en el arreglo.
+            array_push($identificaciones, $dato);
+        }
+
+        return $identificaciones;
+    }
+
+    /**
+     * Permite generar tantos tokens como cantidad sea especificada, sin repeticiones.
+     * @param $cantidad Cantidad de datos aleatorios a generar
+     * @return $tokens[] Arreglo con los datos generados.
+     */
+    private function generarTokens($cantidad) {
+        $tokens = []; //Arreglo con los datos
+
+        $faker = Factory::create('es_ES'); //Generador de datos aleatorios
+
+        //Se crea un for del tamaño especificado
+        for($indice=0; $indice<$cantidad; $indice++) {
+            $dato = $faker->uuid; // Se genera el dato aleatorio para el token
+
+            // Se consulta si ya el dato se encuentra en el arreglo
+            while(in_array($dato, $tokens)) {
+                // Si ya esta en el arreglo, se vuelve a generar otro dato aleatorio.
+                $dato = $faker->uuid;
+            }
+
+            // Se guarda el dato generado en el arreglo.
+            array_push($tokens, $dato);
+        }
+
+        return $tokens;
+    }
+
+    /**
+     * Permite generar tantos links como cantidad sea especificada, sin repeticiones.
+     * @param $cantidad Cantidad de datos aleatorios a generar
+     * @return $links[] Arreglo con los datos generados.
+     */
+    private function generarLinksEncuestas($cantidad) {
+        $links = []; //Arreglo con los datos
+
+        $faker = Factory::create('es_ES'); //Generador de datos aleatorios
+
+        //Se crea un for del tamaño especificado
+        for($indice=0; $indice<$cantidad; $indice++) {
+            $dato = $faker->url; // Se genera el dato aleatorio para el link
+
+            // Se consulta si ya el dato se encuentra en el arreglo
+            while(in_array($dato, $links)) {
+                // Si ya esta en el arreglo, se vuelve a generar otro dato aleatorio.
+                $dato = $faker->url;
+            }
+
+            // Se guarda el dato generado en el arreglo.
+            array_push($links, $dato);
+        }
+
+        return $links;
     }
 }
