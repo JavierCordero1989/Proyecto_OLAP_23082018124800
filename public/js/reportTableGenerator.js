@@ -54,12 +54,12 @@ function generar_tabla_reporte(datos_reporte, id_titulo, id_fecha, id_tabla) {
     $('<th>').appendTo(pie_tabla);
 }
 
-function generar_reporte_general(datos_reporte) {
-    var reporte_general = $('#reporte_general');
+function generar_reporte_general(datos_reporte, id_titulo, id_tabla) {
+    var titulo = $('#' + id_titulo).text(datos_reporte.titulo);
+    var reporte_general = $('#' + id_tabla);
 
     var cuerpo_reporte = $('<tbody>').appendTo(reporte_general);
 
-    var titulo = $('#titulo_reporte').text(datos_reporte.titulo);
     var data = datos_reporte.data;
 
     for(var i in data) {

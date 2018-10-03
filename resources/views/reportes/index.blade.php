@@ -249,7 +249,7 @@
         var datos_reporte_ucr = <?php echo $reporte_areas_ucr; ?>; 
         var datos_reporte_una = <?php echo $reporte_areas_una; ?>;
         
-        generar_reporte_general(datos_reporte_general);
+        generar_reporte_general(datos_reporte_general, 'titulo_reporte', 'reporte_general');
         generar_tabla_reporte(datos_reporte_ucr, 'titulo-reporte-ucr', 'fecha-reporte-ucr', 'tabla-reporte-ucr');
         generar_tabla_reporte(datos_reporte_una, 'titulo-reporte-una', 'fecha-reporte-una', 'tabla-reporte-una');
 
