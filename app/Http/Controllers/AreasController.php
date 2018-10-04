@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\DatosCarreraGraduado;
+use Illuminate\Http\Request;
+use App\Area;
 use Flash;
 
 class AreasController extends Controller
 {
     public function index() {
-        $areas = DatosCarreraGraduado::porArea()->get();
+        // $areas = DatosCarreraGraduado::porArea()->get();
+        $areas = Area::all();
 
         return view('areas.index')->with('areas', $areas);
     }

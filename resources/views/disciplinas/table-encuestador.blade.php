@@ -11,7 +11,7 @@
     @foreach($disciplinas as $disciplina)
         <tr>
             <td>{!! $disciplina->codigo !!}</td>
-            <td>{!! $disciplina->nombre !!}</td>
+            <td>{!! $disciplina->descriptivo !!}</td>
         </tr>
     @endforeach
     </tbody>

@@ -52,38 +52,38 @@ Route::group(['middleware'=>['auth']], function() {
   Route::patch('users/{id}', 'UserController@update')  ->name('users.update') ->middleware('permission:users.update');
   Route::delete('users/{id}', 'UserController@destroy')->name('users.destroy')->middleware('permission:users.destroy');
   
-  Route::get('users/edit-name/{id}', 'UserController@edit_name')->name('users.edit_name')                     ->middleware('permission:users.edit_name');
-  Route::patch('users/update-name/{id}', 'UserController@update_name')->name('users.update_name')             ->middleware('permission:users.update_name');
-  Route::get('users/edit-password/{id}', 'UserController@edit_password')->name('users.edit_password')         ->middleware('permission:users.edit_password');
-  Route::patch('users/update-password/{id}', 'UserController@update_password')->name('users.update_password') ->middleware('permission:users.update_password');
-  Route::get('usuarios', 'UserController@index_table')->name('usuarios.index_table')                          ->middleware('permission:users.index_table');
+  Route::get('users/edit-name/{id}', 'UserController@edit_name')               ->name('users.edit_name')       ->middleware('permission:users.edit_name');
+  Route::patch('users/update-name/{id}', 'UserController@update_name')         ->name('users.update_name')     ->middleware('permission:users.update_name');
+  Route::get('users/edit-password/{id}', 'UserController@edit_password')       ->name('users.edit_password')   ->middleware('permission:users.edit_password');
+  Route::patch('users/update-password/{id}', 'UserController@update_password') ->name('users.update_password') ->middleware('permission:users.update_password');
+  Route::get('usuarios', 'UserController@index_table')                         ->name('usuarios.index_table')  ->middleware('permission:users.index_table');
 });
 
-Route::get('asignar-permisos-a-rol/create', 'AssignPermissionsToRolController@create')->name('permissionsToRol.create') ->middleware('permission:permissionsToRol.create');
-Route::post('asignar-permisos-a-rol/store', 'AssignPermissionsToRolController@store') ->name('permissionsToRol.store')  ->middleware('permission:permissionsToRol.store');
+Route::get('asignar-permisos-a-rol/create', 'AssignPermissionsToRolController@create') ->name('permissionsToRol.create') ->middleware('permission:permissionsToRol.create');
+Route::post('asignar-permisos-a-rol/store', 'AssignPermissionsToRolController@store')  ->name('permissionsToRol.store')  ->middleware('permission:permissionsToRol.store');
 
-Route::get('asignar-roles-a-usuario/create', 'AssignRolesToUserController@create')->name('rolesToUser.create')->middleware('permission:rolesToUser.create');
-Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store') ->name('rolesToUser.store') ->middleware('permission:rolesToUser.store');
+Route::get('asignar-roles-a-usuario/create', 'AssignRolesToUserController@create') ->name('rolesToUser.create') ->middleware('permission:rolesToUser.create');
+Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store')  ->name('rolesToUser.store')  ->middleware('permission:rolesToUser.store');
 
-Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel')->name('excel.import');
-Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
+Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel') ->name('excel.import');
+Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')                  ->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
 
 //Encuestadores
 Route::group(['middleware'=>['auth']], function() {
-    Route::get('encuestadores', 'EncuestadoresController@index')          ->name('encuestadores.index')  /*->middleware('permission:')*/;
-    Route::get('encuestadores/create', 'EncuestadoresController@create')  ->name('encuestadores.create') /*->middleware('')*/;
-    Route::post('encuestadores/store', 'EncuestadoresController@store')   ->name('encuestadores.store')  /*->middleware('')*/;
-    Route::get('encuestadores/{id}', 'EncuestadoresController@show')      ->name('encuestadores.show')   /*->middleware('')*/;
-    Route::get('encuestadores/{id}/edit', 'EncuestadoresController@edit') ->name('encuestadores.edit')   /*->middleware('')*/;
-    Route::patch('encuestadores/{id}', 'EncuestadoresController@update')  ->name('encuestadores.update') /*->middleware('')*/;
-    Route::delete('encuestadores/{id}', 'EncuestadoresController@destroy')->name('encuestadores.destroy')/*->middleware('')*/;
-    Route::get('cambiar-contrasennia-encuestador/{id_encuestador}/cambiar', 'EncuestadoresController@cambiar_contrasennia')->name('encuestadores.cambiar-contrasennia');
-    Route::patch('cambiar-contrasennia-encuestador/{id_encuestador}', 'EncuestadoresController@actualizar_contrasennia')->name('encuestadores.actualizar-contrasennia');
-    Route::get('lista-encuestas/{id}', 'EncuestadoresController@lista_de_encuestas')->name('encuestadores.lista-de-encuestas');
-    Route::get('agregar-contacto-encuestador/{id_encuesta}', 'EncuestadoresController@agregarContacto')->name('encuestadores.agregar-contacto');
-    Route::post('agregar-contacto-encuestador/guardar/{id_encuesta}/{id_encuestador}', 'EncuestadoresController@guardarContacto')->name('encuestadores.guardar-contacto');
-    Route::get('modificar-contacto/{id_contacto}/editar', 'EncuestadoresController@editarContacto')->name('encuestadores.modificar-contacto');
-    Route::patch('modificar-contacto/{id_contacto}', 'EncuestadoresController@actualizarContacto')->name('encuestadores.actualizar-contacto');
+    Route::get('encuestadores', 'EncuestadoresController@index')                                                                  ->name('encuestadores.index')  /*->middleware('permission:')*/;
+    Route::get('encuestadores/create', 'EncuestadoresController@create')                                                          ->name('encuestadores.create') /*->middleware('')*/;
+    Route::post('encuestadores/store', 'EncuestadoresController@store')                                                           ->name('encuestadores.store')  /*->middleware('')*/;
+    Route::get('encuestadores/{id}', 'EncuestadoresController@show')                                                              ->name('encuestadores.show')   /*->middleware('')*/;
+    Route::get('encuestadores/{id}/edit', 'EncuestadoresController@edit')                                                         ->name('encuestadores.edit')   /*->middleware('')*/;
+    Route::patch('encuestadores/{id}', 'EncuestadoresController@update')                                                          ->name('encuestadores.update') /*->middleware('')*/;
+    Route::delete('encuestadores/{id}', 'EncuestadoresController@destroy')                                                        ->name('encuestadores.destroy')/*->middleware('')*/;
+    Route::get('cambiar-contrasennia-encuestador/{id_encuestador}/cambiar', 'EncuestadoresController@cambiar_contrasennia')       ->name('encuestadores.cambiar-contrasennia');
+    Route::patch('cambiar-contrasennia-encuestador/{id_encuestador}', 'EncuestadoresController@actualizar_contrasennia')          ->name('encuestadores.actualizar-contrasennia');
+    Route::get('lista-encuestas/{id}', 'EncuestadoresController@lista_de_encuestas')                                              ->name('encuestadores.lista-de-encuestas');
+    Route::get('agregar-contacto-encuestador/{id_encuesta}', 'EncuestadoresController@agregarContacto')                           ->name('encuestadores.agregar-contacto');
+    Route::post('agregar-contacto-encuestador/guardar/{id_encuesta}/{id_encuestador}', 'EncuestadoresController@guardarContacto') ->name('encuestadores.guardar-contacto');
+    Route::get('modificar-contacto/{id_contacto}/editar', 'EncuestadoresController@editarContacto')                               ->name('encuestadores.modificar-contacto');
+    Route::patch('modificar-contacto/{id_contacto}', 'EncuestadoresController@actualizarContacto')                                ->name('encuestadores.actualizar-contacto');
 });
 
 //Supervisores
@@ -99,43 +99,43 @@ Route::group(['middleware'=>['auth']], function() {
 
 //Encuestas de los graduados
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('encuestas-graduados', 'EncuestaGraduadoController@index')          ->name('encuestas-graduados.index')  /*->middleware('permission:')*/;
-  Route::get('encuestas-graduados/create', 'EncuestaGraduadoController@create')  ->name('encuestas-graduados.create') /*->middleware('')*/;
-  Route::post('encuestas-graduados/store', 'EncuestaGraduadoController@store')   ->name('encuestas-graduados.store')  /*->middleware('')*/;
-  Route::get('encuestas-graduados/{id}', 'EncuestaGraduadoController@show')      ->name('encuestas-graduados.show')   /*->middleware('')*/;
-  Route::get('encuestas-graduados/{id}/edit', 'EncuestaGraduadoController@edit') ->name('encuestas-graduados.edit')   /*->middleware('')*/;
-  Route::patch('encuestas-graduados/{id}', 'EncuestaGraduadoController@update')  ->name('encuestas-graduados.update') /*->middleware('')*/;
-  Route::delete('encuestas-graduados/{id}', 'EncuestaGraduadoController@destroy')->name('encuestas-graduados.destroy')/*->middleware('')*/;
-  Route::get('agregar-contacto-encuesta/{id_encuesta}', 'EncuestaGraduadoController@agregarContacto')->name('encuestas-graduados.agregar-contacto');
-  Route::post('agregar-contacto-encuesta/guardar/{id_encuesta}', 'EncuestaGraduadoController@guardarContacto')->name('encuestas-graduados.guardar-contacto');
+  Route::get('encuestas-graduados', 'EncuestaGraduadoController@index')                                        ->name('encuestas-graduados.index')  /*->middleware('permission:')*/;
+  Route::get('encuestas-graduados/create', 'EncuestaGraduadoController@create')                                ->name('encuestas-graduados.create') /*->middleware('')*/;
+  Route::post('encuestas-graduados/store', 'EncuestaGraduadoController@store')                                 ->name('encuestas-graduados.store')  /*->middleware('')*/;
+  Route::get('encuestas-graduados/{id}', 'EncuestaGraduadoController@show')                                    ->name('encuestas-graduados.show')   /*->middleware('')*/;
+  Route::get('encuestas-graduados/{id}/edit', 'EncuestaGraduadoController@edit')                               ->name('encuestas-graduados.edit')   /*->middleware('')*/;
+  Route::patch('encuestas-graduados/{id}', 'EncuestaGraduadoController@update')                                ->name('encuestas-graduados.update') /*->middleware('')*/;
+  Route::delete('encuestas-graduados/{id}', 'EncuestaGraduadoController@destroy')                              ->name('encuestas-graduados.destroy')/*->middleware('')*/;
+  Route::get('agregar-contacto-encuesta/{id_encuesta}', 'EncuestaGraduadoController@agregarContacto')          ->name('encuestas-graduados.agregar-contacto');
+  Route::post('agregar-contacto-encuesta/guardar/{id_encuesta}', 'EncuestaGraduadoController@guardarContacto') ->name('encuestas-graduados.guardar-contacto');
 });
 
 //Encuestas de los graduados
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('asignar-encuestas/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@asignar')                      ->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;
-  Route::post('asignar-encuestas-encuestador/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@crearAsignacion') ->name('asignar-encuestas.crear-asignacion')  /*->middleware('permission:')*/;
-  Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')       ->name('asignar-encuestas.lista-encuestas-asignadas');
-  Route::post('filtrar-muestra/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@filtrar_muestra_a_asignar')     ->name('asignar-encuestas.filtrar-muestra');
-  Route::post('remover-encuestas-encuestador/{id_encuestador}', 'EncuestaGraduadoController@removerEncuestas')                ->name('asignar-encuestas.remover-encuestas');
-  Route::get('remover-encuestas-encuestador/{id_entrevista}/{id_encuestador}',     'EncuestaGraduadoController@remover_encuestas_a_encuestador')->name('asignar-encuestas.remover-encuestas-a-encuestador');
-  Route::get('realizar-entrevista/{id_entrevista}', 'EncuestaGraduadoController@realizar_entrevista') ->name('asignar-encuestas.realizar-entrevista');
-  Route::get('agregar-contacto-entrevista/{id_entrevista}', 'EncuestaGraduadoController@agregar_contacto')->name('asignar-encuestas.agregar-contacto-entrevista');
-  Route::patch('actualizar-entrevista/{id_entrevista}', 'EncuestaGraduadoController@actualizar_entrevista')->name('asignar-encuestas.actualizar-entrevista');
-  Route::get('agregar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@agregar_detalle_contacto')->name('asignar-encuestas.agregar-detalle-contacto');
-  Route::delete('{id_detalle}/{id_entrevista}/borrar', 'EncuestaGraduadoController@borrar_detalle_contacto')->name('asignar-encuestas.borrar-detalle-contacto');
-  Route::get('editar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}/editar', 'EncuestaGraduadoController@editar_detalle_contacto')->name('asignar-encuestas.editar-detalle-contacto');
-  Route::get('editar-contacto-entrevista/{id_contacto}/editar/{id_entrevista}', 'EncuestaGraduadoController@editar_contacto_entrevista')->name('asignar-encuestas.modificar-contacto-entrevista');
-  Route::post('agregar-contacto-entrevista-supervisor/guardar/{id_entrevista}/{id_supervisor}', 'EncuestaGraduadoController@guardar_contacto')->name('asignar-encuestas.guardar-contacto-entrevista-supervisor');
-  Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@guardar_detalle_contacto')->name('asignar-encuestas.guardar-detalle-contacto');
-  Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_detalle_contacto')->name('asignar-encuestas.actualizar-detalle-contacto');
-  Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_contacto_entrevista')->name('asignar-encuestas.actualizar-contacto-entrevista');
+  Route::get('asignar-encuestas/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@asignar')                                               ->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;
+  Route::post('asignar-encuestas-encuestador/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@crearAsignacion')                          ->name('asignar-encuestas.crear-asignacion')  /*->middleware('permission:')*/;
+  Route::get('ver-encuestas-asignadas/{id_encuestador}', 'EncuestaGraduadoController@encuestasAsignadasPorEncuestador')                                ->name('asignar-encuestas.lista-encuestas-asignadas');
+  Route::post('filtrar-muestra/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@filtrar_muestra_a_asignar')                              ->name('asignar-encuestas.filtrar-muestra');
+  Route::post('remover-encuestas-encuestador/{id_encuestador}', 'EncuestaGraduadoController@removerEncuestas')                                         ->name('asignar-encuestas.remover-encuestas');
+  Route::get('remover-encuestas-encuestador/{id_entrevista}/{id_encuestador}',     'EncuestaGraduadoController@remover_encuestas_a_encuestador')       ->name('asignar-encuestas.remover-encuestas-a-encuestador');
+  Route::get('realizar-entrevista/{id_entrevista}', 'EncuestaGraduadoController@realizar_entrevista')                                                  ->name('asignar-encuestas.realizar-entrevista');
+  Route::get('agregar-contacto-entrevista/{id_entrevista}', 'EncuestaGraduadoController@agregar_contacto')                                             ->name('asignar-encuestas.agregar-contacto-entrevista');
+  Route::patch('actualizar-entrevista/{id_entrevista}', 'EncuestaGraduadoController@actualizar_entrevista')                                            ->name('asignar-encuestas.actualizar-entrevista');
+  Route::get('agregar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@agregar_detalle_contacto')                          ->name('asignar-encuestas.agregar-detalle-contacto');
+  Route::delete('{id_detalle}/{id_entrevista}/borrar', 'EncuestaGraduadoController@borrar_detalle_contacto')                                           ->name('asignar-encuestas.borrar-detalle-contacto');
+  Route::get('editar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}/editar', 'EncuestaGraduadoController@editar_detalle_contacto')             ->name('asignar-encuestas.editar-detalle-contacto');
+  Route::get('editar-contacto-entrevista/{id_contacto}/editar/{id_entrevista}', 'EncuestaGraduadoController@editar_contacto_entrevista')               ->name('asignar-encuestas.modificar-contacto-entrevista');
+  Route::post('agregar-contacto-entrevista-supervisor/guardar/{id_entrevista}/{id_supervisor}', 'EncuestaGraduadoController@guardar_contacto')         ->name('asignar-encuestas.guardar-contacto-entrevista-supervisor');
+  Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@guardar_detalle_contacto')                         ->name('asignar-encuestas.guardar-detalle-contacto');
+  Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_detalle_contacto')          ->name('asignar-encuestas.actualizar-detalle-contacto');
+  Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_contacto_entrevista') ->name('asignar-encuestas.actualizar-contacto-entrevista');
 
 });
 
 //Gráficos
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('graficos-estados', 'GraficosController@graficosPorEstado')->name('graficos.graficos-por-estado')  /*->middleware('permission:')*/;
-  Route::get('graficos-estados-encuestador/{id_encuestador}', 'GraficosController@graficosPorEstadoEncuestador')->name('graficos.graficos-por-encuestador');
+  Route::get('graficos-estados', 'GraficosController@graficosPorEstado')                                         ->name('graficos.graficos-por-estado')  /*->middleware('permission:')*/;
+  Route::get('graficos-estados-encuestador/{id_encuestador}', 'GraficosController@graficosPorEstadoEncuestador') ->name('graficos.graficos-por-encuestador');
 });
 
 // Rutas para el mantenimiento de las carreras
@@ -195,13 +195,13 @@ Route::group(['prefix'=>'areas', 'middleware'=>'auth'], function() {
 
 // Rutas para el mantenimiento de los detalle de contacto
 Route::group(['prefix'=>'detalles', 'middleware'=>'auth'], function() {
-  Route::get('', 'DetalleController@index')          ->name('detalles.index')  /*->middleware('permission:')*/;
-  Route::get('/create/{id}', 'DetalleController@create')  ->name('detalles.create') /*->middleware('')*/;
-  Route::post('/store/{id}', 'DetalleController@store')   ->name('detalles.store')  /*->middleware('')*/;
-  Route::get('/{id}', 'DetalleController@show')      ->name('detalles.show')   /*->middleware('')*/;
-  Route::get('/{id}/edit', 'DetalleController@edit') ->name('detalles.edit')   /*->middleware('')*/;
-  Route::patch('/{id}', 'DetalleController@update')  ->name('detalles.update') /*->middleware('')*/;
-  Route::delete('/{id}', 'DetalleController@destroy')->name('detalles.destroy')/*->middleware('')*/;
+  Route::get('', 'DetalleController@index')              ->name('detalles.index')  /*->middleware('permission:')*/;
+  Route::get('/create/{id}', 'DetalleController@create') ->name('detalles.create') /*->middleware('')*/;
+  Route::post('/store/{id}', 'DetalleController@store')  ->name('detalles.store')  /*->middleware('')*/;
+  Route::get('/{id}', 'DetalleController@show')          ->name('detalles.show')   /*->middleware('')*/;
+  Route::get('/{id}/edit', 'DetalleController@edit')     ->name('detalles.edit')   /*->middleware('')*/;
+  Route::patch('/{id}', 'DetalleController@update')      ->name('detalles.update') /*->middleware('')*/;
+  Route::delete('/{id}', 'DetalleController@destroy')    ->name('detalles.destroy')/*->middleware('')*/;
 });
 
 Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
@@ -266,15 +266,15 @@ Route::group(['prefix'=>'supervisor/2', 'middleware'=>'auth'], function() {
 // Rutas para el calendario y citas
 Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function() {
   Route::get('{id_usuario}', 'CalendarioDeCitasController@ver_calendario')->name('ver-calendario');
-  Route::get('agendar-cita-entrevista/{encuestador}/{mal_encuestador}/{entrevista}/{mal_entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista')->name('calendario.agendar-cita');
-  Route::post('agendar-cita-entrevista/guardar/{entrevista}/{encuestador}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')->name('calendario.guardar-cita');
+  Route::get('agendar-cita-entrevista/{encuestador}/{mal_encuestador}/{entrevista}/{mal_entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista') ->name('calendario.agendar-cita');
+  Route::post('agendar-cita-entrevista/guardar/{entrevista}/{encuestador}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')                          ->name('calendario.guardar-cita');
 });
 
 // Rutas para los reportes 
 Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
-  Route::get('', 'ReportesController@index')->name('reportes.index');
-  Route::get('filtro', 'ReportesController@filtro_reportes')->name('reportes.filtro');
-  Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte')->name('reportes.filtro-encuestas');
+  Route::get('', 'ReportesController@index')                                 ->name('reportes.index');
+  Route::get('filtro', 'ReportesController@filtro_reportes')                 ->name('reportes.filtro');
+  Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte') ->name('reportes.filtro-encuestas');
 });
 
 Route::get('pruebas', function() {

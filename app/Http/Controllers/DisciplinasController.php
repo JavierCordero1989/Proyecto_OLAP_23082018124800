@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\DatosCarreraGraduado;
+use Illuminate\Http\Request;
+use App\Disciplina;
 use Flash;
 
 class DisciplinasController extends Controller
 {
     public function index() {
-        $disciplinas = DatosCarreraGraduado::porDisciplina()->get();
+        // $disciplinas = DatosCarreraGraduado::porDisciplina()->get();
+        $disciplinas = Disciplina::all();
 
         return view('disciplinas.index')->with('disciplinas', $disciplinas);
     }

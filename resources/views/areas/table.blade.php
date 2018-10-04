@@ -12,7 +12,7 @@
     @foreach($areas as $area)
         <tr>
             <td>{!! $area->codigo !!}</td>
-            <td>{!! $area->nombre !!}</td>
+            <td>{!! $area->descriptivo !!}</td>
             <td>
                 {!! Form::open(['route' => ['areas.destroy', $area->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

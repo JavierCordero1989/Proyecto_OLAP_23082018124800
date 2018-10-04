@@ -103,6 +103,8 @@ class ReportesController extends Controller
             ->with('reporte_areas_una', json_encode($reporte_areas_una));
     }
 
+    //La funcion carga la vista para filtro con los datos de las universidades tanto publicas
+    // como privadas, asi como las areas y sus disciplinas
     public function filtro_reportes() {
         $universidades_publicas = Universidad::obtenerPublicas()->get();
         $universidades_privadas = Universidad::obtenerPrivadas()->get();

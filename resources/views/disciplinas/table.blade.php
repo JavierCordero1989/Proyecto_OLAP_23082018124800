@@ -12,7 +12,7 @@
     @foreach($disciplinas as $disciplina)
         <tr>
             <td>{!! $disciplina->codigo !!}</td>
-            <td>{!! $disciplina->nombre !!}</td>
+            <td>{!! $disciplina->descriptivo !!}</td>
             <td>
                 {!! Form::open(['route' => ['disciplinas.destroy', $disciplina->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

@@ -11,7 +11,7 @@
     @foreach($areas as $area)
         <tr>
             <td>{!! $area->codigo !!}</td>
-            <td>{!! $area->nombre !!}</td>
+            <td>{!! $area->descriptivo !!}</td>
         </tr>
     @endforeach
     </tbody>
