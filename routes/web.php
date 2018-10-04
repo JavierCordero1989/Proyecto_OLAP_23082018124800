@@ -313,3 +313,32 @@ Route::post('pruebas', function(\Illuminate\Http\Request $request) {
 //     Route::patch('algo/{id}', 'Controller@update')  ->name('algo.update') /*->middleware('')*/;
 //     Route::delete('algo/{id}', 'Controller@destroy')->name('algo.destroy')/*->middleware('')*/;
 // });
+
+
+
+
+
+
+
+Route::get('usuarios', function() {
+  $rol_encuestador = \Spatie\Permission\Models\Role::where('name', 'Encuestador')->first();
+  $rol_supervisor_2 = \Spatie\Permission\Models\Role::where('name', 'Supervisor 2')->first();
+  $rol_supervisor_1 = \Spatie\Permission\Models\Role::where('name', 'Supervisor 1')->first();
+  $rol_admin = \Spatie\Permission\Models\Role::where('name', 'Super Admin')->first();
+
+  $usuarios = \App\User::all();
+
+  foreach($usuarios as $usuario) {
+    if($usuario->hasRole('Encuestador')) { $encuestador = $usuario->email; }
+    if($usuario->hasRole('Supervisor 2')) { $supervisor_2 = $usuario->email; }
+    if($usuario->hasRole('Supervisor 1')) { $supervisor_1 = $usuario->email; }
+    if($usuario->hasRole('Super Admin')) { $admin = $usuario->email; }
+  }
+
+  dd(array(
+    'Encuestador' => $encuestador,
+    'Supervisor_2' => $supervisor_2,
+    'Supervisor_1' => $supervisor_1,
+    'Administrador' => $admin
+  ));
+});

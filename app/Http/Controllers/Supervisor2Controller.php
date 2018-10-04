@@ -15,6 +15,8 @@ use App\User;
 use Carbon\Carbon;
 use Flash;
 use DB;
+use App\Area;
+use App\Disciplina;
 
 class Supervisor2Controller extends Controller
 {
@@ -199,8 +201,10 @@ class Supervisor2Controller extends Controller
         $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
         $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
         $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
-        $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
-        $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        // $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
+        $disciplinas =   Disciplina::all()->pluck('descriptivo', 'id');
+        // $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        $areas =         Area::all()->pluck('descriptivo', 'id');
         $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
         $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
 
