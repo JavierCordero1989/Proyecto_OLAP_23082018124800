@@ -132,6 +132,26 @@ class CalendarioDeCitasController extends Controller
         return redirect(route('ver-calendario', $encuestador));
     }
 
+    public function obtener_citas_calendario() {
+        if($request->ajax()) {
+            $citas = Cita::all();
+            $citas_del_dia = [];
+        
+            foreach($citas as $cita) {
+                if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
+                    $citas_del_dia[] = $cita;
+                }
+            }
+        
+            $data = [
+                'count' => count($citas_del_dia),
+                'citas' => $citas_del_dia
+            ];
+        
+            return response()->json($data);
+        }
+    }
+
     /** Convierte la fecha obtenida en un formato para guardarlo en MYSQL */
     private function convertir_fecha_mysql($fecha) {
         return Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
