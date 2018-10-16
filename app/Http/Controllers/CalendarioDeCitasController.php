@@ -49,7 +49,8 @@ class CalendarioDeCitasController extends Controller
         /* Si la entrevista encontrada es un objeto vacio devuelve un error*/
         if(empty($entrevista_cita)) {
             Flash::error('La entrevista que busca no existe');
-            return redirect(route($this->validar_ruta_mala_entrevista($mal_entrevista), $entrevista));
+            // return redirect(route($this->validar_ruta_mala_entrevista($mal_entrevista), $entrevista));
+            return redirect(route(config('calendar-routes.'.$mal_entrevista), $entrevista));
         }
 
         /* Busca el usuario que hizo la solicitud en la base de datos */
@@ -58,7 +59,8 @@ class CalendarioDeCitasController extends Controller
         /* Si el usuario encontrdo es un objeto vacio devuelve un error */
         if(empty($usuario)) {
             Flash::error('El usuario que hizo la solicitud no existe');
-            return redirect(route($this->validar_ruta_mal_encuestador($mal_encuestador)));
+            // return redirect(route($this->validar_ruta_mal_encuestador($mal_encuestador)));
+            return redirect(route(config('calendar-routes.'.$mal_encuestador)));
         }
 
         /* Datos esenciales para las rutas */
@@ -70,7 +72,8 @@ class CalendarioDeCitasController extends Controller
         /* Rutas a usar para las vistas */
         $rutas = [
             'store' => 'calendario.guardar-cita',
-            'back' => $this->validar_ruta_mala_entrevista($mal_entrevista)
+            // 'back' => $this->validar_ruta_mala_entrevista($mal_entrevista)
+            'back' => config('calendar-routes.'.$mal_entrevista)
         ];
 
         return view($this->vista_agendar_cita, compact('datos_a_vista', 'rutas'));
@@ -126,7 +129,7 @@ class CalendarioDeCitasController extends Controller
         ]);
 
         Flash::success('La cita ha sido guardada con éxito.');
-        return redirect(route('ver-calendario'));
+        return redirect(route('ver-calendario', $encuestador));
     }
 
     /** Convierte la fecha obtenida en un formato para guardarlo en MYSQL */
