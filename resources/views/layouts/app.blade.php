@@ -186,7 +186,7 @@
 
         $.ajax({
             url: '{{ route("obtener-citas-calendario") }}',
-            method: 'GET',
+            type: 'GET',
             success: function(data) {
                 console.log(data);
                 // se coloca el número de notificaciones
