@@ -15,7 +15,7 @@
                <div class="row">
                    {!! Form::model($supervisor, ['route' => ['supervisores.update', $supervisor->id], 'method' => 'patch']) !!}
 
-                        @include('supervisores.fields')
+                        @include('supervisores.fields-edit')
 
                    {!! Form::close() !!}
                </div>
