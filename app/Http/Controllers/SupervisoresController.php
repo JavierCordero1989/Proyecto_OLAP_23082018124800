@@ -15,20 +15,22 @@ class SupervisoresController extends Controller
          *  vista de index.
          */
         /** Para que no obtenga los usuarios que han sido dados de baja */
-        $usuarios = User::whereNull('deleted_at')->get();
+        // $usuarios = User::whereNull('deleted_at')->get();
+        $usuarios = User::role(['Supervisor 1', 'Supervisor 2', 'Super Admin'])->get();
 
-        $lista_supervisores = [];
+        // $lista_supervisores = [];
 
-        /** Se guardan todos los que son supervisores dentro del array para llevarlos a la vista */
-        foreach($usuarios as $supervisor) {
-            if($supervisor->hasRole('Supervisor 1') || $supervisor->hasRole('Supervisor 2')) {
-                array_push($lista_supervisores, $supervisor);
-            }
-        }
+        // /** Se guardan todos los que son supervisores dentro del array para llevarlos a la vista */
+        // foreach($usuarios as $supervisor) {
+        //     if($supervisor->hasRole('Supervisor 1') || $supervisor->hasRole('Supervisor 2')) {
+        //         array_push($lista_supervisores, $supervisor);
+        //     }
+        // }
+
         /** Se regresa a la vista de index en la carpeta deseada, con los datos obtenidos 
          *  desde la base de datos.
           */
-        return view('supervisores.index', compact('lista_supervisores'));
+        return view('supervisores.index', compact('usuarios'));
     }
 
     /** Metodo create, que carga la vista con los campos para ingresar los datos necesarios
@@ -50,13 +52,35 @@ class SupervisoresController extends Controller
 
         $input = $request->all();
 
+        // dd($input);
+
+        // Se verifica que el código del usuario no existe en la BD
+        $usuario_consulta = User::findByUserCode($input['user_code'])->first();
+
+        // Si el objeto consultado No está vacío
+        if(!empty($usuario_consulta)) {
+            Flash::error('Ha ingresado un código de usuario que ya está registrado.');
+            return redirect(route('supervisores.create'));
+        }
+
+        // Se verifica que el código del usuario no existe en la BD
+        $usuario_consulta = User::findByEmail($input['email'])->first();
+
+        // Si el objeto consultado No está vacío
+        if(!empty($usuario_consulta)) {
+            Flash::error('Ha ingresado un email de usuario que ya está registrado.');
+            return redirect(route('supervisores.create'));
+        }
+
+        // Si las validaciones no se disparan, guardar el usuario nuevo en la BD
         $nuevo_supervisor = User::create([
+            'user_code' => $input['user_code'],
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => bcrypt($input['password'])
         ]);
 
-        $nuevo_supervisor->assignRole('Supervisor');
+        $nuevo_supervisor->assignRole($input['role_name']);
 
         /** Mensaje de exito que se carga en la vista. */
         Flash::success('Se ha guardado el supervisor');
@@ -116,6 +140,7 @@ class SupervisoresController extends Controller
         $supervisor->name = $request->name;
         $supervisor->email = $request->email;
         $supervisor->password = bcrypt($request->password);
+        $supervisor->syncRoles($request->role_name);
         $supervisor->save();
 
         /** Se genera un mensaje de exito y se redirige a la ruta index */
