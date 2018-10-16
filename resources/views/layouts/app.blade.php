@@ -61,6 +61,29 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="far fa-bell"></i>
+                            <span id="count_notifications" class="label label-warning">x</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li id="title_count_notifications" class="header">Tiene x notificaciones</li>
+                            <li>
+                                <ul id="citas_lista" class="menu">
+                                    {{-- <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i>
+                                            Aqui para notificación
+                                        </a>
+                                    </li> --}}
+                                </ul>
+                            </li>
+                            <li class="footer">
+                                <a href="#">Ver todas</a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- User Account Menu -->
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
@@ -155,6 +178,31 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.min.js"></script> --}}
 {{-- <script src="{{ asset('js/app/app.min.js') }}"></script> --}}
 <script src="{{ config('global.js.link_app') }}"></script>
+
+<script>
+    $(function() {
+        console.log('PÁGINA LISTA...');
+        $.ajax({
+            url: '{{ route("obtener-citas-calendario") }}',
+            method: 'GET',
+            success: function(data) {
+                $('#count_notifications').html(data.count);
+                $('#title_count_notifications').html('Tiene '+data.count+' notificaciones');
+                let menu_notificaciones = $('#citas_lista');
+
+                for(index in data.citas) {
+                    let li = $('<li>').appendTo(menu_notificaciones);
+                    let a = $('<a>', { 'href': '#'}).appendTo(li);
+                    $('<i>', {
+                        'class': 'fas fa-users text-aqua'
+                    }).appendTo(a);
+                    a.append(' '+data.citas[index].observacion);
+                    console.log(data.citas[index]);
+                }
+            }
+        });
+    });
+</script>
 
 @yield('scripts')
 </body>
