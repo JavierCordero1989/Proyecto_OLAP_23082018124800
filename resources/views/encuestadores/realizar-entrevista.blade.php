@@ -120,13 +120,13 @@
                         <!-- Campo de la disciplina -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
                             {!! Form::label('disciplina', 'Disciplina:') !!}
-                            {!! Form::text('disciplina', $entrevista->disciplina->nombre, ['class' => 'form-control', 'disabled']) !!}
+                            {!! Form::text('disciplina', $entrevista->disciplina->descriptivo, ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
                         <!-- Campo del area -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
                             {!! Form::label('area', 'Área:') !!}
-                            {!! Form::text('area', $entrevista->area->nombre, ['class' => 'form-control', 'disabled']) !!}
+                            {!! Form::text('area', $entrevista->area->descriptivo, ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
                         <!-- Campo de la agrupacion -->
