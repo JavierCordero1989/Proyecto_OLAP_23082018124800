@@ -346,3 +346,70 @@ Route::get('usuarios', function() {
   return view('pruebas.usuarios')
     ->with('datos', $datos);
 });
+
+
+
+// Para ajax para comprobar código de usuario
+Route::get('findUserByCode', function(\Illuminate\Http\Request $request) {
+  if($request->ajax()) {
+    $codigo = $request->codigo_usuario;
+    $mensaje = '';
+    $encontrado = false;
+
+    $usuario = App\User::findByUserCode($codigo)->first();
+
+    if(!empty($usuario)) {
+      $mensaje = 'El código que esta ingresando se encuentra registrado.';
+      $encontrado = true;
+    }
+
+    $datos_respuesta = [
+      'mensaje' => $mensaje,
+      'encontrado' => $encontrado
+    ];
+
+    return response()->json($datos_respuesta);
+  }
+})->name('findUserByCode');
+
+// Para ajax para comprobar email del usuario
+Route::get('findUserByEmail', function(\Illuminate\Http\Request $request) {
+  if($request->ajax()) {
+    $email = $request->email;
+    $mensaje = '';
+    $encontrado = false;
+
+    $usuario = App\User::findByEmail($email)->first();
+
+    if(!empty($usuario)) {
+      $mensaje = 'El email que esta ingresando se encuentra registrado.';
+      $encontrado = true;
+    }
+
+    $datos_respuesta = [
+      'mensaje' => $mensaje,
+      'encontrado' => $encontrado
+    ];
+
+    return response()->json($datos_respuesta);
+  }
+})->name('findUserByEmail');
+
+Route::get('obtener-citas-calendario', function() {
+  $citas = \App\CitaCalendario::all();
+  $citas_del_dia = [];
+
+  foreach($citas as $cita) {
+    if($cita->getFecha() == \Carbon\Carbon::now()->format('Y-m-d')) {
+      $citas_del_dia[] = $cita;
+    }
+  }
+
+  $data = [
+    'count' => count($citas_del_dia),
+    'citas' => $citas_del_dia
+  ];
+
+  return response()->json($data);
+  
+})->name('obtener-citas-calendario');
