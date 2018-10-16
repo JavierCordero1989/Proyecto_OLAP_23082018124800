@@ -1,6 +1,6 @@
 <section class="content">
     <div class="row">
-        @foreach($lista_supervisores as $supervisor)
+        @foreach($usuarios as $supervisor)
             <div class="col-md-6">
                 <div class="box box-primary collapsed-box" >
                     <!-- Encabezado del cuadro -->
@@ -46,13 +46,26 @@
                                 <div class='btn-group'>
 
                                     <!-- Boton para ver los datos del encuestador -->
-                                    <a href="{!! route('encuestadores.show', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
+                                    {{-- <a href="{!! route('supervisores.show', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
                                         <i class="glyphicon glyphicon-eye-open"></i>
-                                    </a>
+                                    </a> --}}
         
+                                    {{-- <a href="#modal-{!! $supervisor->id !!}" data-toggle="modal" class='btn btn-default btn-xs'>
+                                        <i class="glyphicon glyphicon-eye-open"></i>
+                                    </a> --}}
+
+                                    @component('components.info-encuestador')
+                                        @slot('id_modal', 'modal-'.$supervisor->id)
+                                        @slot('nombre_encuestador', $supervisor->name)
+                                        @slot('codigo_usuario', $supervisor->user_code)
+                                        @slot('email', $supervisor->email)
+                                        @slot('created_at', $supervisor->created_at)
+                                        @slot('updated_at', $supervisor->updated_at)
+                                    @endcomponent
+
                                     <!-- Boton para editar los datos del encuestador -->
                                     {{-- @if (Auth::user()->hasRole('Administrador')) --}}
-                                        <a href="{!! route('encuestadores.edit', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
+                                        <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
                                             <i class="glyphicon glyphicon-edit"></i>
                                         </a>
                     
