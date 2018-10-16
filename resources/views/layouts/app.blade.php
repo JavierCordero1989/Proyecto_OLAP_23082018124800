@@ -179,17 +179,26 @@
 {{-- <script src="{{ asset('js/app/app.min.js') }}"></script> --}}
 <script src="{{ config('global.js.link_app') }}"></script>
 
+<!-- Script para cargar las alertas del calendario en la página principal -->
 <script>
     $(function() {
         console.log('PÁGINA LISTA...');
+
         $.ajax({
             url: '{{ route("obtener-citas-calendario") }}',
             method: 'GET',
             success: function(data) {
+                console.log(data);
+                // se coloca el número de notificaciones
                 $('#count_notifications').html(data.count);
+
+                // se coloca un mensaje con el total de notificaciones
                 $('#title_count_notifications').html('Tiene '+data.count+' notificaciones');
+
+                // se obtiene la caja que contendrá el menú
                 let menu_notificaciones = $('#citas_lista');
 
+                // se recorren las citas obtenidas y se agregan al menú
                 for(index in data.citas) {
                     let li = $('<li>').appendTo(menu_notificaciones);
                     let a = $('<a>', { 'href': '#'}).appendTo(li);
@@ -197,8 +206,8 @@
                         'class': 'fas fa-users text-aqua'
                     }).appendTo(a);
                     a.append(' '+data.citas[index].observacion);
-                    console.log(data.citas[index]);
                 }
+                console.log('ready');
             }
         });
     });
