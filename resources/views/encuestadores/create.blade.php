@@ -14,7 +14,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => 'encuestadores.store']) !!}
+                    {!! Form::open(['route' => 'encuestadores.store', 'onsubmit' => 'return validar_formulario();']) !!}
 
                         @include('encuestadores.fields')
 
