@@ -53,6 +53,23 @@ class EncuestadoresController extends Controller
 
         $input = $request->all();
 
+        // Se verifica que el código ingresado no exista
+        $usuario_consultado = User::findByUserCode($input['user_code'])->first();
+
+        if(!empty($usuario_consultado)) {
+            Flash::error('El código que registró ya existe para otro usuario.');
+            return redirect(route('encuestadores.index'));
+        }
+
+        // Se verifica que el correo ingresado no exista.
+        $usuario_consultado = User::findByEmail($input['email'])->first();
+
+        if(!empty($usuario_consultado)) {
+            Flash::error('El email que registró ya existe para otro usuario.');
+            return redirect(route('encuestadores.index'));
+        }
+
+        // Si no existe ni el código ni el correo en otro usuario, se guarda en la base de datos.
         $nuevo_encuestador = User::create([
             'user_code' => $input['user_code'],
             'name' => $input['name'],
@@ -107,13 +124,13 @@ class EncuestadoresController extends Controller
      *  por parametros, modificandolo con los datos del Request.
      */
     public function update($id, Request $request) {
-        $validar_encuestador_repetido = User::where('user_code', $request->user_code)->first();
+        // $validar_encuestador_repetido = User::where('user_code', $request->user_code)->first();
 
-        if(!is_null($validar_encuestador_repetido)) {
-            Flash::error('Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.');
-            return redirect(route('encuestadores.edit', $id));
-            // return redirect(route('encuestadores.edit', $id))->withErrors(['user_code'=>'Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.']);
-        }
+        // if(!is_null($validar_encuestador_repetido)) {
+        //     Flash::error('Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.');
+        //     return redirect(route('encuestadores.edit', $id));
+        //     // return redirect(route('encuestadores.edit', $id))->withErrors(['user_code'=>'Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.']);
+        // }
 
         /** Se obtiene el objeto que corresponda al ID */
         $encuestador = User::find($id);
