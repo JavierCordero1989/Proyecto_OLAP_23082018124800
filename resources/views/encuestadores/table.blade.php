@@ -17,10 +17,25 @@
                                 <div class='btn-group'>
 
                                     <!-- Boton para ver los datos del encuestador -->
-                                    <a href="{!! route('encuestadores.show', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
+                                    {{-- <a href="{!! route('encuestadores.show', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
                                         <i class="glyphicon glyphicon-eye-open"></i>
-                                    </a>
-      
+                                    </a> --}}
+                                    
+                                    {{-- <a href="#modal-{!! $encuestador->id !!}" data-toggle="modal" class='btn btn-default btn-xs'>
+                                        <i class="glyphicon glyphicon-eye-open"></i>
+                                    </a> --}}
+
+                                    @component('components.info-encuestador')
+                                        @slot('id_modal', 'modal-'.$encuestador->id)
+                                        @slot('nombre_encuestador', $encuestador->name)
+                                        @slot('codigo_usuario', $encuestador->user_code)
+                                        @slot('email', $encuestador->email)
+                                        @slot('created_at', $encuestador->created_at)
+                                        @slot('updated_at', $encuestador->updated_at)
+                                    @endcomponent
+
+                                    {{-- @include('encuestadores.modal-info-encuestador') --}}
+
                                     <!-- Boton para editar los datos del encuestador -->
                                     {{-- @if (Auth::user()->hasRole('Administrador')) --}}
                                         <a href="{!! route('encuestadores.edit', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
