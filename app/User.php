@@ -42,4 +42,12 @@ class User extends Authenticatable
     public function observaciones() {
         return $this->hasMany(ObservacionesGraduado::class, 'id_usuario');
     }
+
+    public function scopeFindByUserCode($query, $user_code) {
+        return $query->where('user_code', $user_code);
+    }
+
+    public function scopeFindByEmail($query, $email) {
+        return $query->where('email', $email);
+    }
 }
