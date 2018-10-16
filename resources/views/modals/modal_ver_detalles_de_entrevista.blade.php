@@ -127,7 +127,7 @@
                             <p>{!! $encuesta->tipo_de_caso !!}</p>
                         </div>
     
-                        <!-- Created At Field -->
+                        {{-- <!-- Created At Field -->
                         <div class="col-xs-6">
                             {!! Form::label('created_at', 'Creado el:') !!}
                             <p>{!! $encuesta->created_at !!}</p>
@@ -137,7 +137,7 @@
                         <div class="col-xs-6">
                             {!! Form::label('updated_at', 'Modificado el:') !!}
                             <p>{!! $encuesta->updated_at !!}</p>
-                        </div>
+                        </div> --}}
                     </div>
                     
                     <!--Botón para volver a atrás-->
