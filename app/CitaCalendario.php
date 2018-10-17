@@ -13,6 +13,7 @@ class CitaCalendario extends Model
         'fecha_hora',
         'numero_contacto',
         'observacion',
+        'estado',
         'id_encuestador',
         'id_entrevista'
     ];
@@ -29,5 +30,21 @@ class CitaCalendario extends Model
      */
     public function scopeCitasDeEncuestador($query, $id_encuestador) {
         return $query->where('id_encuestador', $id_encuestador);
+    }
+
+    /** 
+     * Permite filtrar las citas que se encuentren en estado pendiente.
+     * @return Collection Lista con las citas en estado Pendiente 
+     */
+    public function scopeListaDePendientes($query) {
+        return $query->where('estado', 'P');
+    }
+
+    /** 
+     * Permite filtrar las citas que se encuentren en estado listas.
+     * @return Collection Lista con las citas en estado Lista 
+     */
+    public function scopeListaDeListas($query) {
+        return $query->where('estado', 'L');
     }
 }
