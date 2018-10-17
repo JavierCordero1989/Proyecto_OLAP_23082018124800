@@ -268,7 +268,7 @@ Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function()
   Route::get('{id_usuario}', 'CalendarioDeCitasController@ver_calendario')->name('ver-calendario');
   Route::get('agendar-cita-entrevista/{encuestador}/{mal_encuestador}/{entrevista}/{mal_entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista') ->name('calendario.agendar-cita');
   Route::post('agendar-cita-entrevista/guardar/{entrevista}/{encuestador}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')                          ->name('calendario.guardar-cita');
-  Route::get('obtener-citas-calendario', 'CalendarioDeCitasController@obtener_citas_calendario')->name('obtener-citas-calendario');
+  Route::get('lista-citas/obtener-citas-calendario', 'CalendarioDeCitasController@obtener_citas_calendario')->name('obtener-citas-calendario');
 });
 
 // Rutas para los reportes 
@@ -350,6 +350,8 @@ Route::get('usuarios', function() {
 
 
 
+
+
 // Para ajax para comprobar código de usuario
 Route::get('findUserByCode', function(\Illuminate\Http\Request $request) {
   if($request->ajax()) {
@@ -395,22 +397,3 @@ Route::get('findUserByEmail', function(\Illuminate\Http\Request $request) {
     return response()->json($datos_respuesta);
   }
 })->name('findUserByEmail');
-
-// Route::get('obtener-citas-calendario', function() {
-//   $citas = \App\CitaCalendario::all();
-//   $citas_del_dia = [];
-
-//   foreach($citas as $cita) {
-//     if($cita->getFecha() == \Carbon\Carbon::now()->format('Y-m-d')) {
-//       $citas_del_dia[] = $cita;
-//     }
-//   }
-
-//   $data = [
-//     'count' => count($citas_del_dia),
-//     'citas' => $citas_del_dia
-//   ];
-
-//   return response()->json($data);
-  
-// })->name('obtener-citas-calendario');
