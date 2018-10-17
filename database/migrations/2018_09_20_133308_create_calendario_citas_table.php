@@ -18,6 +18,7 @@ class CreateCalendarioCitasTable extends Migration
             $table->datetime('fecha_hora');
             $table->string('numero_contacto', 50);
             $table->text('observacion')->nullable();
+            $table->char('estado', 1); // P: pendiente, L: lista
             $table->unsignedInteger('id_encuestador');
             $table->unsignedInteger('id_entrevista');
             $table->timestamps();
