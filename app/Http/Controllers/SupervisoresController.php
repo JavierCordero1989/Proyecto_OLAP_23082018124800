@@ -54,23 +54,23 @@ class SupervisoresController extends Controller
 
         // dd($input);
 
-        // Se verifica que el código del usuario no existe en la BD
-        $usuario_consulta = User::findByUserCode($input['user_code'])->first();
+        // // Se verifica que el código del usuario no existe en la BD
+        // $usuario_consulta = User::findByUserCode($input['user_code'])->first();
 
-        // Si el objeto consultado No está vacío
-        if(!empty($usuario_consulta)) {
-            Flash::error('Ha ingresado un código de usuario que ya está registrado.');
-            return redirect(route('supervisores.create'));
-        }
+        // // Si el objeto consultado No está vacío
+        // if(!empty($usuario_consulta)) {
+        //     Flash::error('Ha ingresado un código de usuario que ya está registrado.');
+        //     return redirect(route('supervisores.create'));
+        // }
 
-        // Se verifica que el código del usuario no existe en la BD
-        $usuario_consulta = User::findByEmail($input['email'])->first();
+        // // Se verifica que el código del usuario no existe en la BD
+        // $usuario_consulta = User::findByEmail($input['email'])->first();
 
-        // Si el objeto consultado No está vacío
-        if(!empty($usuario_consulta)) {
-            Flash::error('Ha ingresado un email de usuario que ya está registrado.');
-            return redirect(route('supervisores.create'));
-        }
+        // // Si el objeto consultado No está vacío
+        // if(!empty($usuario_consulta)) {
+        //     Flash::error('Ha ingresado un email de usuario que ya está registrado.');
+        //     return redirect(route('supervisores.create'));
+        // }
 
         // Si las validaciones no se disparan, guardar el usuario nuevo en la BD
         $nuevo_supervisor = User::create([
