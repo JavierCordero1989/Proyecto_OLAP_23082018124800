@@ -1,7 +1,7 @@
 <div class="col-xs-6 col-xs-offset-3">
 <!-- Codigo del usuario Field -->
     <div class="form-group">
-        {!! Form::label('user_code', 'Código:') !!}
+        {!! Form::label('user_code', 'Código de usuario:') !!}
         {!! Form::text('user_code', null, ['class' => 'form-control', 'required' => 'required']) !!}
         <span class="help-block"><strong id="user_code_error" class="text-danger"></strong></span>
     </div>
@@ -22,7 +22,6 @@
     <!-- Password Field -->
     <div class="form-group">
         {!! Form::label('password', 'Contraseña:') !!}
-        {{-- {!! Form::password('password',['class' => 'form-control', 'placeholder' => 'Password', 'type' => 'password']) !!} --}}
         {!! Form::password('password', ['class' => 'form-control', 'required' => 'required']) !!}
     </div>
 
@@ -35,8 +34,10 @@
 </div>
 
 @section('scripts')
+    <!-- Script para verificar codigo de usuario y correo ingresados -->
     <script>
-        let permitir_formulario = false;
+        let codigo_usuario_correcto = false;
+        let email_usuario_correcto = false;
 
         //Caja con el código de usuario
         let caja_codigo_usuario = $('#user_code');
@@ -50,7 +51,7 @@
                 dataType: 'json',
                 success: function(respuesta) {
                     $('#user_code_error').html(respuesta.mensaje);
-                    permitir_formulario = !respuesta.encontrado;
+                    codigo_usuario_correcto = !respuesta.encontrado;
                 }
             });
         });
@@ -67,15 +68,28 @@
                 dataType: 'json',
                 success: function(respuesta) {
                     $('#email_error').html(respuesta.mensaje);
-                    permitir_formulario = !respuesta.encontrado;
+                    email_usuario_correcto = !respuesta.encontrado;
                 }
             });
         });
 
         // Valida que todos los campos estén completos.
         function validar_formulario() {
-            if(!permitir_formulario) { alert('Debes revisar el código de usuario o el email antes de continuar.'); }
-            return permitir_formulario;
+            if(!codigo_usuario_correcto) {
+                alert('Debes revisar el código de usuario antes de continuar.'); 
+                return false;
+            }
+            else if(!email_usuario_correcto) {
+                alert('Debes revisar el email antes de continuar.'); 
+                return false;
+            }
+            else {
+                return true;
+            }
         }
     </script>
 @endsection
+
+{{-- @section('scripts')
+    <script src="{!! asset('js/validate-form-user.js') !!}"></script>
+@endsection --}}
