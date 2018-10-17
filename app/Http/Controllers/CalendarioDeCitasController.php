@@ -22,6 +22,7 @@ class CalendarioDeCitasController extends Controller
     }
 
     public function ver_calendario($id_usuario) {
+
         $user = Usuario::find($id_usuario);
 
         if(empty($user)) {
@@ -132,22 +133,33 @@ class CalendarioDeCitasController extends Controller
         return redirect(route('ver-calendario', $encuestador));
     }
 
-    public function obtener_citas_calendario() {
-        $citas = Cita::all();
-        $citas_del_dia = [];
-    
-        foreach($citas as $cita) {
-            if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
-                $citas_del_dia[] = $cita;
+    /** Este método permite obtener mediante AJAX las citas del día, para que aparezcan las mismas
+     * en la vista principal. Cada vez que la aplicación se refresque, se llama a este método.
+     * @param Request $request Datos enviados por la petición AJAX
+     * @return response Una respuesta con datos en formato JSON.
+     */
+    public function obtener_citas_calendario(Request $request) {
+        if($request->ajax()) {
+            $citas = Cita::all(); //Se obtienen todas las citas de la BD
+            $citas_del_dia = []; //Arreglo con las citas que se filtrarán por fecha
+
+            //Se recorren las citas obtenidas de la BD
+            foreach($citas as $cita) {
+                // Se compara cada fecha de la cita contra la fecha del día
+                if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
+                    $citas_del_dia[] = $cita; //Se guarda la fecha dentro del array
+                }
             }
+
+            // Se crea un nuevo array con los datos que se necesitan en la vista
+            $data = [
+                'count' => count($citas_del_dia),
+                'citas' => $citas_del_dia
+            ];
+
+            //Se regresa la respuesta a la petición AJAX
+            return response()->json($data);
         }
-    
-        $data = [
-            'count' => count($citas_del_dia),
-            'citas' => $citas_del_dia
-        ];
-    
-        return response()->json($data);
     }
 
     /** Convierte la fecha obtenida en un formato para guardarlo en MYSQL */
