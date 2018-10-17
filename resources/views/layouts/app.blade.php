@@ -62,7 +62,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    <li class="dropdown notifications-menu">
+                    <li id="campana_notificaciones" class="dropdown notifications-menu hide">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="far fa-bell"></i>
                             <span id="count_notifications" class="label label-warning">x</span>
@@ -84,6 +84,7 @@
                             </li>
                         </ul>
                     </li>
+
                     <!-- User Account Menu -->
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
@@ -179,35 +180,49 @@
 {{-- <script src="{{ asset('js/app/app.min.js') }}"></script> --}}
 <script src="{{ config('global.js.link_app') }}"></script>
 
-<!-- Script para cargar las alertas del calendario en la página principal -->
+<!-- Script para cargar las alertas del calendario en la página principal en cada REFRESH-->
 <script>
     $(function() {
-        console.log('PÁGINA LISTA...');
-
         $.ajax({
             url: '{{ route("obtener-citas-calendario") }}',
             type: 'GET',
+            cache: false,
+            data: {usuario: '{{ Auth::user()->id }}'},
+            dataType: 'json',
             success: function(data) {
-                console.log(data);
-                // se coloca el número de notificaciones
-                $('#count_notifications').html(data.count);
+                // Si vienen datos, carga la campana con las notificaciones.
+                if(data.count > 0) {
+                    $('#campana_notificaciones').removeClass('hide');
+                    $('#campana_notificaciones').addClass('show');
 
-                // se coloca un mensaje con el total de notificaciones
-                $('#title_count_notifications').html('Tiene '+data.count+' notificaciones');
+                    // se coloca el número de notificaciones
+                    $('#count_notifications').html(data.count);
 
-                // se obtiene la caja que contendrá el menú
-                let menu_notificaciones = $('#citas_lista');
+                    // se coloca un mensaje con el total de notificaciones
+                    $('#title_count_notifications').html('Tiene '+data.count+' notificaciones');
 
-                // se recorren las citas obtenidas y se agregan al menú
-                for(index in data.citas) {
-                    let li = $('<li>').appendTo(menu_notificaciones);
-                    let a = $('<a>', { 'href': '#'}).appendTo(li);
-                    $('<i>', {
-                        'class': 'fas fa-users text-aqua'
-                    }).appendTo(a);
-                    a.append(' '+data.citas[index].observacion);
+                    // se obtiene la caja que contendrá el menú
+                    let menu_notificaciones = $('#citas_lista');
+
+                    // se recorren las citas obtenidas y se agregan al menú
+                    for(index in data.citas) {
+                        let li = $('<li>').appendTo(menu_notificaciones);
+                        let a = $('<a>', { 'href': '#'}).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
+                        $('<i>', {
+                            'class': 'fas fa-users text-aqua'
+                        }).appendTo(a);
+                        a.append(' '+data.citas[index].observacion);
+                    }
                 }
-                console.log('ready');
+            }, 
+            statusCode: {
+                404: function() { alert('Página no encontrada'); },
+                500: function() { alert('Error en el servidor'); }
+            },
+            error: function(xhr, status) {
+                console.log('Ha habido un error');
+                console.log('Estatus: ' + status);
+                console.log('XHR: ', xhr);
             }
         });
     });
