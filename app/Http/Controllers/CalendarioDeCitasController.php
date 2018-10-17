@@ -140,6 +140,16 @@ class CalendarioDeCitasController extends Controller
      */
     public function obtener_citas_calendario(Request $request) {
         if($request->ajax()) {
+            // $citasPendientes = Cita::listaDePendientes()->all();
+            // $citas_del_dia = [];
+
+            // foreach($citasPendientes as $cita) {
+            //     // Se compara cada fecha de la cita contra la fecha del día
+            //     if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
+            //         $citas_del_dia[] = $cita; //Se guarda la fecha dentro del array
+            //     }
+            // }
+
             $citas = Cita::all(); //Se obtienen todas las citas de la BD
             $citas_del_dia = []; //Arreglo con las citas que se filtrarán por fecha
 
