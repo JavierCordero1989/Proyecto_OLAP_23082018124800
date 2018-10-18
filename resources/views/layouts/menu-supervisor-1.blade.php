@@ -1,5 +1,5 @@
 <li class="{{ Request::is('excel*') ? 'active' : '' }}">
-    <a href="{!! route('excel.create') !!}"><i class="fas fa-file-excel"></i><span>  Importar archivo de excel</span></a>
+    <a href="{!! route('excel.create') !!}"><i class="fas fa-file-excel"></i><span> Subir archivo de muestra</span></a>
 </li>
 
 <li class="{{ Request::is('encuestadores*') ? 'active' : '' }}">

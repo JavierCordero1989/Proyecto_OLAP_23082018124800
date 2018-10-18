@@ -58,10 +58,10 @@
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
+
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-
                     <li id="campana_notificaciones" class="dropdown notifications-menu hide">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="far fa-bell"></i>
@@ -79,9 +79,9 @@
                                     </li> --}}
                                 </ul>
                             </li>
-                            <li class="footer">
+                            {{-- <li class="footer">
                                 <a href="#">Ver todas</a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
 
