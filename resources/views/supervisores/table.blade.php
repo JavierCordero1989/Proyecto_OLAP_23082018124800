@@ -8,51 +8,12 @@
                         <h3 class="box-title">
                             <span>{!! $supervisor->user_code !!}</span> - {!! $supervisor->name !!}
                         </h3>
-      
-                        <!-- Botones de la parte superior derecha -->
-                        {{-- <div class="box-tools pull-right">
-                            <div class='btn-group'>
-                                @if(Auth::user()->hasRole('Super Admin', 'Supervisor 1'))
-                                    {!! Form::open(['route' => ['supervisores.destroy', $supervisor->id], 'method' => 'delete']) !!}
-
-                                        <!-- Boton para ver los datos del supervisor -->
-                                        <a href="{!! route('supervisores.show', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
-                                            <i class="glyphicon glyphicon-eye-open"></i>
-                                        </a>
-        
-                                        <!-- Boton para editar los datos del supervisor -->
-                                        <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
-                                            <i class="glyphicon glyphicon-edit"></i>
-                                        </a>
-                    
-                                        <!-- Boton para eliminar los datos del supervisor -->
-                                        {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs','onclick' => "return confirm('¿Está seguro de querer eliminar?')", 'data-toggle' => 'modal', 'data-target' => '#modal-danger']) !!}
-
-                                    {!! Form::close() !!}
-                                @endif
-
-                                <!-- Boton para minimizar/maximiar cada cuadro -->
-                                <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-
-                            </div>
-                        </div> --}}
 
                         <div class="box-tools pull-right">
                             @if(Auth::user()->hasRole('Super Admin', 'Supervisor 1'))
                                 {!! Form::open(['route' => ['supervisores.destroy', $supervisor->id], 'method' => 'delete']) !!}
                             @endif    
                                 <div class='btn-group'>
-
-                                    <!-- Boton para ver los datos del encuestador -->
-                                    {{-- <a href="{!! route('supervisores.show', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
-                                        <i class="glyphicon glyphicon-eye-open"></i>
-                                    </a> --}}
-        
-                                    {{-- <a href="#modal-{!! $supervisor->id !!}" data-toggle="modal" class='btn btn-default btn-xs'>
-                                        <i class="glyphicon glyphicon-eye-open"></i>
-                                    </a> --}}
 
                                     @component('components.info-encuestador')
                                         @slot('id_modal', 'modal-'.$supervisor->id)
