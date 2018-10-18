@@ -269,6 +269,7 @@ Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function()
   Route::get('agendar-cita-entrevista/{encuestador}/{mal_encuestador}/{entrevista}/{mal_entrevista}', 'CalendarioDeCitasController@agendar_cita_a_entrevista') ->name('calendario.agendar-cita');
   Route::post('agendar-cita-entrevista/guardar/{entrevista}/{encuestador}', 'CalendarioDeCitasController@guardar_cita_de_entrevista')                          ->name('calendario.guardar-cita');
   Route::get('lista-citas/obtener-citas-calendario', 'CalendarioDeCitasController@obtener_citas_calendario')->name('obtener-citas-calendario');
+  Route::post('cambiar-estado-de-citas/{id_cita}','CalendarioDeCitasController@cambiar_estado_de_cita')->name('cambiar-estado-de-cita');
 });
 
 // Rutas para los reportes 

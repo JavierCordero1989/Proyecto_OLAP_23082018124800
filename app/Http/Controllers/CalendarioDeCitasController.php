@@ -39,7 +39,8 @@ class CalendarioDeCitasController extends Controller
             $citas = Cita::all();
         }
 
-        return view('calendario-de-citas.calendario', compact('citas'));
+        return view('calendario-de-citas.calendario')->with('citas', json_encode($citas));
+        // return view('calendario-de-citas.calendario', compact('citas'));
     }
 
     public function agendar_cita_a_entrevista($encuestador, $mal_encuestador, $entrevista, $mal_entrevista) {
@@ -123,6 +124,7 @@ class CalendarioDeCitasController extends Controller
             'fecha_hora' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
             'numero_contacto' => $request->numero_contacto,
             'observacion' => $request->observacion_de_cita,
+            'estado' => 'P',
             'id_encuestador' => $encuestador,
             'id_entrevista' => $entrevista,
             'created_at' => Carbon::now(),
@@ -131,6 +133,23 @@ class CalendarioDeCitasController extends Controller
 
         Flash::success('La cita ha sido guardada con éxito.');
         return redirect(route('ver-calendario', $encuestador));
+    }
+
+    public function cambiar_estado_de_cita($id_cita, Request $request) {
+        $cita = Cita::find($id_cita);
+
+        if(empty($cita)) {
+            Flash::error('la cita que busca no existe.');
+            // return redirect(route('ver-calendario', $encuestador));
+        }
+
+        dd($request->all());
+
+        $cita->estado = $request->estado_nuevo;
+        $cita->save();
+
+        Flash::success('Ha cambiado el estado de la ruta');
+        // return redirect(route('ver-calendario', $encuestador));
     }
 
     /** Este método permite obtener mediante AJAX las citas del día, para que aparezcan las mismas
@@ -150,7 +169,9 @@ class CalendarioDeCitasController extends Controller
             //     }
             // }
 
-            $citas = Cita::all(); //Se obtienen todas las citas de la BD
+            // $citas = Cita::all(); //Se obtienen todas las citas de la BD
+            $citas = Cita::listaDePendientes()->get(); // Se obtienen todas las citas pendientes.
+
             $citas_del_dia = []; //Arreglo con las citas que se filtrarán por fecha
 
             //Se recorren las citas obtenidas de la BD
