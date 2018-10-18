@@ -9,6 +9,7 @@ class CitaCalendario extends Model
 {
     protected $table = 'tbl_calendario_de_citas';
 
+    // estado: P: pendiente, L: lista
     protected $fillable = [
         'fecha_hora',
         'numero_contacto',
