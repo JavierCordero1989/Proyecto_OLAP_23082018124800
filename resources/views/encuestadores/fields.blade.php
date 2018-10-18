@@ -73,6 +73,27 @@
             });
         });
 
+        let default_mail = '@conare.ac.cr'; //Variable con correo predeterminado
+
+        // evento cuando se escribe en la caja de texto del nombre
+        $('#name').on('keyup', function() {
+            let nombre = $(this).val().split(" ", 2); //Se divide la cadena ingresada en dos
+
+            // Si solo hay un nombre
+            if(nombre.length == 1) {
+                if(nombre[0] == "") {
+                    caja_email_usuario.val("");
+                }
+                else {
+                    caja_email_usuario.val(nombre[0].toLowerCase()+default_mail);
+                }
+            }
+            // Si hay dos nombres
+            else if(nombre.length == 2) {
+                caja_email_usuario.val(nombre[0].substring(0,1).toLowerCase()+nombre[1].toLowerCase()+default_mail);
+            }
+        });
+
         // Valida que todos los campos estén completos.
         function validar_formulario() {
             if(!codigo_usuario_correcto) {
