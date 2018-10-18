@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Flash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class SupervisoresController extends Controller
 {
@@ -15,17 +16,7 @@ class SupervisoresController extends Controller
          *  vista de index.
          */
         /** Para que no obtenga los usuarios que han sido dados de baja */
-        // $usuarios = User::whereNull('deleted_at')->get();
-        $usuarios = User::role(['Supervisor 1', 'Supervisor 2', 'Super Admin'])->get();
-
-        // $lista_supervisores = [];
-
-        // /** Se guardan todos los que son supervisores dentro del array para llevarlos a la vista */
-        // foreach($usuarios as $supervisor) {
-        //     if($supervisor->hasRole('Supervisor 1') || $supervisor->hasRole('Supervisor 2')) {
-        //         array_push($lista_supervisores, $supervisor);
-        //     }
-        // }
+        $usuarios = User::role(['Supervisor 1', 'Supervisor 2', 'Super Admin'])->whereNull('deleted_at')->get();
 
         /** Se regresa a la vista de index en la carpeta deseada, con los datos obtenidos 
          *  desde la base de datos.
@@ -51,26 +42,6 @@ class SupervisoresController extends Controller
          */
 
         $input = $request->all();
-
-        // dd($input);
-
-        // // Se verifica que el código del usuario no existe en la BD
-        // $usuario_consulta = User::findByUserCode($input['user_code'])->first();
-
-        // // Si el objeto consultado No está vacío
-        // if(!empty($usuario_consulta)) {
-        //     Flash::error('Ha ingresado un código de usuario que ya está registrado.');
-        //     return redirect(route('supervisores.create'));
-        // }
-
-        // // Se verifica que el código del usuario no existe en la BD
-        // $usuario_consulta = User::findByEmail($input['email'])->first();
-
-        // // Si el objeto consultado No está vacío
-        // if(!empty($usuario_consulta)) {
-        //     Flash::error('Ha ingresado un email de usuario que ya está registrado.');
-        //     return redirect(route('supervisores.create'));
-        // }
 
         // Si las validaciones no se disparan, guardar el usuario nuevo en la BD
         $nuevo_supervisor = User::create([
@@ -149,6 +120,11 @@ class SupervisoresController extends Controller
     } //Fin de la funcion update
 
     public function destroy($id) {
+        if(Auth::user()->id == $id) {
+            Flash::error('No puedes eliminarte a ti mismo.');
+            return redirect(route('supervisores.index'));
+        }
+
         /** Se obtiene el objeto que corresponda al ID */
         $supervisor = User::find($id);
 
