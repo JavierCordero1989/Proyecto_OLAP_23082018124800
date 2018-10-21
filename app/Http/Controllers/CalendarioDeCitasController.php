@@ -135,21 +135,43 @@ class CalendarioDeCitasController extends Controller
         return redirect(route('ver-calendario', $encuestador));
     }
 
-    public function cambiar_estado_de_cita($id_cita, Request $request) {
+    public function cambiar_estado_de_cita($id_cita, $encuestador, Request $request) {
         $cita = Cita::find($id_cita);
 
         if(empty($cita)) {
-            Flash::error('la cita que busca no existe.');
-            // return redirect(route('ver-calendario', $encuestador));
+            Flash::error('La cita que busca no existe.');
+            return redirect(route('ver-calendario', $encuestador));
         }
-
-        dd($request->all());
 
         $cita->estado = $request->estado_nuevo;
         $cita->save();
 
-        Flash::success('Ha cambiado el estado de la ruta');
-        // return redirect(route('ver-calendario', $encuestador));
+        Flash::success('Ha cambiado el estado de la cita');
+        return redirect(route('ver-calendario', $encuestador));
+    }
+
+    public function agendar_cita_desde_calendario(Request $request) {
+
+        // La fecha obtenida se pasa a un formato para poder convertirla a formato de mysql
+        $fecha = Carbon::createFromFormat('Y/m/d', $request->fecha_seleccionada)->format('d-m-Y');
+        // Se obtiene la hora ingresada en el form y se pasa a formato de mysql
+        $hora = $this->convertir_hora_24($request->hora_de_cita);
+        // Se unen la fecha y la hora en formato mysql
+        $fecha_hora = $this->fecha_hora_mysql($fecha, $hora);
+
+        $data = [
+            'fecha_hora'        => $fecha_hora,
+            'numero_contacto'   => $request->numero_contacto,
+            'observacion'       => $request->observacion_de_cita,
+            'estado'            => 'P',
+            'id_encuestador'    => $request->usuario,
+            'id_entrevista'     => null
+        ];
+
+        $cita_creada = Cita::create($data);
+
+        Flash::success('La cita ha sido agendada');
+        return redirect(route('ver-calendario', $request->usuario));
     }
 
     /** Este método permite obtener mediante AJAX las citas del día, para que aparezcan las mismas
