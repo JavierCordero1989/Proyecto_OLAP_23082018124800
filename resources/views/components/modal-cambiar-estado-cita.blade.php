@@ -9,6 +9,9 @@
             </div>
             <div class="modal-body">
                 <div class="row" style="padding-left: 20px">
+                    <h4 id="numero_contacto_cita" class="modal-title">Numero de contacto</h4>
+                    <h4 id="observacion_contacto_cita" class="modal-title">Observacion</h4>
+                    
                     <!-- 'route' => 'cambiar-estado-de-cita' -->
                     {!! Form::open(['id'=>'form_cambiar_estado']) !!}
                         <div class="col-xs-12">
