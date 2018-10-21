@@ -20,7 +20,7 @@ class CreateCalendarioCitasTable extends Migration
             $table->text('observacion')->nullable();
             $table->char('estado', 1); // P: pendiente, L: lista
             $table->unsignedInteger('id_encuestador');
-            $table->unsignedInteger('id_entrevista');
+            $table->unsignedInteger('id_entrevista')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('id_encuestador')->references('id')->on('users');
