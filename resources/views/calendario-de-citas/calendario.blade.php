@@ -6,6 +6,9 @@
     {{-- <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' /> --}}
     <link rel="stylesheet" href="{!! asset('fullcalendar/css/fullcalendar.min.css') !!}">
     {{-- <link rel="stylesheet" href="{!! asset('fullcalendar/css/fullcalendar.print.min.css') !!}"> --}}
+    <link rel="stylesheet" href="{{ asset('datePicker/css/bootstrap-datepicker3.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('form-helper/css/bootstrap-formhelpers.min.css') }}">
 @endsection
 
 @section('content')
@@ -31,6 +34,29 @@
 @endsection
 
 @section('scripts')
+    <!-- Scripts para la caja de la hora en el modal -->
+    <script src="{{asset('datePicker/js/bootstrap-datepicker.js')}}"></script>
+    <!-- Archivo para el idioma -->
+    <script src="{{asset('datePicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <!-- Para prueba -->
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> --}}
+    <script type="text/javascript" src="{{ asset('form-helper/js/bootstrap-formhelpers.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            var caracteres_maximos = 200;
+            $('#caracteres_restantes').html(caracteres_maximos + ' caracteres restantes');
+
+            $('#observacion_de_cita').on('keyup', function() {
+                var tamannio_texto = $(this).val().length;
+                var restantes = caracteres_maximos - tamannio_texto;
+
+                $('#caracteres_restantes').html(restantes + ' caracteres restantes');
+            });
+        });
+    </script>
+
     <!-- Scripts para el calendario -->
 
     {{-- <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script> --}}
@@ -40,7 +66,8 @@
     {{-- <script src="{!! asset('fullcalendar/js/locale/es.js') !!}"></script> --}}
     <script src="{!! asset('fullcalendar/js/locale-all.js') !!}"></script>
     <script>
-        
+        let evento;
+
         $(document).ready(function() {
             let citas = <?php echo $citas; ?>;
             let array_citas = [];
@@ -61,7 +88,6 @@
                     end: citas[index].fecha_hora,
                     backgroundColor: color,
                     borderColor: color,
-                    // url: '{{ route("cambiar-estado-de-cita", "<script>citas[index].id</script>" ) }}'
                 });
             }
 
@@ -77,19 +103,38 @@
                     right: 'month,agendaWeek,agendaDay'
                 },
                 eventClick: function(event) {
-                    let url = "{{ route('cambiar-estado-de-cita', ':date') }}";
+                    
+                    let url = "{{ route('cambiar-estado-de-cita', [':date', ':user']) }}";
                     url = url.replace(':date', event.id);
-                    // url = url.replace(':user', '{{ Auth::user()->id }}');
+                    url = url.replace(':user', '{{ Auth::user()->id }}');
 
-                    console.log(event);
                     $('#modal-cambiar-estado-cita').modal('show');
+                    $('#modal-cambiar-estado-cita').find('#numero_contacto_cita').text(getCita(citas, event.id).numero_contacto);
+                    $('#modal-cambiar-estado-cita').find('#observacion_contacto_cita').text(getCita(citas, event.id).observacion);
                     $('#modal-cambiar-estado-cita').find('#form_cambiar_estado').attr('action', url);
                 },
-                select: function(start, end) {
-                    // Aqui se debe abrir otro modal, que permita ingresar datos para una nueva cita
-                    $('#modal-nueva-cita').modal('show');
+                select: function(start, end, event) {
+                    let fechaSeleccionada = start.format();
+                    fechaSeleccionada = fechaSeleccionada.length <= 10 ? fechaSeleccionada.replace(/-/g, '/') : fechaSeleccionada;
+
+                    let fechaActual = new Date(); // Obtiene la fecha actual
+                    let otraFecha = new Date(fechaSeleccionada); // Obtiene la fecha seleccionada en el calendario
+
+                    if(otraFecha.getTime() < fechaActual.getTime()) {
+                        alert('La fecha seleccionada es anterior al día de hoy.\n\nPor favor, seleccione el día de hoy o un día posterior.');
+                    }
+                    else {
+                        
+                        $('#modal-nueva-cita').find('[name=fecha_seleccionada]').attr('value', fechaSeleccionada);
+                        $('#modal-nueva-cita').find('[name=usuario]').attr('value', '{{ Auth::user()->id}}');
+                        $('#modal-nueva-cita').modal('show');
+                    }
                 }
             })
         });
+
+        function getCita(array, id_cita) {
+            return array[id_cita];
+        }
     </script>
 @endsection
