@@ -159,6 +159,8 @@ class CalendarioDeCitasController extends Controller
         // Se unen la fecha y la hora en formato mysql
         $fecha_hora = $this->fecha_hora_mysql($fecha, $hora);
 
+        dd($hora);
+
         $data = [
             'fecha_hora'        => $fecha_hora,
             'numero_contacto'   => $request->numero_contacto,

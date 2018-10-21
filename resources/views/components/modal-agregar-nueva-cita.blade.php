@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <div class="row" style="padding-left: 20px">
                     <!-- 'route' => 'cambiar-estado-de-cita' -->
-                    {!! Form::open(['route'=>'agendar-cita-desde-calendario']) !!}
+                    {!! Form::open(['route'=>'agendar-cita-desde-calendario', 'id'=>'form-agregar-cita']) !!}
                         <div class="col-xs-12">
                             {!! Form::hidden('fecha_seleccionada', '') !!}
                             {!! Form::hidden('usuario', '') !!}
