@@ -134,7 +134,23 @@
         });
 
         function getCita(array, id_cita) {
-            return array[id_cita];
+            return array[id_cita-1];
         }
+
+        $('#form-agregar-cita').submit(function(evento){
+            evento.preventDefault();
+
+            if($('[name="numero_contacto"]').val().length == 0) {
+                alert('Debe ingresar un número de teléfono');
+                return;
+            }
+
+            if($('[name="observacion_de_cita"]').val().length == 0) {
+                alert('Ingrese texto para la observación.\n\nEs importante para conocer el motivo de la cita.');
+                return;
+            }
+
+            this.submit();
+        });
     </script>
 @endsection
