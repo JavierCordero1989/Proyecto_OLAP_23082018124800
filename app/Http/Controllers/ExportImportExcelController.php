@@ -63,25 +63,25 @@ class ExportImportExcelController extends Controller
             $disciplina;
             $tipo_de_caso;
 
-            echo '<table border>';
-            echo '<thead>';
-            echo '<th>Identificacion</th>';
-            echo '<th>Nombre</th>';
-            echo '<th>Año de graduación</th>';
-            echo '<th>Link de encuesta</th>';
-            echo '<th>Sexo</th>';
-            echo '<th>Token</th>';
-            echo '<th>Codigo Carrera</th>';
-            echo '<th>Codigo Universidad</th>';
-            echo '<th>Codigo Grado</th>';
-            echo '<th>Codigo Disciplina</th>';
-            echo '<th>Codigo Area</th>';
-            echo '<th>Codigo Agrupacion</th>';
-            echo '<th>Codigo Sector</th>';
-            echo '<th>Codigo Tipo de Caso</th>';
-            echo '<th>Fecha</th>';
-            echo '</thead>';
-            echo '<tbody>';
+            // echo '<table border>';
+            // echo '<thead>';
+            // echo '<th>Identificacion</th>';
+            // echo '<th>Nombre</th>';
+            // echo '<th>Año de graduación</th>';
+            // echo '<th>Link de encuesta</th>';
+            // echo '<th>Sexo</th>';
+            // echo '<th>Token</th>';
+            // echo '<th>Codigo Carrera</th>';
+            // echo '<th>Codigo Universidad</th>';
+            // echo '<th>Codigo Grado</th>';
+            // echo '<th>Codigo Disciplina</th>';
+            // echo '<th>Codigo Area</th>';
+            // echo '<th>Codigo Agrupacion</th>';
+            // echo '<th>Codigo Sector</th>';
+            // echo '<th>Codigo Tipo de Caso</th>';
+            // echo '<th>Fecha</th>';
+            // echo '</thead>';
+            // echo '<tbody>';
             /**
              * $reader->get() nos permite obtener todas las filas de nuestro archivo
              */
@@ -114,7 +114,7 @@ class ExportImportExcelController extends Controller
 
                 $contador_entrevistas++; //Se incrementa para guardarlo como total de casos
 
-                $this->tabla($data);
+                // $this->tabla($data);
 
                 // /* Una vez obtenido los datos de la fila procedemos a registrarlos */
                 if(!empty($data)){
@@ -137,16 +137,14 @@ class ExportImportExcelController extends Controller
                 DB::table('tbl_reportes_entrevistas')->insert($data_reporte);
             }
 
-            echo '</tbody></table>';
-            echo '<h1>'.$contador_entrevistas.'</h1>';
+            // echo '</tbody></table>';
+            // echo '<h1>'.$contador_entrevistas.'</h1>';
         });
     }
 
     public function importar_desde_excel(Request $request) {
 
         // sleep(2);
-
-        // return response()->json('Ha llegado al controlador');
 
         /** Si viene un archivo en el request
          * 'archivo_nuevo' => es el nombre del campo que tiene el formulario
