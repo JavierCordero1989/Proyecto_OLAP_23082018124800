@@ -52,8 +52,17 @@ class ExportImportExcelController extends Controller
 
     protected function guardar_a_base_de_datos(Request $request) {
         $archivo = $request->file('archivo_nuevo');
+
         /** El método load permite cargar el archivo definido como primer parámetro */
         Excel::load($archivo, function ($reader) {
+
+            $contador_entrevistas = 0;
+
+            $universidad;
+            $grado;
+            $disciplina;
+            $tipo_de_caso;
+
             echo '<table border>';
             echo '<thead>';
             echo '<th>Identificacion</th>';
@@ -78,32 +87,58 @@ class ExportImportExcelController extends Controller
              */
             foreach ($reader->get() as $key => $row) {
 
+                if($key == 0) {
+                    $universidad = $row['codigo_universidad'];
+                    $grado = $row['codigo_grado'];
+                    $disciplina = $row['codigo_disciplina'];
+                    $tipo_de_caso = $row['tipo_de_caso'];
+                }
+
                 $data = [
-                    'identificacion_graduado'   => $row['identificacion'],
-                    'nombre_completo'           => $row['nombre'],
-                    'annio_graduacion'          => $row['ano_de_graduacion'],
-                    'link_encuesta'             => $row['link_de_encuesta'],
-                    'sexo'                      => $row['sexo'],
-                    'token'                     => $row['token'],
-                    'codigo_carrera'            => $row['codigo_carrera'],
-                    'codigo_universidad'        => $row['codigo_universidad'],
-                    'codigo_grado'              => $row['codigo_grado'],
-                    'codigo_disciplina'         => $row['codigo_disciplina'],
-                    'codigo_area'               => $row['codigo_area'],
-                    'codigo_agrupacion'         => $row['codigo_agrupacion'],
-                    'codigo_sector'             => $row['codigo_sector'],
-                    'tipo_de_caso'              => $row['tipo_de_caso'],
-                    'created_at'                => Carbon::now()
+                    'identificacion_graduado' => $row['identificacion'],
+                    'nombre_completo'         => $row['nombre'],
+                    'annio_graduacion'        => $row['ano_de_graduacion'],
+                    'link_encuesta'           => $row['link_de_encuesta'],
+                    'sexo'                    => $row['sexo'],
+                    'token'                   => $row['token'],
+                    'codigo_carrera'          => $row['codigo_carrera'],
+                    'codigo_universidad'      => $row['codigo_universidad'],
+                    'codigo_grado'            => $row['codigo_grado'],
+                    'codigo_disciplina'       => $row['codigo_disciplina'],
+                    'codigo_area'             => $row['codigo_area'],
+                    'codigo_agrupacion'       => $row['codigo_agrupacion'],
+                    'codigo_sector'           => $row['codigo_sector'],
+                    'tipo_de_caso'            => $row['tipo_de_caso'],
+                    'created_at'              => Carbon::now()
                 ];
+
+                $contador_entrevistas++; //Se incrementa para guardarlo como total de casos
 
                 $this->tabla($data);
 
-                // /** Una vez obtenido los datos de la fila procedemos a registrarlos */
-                // if(!empty($data)){
-                //     Entrevista::create($data);
-                // }
+                // /* Una vez obtenido los datos de la fila procedemos a registrarlos */
+                if(!empty($data)){
+                    Entrevista::create($data);
+                }
             }
+
+            /* Se crea un array con los datos que contendrá el reporte */
+            $data_reporte = [
+                'codigo_disciplina'  => $disciplina,
+                'codigo_grado'       => $grado,
+                'codigo_universidad' => $universidad,
+                'tipo_de_caso'       => $tipo_de_caso,
+                'total_casos'        => $contador_entrevistas,
+                'created_at'         => Carbon::now()
+            ];
+
+            /* Se guarda el reporte en la tabla con los datos recién subidos desde Excel a la BD. */
+            if(!empty($data_reporte)) {
+                DB::table('tbl_reportes_entrevistas')->insert($data_reporte);
+            }
+
             echo '</tbody></table>';
+            echo '<h1>'.$contador_entrevistas.'</h1>';
         });
     }
 
