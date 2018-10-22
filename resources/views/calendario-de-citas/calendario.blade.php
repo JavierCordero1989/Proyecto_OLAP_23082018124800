@@ -115,10 +115,12 @@
                 },
                 select: function(start, end, event) {
                     let fechaSeleccionada = start.format();
-                    fechaSeleccionada = fechaSeleccionada.length <= 10 ? fechaSeleccionada.replace(/-/g, '/') : fechaSeleccionada;
+                    fechaSeleccionada = fechaSeleccionada.length <= 10 ? fechaSeleccionada : fechaSeleccionada.concat('Z');
 
                     let fechaActual = new Date(); // Obtiene la fecha actual
                     let otraFecha = new Date(fechaSeleccionada); // Obtiene la fecha seleccionada en el calendario
+
+                    console.log(fechaSeleccionada, otraFecha);
 
                     if(otraFecha.getTime() < fechaActual.getTime()) {
                         alert('La fecha seleccionada es anterior al día de hoy.\n\nPor favor, seleccione el día de hoy o un día posterior.');

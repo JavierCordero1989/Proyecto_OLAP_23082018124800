@@ -34,7 +34,7 @@
 
             <div class="col-sm-6">
                 <!-- Botón para agendar cita -->
-                <a href="#" class="btn btn-primary btn-sm col-sm-12">
+                <a href="{!! route('calendario.agendar-cita', [Auth::user()->id, '2a', $entrevista->id, '2b']) !!}" class="btn btn-primary btn-sm col-sm-12">
                     <i class="far fa-calendar-plus"></i> Agendar cita
                 </a>
             </div>

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Flash;
 use DB;
 use Carbon\Carbon;
-use App\CitaCalendario as Cita;
+use App\EncuestaGraduado as Entrevista;
 /*
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
@@ -79,28 +79,28 @@ class ExportImportExcelController extends Controller
             foreach ($reader->get() as $key => $row) {
 
                 $data = [
-                    'identificacion_graduado' => $row['identificacion'],
-                    'nombre_completo' => $row['nombre'],
-                    'annio_graduacion' => $row['ano_de_graduacion'],
-                    'link_encuesta' => $row['link_de_encuesta'],
-                    'sexo' => $row['sexo'],
-                    'token' => $row['token'],
-                    'codigo_carrera' => $row['codigo_carrera'],
-                    'codigo_universidad' => $row['codigo_universidad'],
-                    'codigo_grado' => $row['codigo_grado'],
-                    'codigo_disciplina' => $row['codigo_disciplina'],
-                    'codigo_area' => $row['codigo_area'],
-                    'codigo_agrupacion' => $row['codigo_agrupacion'],
-                    'codigo_sector' => $row['codigo_sector'],
-                    'tipo_de_caso' => $row['tipo_de_caso'],
-                    'created_at' => Carbon::now()
+                    'identificacion_graduado'   => $row['identificacion'],
+                    'nombre_completo'           => $row['nombre'],
+                    'annio_graduacion'          => $row['ano_de_graduacion'],
+                    'link_encuesta'             => $row['link_de_encuesta'],
+                    'sexo'                      => $row['sexo'],
+                    'token'                     => $row['token'],
+                    'codigo_carrera'            => $row['codigo_carrera'],
+                    'codigo_universidad'        => $row['codigo_universidad'],
+                    'codigo_grado'              => $row['codigo_grado'],
+                    'codigo_disciplina'         => $row['codigo_disciplina'],
+                    'codigo_area'               => $row['codigo_area'],
+                    'codigo_agrupacion'         => $row['codigo_agrupacion'],
+                    'codigo_sector'             => $row['codigo_sector'],
+                    'tipo_de_caso'              => $row['tipo_de_caso'],
+                    'created_at'                => Carbon::now()
                 ];
 
                 $this->tabla($data);
 
                 // /** Una vez obtenido los datos de la fila procedemos a registrarlos */
                 // if(!empty($data)){
-                //     Cita::create($data);
+                //     Entrevista::create($data);
                 // }
             }
             echo '</tbody></table>';
