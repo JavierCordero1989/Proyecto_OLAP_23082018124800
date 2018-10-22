@@ -2,36 +2,70 @@
 
 @section('title', 'Inicio') 
 
-@section('css')
-    <style>
-        .flex-parent{
-            display: -ms-flex;
-            display: -webkit-flex;
-            display: flex;
-        }
-
-        .flex-child{
-            display: -ms-flex;
-            display: -webkit-flex;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            margin-top: 10%;
-        }
-    </style>
-@endsection
-
 @section('content')
-    <div class="container">
-        <div class="row flex-parent" style="height: 100%;">
-
-            {{-- <div class="col-sm-6 flex-child">
-                <img class="img-responsive center-block" src="{{ asset(config('global.logo_conare')) }}" alt="">
-            </div> --}}
+    <div class="content">
+        <div class="row" style="height: 100%;">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-aqua">
+                        <i class="ion ion-ios-gear-outline"></i>
+                    </span>
+                    
+                    <div class="info-box-content">
+                        <span class="info-box-text">CPU Traffic</span>
+                        <span class="info-box-number">90<small>%</small></span>
+                    </div>
             
-            {{-- <div class="col-sm-6 flex-child">
-                <img class="img-responsive center-block" src="{{ asset('img/logo_olap.png') }}" alt="">
-            </div> --}}
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red">
+                        <i class="fa fa-google-plus"></i>
+                    </span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Likes</span>
+                        <span class="info-box-number">41,410</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green">
+                        <i class="ion ion-ios-cart-outline"></i>
+                    </span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Sales</span>
+                        <span class="info-box-number">760</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-yellow">
+                        <i class="ion ion-ios-people-outline"></i>
+                    </span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">New Members</span>
+                        <span class="info-box-number">2,000</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+
         </div>
     </div>
 @endsection
