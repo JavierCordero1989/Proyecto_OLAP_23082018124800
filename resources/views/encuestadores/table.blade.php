@@ -11,7 +11,7 @@
       
                         <!-- Botones de la parte superior derecha -->
                         <div class="box-tools pull-right">
-                            @if(Auth::user()->hasRole('Super Admin', 'Supervisor 1'))
+                            @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
                                 {!! Form::open(['route' => ['encuestadores.destroy', $encuestador->id], 'method' => 'delete']) !!}
                             @endif    
                                 <div class='btn-group'>
@@ -42,7 +42,7 @@
                                             <i class="glyphicon glyphicon-edit"></i>
                                         </a>
                     
-                                        @if(Auth::user()->hasRole('Super Admin', 'Supervisor 1'))
+                                        @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
                                             <!-- Boton para eliminar los datos del encuestador -->
                                             {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs','onclick' => "return confirm('¿Está seguro de querer eliminar?')", 'data-toggle' => 'modal', 'data-target' => '#modal-danger']) !!}
                                         @endif
@@ -54,7 +54,7 @@
                                     </button>
       
                                 </div>
-                            @if(Auth::user()->hasRole('Super Admin', 'Supervisor 1'))
+                            @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
                                 {!! Form::close() !!}
                             @endif
                         </div>

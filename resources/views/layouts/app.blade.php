@@ -49,7 +49,8 @@
         <a href="{!! url('/home') !!}" class="logo">
             {{-- <b>Javier Cordero</b> --}}
             <span class="logo-mini"><b>{{ config('global.sidebar_title_min') }}</b></span>
-            <span class="logo-lg"><b>{{ config('global.sidebar_title') }}</b></span>
+            {{-- <span class="logo-lg"><b>{{ config('global.sidebar_title') }}</b></span> --}}
+            <span class="logo-lg"><b>{{ Auth::user()->getRoleNames() }}</b></span>
         </a>
 
         <!-- Header Navbar -->

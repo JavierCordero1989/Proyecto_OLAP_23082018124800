@@ -14,9 +14,9 @@
     <a href="{!! route('encuestas-graduados.index') !!}"><i class="fas fa-check"></i><span> Lista de encuestas</span></a>
 </li>
 
-<li class="{{ Request::is('graficos*') ? 'active' : '' }}">
+{{-- <li class="{{ Request::is('graficos*') ? 'active' : '' }}">
     <a href="{!! route('graficos.graficos-por-estado') !!}"><i class="fas fa-chart-area"></i><span> Gráficos por estado</span></a>
-</li>
+</li> --}}
 
 <!-- Menú desplegable para datos de carrera-->
 <li class="treeview">
