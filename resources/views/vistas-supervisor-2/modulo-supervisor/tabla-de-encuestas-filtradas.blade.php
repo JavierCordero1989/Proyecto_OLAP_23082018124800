@@ -45,8 +45,8 @@
                                         <td>{!! $entrevista->carrera->nombre !!}</td>
                                         <td>{!! $entrevista->universidad->nombre !!}</td>
                                         <td>{!! $entrevista->grado->nombre !!}</td>
-                                        <td>{!! $entrevista->disciplina->nombre !!}</td>
-                                        <td>{!! $entrevista->area->nombre !!}</td>
+                                        <td>{!! $entrevista->disciplina->descriptivo !!}</td>
+                                        <td>{!! $entrevista->area->descriptivo !!}</td>
                                         <td>{!! $entrevista->agrupacion->nombre !!}</td>
                                         <td>{!! $entrevista->sector->nombre !!}</td>
                                         <td>{!! $entrevista->tipo_de_caso !!}</td>

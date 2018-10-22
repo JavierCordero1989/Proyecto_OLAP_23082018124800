@@ -26,16 +26,14 @@ class Supervisor2Controller extends Controller
         $id_carrera =       TiposDatosCarrera::carrera()->first();
         $id_universidad =   TiposDatosCarrera::universidad()->first();
         $id_grado =         TiposDatosCarrera::grado()->first();
-        $id_disciplina =    TiposDatosCarrera::disciplina()->first();
-        $id_area =          TiposDatosCarrera::area()->first();
         $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
         $id_sector =        TiposDatosCarrera::sector()->first();
 
         $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
         $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
         $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
-        $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
-        $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        $disciplinas =   Disciplina::pluck('descriptivo', 'id');
+        $areas =         Area::pluck('descriptivo', 'id');
         $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
         $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
 
@@ -380,16 +378,14 @@ class Supervisor2Controller extends Controller
         $id_carrera =       TiposDatosCarrera::carrera()->first();
         $id_universidad =   TiposDatosCarrera::universidad()->first();
         $id_grado =         TiposDatosCarrera::grado()->first();
-        $id_disciplina =    TiposDatosCarrera::disciplina()->first();
-        $id_area =          TiposDatosCarrera::area()->first();
         $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
         $id_sector =        TiposDatosCarrera::sector()->first();
 
         $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
         $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
         $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
-        $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
-        $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
+        $disciplinas =   Disciplina::pluck('descriptivo', 'id');
+        $areas =         Area::pluck('descriptivo', 'id');
         $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
         $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
 

@@ -99,13 +99,13 @@
                         <!-- Disciplina -->
                         <div class="col-xs-6">
                             {!! Form::label('codigo_disciplina', 'Disciplina:') !!}
-                            <p>{!! $entrevista->disciplina->nombre !!}</p>
+                            <p>{!! $entrevista->disciplina->descriptivo !!}</p>
                         </div>
     
                         <!-- Área -->
                         <div class="col-xs-6">
                             {!! Form::label('codigo_area', 'Área:') !!}
-                            <p>{!! $entrevista->area->nombre !!}</p>
+                            <p>{!! $entrevista->area->descriptivo !!}</p>
                         </div>
     
                         <!-- Agrupación -->
@@ -124,18 +124,6 @@
                         <div class="col-xs-6">
                             {!! Form::label('tipo_de_caso', 'Tipo de caso:') !!}
                             <p>{!! $entrevista->tipo_de_caso !!}</p>
-                        </div>
-    
-                        <!-- Created At Field -->
-                        <div class="col-xs-6">
-                            {!! Form::label('created_at', 'Creado el:') !!}
-                            <p>{!! $entrevista->created_at !!}</p>
-                        </div>
-    
-                        <!-- Updated At Field -->
-                        <div class="col-xs-6">
-                            {!! Form::label('updated_at', 'Modificado el:') !!}
-                            <p>{!! $entrevista->updated_at !!}</p>
                         </div>
                     </div>
                     

@@ -18,7 +18,7 @@
                     <div class="row">
                         @foreach($lista_supervisores as $supervisor)
                             <div class="col-md-6">
-                                <div class="box box-primary" >
+                                <div class="box box-primary collapsed-box" >
 
                                     <!-- Encabezado del cuadro -->
                                     <div class="box-header with-border">
@@ -32,7 +32,7 @@
 
                                                 <!-- Boton para minimizar/maximiar cada cuadro -->
                                                 <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                                    <i class="fa fa-minus"></i>
+                                                    <i class="fa fa-plus"></i>
                                                 </button>
 
                                             </div>
