@@ -6,7 +6,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Flash;
 use DB;
-
+use Carbon\Carbon;
+use App\CitaCalendario as Cita;
 /*
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
@@ -53,31 +54,56 @@ class ExportImportExcelController extends Controller
         $archivo = $request->file('archivo_nuevo');
         /** El método load permite cargar el archivo definido como primer parámetro */
         Excel::load($archivo, function ($reader) {
+            echo '<table border>';
+            echo '<thead>';
+            echo '<th>Identificacion</th>';
+            echo '<th>Nombre</th>';
+            echo '<th>Año de graduación</th>';
+            echo '<th>Link de encuesta</th>';
+            echo '<th>Sexo</th>';
+            echo '<th>Token</th>';
+            echo '<th>Codigo Carrera</th>';
+            echo '<th>Codigo Universidad</th>';
+            echo '<th>Codigo Grado</th>';
+            echo '<th>Codigo Disciplina</th>';
+            echo '<th>Codigo Area</th>';
+            echo '<th>Codigo Agrupacion</th>';
+            echo '<th>Codigo Sector</th>';
+            echo '<th>Codigo Tipo de Caso</th>';
+            echo '<th>Fecha</th>';
+            echo '</thead>';
+            echo '<tbody>';
             /**
              * $reader->get() nos permite obtener todas las filas de nuestro archivo
              */
             foreach ($reader->get() as $key => $row) {
 
-                
+                $data = [
+                    'identificacion_graduado' => $row['identificacion'],
+                    'nombre_completo' => $row['nombre'],
+                    'annio_graduacion' => $row['ano_de_graduacion'],
+                    'link_encuesta' => $row['link_de_encuesta'],
+                    'sexo' => $row['sexo'],
+                    'token' => $row['token'],
+                    'codigo_carrera' => $row['codigo_carrera'],
+                    'codigo_universidad' => $row['codigo_universidad'],
+                    'codigo_grado' => $row['codigo_grado'],
+                    'codigo_disciplina' => $row['codigo_disciplina'],
+                    'codigo_area' => $row['codigo_area'],
+                    'codigo_agrupacion' => $row['codigo_agrupacion'],
+                    'codigo_sector' => $row['codigo_sector'],
+                    'tipo_de_caso' => $row['tipo_de_caso'],
+                    'created_at' => Carbon::now()
+                ];
 
-                foreach($row as $llave => $valor) {
-                    if(!sizeof($valor) == 0) {
-                        echo $llave.':'.$valor.'<br>';
-                    }
-                }
-
-                echo '<br><br>';
-                // /** campos del archivo excel */
-                // $data = [
-                //     //'campo en base de datos' => 'columna de excel'
-                //     'nombre' => $row['nombre'],
-                // ];
+                $this->tabla($data);
 
                 // /** Una vez obtenido los datos de la fila procedemos a registrarlos */
                 // if(!empty($data)){
-                //     DB::table('nombre de la tabla')->insert($data);
+                //     Cita::create($data);
                 // }
             }
+            echo '</tbody></table>';
         });
     }
 
@@ -115,4 +141,17 @@ class ExportImportExcelController extends Controller
             }
         }
     }// Fin de la funcion importar_desde_excel
+
+    private function tabla($array) {
+        $fila = '<tr>';
+        foreach($array as $element) {
+            $fila .= '<td>';
+            $fila .= $element;
+            $fila .= '</td>';
+        }
+
+        $fila .= '</tr>';
+
+        echo $fila;
+    }
 }
