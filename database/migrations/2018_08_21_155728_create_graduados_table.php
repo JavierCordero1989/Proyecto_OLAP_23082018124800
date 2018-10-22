@@ -15,7 +15,7 @@ class CreateGraduadosTable extends Migration
     {
         Schema::create('tbl_graduados', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('identificacion_graduado', 20)->unique();
+            $table->string('identificacion_graduado', 20); //Se le quitó atributo para que fuera único ->unique()
             $table->string('token', 191)->unique();
             $table->string('nombre_completo', 50);
             $table->integer('annio_graduacion');

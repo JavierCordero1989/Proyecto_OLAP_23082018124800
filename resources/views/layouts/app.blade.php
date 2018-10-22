@@ -208,7 +208,7 @@
                     // se recorren las citas obtenidas y se agregan al menú
                     for(index in data.citas) {
                         let li = $('<li>').appendTo(menu_notificaciones);
-                        let a = $('<a>', { 'href': '#'}).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
+                        let a = $('<a>', { 'href': '{{route( "ver-calendario", Auth::user()->id )}}'}).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
                         $('<i>', {
                             'class': 'fas fa-users text-aqua'
                         }).appendTo(a);

@@ -23,7 +23,7 @@ class EncuestaGraduadoTableSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create('es_ES');
-        $totalDeDatosGenerados = 400;
+        $totalDeDatosGenerados = 4000;
 
         // $carrera = TiposDatosCarrera::where('nombre', 'CARRERA')->first();
         // $universidad = TiposDatosCarrera::where('nombre', 'UNIVERSIDAD')->first();
