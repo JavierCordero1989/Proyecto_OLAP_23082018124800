@@ -152,8 +152,9 @@ class CalendarioDeCitasController extends Controller
 
     public function agendar_cita_desde_calendario(Request $request) {
 
+        $array = explode('T', $request->fecha_seleccionada);
         // La fecha obtenida se pasa a un formato para poder convertirla a formato de mysql
-        $fecha = Carbon::createFromFormat('Y/m/d', $request->fecha_seleccionada)->format('d-m-Y');
+        $fecha = Carbon::createFromFormat('Y-m-d', $array[0])->format('d-m-Y');
         // Se obtiene la hora ingresada en el form y se pasa a formato de mysql
         $hora = $this->convertir_hora_24($request->hora_de_cita);
         // Se unen la fecha y la hora en formato mysql
