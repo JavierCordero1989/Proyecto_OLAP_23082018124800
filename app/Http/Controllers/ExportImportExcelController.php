@@ -162,8 +162,8 @@ class ExportImportExcelController extends Controller
             else {
                 self::guardar_a_base_de_datos($request);
 
-                // Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
-                // return redirect(route('encuestas-graduados.index'));
+                Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
+                return redirect(route('encuestas-graduados.index'));
             }
         }
         else {
