@@ -67,5 +67,22 @@
                 'UTN'   => '#00205B'
             ]
         ],
+        'iconos_estados' => [
+            'NO ASIGNADA'            => 'ion-close-circled',
+            'ASIGNADA'               => 'ion-checkmark-round',
+            'RECHAZADA'              => 'ion-close-round',
+            'INCOMPLETA'             => 'ion-android-checkmark-circle',
+            'FUERA DEL PAÍS'         => 'ion-plane',
+            'ILOCALIZABLE'           => 'ion-sad-outline',
+            'FALLECIDO'              => 'ion-medkit',
+            'EXTRANJERO'             => 'ion-ios-location',
+            'CON CITA'               => 'ion-calendar',
+            'MENSAJE'                => 'ion-android-textsms',
+            'LINK AL CORREO'         => 'ion-email-unread',
+            'INFORMACIÓN POR CORREO' => 'ion-email',
+            'ENTREVISTA COMPLETA'    => 'ion-android-done-all',
+            'OTRO'                   => 'ion-compose',
+            'TOTAL DE ENTREVISTAS'   => 'ion-earth'
+        ],
     ];
 ?>
