@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\EncuestaGraduado as Entrevista;
+
 class HomeController extends Controller
 {
     public function __construct()
@@ -15,6 +17,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $estados_temp = Entrevista::totalesPorEstado()->get();
+
+        $estados = [];
+
+        foreach($estados_temp as $key => $value) {
+            $estados[$value->estado] = $value->total;
+        }
+
+        $estados['TOTAL DE ENTREVISTAS'] = Entrevista::totalDeEncuestas();
+
+        return view('home', compact('estados'));
     }
 }
