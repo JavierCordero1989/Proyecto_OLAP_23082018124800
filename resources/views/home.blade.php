@@ -17,6 +17,13 @@
         .carousel-indicators {
             bottom: -5%;
         }
+
+        .carousel-indicators .active {
+            background-color: #000;
+            text-shadow: 0 1px 2px rgba(0,0,0,.6);
+            opacity: .5;
+        }
+
     </style>
 @endsection
 

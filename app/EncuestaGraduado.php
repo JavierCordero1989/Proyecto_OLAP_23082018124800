@@ -402,7 +402,7 @@ class EncuestaGraduado extends Model
                         'link_encuesta', 
                         'sexo', 
                         'codigo_carrera', 
-                        'codigo_universidad', 
+                        'codigo_universidad',
                         'codigo_grado', 
                         'codigo_disciplina', 
                         'codigo_area',
