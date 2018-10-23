@@ -22,7 +22,7 @@
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-red">
-                        <i class="fa fa-google-plus"></i>
+                        <i class="ion ion-document"></i>
                     </span>
 
                     <div class="info-box-content">
