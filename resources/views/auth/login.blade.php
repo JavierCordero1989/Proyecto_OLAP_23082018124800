@@ -76,7 +76,7 @@
             {!! csrf_field() !!}
 
             <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
-                <input type="email" class="form-control" name="email" value="root@root.com" placeholder="Correo electrónico">
+                <input type="email" class="form-control" name="email" {{--value="root@root.com"--}} placeholder="Correo electrónico">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 @if ($errors->has('email'))
                     <span class="help-block">
@@ -86,7 +86,7 @@
             </div>
 
             <div class="form-group has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
-                <input type="password" class="form-control" placeholder="Contraseña" name="password" value="root">
+                <input type="password" class="form-control" placeholder="Contraseña" name="password" {{--value="root"--}}>
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 @if ($errors->has('password'))
                     <span class="help-block">
@@ -126,6 +126,10 @@
 <!-- AdminLTE App -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.min.js"></script>
 <script>
+    $('[name="email"]').on('keyup', function() {
+        console.log($(this).val());
+    });
+
     $(function () {
         $('input').iCheck({
             checkboxClass: 'icheckbox_square-blue',
