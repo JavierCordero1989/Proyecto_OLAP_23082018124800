@@ -2,70 +2,98 @@
 
 @section('title', 'Inicio') 
 
+@section('css')
+    <style>
+        .carousel-control {
+            width: 0%;
+            color: #000;
+        }
+
+        .item {
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+
+        .carousel-indicators {
+            bottom: -5%;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="content">
-        <div class="row" style="height: 100%;">
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-aqua">
-                        <i class="ion ion-ios-gear-outline"></i>
-                    </span>
-                    
-                    <div class="info-box-content">
-                        <span class="info-box-text">CPU Traffic</span>
-                        <span class="info-box-number">90<small>%</small></span>
-                    </div>
-            
+
+        <div id="carrusel_datos_home" class="carousel slide" data-ride="carousel">
+            <!-- INDICADORES -->
+            <ol class="carousel-indicators">
+                <li data-target="#carrusel_datos_home" data-slide-to="0" class="active"></li>
+                <li data-target="#carrusel_datos_home" data-slide-to="1"></li>
+                <li data-target="#carrusel_datos_home" data-slide-to="2"></li>
+            </ol>
+
+            <!-- CONTENIDO DEL CARRUSEL -->
+            <div class="carousel-inner">
+                <div class="item active row">
+                    <!-- Componentes para mostrar la información por estados, de la información general -->
+                    @foreach($estados as $key => $value)
+                            @component('components.info-box')
+                                @slot('color_class', 'bg-green')
+                                @slot('icon', config('global.iconos_estados.'.$key))
+                                @slot('info_text', $key)
+                                @slot('data', $value)
+                                @if($key == 'TOTAL DE ENTREVISTAS')
+                                    @slot('percent', '')
+                                @else
+                                    @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
+                                @endif
+                            @endcomponent
+                    @endforeach
+                </div>
+
+                <div class="item row">
+                    <!-- Componentes para mostrar la información por estados, de la información general -->
+                    @foreach($estados as $key => $value)
+                            @component('components.info-box')
+                                @slot('color_class', 'bg-blue')
+                                @slot('icon', config('global.iconos_estados.'.$key))
+                                @slot('info_text', $key)
+                                @slot('data', $value)
+                                @if($key == 'TOTAL DE ENTREVISTAS')
+                                    @slot('percent', '')
+                                @else
+                                    @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
+                                @endif
+                            @endcomponent
+                    @endforeach
+                </div>
+
+                <div class="item row">
+                    <!-- Componentes para mostrar la información por estados, de la información general -->
+                    @foreach($estados as $key => $value)
+                            @component('components.info-box')
+                                @slot('color_class', 'bg-red')
+                                @slot('icon', config('global.iconos_estados.'.$key))
+                                @slot('info_text', $key)
+                                @slot('data', $value)
+                                @if($key == 'TOTAL DE ENTREVISTAS')
+                                    @slot('percent', '')
+                                @else
+                                    @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
+                                @endif
+                            @endcomponent
+                    @endforeach
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-red">
-                        <i class="ion ion-document"></i>
-                    </span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Likes</span>
-                        <span class="info-box-number">41,410</span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-            </div>
-
-            <div class="clearfix visible-sm-block"></div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-green">
-                        <i class="ion ion-ios-cart-outline"></i>
-                    </span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Sales</span>
-                        <span class="info-box-number">760</span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-yellow">
-                        <i class="ion ion-ios-people-outline"></i>
-                    </span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">New Members</span>
-                        <span class="info-box-number">2,000</span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-            </div>
-
-        </div>
+            <!-- CONTROLES -->
+            <a class="left carousel-control" href="#carrusel_datos_home" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Siguiente</span>
+            </a>
+            <a class="right carousel-control" href="#carrusel_datos_home" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Anterior</span>
+            </a>
+        </div>        
     </div>
 @endsection
