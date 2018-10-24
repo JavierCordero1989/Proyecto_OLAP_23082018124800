@@ -126,10 +126,6 @@
 <!-- AdminLTE App -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.min.js"></script>
 <script>
-    $('[name="email"]').on('keyup', function() {
-        console.log($(this).val());
-    });
-
     $(function () {
         $('input').iCheck({
             checkboxClass: 'icheckbox_square-blue',
