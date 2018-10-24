@@ -65,6 +65,7 @@
     <script src="{!! asset('fullcalendar/js/fullcalendar.min.js') !!}"></script>
     {{-- <script src="{!! asset('fullcalendar/js/locale/es.js') !!}"></script> --}}
     <script src="{!! asset('fullcalendar/js/locale-all.js') !!}"></script>
+    <script src="{!! asset('js/funciones_varias.js') !!}"></script>
     <script>
         let evento;
 
@@ -118,6 +119,7 @@
                     fechaSeleccionada = fechaSeleccionada.length <= 10 ? fechaSeleccionada : fechaSeleccionada.concat('Z');
 
                     let fechaActual = new Date(); // Obtiene la fecha actual
+                    fechaActual = convertUTCDateToLocalDate(fechaActual);
                     let otraFecha = new Date(fechaSeleccionada); // Obtiene la fecha seleccionada en el calendario
 
                     console.log(fechaSeleccionada, otraFecha);
