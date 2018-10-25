@@ -71,10 +71,10 @@ Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')    
 //Encuestadores
 Route::group(['middleware'=>['auth']], function() {
     Route::get('encuestadores', 'EncuestadoresController@index')                                                                  ->name('encuestadores.index')  /*->middleware('permission:')*/;
-    Route::get('encuestadores/create', 'EncuestadoresController@create')                                                          ->name('encuestadores.create') /*->middleware('')*/;
+    Route::get('encuestadores/create', 'EncuestadoresController@create')                                                          ->name('encuestadores.create') ->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
     Route::post('encuestadores/store', 'EncuestadoresController@store')                                                           ->name('encuestadores.store')  /*->middleware('')*/;
     Route::get('encuestadores/{id}', 'EncuestadoresController@show')                                                              ->name('encuestadores.show')   /*->middleware('')*/;
-    Route::get('encuestadores/{id}/edit', 'EncuestadoresController@edit')                                                         ->name('encuestadores.edit')   /*->middleware('')*/;
+    Route::get('encuestadores/{id}/edit', 'EncuestadoresController@edit')                                                         ->name('encuestadores.edit')   ->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
     Route::patch('encuestadores/{id}', 'EncuestadoresController@update')                                                          ->name('encuestadores.update') /*->middleware('')*/;
     Route::delete('encuestadores/{id}', 'EncuestadoresController@destroy')                                                        ->name('encuestadores.destroy')/*->middleware('')*/;
     Route::get('cambiar-contrasennia-encuestador/{id_encuestador}/cambiar', 'EncuestadoresController@cambiar_contrasennia')       ->name('encuestadores.cambiar-contrasennia');
@@ -89,10 +89,10 @@ Route::group(['middleware'=>['auth']], function() {
 //Supervisores
 Route::group(['middleware'=>['auth']], function() {
   Route::get('supervisores', 'SupervisoresController@index')          ->name('supervisores.index')  /*->middleware('permission:')*/;
-  Route::get('supervisores/create', 'SupervisoresController@create')  ->name('supervisores.create') /*->middleware('')*/;
+  Route::get('supervisores/create', 'SupervisoresController@create')  ->name('supervisores.create') ->middleware('role:Super Admin|Supervisor 1');
   Route::post('supervisores/store', 'SupervisoresController@store')   ->name('supervisores.store')  /*->middleware('')*/;
   Route::get('supervisores/{id}', 'SupervisoresController@show')      ->name('supervisores.show')   /*->middleware('')*/;
-  Route::get('supervisores/{id}/edit', 'SupervisoresController@edit') ->name('supervisores.edit')   /*->middleware('')*/;
+  Route::get('supervisores/{id}/edit', 'SupervisoresController@edit') ->name('supervisores.edit')   ->middleware('role:Super Admin|Supervisor 1');
   Route::patch('supervisores/{id}', 'SupervisoresController@update')  ->name('supervisores.update') /*->middleware('')*/;
   Route::delete('supervisores/{id}', 'SupervisoresController@destroy')->name('supervisores.destroy')/*->middleware('')*/;
 });
