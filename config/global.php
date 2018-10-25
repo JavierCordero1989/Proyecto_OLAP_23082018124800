@@ -1,9 +1,9 @@
 <?php
     return [
         'shortcut-icon'              => 'img/olap.png',
-        'site_title'                 => 'OLAP',
+        'site_title'                 => 'SAE',
         'sidebar_title'              => 'Sistema OLaP',
-        'sidebar_title_min'          => 'OLAP',
+        'sidebar_title_min'          => 'SAE',
         'login_title'                => 'CONARE - OLaP',
         'img_app'                    => 'img/olap.png',
         'logo_conare'                => 'img/logo_conare.png',
