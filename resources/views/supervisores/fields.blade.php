@@ -1,4 +1,4 @@
-<div class="col-xs-6 col-xs-offset-3">
+<div class="col-xs-12 col-sm-6 col-sm-offset-3">
     <!-- Nombre Field -->
     <div class="form-group">
         {!! Form::label('user_code', 'Código de usuario:') !!}
@@ -26,10 +26,18 @@
     </div>
 
     <!-- Supervisor Field -->
-    <div class="form-group">
-        {!! Form::label('role_name', 'Elija un rol:') !!}
-        {!! Form::select('role_name', [''=>'Elija un rol', 'Supervisor 1'=>'Supervisor 1', 'Supervisor 2'=>'Supervisor 2'], null, ['class' => 'form-control', 'required' => 'required']) !!}
-    </div>
+    @if(Auth::user()->hasRole('Super Admin'))
+        <div class="form-group">
+            {!! Form::label('role_name', 'Elija un rol:') !!}
+            {!! Form::select('role_name', [''=>'Elija un rol', 'Supervisor 1'=>'Supervisor 1', 'Supervisor 2'=>'Supervisor 2'], null, ['class' => 'form-control', 'required' => 'required']) !!}
+        </div>
+    @endif
+
+    @if(Auth::user()->hasRole('Supervisor 1'))
+        <div class="form-group">
+            {!! Form::hidden('role_name', 'Supervisor 2') !!}
+        </div>
+    @endif
 
     <!-- Submit Field -->
     <div class="form-group">

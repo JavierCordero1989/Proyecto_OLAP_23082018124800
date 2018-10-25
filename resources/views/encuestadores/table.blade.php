@@ -50,7 +50,7 @@
 
                                     <!-- Boton para minimizar/maximiar cada cuadro -->
                                     <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                        <i class="fa fa-plus"></i>
+                                        <i class="fas fa-plus"></i>
                                     </button>
       
                                 </div>
