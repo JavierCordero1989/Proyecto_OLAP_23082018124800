@@ -163,20 +163,32 @@ class UserController extends Controller
      * datos del usuario encontrado a la vista respectiva.
      */
     public function edit_password($id) {
-        $user = User::find($id);
+        // $user = User::find($id);
 
-        if(empty($user)) {
+        // if(empty($user)) {
+        //     Flash::error('Usuario no encontrado');
+        //     return redirect(route('users.index'));
+        // }
+
+        // return view('users.edit-password', compact('user'));
+
+        $usuario = User::find($id);
+
+        if(empty($usuario)) {
             Flash::error('Usuario no encontrado');
             return redirect(route('users.index'));
         }
 
-        return view('users.edit-password', compact('user'));
+        return view('users.cambiar-contrasennia')->with('usuario', $usuario);
     }// Fin de la funcion edit_password
 
     /** Metodo que permite modificar la contraseña del usuario, siempre
      * y cuando se encuentre por el ID.
      */
     public function update_password($id, Request $request) {
+
+        dd($request->all());
+        
         $user = User::find($id);
 
         if(empty($user)) {
