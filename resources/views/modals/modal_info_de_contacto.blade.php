@@ -26,6 +26,7 @@
                                     <thead>
                                         <th>Contacto</th>
                                         <th>Observación</th>
+                                        <th>Estado</th>
                                     </thead>
                                     <tbody>
                                         @foreach($contacto->detalle() as $detalle)
@@ -33,6 +34,7 @@
                                             <tr>
                                                 <td>{!! $detalle->contacto !!}</td>
                                                 <td>{!! $detalle->observacion !!}</td>
+                                                <td>Activo o Eliminado</td>
                                             </tr>
                                                 
                                         @endforeach

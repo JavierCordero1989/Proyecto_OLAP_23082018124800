@@ -11,26 +11,28 @@
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
+
                     {!! Form::open(['route'=>['users.update_password', $usuario->id], 'class'=>'form-horizontal', 'id'=>'form-change-password', 'method'=>'patch']) !!}
                         {{-- <fieldset> --}}
-                            <!-- campo para el correo -->
-                            <div class="form-group col-xs-12">
-                                {!! Form::label('email', 'Ingrese su correo', ['class'=>'control-label col-md-5']) !!}
-                                <div class="col-md-5 inputGroupContainer">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                        {!! Form::email('email', null, ['class'=>'form-control', 'required'=>'required']) !!}
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Campo para la contraseña -->
                             <div class="form-group col-xs-12">
-                                {!! Form::label('password', 'Ingrese su contraseña', ['class'=>'control-label col-md-5']) !!}
+                                {!! Form::label('password', 'Ingrese su nueva contraseña', ['class'=>'control-label col-md-5']) !!}
                                 <div class="col-md-5 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                         {!! Form::password('password', ['class'=>'form-control', 'required'=>'required']) !!}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Campo para confirmar la contraseña -->
+                            <div class="form-group col-xs-12">
+                                {!! Form::label('password_confirm', 'Confirme su contraseña', ['class'=>'control-label col-md-5']) !!}
+                                <div class="col-md-5 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                        {!! Form::password('password_confirm', ['class'=>'form-control', 'required'=>'required']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -47,7 +49,7 @@
                                         ]) 
                                     !!}
 
-                                    <a href="#" class="btn btn-default">
+                                    <a href="{!! url('home') !!}" class="btn btn-default">
                                         <span class="glyphicon glyphicon-arrow-left"></span>
                                         Cancelar
                                     </a>
@@ -55,6 +57,7 @@
                             </div>
                         {{-- </fieldset> --}}
                     {!! Form::close() !!}
+
                 </div>
             </div>
         </div>
@@ -91,6 +94,21 @@
                             regexp: {
                                 regexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.-_])[A-Za-z\d@$!%*?.-_]{7,15}$/,
                                 message: 'Contraseña con formato no válida'
+                            },
+                            notEmpty: {
+                                message: 'Debe ingresar una contraseña'
+                            }
+                        }
+                    },
+                    password_confirm: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.-_])[A-Za-z\d@$!%*?.-_]{7,15}$/,
+                                message: 'Contraseña con formato no válida'
+                            },
+                            identical: {
+                                field: 'password',
+                                message: 'Las contraseñas no coinciden.'
                             },
                             notEmpty: {
                                 message: 'Debe ingresar una contraseña'

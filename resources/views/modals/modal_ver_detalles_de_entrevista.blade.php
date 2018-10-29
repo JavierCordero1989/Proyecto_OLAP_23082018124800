@@ -48,7 +48,7 @@
                         <!-- Sexo del graduado -->
                         <div class="col-xs-6">
                             {!! Form::label('sexo', 'Sexo:') !!}
-                            <p>{!! $encuesta->sexo !!}</p>
+                            <p>{!! $encuesta->sexo == 'M' ? 'Hombre' : ($encuesta->sexo == 'F' ? 'Mujer' : 'ND') !!}</p>
                         </div>
     
                         <!-- Modal para ver la información de detalle de los contactos que pertenecen a la entrevista -->
@@ -109,11 +109,11 @@
                             <p>{!! $encuesta->area->descriptivo !!}</p>
                         </div>
     
-                        <!-- Agrupación -->
+                        {{-- <!-- Agrupación -->
                         <div class="col-xs-6">
                             {!! Form::label('codigo_agrupacion', 'Agrupación:') !!}
                             <p>{!! $encuesta->agrupacion->nombre !!}</p>
-                        </div>
+                        </div> --}}
     
                         <!-- Sector -->
                         <div class="col-xs-6">

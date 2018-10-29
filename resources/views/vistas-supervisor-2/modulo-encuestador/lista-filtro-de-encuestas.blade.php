@@ -16,15 +16,15 @@
             <div class="box-body">
                 <div class="row">
                     {!! Form::open(['route' => ['supervisor2.filtrar-muestra-de-entrevistas-a-asignar', 'id_supervisor'=>$id_supervisor,'id_encuestador'=>$id_encuestador]]) !!}
-                        <div class="form-group col-sm-6">
+                        {{-- <div class="form-group col-sm-6">
                             {!! Form::label('carrera', 'Carreras:') !!}
                             {!! Form::select('carrera', $carreras, null, ['class' => 'form-control', 'placeholder'=>'Elija una carrera']) !!}
-                        </div>
+                        </div> --}}
 
-                        <div class="form-group col-sm-6">
+                        {{-- <div class="form-group col-sm-6">
                             {!! Form::label('universidad', 'Universidad:') !!}
                             {!! Form::select('universidad', $universidades, null, ['class' => 'form-control', 'placeholder'=>'Elija una universidad']) !!}
-                        </div>
+                        </div> --}}
 
                         <div class="form-group col-sm-6">
                             {!! Form::label('grado', 'Grado:') !!}
@@ -46,10 +46,10 @@
                             {!! Form::select('agrupacion', $agrupaciones, null, ['class' => 'form-control', 'placeholder'=>'Elija una agrupación']) !!}
                         </div>
 
-                        <div class="form-group col-sm-6">
+                        {{-- <div class="form-group col-sm-6">
                             {!! Form::label('sector', 'Sector:') !!}
                             {!! Form::select('sector', $sectores, null, ['class' => 'form-control', 'placeholder'=>'Elija un sector']) !!}
-                        </div>
+                        </div> --}}
                         
                         <div class="form-group col-sm-12">
                             {!! Form::submit('Buscar', ['class' => 'btn btn-primary']) !!}

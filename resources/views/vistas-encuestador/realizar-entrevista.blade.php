@@ -129,11 +129,13 @@
                             {!! Form::text('area', $entrevista->area->descriptivo, ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
-                        <!-- Campo de la agrupacion -->
-                        <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
-                            {!! Form::label('agrupacion', 'Agrupación:') !!}
-                            {!! Form::text('agrupacion', $entrevista->agrupacion->nombre, ['class' => 'form-control', 'disabled']) !!}
-                        </div>
+                        @if(!Auth::user()->hasRole('Encuestador'))
+                            <!-- Campo de la agrupacion -->
+                            <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
+                                {!! Form::label('agrupacion', 'Agrupación:') !!}
+                                {!! Form::text('agrupacion', $entrevista->agrupacion->nombre, ['class' => 'form-control', 'disabled']) !!}
+                            </div>
+                        @endif
 
                         <!-- Campo del sector -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
@@ -141,11 +143,13 @@
                             {!! Form::text('sector', $entrevista->sector->nombre, ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
-                        <!-- Campo del tipo de caso -->
-                        <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
-                            {!! Form::label('tipo_de_caso', 'Tipo de caso:') !!}
-                            {!! Form::text('tipo_de_caso', null, ['class' => 'form-control', 'disabled']) !!}
-                        </div>
+                        @if(!Auth::user()->hasRole('Encuestador'))
+                            <!-- Campo del tipo de caso -->
+                            <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
+                                {!! Form::label('tipo_de_caso', 'Tipo de caso:') !!}
+                                {!! Form::text('tipo_de_caso', null, ['class' => 'form-control', 'disabled']) !!}
+                            </div>
+                        @endif
 
                         <div class="form-group col-sm-4">
                             {!! Form::label('estados', 'Estados:') !!}

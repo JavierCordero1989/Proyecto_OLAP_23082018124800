@@ -26,23 +26,50 @@
                                         @slot('updated_at', $supervisor->updated_at)
                                     @endcomponent
 
-                                    <!-- Boton para editar los datos del encuestador -->
-                                        {{-- @if(Auth::user()->id == $supervisor->id) --}}
-                                        @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
-                                            @if(!$supervisor->hasRole(['Super Admin', 'Supervisor 1']))
-                                                <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
-                                                    <i class="glyphicon glyphicon-edit"></i>
-                                                </a>
-                                            @endif
-                                        {{-- @endif --}}
-                                        @endif
 
-                                        @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
-                                            @if(!$supervisor->hasRole(['Super Admin', 'Supervisor 1']))
-                                                <!-- Boton para eliminar los datos del encuestador -->
-                                                {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs','onclick' => "return confirm('¿Está seguro de querer eliminar?')", 'data-toggle' => 'modal', 'data-target' => '#modal-danger']) !!}
-                                            @endif
+                                    @if (Auth::user()->hasRole('Super Admin'))
+                                        @if (!$supervisor->hasRole('Super Admin'))
+                                            <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class="btn btn-default btn-xs">
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                            
+                                            {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', [
+                                                'type'=>'submit',
+                                                'class'=>'btn btn-danger btn-xs', 
+                                                'onsubmit'=>"return confirm('¿Está seguro de querer eliminar?')"
+                                            ]) !!}
+                                        @endif 
+                                    @endif
+
+                                    @if (Auth::user()->hasRole('Supervisor 1'))
+                                        @if (!$supervisor->hasRole(['Super Admin', 'Supervisor 1']))
+                                            <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class="btn btn-default btn-xs">
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                            
+                                            {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', [
+                                                'type'=>'submit',
+                                                'class'=>'btn btn-danger btn-xs', 
+                                                'onsubmit'=>"return confirm('¿Está seguro de querer eliminar?')"
+                                            ]) !!}
                                         @endif
+                                    @endif
+
+                                    <!-- Boton para editar los datos del encuestador -->
+                                    {{-- @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
+                                        @if(!$supervisor->hasRole(['Super Admin', 'Supervisor 1']))
+                                            <a href="{!! route('supervisores.edit', [$supervisor->id]) !!}" class='btn btn-default btn-xs'>
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                        @endif
+                                    @endif --}}
+
+                                    {{-- @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
+                                        @if(!$supervisor->hasRole(['Super Admin', 'Supervisor 1']))
+                                            <!-- Boton para eliminar los datos del encuestador -->
+                                            {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs','onclick' => "return confirm('¿Está seguro de querer eliminar?')", 'data-toggle' => 'modal', 'data-target' => '#modal-danger']) !!}
+                                        @endif
+                                    @endif --}}
 
                                     <!-- Boton para minimizar/maximiar cada cuadro -->
                                     <button type="button" class="btn btn-info btn-xs" data-widget="collapse">

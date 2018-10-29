@@ -17,6 +17,7 @@ class CreateDetalleContactosTable extends Migration
             $table->increments('id');
             $table->string('contacto', 191)->nullable();
             $table->text('observacion')->nullable();
+            $table->char('estado', 1); // U => Utilizable, E => Eliminado
             $table->unsignedInteger('id_contacto_graduado');
             $table->timestamps();
             $table->softDeletes();

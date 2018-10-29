@@ -64,6 +64,7 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> --}}
     <script type="text/javascript" src="{{ asset('form-helper/js/bootstrap-formhelpers.min.js') }}"></script>
     <script>
+        // Para el campo de observación, contar caractéres.
         $(document).ready(function() {
             var caracteres_maximos = 200;
             $('#caracteres_restantes').html(caracteres_maximos + ' caracteres restantes');
@@ -74,6 +75,10 @@
 
                 $('#caracteres_restantes').html(restantes + ' caracteres restantes');
             });
+        });
+
+        $('[name="fecha_de_cita"]').datetimepicker({
+            daysOfWeekDisabled: [0, 6]
         });
 
         function validar_submit() {

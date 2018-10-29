@@ -30,7 +30,14 @@
 @section('content')
     <div class="content">
 
-        <div id="carrusel_datos_home" class="carousel slide" data-ride="carousel">
+        <!-- Cuadro para notificaciones -->
+        <div class="clearfix"></div>
+
+        @include('flash::message')
+
+        <div class="clearfix"></div>
+
+        <div id="carrusel_datos_home" class="carousel {{--slide--}}" data-ride="carousel">
             <!-- INDICADORES -->
             <ol class="carousel-indicators">
                 <li data-target="#carrusel_datos_home" data-slide-to="0" class="active"></li>
@@ -103,4 +110,10 @@
             </a>
         </div>        
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $('#flash-overlay-modal').modal();
+    </script>
 @endsection

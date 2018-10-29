@@ -44,7 +44,7 @@
                                         </td>
                                         <td>{!! $encuesta->nombre_completo !!}</td>
                                         <td>{!! $encuesta->annio_graduacion !!}</td>
-                                        <td>{!! $encuesta->sexo !!}</td>
+                                        <td>{!! $encuesta->sexo == 'M' ? 'Hombre' : ($encuesta->sexo == 'F' ? 'Mujer' : 'ND') !!}</td>
                                         <td>{!! $encuesta->carrera->nombre !!}</td>
                                         <td>{!! $encuesta->universidad->nombre !!}</td>
                                         <td>{!! $encuesta->grado->nombre !!}</td>

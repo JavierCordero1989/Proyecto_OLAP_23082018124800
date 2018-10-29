@@ -78,7 +78,7 @@
             'EXTRANJERO'             => 'ion-ios-location',
             'CON CITA'               => 'ion-calendar',
             'MENSAJE'                => 'ion-android-textsms',
-            'LINK AL CORREO'         => 'ion-at',
+            'LINK AL CORREO'         => 'ion-ios-list-outline',
             'INFORMACIÓN POR CORREO' => 'ion-email',
             'ENTREVISTA COMPLETA'    => 'ion-android-done-all',
             'OTRO'                   => 'ion-compose',

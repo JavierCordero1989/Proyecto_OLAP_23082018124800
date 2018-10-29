@@ -96,7 +96,7 @@
                 locale: 'es',
                 firstDay: 0, // (Domingo)
                 events : array_citas,
-                hiddenDays: [0,6],
+                hiddenDays: [0],
                 selectable: true, // permite seleccionar el dia
                 header: {
                     left: 'prev,next,today',
