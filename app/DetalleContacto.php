@@ -11,6 +11,7 @@ class DetalleContacto extends Model
     protected $fillable = [
         'contacto',
         'observacion',
+        'estado',
         'id_contacto_graduado'
     ];
 }

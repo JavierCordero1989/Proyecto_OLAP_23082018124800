@@ -151,12 +151,12 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
         $carreras =[];
 
         for($i=0; $i<200; $i++) {
-            $carreras[] =$faker->sentence;
+            $carreras[] = $faker->sentence;
         }
 
         foreach($carreras as $clave => $valor) {
             $nueva_carrera = Carrera::create([
-                'codigo'  =>$clave,
+                'codigo'  =>$clave+1,
                 'nombre'  =>$valor,
                 'id_tipo' => 1
             ]);

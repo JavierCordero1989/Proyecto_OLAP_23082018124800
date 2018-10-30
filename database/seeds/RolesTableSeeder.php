@@ -29,7 +29,7 @@ class RolesTableSeeder extends Seeder
         ]);
 
         //Se le dan todos los permisos
-        $role->givePermissionTo(Permission::all());
+        // $role->givePermissionTo(Permission::all());
 
         // Nombre para ruta amigable
         $nombreAmigable = 'Supervisor #1 para el sistema';
@@ -45,7 +45,7 @@ class RolesTableSeeder extends Seeder
         ]);
         
         //Se le dan todos los permisos
-        $supervisor1->givePermissionTo(Permission::all());
+        // $supervisor1->givePermissionTo(Permission::all());
 
         // Nombre para ruta amigable
         $nombreAmigable = 'Supervisor #2 para el sistema';

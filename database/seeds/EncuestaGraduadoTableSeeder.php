@@ -23,27 +23,17 @@ class EncuestaGraduadoTableSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create('es_ES');
-        $totalDeDatosGenerados = 4000;
+        $totalDeDatosGenerados = 2000;
 
-        // $carrera = TiposDatosCarrera::where('nombre', 'CARRERA')->first();
-        // $universidad = TiposDatosCarrera::where('nombre', 'UNIVERSIDAD')->first();
-        // $grado = TiposDatosCarrera::where('nombre', 'GRADO')->first();
-        // $agrupacion = TiposDatosCarrera::where('nombre', 'AGRUPACION')->first();
         $sector = TiposDatosCarrera::where('nombre', 'SECTOR')->first();
 
-        // $carreras = DatosCarreraGraduado::where('id_tipo', $carrera->id)->pluck('id')->all();
-        $carreras = Carrera::allData()->pluck('id')->all();
-        // $universidades = DatosCarreraGraduado::where('id_tipo', $universidad->id)->pluck('id')->all();
-        $universidades = Universidad::allData()->pluck('id')->all();
-        // $grados = DatosCarreraGraduado::where('id_tipo', $grado->id)->pluck('id')->all();
-        $grados = Grado::allData()->pluck('id')->all();
-        // $disciplinas = DatosCarreraGraduado::where('id_tipo', $disciplina->id)->pluck('id')->all();
-        // $areas = DatosCarreraGraduado::where('id_tipo', $area->id)->pluck('id')->all();
-        $disciplinas = Disciplina::pluck('id')->all();
-        $areas = Area::pluck('id')->all();
-        // $agrupaciones = DatosCarreraGraduado::where('id_tipo', $agrupacion->id)->pluck('id')->all();
-        $agrupaciones = Agrupacion::allData()->pluck('id')->all();
-        // $sectores = DatosCarreraGraduado::where('id_tipo', $sector->id)->pluck('id')->all();
+        // $carreras =       Carrera::allData()->pluck('id')->all();
+        $carreras =       Carrera::allData()->pluck('id')->all();
+        $universidades =  Universidad::allData()->pluck('id')->all();
+        $grados =         Grado::allData()->pluck('id')->all();
+        $disciplinas =    Disciplina::pluck('id')->all();
+        $areas =          Area::pluck('id')->all();
+        $agrupaciones =   Agrupacion::allData()->pluck('id')->all();
         $sector_publico = Sector::publico()->first();
         $sector_privado = Sector::privado()->first();
 
@@ -74,6 +64,7 @@ class EncuestaGraduadoTableSeeder extends Seeder
             ]);
 
             $encuesta->asignarEstado($id_estado->id);
+            echo "Registro ". ($i+1) . " de " . $totalDeDatosGenerados . " guardado...\n";
         }
     }
 
