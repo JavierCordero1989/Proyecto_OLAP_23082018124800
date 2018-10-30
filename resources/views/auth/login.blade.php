@@ -23,6 +23,7 @@
     <!-- iCheck -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/css/skins/_all-skins.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/square/_all.css">
+    <link rel="stylesheet" href="{!! asset('css/estilos-login.css') !!}">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -63,60 +64,69 @@
     </style>
 </head>
 <body class="hold-transition login-page">
-<div class="login-box">
-    <div class="login-logo">
-        <a href="{{ url('/home') }}"><b>CONARE </b>OLaP</a>
+    <div id="logo_1" class="col-xs-6 col-sm-4 caja_de_imagen">
+        <img src="http://radiografia.conare.ac.cr/static/images/olap.png" alt="logo del OLaP" class="imagen">
     </div>
 
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg">Inicio de sesión</p>
+    <div id="login" class="col-xs-12 col-sm-4 caja-login">
 
-        <form method="post" action="{{ url('/login') }}">
-            {!! csrf_field() !!}
+        <div class="login-logo">
+            <a href="{{ url('/home') }}"><b>CONARE </b>OLaP</a>
+        </div>
 
-            <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
-                <input type="email" class="form-control" name="email" {{--value="root@root.com"--}} placeholder="Correo electrónico">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                @if ($errors->has('email'))
-                    <span class="help-block">
-                    <strong>{{ $errors->first('email') }}</strong>
-                </span>
-                @endif
-            </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <p class="login-box-msg">Inicio de sesión</p>
 
-            <div class="form-group has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
-                <input type="password" class="form-control" placeholder="Contraseña" name="password" {{--value="root"--}}>
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                @if ($errors->has('password'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('password') }}</strong>
+            <form method="post" action="{{ url('/login') }}">
+                {!! csrf_field() !!}
+
+                <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
+                    <input type="email" class="form-control" name="email" {{--value="root@root.com"--}} placeholder="Correo electrónico">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    @if ($errors->has('email'))
+                        <span class="help-block">
+                        <strong>{{ $errors->first('email') }}</strong>
                     </span>
-                @endif
-
-            </div>
-            <div class="row">
-                {{-- <div class="col-xs-8">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox" name="remember"> Recordarme
-                        </label>
-                    </div>
-                </div> --}}
-                <!-- /.col -->
-                <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+                    @endif
                 </div>
-                <!-- /.col -->
-            </div>
-        </form>
 
-        {{-- <a href="{{ url('/password/reset') }}">I forgot my password</a><br> --}}
-        {{-- <a href="{{ url('/register') }}" class="text-center">Register a new membership</a> --}}
+                <div class="form-group has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
+                    <input type="password" class="form-control" placeholder="Contraseña" name="password" {{--value="root"--}}>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    @if ($errors->has('password'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
 
+                </div>
+                <div class="row">
+                    {{-- <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox" name="remember"> Recordarme
+                            </label>
+                        </div>
+                    </div> --}}
+                    <!-- /.col -->
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            {{-- <a href="{{ url('/password/reset') }}">I forgot my password</a><br> --}}
+            {{-- <a href="{{ url('/register') }}" class="text-center">Register a new membership</a> --}}
+
+        </div>
+        <!-- /.login-box-body -->
     </div>
-    <!-- /.login-box-body -->
-</div>
+
+    <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
+        <img src="https://www.conare.ac.cr/images/conare_solo.png" alt="logo del CONARE" class="imagen">
+    </div>
 <!-- /.login-box -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -125,6 +135,7 @@
 
 <!-- AdminLTE App -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.min.js"></script>
+<script src="{!! asset('js/script-login.js') !!}"></script>
 <script>
     $(function () {
         $('input').iCheck({

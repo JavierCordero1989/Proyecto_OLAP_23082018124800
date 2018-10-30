@@ -1,0 +1,72 @@
+/* Si el tamaño de la pantalla es mayor o igual a 1201px */
+@media screen and (min-width: 1201px) {
+    body {
+      background-color: #d4ecae;
+    }
+  
+    .imagen {
+      width: 250px;
+      margin-left: 25%;
+    }
+  
+    .caja_de_imagen {
+      margin: 12% auto;
+    }
+  
+    .caja-login {
+      margin: 7% auto;
+    }
+  }
+  
+  /* Si el tamaño de la pantalla es menor o igual a 1200px */
+  @media screen and (max-width: 1200px) {
+    body {
+      background-color: lightblue;
+    }
+  
+    img {
+      width: 200px;
+      margin-left: 20%;
+    }
+  
+    .caja_de_imagen {
+      margin: 18% auto;
+    }
+  
+    .caja-login {
+      margin: 7% auto;
+    }
+  }
+  
+  /* Si el tamaño de la pantalla es menor o igual a 900px */
+  @media screen and (max-width: 900px) {
+    body {
+      background-color: lightgreen;
+    }
+  
+    img {
+      width: 150px;
+      margin-left: 15%;
+    }
+  
+    .caja_de_imagen {
+      margin: 20% auto;
+    }
+  
+    .caja-login {
+      margin: 7% auto;
+    }
+  }
+  
+  /* Si el tamaño de la pantalla es menor o igual a 768 */
+  @media screen and (max-width: 768px) {
+    body {
+      background-color: pink;
+    }
+    
+    
+  }
+  
+  /* Para pantallas que cumplen con los tamaños 600 o menos y 400 o más */
+  /* @media only screen and (max-width: 600px) and (min-width: 400px) ¨* */
+  
