@@ -22,48 +22,48 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //Rutas para los roles
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('roles', 'RolesController@index')          ->name('roles.index')   ->middleware('permission:roles.index');
-  Route::get('roles/create', 'RolesController@create')  ->name('roles.create')  ->middleware('permission:roles.create');;
-  Route::post('roles/store', 'RolesController@store')   ->name('roles.store')   ->middleware('permission:roles.store');;
-  Route::get('roles/{id}', 'RolesController@show')      ->name('roles.show')    ->middleware('permission:roles.show');;
-  Route::get('roles/{id}/edit', 'RolesController@edit') ->name('roles.edit')    ->middleware('permission:roles.edit');;
-  Route::patch('roles/{id}', 'RolesController@update')  ->name('roles.update')  ->middleware('permission:roles.update');;
-  Route::delete('roles/{id}', 'RolesController@destroy')->name('roles.destroy') ->middleware('permission:roles.destroy');;
+  Route::get('roles', 'RolesController@index')          ->name('roles.index');
+  Route::get('roles/create', 'RolesController@create')  ->name('roles.create');
+  Route::post('roles/store', 'RolesController@store')   ->name('roles.store');
+  Route::get('roles/{id}', 'RolesController@show')      ->name('roles.show');
+  Route::get('roles/{id}/edit', 'RolesController@edit') ->name('roles.edit');
+  Route::patch('roles/{id}', 'RolesController@update')  ->name('roles.update');
+  Route::delete('roles/{id}', 'RolesController@destroy')->name('roles.destroy');
 });
 
 //Rutas para los permisos
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('permisos', 'PermissionsController@index')          ->name('permisos.index')  ->middleware('permission:permisos.index');
-  Route::get('permisos/create', 'PermissionsController@create')  ->name('permisos.create') ->middleware('permission:permisos.create');
-  Route::post('permisos/store', 'PermissionsController@store')   ->name('permisos.store')  ->middleware('permission:permisos.store');
-  Route::get('permisos/{id}', 'PermissionsController@show')      ->name('permisos.show')   ->middleware('permission:permisos.show');
-  Route::get('permisos/{id}/edit', 'PermissionsController@edit') ->name('permisos.edit')   ->middleware('permission:permisos.edit');
-  Route::patch('permisos/{id}', 'PermissionsController@update')  ->name('permisos.update') ->middleware('permission:permisos.update');
-  Route::delete('permisos/{id}', 'PermissionsController@destroy')->name('permisos.destroy')->middleware('permission:permisos.destroy');
+  Route::get('permisos', 'PermissionsController@index')          ->name('permisos.index');
+  Route::get('permisos/create', 'PermissionsController@create')  ->name('permisos.create');
+  Route::post('permisos/store', 'PermissionsController@store')   ->name('permisos.store');
+  Route::get('permisos/{id}', 'PermissionsController@show')      ->name('permisos.show');
+  Route::get('permisos/{id}/edit', 'PermissionsController@edit') ->name('permisos.edit');
+  Route::patch('permisos/{id}', 'PermissionsController@update')  ->name('permisos.update');
+  Route::delete('permisos/{id}', 'PermissionsController@destroy')->name('permisos.destroy');
 });
 
 //Rutas para los usuarios
 Route::group(['middleware'=>['auth']], function() {
-  Route::get('users', 'UserController@index')          ->name('users.index')  ->middleware('permission:users.index');
-  Route::get('users/create', 'UserController@create')  ->name('users.create') ->middleware('permission:users.create');
-  Route::post('users/store', 'UserController@store')   ->name('users.store')  ->middleware('permission:users.store');
-  Route::get('users/{id}', 'UserController@show')      ->name('users.show')   ->middleware('permission:users.show');
-  Route::get('users/{id}/edit', 'UserController@edit') ->name('users.edit')   ->middleware('permission:users.edit');
-  Route::patch('users/{id}', 'UserController@update')  ->name('users.update') ->middleware('permission:users.update');
-  Route::delete('users/{id}', 'UserController@destroy')->name('users.destroy')->middleware('permission:users.destroy');
+  Route::get('users', 'UserController@index')          ->name('users.index');
+  Route::get('users/create', 'UserController@create')  ->name('users.create');
+  Route::post('users/store', 'UserController@store')   ->name('users.store');
+  Route::get('users/{id}', 'UserController@show')      ->name('users.show');
+  Route::get('users/{id}/edit', 'UserController@edit') ->name('users.edit');
+  Route::patch('users/{id}', 'UserController@update')  ->name('users.update');
+  Route::delete('users/{id}', 'UserController@destroy')->name('users.destroy');
   
-  Route::get('users/edit-name/{id}', 'UserController@edit_name')               ->name('users.edit_name')       ->middleware('permission:users.edit_name');
-  Route::patch('users/update-name/{id}', 'UserController@update_name')         ->name('users.update_name')     ->middleware('permission:users.update_name');
-  Route::get('users/edit-password/{id}', 'UserController@edit_password')       ->name('users.edit_password')   ->middleware('permission:users.edit_password');
-  Route::patch('users/update-password/{id}', 'UserController@update_password') ->name('users.update_password') ->middleware('permission:users.update_password');
-  Route::get('usuarios', 'UserController@index_table')                         ->name('usuarios.index_table')  ->middleware('permission:users.index_table');
+  Route::get('users/edit-name/{id}', 'UserController@edit_name')               ->name('users.edit_name');
+  Route::patch('users/update-name/{id}', 'UserController@update_name')         ->name('users.update_name');
+  Route::get('users/edit-password/{id}', 'UserController@edit_password')       ->name('users.edit_password');
+  Route::patch('users/update-password/{id}', 'UserController@update_password') ->name('users.update_password');
+  Route::get('usuarios', 'UserController@index_table')                         ->name('usuarios.index_table');
 });
 
-Route::get('asignar-permisos-a-rol/create', 'AssignPermissionsToRolController@create') ->name('permissionsToRol.create') ->middleware('permission:permissionsToRol.create');
-Route::post('asignar-permisos-a-rol/store', 'AssignPermissionsToRolController@store')  ->name('permissionsToRol.store')  ->middleware('permission:permissionsToRol.store');
+Route::get('asignar-permisos-a-rol/create', 'AssignPermissionsToRolController@create') ->name('permissionsToRol.create');
+Route::post('asignar-permisos-a-rol/store', 'AssignPermissionsToRolController@store')  ->name('permissionsToRol.store');
 
-Route::get('asignar-roles-a-usuario/create', 'AssignRolesToUserController@create') ->name('rolesToUser.create') ->middleware('permission:rolesToUser.create');
-Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store')  ->name('rolesToUser.store')  ->middleware('permission:rolesToUser.store');
+Route::get('asignar-roles-a-usuario/create', 'AssignRolesToUserController@create') ->name('rolesToUser.create');
+Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store')  ->name('rolesToUser.store');
 
 Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel') ->name('excel.import');
 Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')                  ->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
@@ -280,8 +280,11 @@ Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
   Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte') ->name('reportes.filtro-encuestas');
 });
 
-Route::get('pruebas', function() {
-
+Route::group(['prefix'=>'security'], function(){
+  Route::get('remember-password', 'ResetPasswordController@anotar_cambio_de_contrasennia')->name('security.remember-password');
+  Route::post('send-password-request', 'ResetPasswordController@obtener_solicitud_de_cambio')->name('security.send-password-request');
+  Route::get('get-password-reset/get-requests', 'ResetPasswordController@obtener_solicitudes_de_cambio')->name('security.get-password-reset-requests')->middleware('auth');
+  Route::get('change-password/user/{email}/change', 'ResetPasswordController@cambiar_contrasennia_usuario')->name('security.change-password')->middleware('auth');
 });
 
 Route::post('pruebas', function(\Illuminate\Http\Request $request) {
