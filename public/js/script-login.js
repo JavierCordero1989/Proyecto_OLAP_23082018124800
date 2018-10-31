@@ -34,7 +34,7 @@ function recrear_cajas_logos() {
 			class: "col-xs-6 col-sm-4 caja_de_imagen"
 		}).append(
 			$("<img>", {
-				src: "http://radiografia.conare.ac.cr/static/images/olap.png",
+				src: "img/logo_oficial_olap_transparente.png",
 				alt: "logo del OLaP",
 				class: "imagen"
 			})
@@ -47,7 +47,7 @@ function recrear_cajas_logos() {
 			class: "col-xs-6 col-sm-4 caja_de_imagen"
 		}).append(
 			$("<img>", {
-				src: "https://www.conare.ac.cr/images/conare_solo.png",
+				src: "img/logo_oficial_conare_transparente.png",
 				alt: "logo del CONARE",
 				class: "imagen"
 			})
@@ -62,7 +62,7 @@ function recrear_cajas_movil() {
 			class: "col-xs-6 caja_de_imagen"
 		}).append(
 			$("<img>", {
-				src: "http://radiografia.conare.ac.cr/static/images/olap.png",
+				src: "img/logo_oficial_olap_transparente.png",
 				alt: "logo del OLaP",
 				class: "imagen"
 			}).css({'width':'150px', 'margin-top':'-10px'})
@@ -75,7 +75,7 @@ function recrear_cajas_movil() {
 			class: "col-xs-6 caja_de_imagen"
 		}).append(
 			$("<img>", {
-				src: "https://www.conare.ac.cr/images/conare_solo.png",
+				src: "img/logo_oficial_conare_transparente.png",
 				alt: "logo del CONARE",
 				class: "imagen"
 			}).css({'width':'150px', 'margin-top':'-10px'})
