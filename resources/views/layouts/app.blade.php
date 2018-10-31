@@ -63,6 +63,21 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+                    <li id="bandera_cambios_contrasennias" class="dropdown notifications-menu hide">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="far fa-flag"></i>
+                            <span id="count_cambios" class="label label-warning">x</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li id="title_change_notifications" class="header">Tiene x solicitudes de cambio</li>
+                            <li>
+                                <ul id="cambios_lista" class="menu">
+                                    <!-- Aqui se colocan las notificaciones en lista -->
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li id="campana_notificaciones" class="dropdown notifications-menu hide">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="far fa-bell"></i>
@@ -181,6 +196,7 @@
 <!-- Script para cargar las alertas del calendario en la página principal en cada REFRESH-->
 <script>
     $(function() {
+        //Solicitud para los eventos de calendario
         $.ajax({
             url: '{{ route("obtener-citas-calendario") }}',
             type: 'GET',
@@ -223,7 +239,60 @@
                 console.log('XHR: ', xhr);
             }
         });
+
+        let ruta_cambios = '{{ route("security.get-password-reset-requests") }}';
+
+        //Solicitud para las peticiones de cambio de contraseña
+        $.ajax({
+            url: ruta_cambios,
+            type: 'GET',
+            cache: false,
+            data: {user_role: '{{ Auth::user()->getRoleNames()[0] }}'},
+            dataType: 'json',
+            success: cargar_cambios_contrasennias,
+            statusCode: {
+                404: function() { alert('Página no encontrada'); },
+                500: function() { alert('Error en el servidor'); }
+            },
+            error: function(xhr, status) {
+                console.log('Ha habido un error');
+                console.log('Estatus: ' + status);
+                console.log('XHR: ', xhr);
+            }
+        });
     });
+
+    function cargar_cambios_contrasennias(data) {
+        console.log(data);
+        // Si vienen datos, carga la campana con las notificaciones.
+        if(data.count > 0) {
+            $('#bandera_cambios_contrasennias').removeClass('hide');
+            $('#bandera_cambios_contrasennias').addClass('show');
+
+            // se coloca el número de notificaciones
+            $('#count_cambios').html(data.count);
+
+            // se coloca un mensaje con el total de notificaciones
+            $('#title_change_notifications').html('Tiene <b>'+data.count+'</b> solicitudes de cambio');
+
+            // se obtiene la caja que contendrá el menú
+            let menu_notificaciones = $('#cambios_lista');
+
+            // se recorren las citas obtenidas y se agregan al menú
+            for(index in data.datos) {
+                //Se crea la URL para cada enlace de cambio de contraseña
+                let url = '{{ route("security.change-password", ":email") }}';
+                url = url.replace(":email", data.datos[index].email);
+
+                let li = $('<li>').appendTo(menu_notificaciones);
+                let a = $('<a>', { 'href': url }).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
+                $('<i>', {
+                    'class': 'fas fa-users text-aqua'
+                }).appendTo(a);
+                a.append(' '+data.datos[index].email);
+            }
+        }
+    }
 </script>
 
 @yield('scripts')
