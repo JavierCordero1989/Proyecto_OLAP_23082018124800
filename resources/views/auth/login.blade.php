@@ -65,13 +65,13 @@
 </head>
 <body class="hold-transition login-page">
     <div id="logo_1" class="col-xs-6 col-sm-4 caja_de_imagen">
-        <img src="http://radiografia.conare.ac.cr/static/images/olap.png" alt="logo del OLaP" class="imagen">
+        <img src="{!! asset(config('global.olap_login')) !!}" alt="logo del OLaP" class="imagen">
     </div>
 
     <div id="login" class="col-xs-12 col-sm-4 caja-login">
 
         <div class="login-logo">
-            <a href="{{ url('/home') }}"><b>CONARE </b>OLaP</a>
+            <b>{!! config('global.nombre_sistema') !!} </b>
         </div>
 
         <!-- /.login-logo -->
@@ -117,15 +117,14 @@
                 </div>
             </form>
 
-            {{-- <a href="{{ url('/password/reset') }}">I forgot my password</a><br> --}}
-            {{-- <a href="{{ url('/register') }}" class="text-center">Register a new membership</a> --}}
+            <a href="{{ route('security.remember-password') }}">Olvidé mi contraseña</a><br>
 
         </div>
         <!-- /.login-box-body -->
     </div>
 
     <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
-        <img src="https://www.conare.ac.cr/images/conare_solo.png" alt="logo del CONARE" class="imagen">
+        <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del CONARE" class="imagen">
     </div>
 <!-- /.login-box -->
 
