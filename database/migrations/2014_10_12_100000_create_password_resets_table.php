@@ -13,9 +13,17 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
+        //Se cambia le esquema para poder crear una tbala para resetear contraseñas.
+        //ESTE ES EL ESQUEMA ORIGINAL
+        // Schema::create('password_resets', function (Blueprint $table) {
+        //     $table->string('email')->index();
+        //     $table->string('token');
+        //     $table->timestamp('created_at')->nullable();
+        // });
+
         Schema::create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
-            $table->string('token');
+            $table->char('estado', 2); // R => RESUELTA, NR => NO RESUELTA
             $table->timestamp('created_at')->nullable();
         });
     }
