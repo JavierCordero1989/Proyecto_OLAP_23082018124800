@@ -15,13 +15,13 @@ class CreateBitacoraDeCambiosTable extends Migration
     {
         Schema::create('tbl_bitacora_de_cambios', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('transaccion', 1);
+            $table->char('transaccion', 1); // I => INSERT, D => DELETE, U => UPDATE 
             $table->string('tabla', 50);
-            $table->integer('id_registro_afectado');
+            $table->integer('id_registro_afectado')->nullable();
             $table->text('dato_original')->nullable();
             $table->text('dato_nuevo')->nullable();
             $table->datetime('fecha_hora_transaccion');
-            $table->integer('id_usuario');
+            $table->integer('id_usuario')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
