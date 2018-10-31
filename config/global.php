@@ -1,5 +1,8 @@
 <?php
     return [
+        'nombre_sistema'             => 'S.A.E',
+        'olap_login'                 =>'img/logo_oficial_olap_transparente.png',
+        'conare_login'               => 'img/logo_oficial_conare_transparente.png',
         'shortcut-icon'              => 'img/olap.png',
         'site_title'                 => 'SAE',
         'sidebar_title'              => 'Sistema OLaP',
