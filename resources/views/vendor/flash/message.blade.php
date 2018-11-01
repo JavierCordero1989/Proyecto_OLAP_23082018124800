@@ -2,7 +2,7 @@
 @php $message = (array)$message[0]; @endphp    
     @if ($message['overlay'])
         @include('flash::modal', [
-            'modalClass' => 'flash-modal',
+            'modalClass' => $message['level'],
             'title'      => $message['title'],
             'body'       => $message['message']
         ])
