@@ -185,11 +185,11 @@ class UserController extends Controller
     /** Metodo que permite modificar la contraseña del usuario, siempre
      * y cuando se encuentre por el ID.
      */
-    public function update_password($id, Request $request) {        
+    public function update_password($id, Request $request) {      
         $user = User::find($id);
 
         if(empty($user)) {
-            Flash::overlay('El usuario consultado no existe.', 'Error');
+            Flash::overlay('El usuario consultado no existe.', 'Error')->error();
             return redirect(url('home'));
         }
 
@@ -197,14 +197,15 @@ class UserController extends Controller
         $contraseña_confirmacion = $request->password_confirm;
 
         if($contraseña != $contraseña_confirmacion) {
-            Flash::overlay('Las contraseñas no coinciden, por favor inténtelo de nuevo.', 'Error');
+            Flash::overlay('Las contraseñas no coinciden, por favor inténtelo de nuevo.', 'Error')->warning();
             return redirect(url('home'));
         }
 
-        $user->password = bcrypt($request->new_password);
+        $user->password = bcrypt($request->password);
         $user->save();
 
-        Flash::overlay('Se ha cambiado la contraseña exitosamente.', 'Cambio de contraseña');
+        Flash::overlay('Se ha cambiado la contraseña exitosamente.', 'Cambio de contraseña')->success();
+        // return redirect(url('/logout'));
         return redirect(url('home'));
     }// Fin de la funcion update_password
 
