@@ -67,15 +67,24 @@ class ResetPasswordController extends Controller
     //Saca todas las solicitudes de cambio de contraseña que estén pendientes.
     public function obtener_solicitudes_de_cambio(Request $request) {
         if($request->ajax()) {
-            //Obtiene todos los registros que tienen de estado NR
-            $cambios_pendientes = DB::table('password_resets')->where('estado', 'NR')->get();
+            
+            if($request->user_role != 'Encuestador') {
+                //Obtiene todos los registros que tienen de estado NR
+                $cambios_pendientes = DB::table('password_resets')->where('estado', 'NR')->get();
 
-            //Array con los datos 
-            $data = [
-                'count' => sizeof($cambios_pendientes),
-                'datos' => $cambios_pendientes
-            ];
-
+                //Array con los datos 
+                $data = [
+                    'count' => sizeof($cambios_pendientes),
+                    'datos' => $cambios_pendientes
+                ];
+            }
+            else {
+                $data = [
+                    'count' => 0,
+                    'datos' => []
+                ];
+            }
+            
             //Devuelve la respuesta al ajax
             return response()->json($data);
         }
