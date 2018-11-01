@@ -285,6 +285,7 @@ Route::group(['prefix'=>'security'], function(){
   Route::post('send-password-request', 'ResetPasswordController@obtener_solicitud_de_cambio')->name('security.send-password-request');
   Route::get('get-password-reset/get-requests', 'ResetPasswordController@obtener_solicitudes_de_cambio')->name('security.get-password-reset-requests')->middleware('auth');
   Route::get('change-password/user/{email}/change', 'ResetPasswordController@cambiar_contrasennia_usuario')->name('security.change-password')->middleware('auth');
+  Route::post('reset-password/{id}', 'ResetPasswordController@realizar_cambio_de_contrasennia')->name('security.reset-password');
 });
 
 Route::post('pruebas', function(\Illuminate\Http\Request $request) {
