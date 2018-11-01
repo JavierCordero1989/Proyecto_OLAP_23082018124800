@@ -31,12 +31,18 @@
             transition: 0.5s;
         }
     </style>
+    <link rel="stylesheet" href="{!! asset('css/estilos-login.css') !!}">
 @endsection
 
 @section('title', 'Cambio de contraseña')
 
 @section('content')
-    <div class="login-box">
+    {{-- <div id="logo_1" class="col-xs-6 col-sm-4 caja_de_imagen">
+        <img src="{!! asset(config('global.olap_login')) !!}" alt="logo del OLaP" class="imagen">
+    </div> --}}
+
+    {{-- <div class="login-box"> --}}
+    <div id="login" class="col-xs-12 col-sm-4 caja-login">
         <div class="login-logo">
             <a href="{{ url('/home') }}"><b>CONARE </b>OLaP</a>
         </div>
@@ -74,4 +80,12 @@
         </div>
         <!-- /.login-box-body -->
     </div>
+
+    {{-- <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
+        <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del CONARE" class="imagen">
+    </div> --}}
+@endsection
+
+@section('scripts')
+    <script src="{!! asset('js/script-login.js') !!}"></script>
 @endsection
