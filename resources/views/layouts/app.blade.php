@@ -63,20 +63,22 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li id="bandera_cambios_contrasennias" class="dropdown notifications-menu hide">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="far fa-flag"></i>
-                            <span id="count_cambios" class="label label-warning">x</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li id="title_change_notifications" class="header">Tiene x solicitudes de cambio</li>
-                            <li>
-                                <ul id="cambios_lista" class="menu">
-                                    <!-- Aqui se colocan las notificaciones en lista -->
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (Auth::user()->hasRole(['Super Admin', 'Supervisor 1', 'Supervisor 2']))
+                        <li id="bandera_cambios_contrasennias" class="dropdown notifications-menu hide">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="far fa-flag"></i>
+                                <span id="count_cambios" class="label label-danger">x</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li id="title_change_notifications" class="header">Tiene x solicitudes de cambio</li>
+                                <li>
+                                    <ul id="cambios_lista" class="menu">
+                                        <!-- Aqui se colocan las notificaciones en lista -->
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
 
                     <li id="campana_notificaciones" class="dropdown notifications-menu hide">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -201,7 +203,7 @@
             url: '{{ route("obtener-citas-calendario") }}',
             type: 'GET',
             cache: false,
-            data: {usuario: '{{ Auth::user()->id }}'},
+            data: {id: '{{ Auth::user()->id }}'},
             dataType: 'json',
             success: function(data) {
                 // Si vienen datos, carga la campana con las notificaciones.
