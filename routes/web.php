@@ -67,6 +67,7 @@ Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store'
 
 Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel') ->name('excel.import');
 Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')                  ->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
+Route::post('importar-excel-bd/guardar-aceptados/data-file', 'ExportImportExcelController@guardarRegistrosAceptados')->name('excel.guardar-aceptados');
 
 //Encuestadores
 Route::group(['middleware'=>['auth']], function() {
