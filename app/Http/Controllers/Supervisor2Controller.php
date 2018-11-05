@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\ObservacionesGraduado;
 use App\DatosCarreraGraduado;
-use App\EncuestaGraduado;
-use App\Asignacion;
+use Illuminate\Http\Request;
 use App\TiposDatosCarrera;
+use App\EncuestaGraduado;
 use App\ContactoGraduado;
 use App\DetalleContacto;
-use App\ObservacionesGraduado;
-use App\User;
+use App\Asignacion;
+use App\Disciplina;
 use Carbon\Carbon;
+use App\User;
+use App\Area;
 use Flash;
 use DB;
-use App\Area;
-use App\Disciplina;
 
 class Supervisor2Controller extends Controller
 {
@@ -188,26 +188,26 @@ class Supervisor2Controller extends Controller
      * pueda seleccionar todos los filtros adecuados.
     */
     public function asignar_encuestas_a_encuestador($id_supervisor, $id_encuestador) {
-        $id_carrera =       TiposDatosCarrera::carrera()->first();
-        $id_universidad =   TiposDatosCarrera::universidad()->first();
+        // $id_carrera =       TiposDatosCarrera::carrera()->first();
+        // $id_universidad =   TiposDatosCarrera::universidad()->first();
         $id_grado =         TiposDatosCarrera::grado()->first();
         $id_disciplina =    TiposDatosCarrera::disciplina()->first();
         $id_area =          TiposDatosCarrera::area()->first();
         $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
-        $id_sector =        TiposDatosCarrera::sector()->first();
+        // $id_sector =        TiposDatosCarrera::sector()->first();
 
-        $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
-        $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
+        // $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
+        // $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
         $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
         // $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
         $disciplinas =   Disciplina::all()->pluck('descriptivo', 'id');
         // $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
         $areas =         Area::all()->pluck('descriptivo', 'id');
         $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
-        $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
+        // $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
 
         return view('vistas-supervisor-2.modulo-encuestador.lista-filtro-de-encuestas', 
-            compact('id_supervisor', 'id_encuestador','carreras', 'universidades', 'grados', 'disciplinas', 'areas', 'agrupaciones', 'sectores'));
+            compact('id_supervisor', 'id_encuestador', 'grados', 'disciplinas', 'areas', 'agrupaciones'));
     }
 
     public function encuestas_asignadas_por_encuestador($id_encuestador) {
@@ -224,13 +224,13 @@ class Supervisor2Controller extends Controller
 
         $resultado = EncuestaGraduado::listaDeEncuestasSinAsignar();
 
-        if(!is_null($input['carrera'])) {
-            $resultado->where('codigo_carrera', $input['carrera']);
-        }
+        // if(!is_null($input['carrera'])) {
+        //     $resultado->where('codigo_carrera', $input['carrera']);
+        // }
 
-        if(!is_null($input['universidad'])) {
-            $resultado->where('codigo_universidad', $input['universidad']);
-        }
+        // if(!is_null($input['universidad'])) {
+        //     $resultado->where('codigo_universidad', $input['universidad']);
+        // }
 
         if(!is_null($input['grado'])) {
             $resultado->where('codigo_grado', $input['grado']);
@@ -248,9 +248,9 @@ class Supervisor2Controller extends Controller
             $resultado->where('codigo_agrupacion', $input['agrupacion']);
         }
 
-        if(!is_null($input['sector'])) {
-            $resultado->where('codigo_sector', $input['sector']);
-        }
+        // if(!is_null($input['sector'])) {
+        //     $resultado->where('codigo_sector', $input['sector']);
+        // }
 
         $encuestasNoAsignadas = $resultado->get();
 
@@ -375,31 +375,31 @@ class Supervisor2Controller extends Controller
      * pueda seleccionar todos los filtros adecuados.
     */
     public function asignar_encuestas_a_supervisor($id_supervisor, $id_supervisor_asignado) {
-        $id_carrera =       TiposDatosCarrera::carrera()->first();
-        $id_universidad =   TiposDatosCarrera::universidad()->first();
+        // $id_carrera =       TiposDatosCarrera::carrera()->first();
+        // $id_universidad =   TiposDatosCarrera::universidad()->first();
         $id_grado =         TiposDatosCarrera::grado()->first();
         $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
-        $id_sector =        TiposDatosCarrera::sector()->first();
+        // $id_sector =        TiposDatosCarrera::sector()->first();
 
-        $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
-        $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
+        // $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
+        // $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
         $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
         $disciplinas =   Disciplina::pluck('descriptivo', 'id');
         $areas =         Area::pluck('descriptivo', 'id');
         $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
-        $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
+        // $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
 
         return view('vistas-supervisor-2.modulo-supervisor.lista-filtro-encuestas', 
             compact(
                 'id_supervisor', 
                 'id_supervisor_asignado',
-                'carreras', 
-                'universidades', 
+                // 'carreras', 
+                // 'universidades', 
                 'grados', 
                 'disciplinas', 
                 'areas', 
-                'agrupaciones', 
-                'sectores'
+                'agrupaciones'
+                // 'sectores'
             )
         );
     }
@@ -419,13 +419,13 @@ class Supervisor2Controller extends Controller
 
         $resultado = EncuestaGraduado::listaDeEncuestasSinAsignar();
 
-        if(!is_null($input['carrera'])) {
-            $resultado->where('codigo_carrera', $input['carrera']);
-        }
+        // if(!is_null($input['carrera'])) {
+        //     $resultado->where('codigo_carrera', $input['carrera']);
+        // }
 
-        if(!is_null($input['universidad'])) {
-            $resultado->where('codigo_universidad', $input['universidad']);
-        }
+        // if(!is_null($input['universidad'])) {
+        //     $resultado->where('codigo_universidad', $input['universidad']);
+        // }
 
         if(!is_null($input['grado'])) {
             $resultado->where('codigo_grado', $input['grado']);
@@ -443,9 +443,9 @@ class Supervisor2Controller extends Controller
             $resultado->where('codigo_agrupacion', $input['agrupacion']);
         }
         
-        if(!is_null($input['sector'])) {
-            $resultado->where('codigo_sector', $input['sector']);
-        }
+        // if(!is_null($input['sector'])) {
+        //     $resultado->where('codigo_sector', $input['sector']);
+        // }
 
         $encuestasNoAsignadas = $resultado->get();
 
