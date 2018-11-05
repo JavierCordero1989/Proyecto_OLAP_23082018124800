@@ -52,7 +52,14 @@
                    
                     <div class="col-xs-12">
                         <h3 class="text-center">{!! $reporte['total_entrevistas_guardadas'] !!}</h3>
+                        <hr>
+                        <p>Los casos son los correspondientes a los token: </p>
+                        @foreach($data_file as $data)
+                            <strong>{!! $data['token'] !!}</strong><br>
+                        @endforeach
 
+                        <br>
+                        
                         @if (sizeof($data_file) > 0)
                             <form id="guardar-casos-aceptados-form" action="{!! route('excel.guardar-aceptados') !!}" method="post">
                                 {{ csrf_field() }}
@@ -64,11 +71,13 @@
 
                             <div class="col-xs-12 col-md-6">
                                 <a id="btn_submit" href="{!! route('excel.guardar-aceptados') !!}" class="btn btn-primary col-xs-12 col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                                    <i class="fas fa-save"></i>
                                     Guardar registros aceptados
                                 </a>
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <a href="{!! url('/home') !!}" class="btn btn-default col-xs-12 col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                                    <i class="fas fa-ban"></i>
                                     Cancelar
                                 </a>
                             </div>
