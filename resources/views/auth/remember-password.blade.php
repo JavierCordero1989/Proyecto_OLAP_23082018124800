@@ -1,36 +1,6 @@
 @extends('layouts.app-logout')
 
 @section('css')
-    <style>
-        .btn-info {
-            background-color: #003865;
-            border-color: #003865;
-        }
-
-        .btn-info:focus {
-            background-color: #003865;
-            border-color: #003865;
-        }
-
-        .btn-info:hover {
-            background-color: #CCCCCC;
-            border-color: #CCCCCC;
-            color: #000000;
-            transition: 0.5s;
-        }
-
-        .btn-primary {
-            background-color: #80C6CF;
-            border-color: #003865;
-            color: #000000;
-        }
-
-        .btn-primary:hover {
-            background-color: #CCCCCC;
-            color: #000000;
-            transition: 0.5s;
-        }
-    </style>
     <link rel="stylesheet" href="{!! asset('css/estilos-login.css') !!}">
 @endsection
 
@@ -55,11 +25,11 @@
                 <div class="form-group has-feedback {{ isset($error) ? ' has-error' : '' }}">
                     {!! Form::email('email', null, ['class'=>'form-control', 'placeholder'=>'Ingrese su correo']) !!}
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    @if (isset($error))
+                    {{-- @if (isset($error))
                         <span class="help-block">
                             <strong>{!! $error !!}</strong>
                         </span>
-                    @endif
+                    @endif --}}
                 </div>
 
                 <div class="row">
@@ -81,11 +51,12 @@
         <!-- /.login-box-body -->
     </div>
 
+    @include('components.error-message')
     {{-- <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
         <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del CONARE" class="imagen">
     </div> --}}
 @endsection
 
 @section('scripts')
-    <script src="{!! asset('js/script-login.js') !!}"></script>
+    {{-- <script src="{!! asset('js/script-login.js') !!}"></script> --}}
 @endsection
