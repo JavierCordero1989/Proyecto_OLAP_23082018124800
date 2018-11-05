@@ -19,8 +19,8 @@
                 <div class="nav-tabs-custom">
                     <!-- Pestañas -->
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#panel_1" data-toggle="tab" aria-expanded="false"> Resumen general</a></li>
-                        <li><a href="#panel_2" data-toggle="tab" aria-expanded="true"> UCR</a></li>
+                        <li class="active"><a href="#panel_1" data-toggle="tab" aria-expanded="true"> Resumen general</a></li>
+                        <li><a href="#panel_2" data-toggle="tab" aria-expanded="false"> UCR</a></li>
                         <li><a href="#panel_3" data-toggle="tab" aria-expanded="false"> UNA</a></li>
                     </ul>
 
