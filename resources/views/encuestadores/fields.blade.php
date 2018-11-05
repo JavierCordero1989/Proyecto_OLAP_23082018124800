@@ -1,3 +1,7 @@
+@section('css')
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
+@endsection
+
 <div class="col-xs-6 col-xs-offset-3">
 <!-- Codigo del usuario Field -->
     <div class="form-group">
@@ -34,6 +38,7 @@
 </div>
 
 @section('scripts')
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
     <!-- Script para verificar codigo de usuario y correo ingresados -->
     <script>
         let codigo_usuario_correcto = false;
@@ -94,20 +99,85 @@
             }
         });
 
+        
         // Valida que todos los campos estén completos.
-        function validar_formulario() {
-            if(!codigo_usuario_correcto) {
-                alert('Debes revisar el código de usuario antes de continuar.'); 
-                return false;
-            }
-            else if(!email_usuario_correcto) {
-                alert('Debes revisar el email antes de continuar.'); 
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
+        // function validar_formulario() {
+        //     if(!codigo_usuario_correcto) {
+        //         alert('Debes revisar el código de usuario antes de continuar.'); 
+        //         return false;
+        //     }
+        //     else if(!email_usuario_correcto) {
+        //         alert('Debes revisar el email antes de continuar.'); 
+        //         return false;
+        //     }
+        //     else {
+        //         return true;
+        //     }
+        // }
+
+        $(function() {
+            $('#form-crear-nuevo-encuestador').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                }, 
+                fields: {
+                    user_code: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Debe ingresar un código para el encuestador.'
+                            }
+                        }
+                    },
+                    name: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Debe ingresar un nombre.'
+                            }
+                        }
+                    },
+                    email: {
+                        validators: {
+                            regexp: {
+                                regexp: '',
+                                message: 'Correo electrónico con formato no válido'
+                            },
+                            notEmpty: {
+                                message: 'Debe ingresar el correo electrónico.'
+                            }
+                        }
+                    },
+                    password: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.-_])[A-Za-z\d@$!%*?.-_]{7,15}$/,
+                                message: 'Contraseña con formato no válida'
+                            },
+                            notEmpty: {
+                                message: 'Debe ingresar una contraseña'
+                            }
+                        }
+                    }
+                }
+            })
+            .on('success.form.bv', function(e){
+                //$('#success_message').slideDown({opacity: "show"}, "slow")
+                $('#form_prueba').data('bootstrapValidator').resetForm();
+                
+                //Previene el submit
+                e.preventDefault();
+                
+                // Obtiene la instancia del formulario
+                let $formulario = $(e.target);
+                
+                //Obtiene la instancia del validador de bootstrap
+                let bv = $formulario.data('bootstrapValidator');
+                
+                // Hacer algo con el submit
+                this.submit();
+            });
+        });
     </script>
 @endsection
 
