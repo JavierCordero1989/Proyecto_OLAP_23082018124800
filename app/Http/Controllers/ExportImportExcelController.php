@@ -34,6 +34,12 @@ class ExportImportExcelController extends Controller
     private $sectores_no_encontrados = [];
     private $data_file = [];
     private $entrevistas_guardadas = 0;
+    private $id_estado;
+
+    public function __construct() {
+        $this->id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+        $this->id_estado = $this->id_estado->id;
+    }
 
     public function create() {
         return view('excel.create');
@@ -274,7 +280,8 @@ class ExportImportExcelController extends Controller
             necesario enviar alguna alerta. */
             if(sizeof($reporte) == 1) {
                 foreach($data_file as $data ) {
-                    Entrevista::create($data);
+                    $entrevista = Entrevista::create($data);
+                    $entrevista->asignarEstado($this->id_estado);
                 }
 
                 Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
@@ -303,7 +310,8 @@ class ExportImportExcelController extends Controller
 
         foreach($data as $item) {
             //Se deserealiza cada dato y se guarda en la BD
-            Entrevista::create(unserialize($item));
+            $entrevista = Entrevista::create(unserialize($item));
+            $entrevista->asignarEstado($this->id_estado);
 
             Flash::success('Se han guardado las encuestas aceptadas.');
             return redirect(route('encuestas-graduados.index'));
