@@ -65,9 +65,13 @@ Route::post('asignar-permisos-a-rol/store', 'AssignPermissionsToRolController@st
 Route::get('asignar-roles-a-usuario/create', 'AssignRolesToUserController@create') ->name('rolesToUser.create');
 Route::post('asignar-roles-a-usuario/store', 'AssignRolesToUserController@store')  ->name('rolesToUser.store');
 
-Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel') ->name('excel.import');
-Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')                  ->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
-Route::post('importar-excel-bd/guardar-aceptados/data-file', 'ExportImportExcelController@guardarRegistrosAceptados')->name('excel.guardar-aceptados');
+Route::group(['middleware'=>'auth'], function(){
+  Route::post('importar-excel-bd/importar', 'ExportImportExcelController@importar_desde_excel') ->name('excel.import');
+  Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')                  ->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
+  Route::post('importar-excel-bd/guardar-aceptados/data-file', 'ExportImportExcelController@guardarRegistrosAceptados')->name('excel.guardar-aceptados');
+  Route::get('importar-archivo-contactos', 'ExportImportExcelController@createArchivoContactos')->name('excel.subir-contactos');
+  Route::post('importar-archivo-contactos', 'ExportImportExcelController@subirArchivoExcelContactos')->name('excel.subir-archivo-contactos');
+});
 
 //Encuestadores
 Route::group(['middleware'=>['auth']], function() {
