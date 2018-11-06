@@ -12,7 +12,7 @@
     </div> --}}
 
     {{-- <div class="login-box"> --}}
-    <div id="login" class="col-xs-12 col-sm-4 caja-login">
+    <div id="login" class="login-box {{--col-xs-12 col-sm-4 caja-login--}}">
         <div class="login-logo">
             <a href="{{ url('/home') }}"><b>CONARE </b>OLaP</a>
         </div>
@@ -52,6 +52,7 @@
     </div>
 
     @include('components.error-message')
+
     {{-- <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
         <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del CONARE" class="imagen">
     </div> --}}
