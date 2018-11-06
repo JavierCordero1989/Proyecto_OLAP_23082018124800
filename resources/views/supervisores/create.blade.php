@@ -17,7 +17,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => 'supervisores.store', 'onsubmit' => 'return validar_formulario();']) !!}
+                    {!! Form::open(['route' => 'supervisores.store', 'id' => 'form-crear-nuevo-supervisor']) !!}
 
                         @include('supervisores.fields')
 
