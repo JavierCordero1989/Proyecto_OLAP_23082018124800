@@ -37,7 +37,24 @@
 
         <div class="clearfix"></div>
 
-        <div id="carrusel_datos_home" class="carousel {{--slide--}}" data-ride="carousel">
+        <div class="row">
+            <!-- Componentes para mostrar la información por estados, de la información general -->
+            @foreach($estados as $key => $value)
+                @component('components.info-box')
+                    @slot('color_class', 'bg-green')
+                    @slot('icon', config('global.iconos_estados.'.$key))
+                    @slot('info_text', $key)
+                    @slot('data', $value)
+                    @if($key == 'TOTAL DE ENTREVISTAS')
+                        @slot('percent', '')
+                    @else
+                        @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
+                    @endif
+                @endcomponent
+            @endforeach
+        </div>
+        
+        {{-- <div id="carrusel_datos_home" class="carousel slide" data-ride="carousel">
             <!-- INDICADORES -->
             <ol class="carousel-indicators">
                 <li data-target="#carrusel_datos_home" data-slide-to="0" class="active"></li>
@@ -108,7 +125,7 @@
                 <span class="glyphicon glyphicon-chevron-right"></span>
                 <span class="sr-only">Anterior</span>
             </a>
-        </div>        
+        </div>         --}}
     </div>
 @endsection
 
