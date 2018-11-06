@@ -59,6 +59,91 @@
     opacity: 0;
 }
 
+.custom-message-danger {
+    position: fixed;
+    right: 20px;
+    top:50px;
+    padding:15px;
+    border-radius: 10px 5px 5px 10px;
+    background-color: #d9534f;
+    animation-name: flashy;
+    animation-duration: 10s;
+    opacity: 0; 
+}
+
+.custom-message-success {
+    position: fixed;
+    right: 20px;
+    top:50px;
+    padding:15px;
+    border-radius: 10px 5px 5px 10px;
+    background-color: #5cb85c;
+    animation-name: flashy;
+    animation-duration: 10s;
+    opacity: 0; 
+}
+
+.custom-message-warning {
+    position: fixed;
+    right: 20px;
+    top:50px;
+    padding:15px;
+    border-radius: 10px 5px 5px 10px;
+    background-color: #f0ad4e;
+    animation-name: flashy;
+    animation-duration: 10s;
+    opacity: 0; 
+}
+
+.custom-message-warning {
+    position: fixed;
+    right: 20px;
+    top:50px;
+    padding:15px;
+    border-radius: 10px 5px 5px 10px;
+    background-color: #5bc0de;
+    animation-name: flashy;
+    animation-duration: 10s;
+    opacity: 0; 
+}
+
+@keyframes flashy {
+    from {
+        opacity: 1;
+        transform: translate(130px);
+    }
+    
+    1.1% { transform: translate(120px); }
+    1.2% { transform: translate(110px); }
+    1.3% { transform: translate(100px); }
+    1.4% { transform: translate(90px); }
+    1.5% { transform: translate(80px); }
+    1.6% { transform: translate(70px); }
+    1.7% { transform: translate(60px); }
+    1.8% { transform: translate(50px); }
+    1.9% { transform: translate(40px); }
+    2.0% { transform: translate(30px); }
+    2.1% { transform: translate(20px); }
+    2.2% { transform: translate(10px); }
+    2.3% { transform: translate(0px); }
+
+    80% { opacity: 1; }
+    
+    91% { opacity: 0.9; }
+    92% { opacity: 0.8; }
+    93% { opacity: 0.7; }
+    94% { opacity: 0.6; }
+    95% { opacity: 0.5; }
+    96% { opacity: 0.4; }
+    97% { opacity: 0.3; }
+    98% { opacity: 0.2; }
+    99% { opacity: 0.1; }
+    
+    to {
+        opacity: 0;
+    }
+}
+
 @keyframes error {
     from {
         opacity: 1;
