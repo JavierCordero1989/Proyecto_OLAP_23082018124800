@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\EncuestaGraduado as Entrevista;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\ContactoGraduado;
 use App\Universidad;
 use App\Disciplina;
 use App\Agrupacion;
@@ -15,7 +16,6 @@ use App\Grado;
 use App\Area;
 use Flash;
 use DB;
-
 /*
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
@@ -318,6 +318,99 @@ class ExportImportExcelController extends Controller
         }
     }
 
+    public function createArchivoContactos() {
+        return view('excel.subir-archivo-contactos');
+    }
+
+    public function subirArchivoExcelContactos(Request $request) {
+        if($request->hasFile('archivo_contactos')) {
+            $archivo = $request->file('archivo_contactos');
+
+            Excel::load($archivo, function ($reader) {
+
+                foreach ($reader->get() as $key => $row) {
+
+                    $cedula_graduado = $row['cedula_encuestado'];
+                    echo $cedula_graduado.'<br>';
+                    $graduados = Entrevista::listaPorIdentificacion($cedula_graduado)->get();
+                    
+                    /* Si no hay un registro que coincida con la cédula obtenida */
+                    if(sizeof($graduados) == 0) {
+                        /* Guardar un reporte, especificando que la cédula obtenida no corresponde
+                        a ningún graduado y guardar para mostrarlo al final de la carga del 
+                        archivo. */
+                        continue;
+                    }
+                    
+                    $ids_graduados = [];
+
+                    /* Se recorren los graduados encontrados con la cédula, y se 
+                    guardan los ID unicamente. */
+                    foreach($graduados as $graduado) {
+                        $ids_graduados[] = $graduado->id;
+                        echo 'ID del graduado: '.$graduado->id.'<br><br>';
+                    }
+
+                    $datos_contacto = [];
+
+                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_1'];
+                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_1'];
+                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_1'];
+                    $datos_contacto['contacto_1'] = $row['contacto_1a'];
+                    $datos_contacto['contacto_2'] = $row['contacto_1b'];
+                    $datos_contacto['contacto_3'] = $row['contacto_1c'];
+                    $datos_contacto['contacto_4'] = $row['contacto_1d'];
+
+                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+
+                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_2'];
+                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_2'];
+                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_2'];
+                    $datos_contacto['contacto_1'] = $row['contacto_2a'];
+                    $datos_contacto['contacto_2'] = $row['contacto_2b'];
+                    $datos_contacto['contacto_3'] = $row['contacto_2c'];
+                    $datos_contacto['contacto_4'] = $row['contacto_2d'];
+
+                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+
+                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_3'];
+                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_3'];
+                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_3'];
+                    $datos_contacto['contacto_1'] = $row['contacto_3a'];
+                    $datos_contacto['contacto_2'] = $row['contacto_3b'];
+                    $datos_contacto['contacto_3'] = $row['contacto_3c'];
+                    $datos_contacto['contacto_4'] = $row['contacto_3d'];
+
+                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+
+                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_4'];
+                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_4'];
+                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_4'];
+                    $datos_contacto['contacto_1'] = $row['contacto_4a'];
+                    $datos_contacto['contacto_2'] = $row['contacto_4b'];
+                    $datos_contacto['contacto_3'] = $row['contacto_4c'];
+                    $datos_contacto['contacto_4'] = $row['contacto_4d'];
+
+                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+
+                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_5'];
+                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_5'];
+                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_5'];
+                    $datos_contacto['contacto_1'] = $row['contacto_5a'];
+                    $datos_contacto['contacto_2'] = $row['contacto_5b'];
+                    $datos_contacto['contacto_3'] = $row['contacto_5c'];
+                    $datos_contacto['contacto_4'] = $row['contacto_5d'];
+
+                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+                }
+            });
+        }
+        else {
+            $error = 'No ha subido ningún archivo.';
+            return view('excel.subir-archivo-contactos')->with('error', $error);
+        }
+    }
+
     /* Busca mediante el token, que una entrevista esté o no duplicada, para verificar dicha información y 
     dar un reporte al final de la carga del archivo. */
     private function buscarTokenDuplicado($token) {
@@ -419,5 +512,75 @@ class ExportImportExcelController extends Controller
         }
         
         return $reporte;
+    }
+
+    /* Esta función permitirá obtener un arreglo por parámetros y evaluarlo ante la BD 
+    para comprobar la información, además recibe los IDS de los graduados si existen
+    alguno que tenga varias carreras. */
+    private function guardarContactoGraduado($array_contacto, $ids) {
+
+        /* El registro es adecuado para guardarlo*/
+        if($this->comprobarDatosEnBlanco($array_contacto) == 1) {
+            $existe_contacto = ContactoGraduado::buscarPorIdentificacion($array_contacto['cedula_contacto'])->first();
+
+            /* Si no existe un registro con la cédula del contacto ingresada, se puede guardar como
+            un registro nuevo. Si no está vacío, se deberá ligar el encontrado a las entrevistas
+            que coincidan */
+            if(empty($existe_contacto)) {
+                $contactos = $this->obtenerNumerosDeContacto($array_contacto);
+
+                foreach($ids as $id) {
+                    $nuevo_contacto = ContactoGraduado::create([
+                        'identificacion_referencia' => $array_contacto['cedula_contacto'],
+                        'nombre_referencia' => $array_contacto['nombre_contacto'],
+                        'parentezco' => $array_contacto['parentezco_contacto'],
+                        'id_graduado' => $id
+                    ]);
+
+                    foreach($contactos as $contacto) {
+                        $nuevo_detalle = DetalleContacto::create([
+                            'contacto' => $contacto,
+                            'observacion' => '',
+                            'estado' => 'F',
+                            'id_contacto_graduado' => $nuevo_contacto->id
+                        ]);
+                    }
+                }
+            }
+            else {
+                /* Se debe reportar que el registro que tiene la cédula X ya le corresponde a otro 
+                registro, para analizar referencias familiares. */
+                $existe_contacto->id_graduado;
+            }
+        }
+        /* No se puede guardar el registro, reportarlo */
+        else {
+            /*  */
+        }
+    }
+
+    /** Permite recorrer los datos del array y ver cuales están vacíos, si los tres primeros (identificacion,
+     * nombre y parentezco) están vacíos, el registro es inútil porque carece de información. */
+    public function comprobarDatosEnBlanco($array) {
+        if( $array['cedula_contacto'] == '' && 
+            $array['nombre_contacto'] == '' && 
+            $array['parentezco_contacto'] == '')
+        {
+            /* Retorna FALSE por registro no utilizable*/
+            return false;
+        }
+
+        return true;
+    }
+
+    public function obtenerNumerosDeContacto($array) {
+        $temp = [];
+
+        if($array['contacto_1'] != ''){ $temp[] = $array['contacto_1']; }
+        if($array['contacto_2'] != ''){ $temp[] = $array['contacto_2']; }
+        if($array['contacto_3'] != ''){ $temp[] = $array['contacto_3']; }
+        if($array['contacto_4'] != ''){ $temp[] = $array['contacto_4']; }
+
+        return $temp;
     }
 }
