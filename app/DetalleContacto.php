@@ -11,7 +11,12 @@ class DetalleContacto extends Model
     protected $fillable = [
         'contacto',
         'observacion',
+        // F => Funcional, E => Eliminado
         'estado',
         'id_contacto_graduado'
     ];
+
+    public function scopeBuscarContacto($query, $contacto) {
+        return $query->where('contacto', $contacto);
+    }
 }
