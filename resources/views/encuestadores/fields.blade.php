@@ -48,35 +48,37 @@
         let caja_codigo_usuario = $('#user_code');
 
         // Evento para comprobar el código de usuario
-        caja_codigo_usuario.on('keyup', function() {
-            $.ajax({
-                url: '{{ route("findUserByCode") }}',
-                data: {codigo_usuario: $(this).val()},
-                type: 'GET',
-                dataType: 'json',
-                success: function(respuesta) {
-                    $('#user_code_error').html(respuesta.mensaje);
-                    codigo_usuario_correcto = !respuesta.encontrado;
-                }
-            });
-        });
+        // caja_codigo_usuario.on('keyup', function() {
+        //     $.ajax({
+        //         url: '{{--{{ route("findUserByCode") }}--}}',
+        //         data: {codigo_usuario: $(this).val()},
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function(respuesta) {
+        //             $('#user_code_error').html(respuesta.mensaje);
+        //             $('#user_code_error').removeClass('hide');
+        //             $('#user_code_error').addClass('show');
+        //             codigo_usuario_correcto = !respuesta.encontrado;
+        //         }
+        //     });
+        // });
 
         // Caja para el email del usuario
         let caja_email_usuario = $('#email');
 
         // Evento para comprobar el correo.
-        caja_email_usuario.on('keyup', function() {
-            $.ajax({
-                url: '{{ route("findUserByEmail") }}',
-                data: {email: $(this).val()},
-                type: 'GET',
-                dataType: 'json',
-                success: function(respuesta) {
-                    $('#email_error').html(respuesta.mensaje);
-                    email_usuario_correcto = !respuesta.encontrado;
-                }
-            });
-        });
+        // caja_email_usuario.on('keyup', function() {
+        //     $.ajax({
+        //         url: '{{ route("findUserByEmail") }}',
+        //         data: {email: $(this).val()},
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function(respuesta) {
+        //             $('#email_error').html(respuesta.mensaje);
+        //             email_usuario_correcto = !respuesta.encontrado;
+        //         }
+        //     });
+        // });
 
         let default_mail = '@conare.ac.cr'; //Variable con correo predeterminado
 
@@ -126,14 +128,32 @@
                     user_code: {
                         validators: {
                             notEmpty: {
-                                message: 'Debe ingresar un código para el encuestador.'
+                                message: 'El código del encuestador es requerido.'
+                            },
+                            callback: {
+                                message: 'El código ingresado ya está en uso.',
+                                callback: function(value, validator, $field) {
+                                    var call = true;
+
+                                    $.ajax({
+                                        url: '{{ route("findUserByCode") }}',
+                                        data: {codigo_usuario: value},
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        async: false,
+                                        success: function(respuesta) {
+                                            call = !respuesta.encontrado;
+                                        }
+                                    });
+                                    return call;
+                                }
                             }
                         }
                     },
                     name: {
                         validators: {
                             notEmpty: {
-                                message: 'Debe ingresar un nombre.'
+                                message: 'El nombre es requerido.'
                             }
                         }
                     },
@@ -144,7 +164,26 @@
                                 message: 'Correo electrónico con formato no válido'
                             },
                             notEmpty: {
-                                message: 'Debe ingresar el correo electrónico.'
+                                message: 'El correo electrónico es requerido.'
+                            },
+                            callback: {
+                                message: 'El correo ingresado ya está en uso.',
+                                callback: function(value, validator, $field) {
+                                    var call = true;
+
+                                    $.ajax({
+                                        url: '{{ route("findUserByEmail") }}',
+                                        data: {email: value},
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        async: false,
+                                        success: function(respuesta) {
+                                            call = !respuesta.encontrado;
+                                        }
+                                    });
+
+                                    return call;
+                                }
                             }
                         }
                     },
@@ -152,10 +191,10 @@
                         validators: {
                             regexp: {
                                 regexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.-_])[A-Za-z\d@$!%*?.-_]{7,15}$/,
-                                message: 'Contraseña con formato no válida'
+                                message: 'Contraseña con formato no válida.'
                             },
                             notEmpty: {
-                                message: 'Debe ingresar una contraseña'
+                                message: 'La contraseña es requerida.'
                             }
                         }
                     }
@@ -173,9 +212,19 @@
                 
                 //Obtiene la instancia del validador de bootstrap
                 let bv = $formulario.data('bootstrapValidator');
+
+                if(!codigo_usuario_correcto) {
+                    alert('Debes revisar el código de usuario antes de continuar.'); 
+                    return false;
+                }
+                else if(!email_usuario_correcto) {
+                    alert('Debes revisar el email antes de continuar.'); 
+                    return false;
+                }
+                else {
+                    this.submit();
+                }
                 
-                // Hacer algo con el submit
-                this.submit();
             });
         });
     </script>
