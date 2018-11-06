@@ -22,9 +22,41 @@ use DB;
 class EncuestaGraduadoController extends Controller
 {
     public function index() {
-        $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('id', 'ASC')->paginate(25);
+        $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->paginate(25);
 
         return view('encuestas_graduados.index', compact('encuestas'));
+    }
+
+    public function destroy($id) {
+        $encuesta = EncuestaGraduado::find($id);
+
+        if(empty($encuesta)) {
+            Flash::error('No existe la entrevista que intenta eliminar.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $datoViejo = $encuesta->deleted_at;
+
+        /* Se modifica el dato de la fecha de eliminacion, para que no aparezca más */
+        $encuesta->deleted_at = carbon::now();
+        $encuesta->save();
+
+        //En la tabla de bitácora se registra el cambio
+        $bitacora = [
+            'transaccion'            =>'D',
+            'tabla'                  =>'tbl_graduados',
+            'id_registro_afectado'   =>$encuesta->id,
+            'dato_original'          =>$datoViejo,
+            'dato_nuevo'             =>('Se ha eliminado el registro de la encuesta de la BD. Nuevo dato: deleted_at => '.$encuesta->deleted_at),
+            'fecha_hora_transaccion' =>Carbon::now(),
+            'id_usuario'             =>Auth::user()->id,
+            'created_at'             =>Carbon::now()
+        ];
+
+        DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+        Flash::success('Se ha eliminado la encuesta del sistema.');
+        return redirect(route('encuestas-graduados.index'));
     }
 
     public function agregarContacto($id_encuesta) {
