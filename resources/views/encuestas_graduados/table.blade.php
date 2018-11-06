@@ -3,7 +3,7 @@
 @endsection --}}
 
 @component('components.table')
-    @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Agrupación', 'Sector', 'Tipo de caso'])
+    @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Agrupación', 'Sector', 'Tipo de caso', 'Acciones'])
     
     @slot('cuerpo_tabla')
         @foreach($encuestas as $encuesta)
@@ -22,6 +22,19 @@
                 <td>{!! $encuesta->agrupacion->nombre !!}</td>
                 <td>{!! $encuesta->sector->nombre !!}</td>
                 <td>{!! $encuesta->tipo_de_caso !!}</td>
+                <td>
+                    {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}
+                        <div class='btn-group'>
+                            {!! Form::button(
+                                '<i class="glyphicon glyphicon-trash"></i>',
+                                [
+                                    'type' => 'submit', 
+                                    'class' => 'btn btn-danger btn-xs'
+                                ]
+                            ) !!}
+                        </div>
+                    {!! Form::close() !!}
+                </td>
             </tr>
         @endforeach
     @endslot
@@ -29,6 +42,16 @@
     @slot('paginacion', $encuestas->render())
 @endcomponent
 
-{{-- @section('scripts')
-    @include('layouts.datatables_js')
-@endsection --}}
+@include('components.error-message')
+
+@section('scripts')
+    {{-- @include('layouts.datatables_js') --}}
+    <script>
+        $('.btn-danger').on('click', function(event) {
+
+            if(!confirm('¿Desea eliminar el registro de todas formas?')) {
+                event.preventDefault();
+            }
+        });
+    </script>
+@endsection
