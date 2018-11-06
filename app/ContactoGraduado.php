@@ -15,8 +15,6 @@ class ContactoGraduado extends Model
     protected $fillable = [
         'identificacion_referencia',
         'nombre_referencia',
-        // 'informacion_contacto',
-        // 'observacion_contacto',
         'parentezco',
         'id_graduado'
     ];
@@ -46,5 +44,13 @@ class ContactoGraduado extends Model
             'id_contacto_graduado' => $this->id,
             'created_at' => Carbon::now()
         ]);
+    }
+
+    /** Este método permite buscar un contacto de un graduado por su identificación o cédula.
+     * Se debe utilizar el método first() de Query Builder para poder obtener el registro
+     * y poder compararlo con el método empty().
+     */
+    public function scopeBuscarPorIdentificacion($query, $identificacion) {
+        return $query->where('identificacion_referencia', $identificacion);
     }
 }
