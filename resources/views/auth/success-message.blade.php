@@ -13,4 +13,4 @@
     </a>
  </div>
  
- <!-- Este código fue copiado de https://codepen.io/souporserious/pen/MwmXdg y adaptado para cumplir una necesidad específica -->
+ <!-- Este código fue copiado y adaptado de https://codepen.io/souporserious/pen/MwmXdg y adaptado para cumplir una necesidad específica -->
