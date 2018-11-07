@@ -23,6 +23,13 @@
                             </div>
                         </div>
                     <div class="clearfix"></div>
+                    <div class="row">
+                        <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3">
+                            <a href="{!! route('supervisor2.asignar-encuestas-a-encuestador', [Auth::user()->id, $encuestador->id]) !!}" class="btn btn-primary col-xs-12 col-md-6 col-md-offset-3">
+                                Asignar encuestas
+                            </a>
+                        </div>
+                    </div>
                 </div>
             @else
 
@@ -125,10 +132,11 @@
             }
         });
 
-        $('#btn_quitar_encuesta').click(function(e) {
-            e.preventDefault();
+        $('.btn-danger').click(function(e) {
 
-            return confirm('¿Desea quitar la entrevista asignada a este encuestador?');
+            if(!confirm('¿Desea quitar la entrevista asignada a este encuestador?')) {
+                e.preventDefault();
+            }
         });
     </script>
 @endsection
