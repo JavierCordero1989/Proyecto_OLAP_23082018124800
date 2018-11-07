@@ -26,15 +26,33 @@
                                     <thead>
                                         <th>Contacto</th>
                                         <th>Observación</th>
-                                        <th>Estado</th>
+                                        <th>Estado del contacto</th>
+                                        {{-- <th>Opciones</th> --}}
                                     </thead>
                                     <tbody>
                                         @foreach($contacto->detalle() as $detalle)
                                         
                                             <tr>
                                                 <td>{!! $detalle->contacto !!}</td>
-                                                <td>{!! $detalle->observacion !!}</td>
-                                                <td>Activo o Eliminado</td>
+                                                <td>{!! $detalle->observacion == '' ? 'NO TIENE' : $detalle->observacion !!}</td>
+                                                <td>{!! $detalle->estado == 'F' ? '<i class="fas fa-check-circle" style="color: green;"></i>' : ($detalle->estado == 'E' ? '<i class="fas fa-times-circle" style="color: red;"></i>' : 'INDEFINIDO') !!}</td>
+                                                {{-- <td>
+                                                    @if ($detalle->estado == 'F')
+                                                        {!! Form::open(['route' => ['encuestador.borrar-detalle-contacto', $detalle->id, $encuesta->id], 'method' => 'delete']) !!}
+                                                            <div class='btn-group'>
+                                                                <a href="{!! route('encuestador.editar-detalle-contacto', [$detalle->id, $encuesta->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+                                                                {!! Form::button(
+                                                                    '<i class="glyphicon glyphicon-trash"></i>',
+                                                                    [
+                                                                        'type' => 'submit', 
+                                                                        'class' => 'btn btn-danger btn-xs', 
+                                                                        'onclick' => "return confirm('¿Está seguro de eliminar este contacto?')"
+                                                                    ]
+                                                                ) !!}
+                                                            </div>
+                                                        {!! Form::close() !!}
+                                                    @endif
+                                                </td> --}}
                                             </tr>
                                                 
                                         @endforeach
