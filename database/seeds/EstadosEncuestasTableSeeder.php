@@ -94,5 +94,11 @@ class EstadosEncuestasTableSeeder extends Seeder
                 'estado' => 'OTRO'
                 // 'descripcion' => 'un estado para cualquier otro caso.'
             ]);
+
+        DB::table('tbl_estados_encuestas')
+            ->insert([
+                'estado' => 'DISCIPLINA NO CORRESPONDE'
+                // 'descripcion' => 'un estado para cualquier otro caso.'
+            ]);
     }
 }
