@@ -32,7 +32,7 @@ class EncuestadorController extends Controller
 
         // $entrevista->sexo = ($entrevista->sexo == 'M' ? 'MASCULINO' : 'FEMENINO');
         
-        $estados = DB::table('tbl_estados_encuestas')->get()->pluck('estado', 'id');
+        $estados = DB::table('tbl_estados_encuestas')->whereNotIn('estado', ['NO ASIGNADA', 'ASIGNADA', 'EXTRANJERO', 'OTRO'])->get()->pluck('estado', 'id');
 
         return view('vistas-encuestador.realizar-entrevista', compact('entrevista', 'estados'));
     }
@@ -158,6 +158,7 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
         }
 
+        $detalle->estado = 'E';
         $detalle->deleted_at = Carbon::now();
         $detalle->save();
 
