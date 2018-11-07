@@ -31,7 +31,7 @@ class ContactoGraduado extends Model
         $id_contacto = $this->id;
 
         $detalle_contactos = DetalleContacto::where('id_contacto_graduado', $this->id)
-            ->whereNull('deleted_at')
+            // ->whereNull('deleted_at')
             ->get();
 
         return $detalle_contactos;
@@ -41,6 +41,7 @@ class ContactoGraduado extends Model
         $detalle = DetalleContacto::create([
             'contacto' => $contacto,
             'observacion' => $observacion,
+            'estado'=> 'F',
             'id_contacto_graduado' => $this->id,
             'created_at' => Carbon::now()
         ]);
