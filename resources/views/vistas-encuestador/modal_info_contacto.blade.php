@@ -31,32 +31,40 @@
                                 <thead>
                                     <th>Contacto</th>
                                     <th>Observación</th>
+                                    <th>Estado del contacto</th>
                                     <th>Opciones</th>
-                                    <th>Datos</th>
+                                    {{-- <th>Datos</th> --}}
                                 </thead>
                                 <tbody>
                                     @foreach($contacto->detalle() as $detalle)
                                     
                                         <tr>
                                             <td>{!! $detalle->contacto !!}</td>
-                                            <td>{!! $detalle->observacion !!}</td>
+                                            <td>{!! $detalle->observacion == '' ? 'NO TIENE' : $detalle->observacion !!}</td>
+                                            <td>{!! $detalle->estado == 'F' ? '<i class="fas fa-check-circle" style="color: green;"></i>' : ($detalle->estado == 'E' ? '<i class="fas fa-times-circle" style="color: red;"></i>' : 'INDEFINIDO') !!}</td>
                                             <td>
-                                                {!! $detalle->id !!} - {!! $entrevista->id !!}
-                                                {!! Form::open(['route' => ['encuestador.borrar-detalle-contacto', $detalle->id, $entrevista->id], 'method' => 'delete']) !!}
-                                                    <div class='btn-group'>
+                                                {{-- {!! $detalle->id !!} - {!! $entrevista->id !!} --}}
+                                                @if ($detalle->estado == 'F')
+                                                    {!! Form::open(['route' => ['encuestador.borrar-detalle-contacto', $detalle->id, $entrevista->id], 'method' => 'delete']) !!}
+                                                        <div class='btn-group'>
+                                                            <a href="{!! route('encuestador.editar-detalle-contacto', [$detalle->id, $entrevista->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+                                                            {!! Form::button(
+                                                                '<i class="glyphicon glyphicon-trash"></i>',
+                                                                [
+                                                                    'type' => 'submit', 
+                                                                    'class' => 'btn btn-danger btn-xs', 
+                                                                    'onclick' => "return confirm('¿Está seguro de eliminar este contacto?')"
+                                                                ]
+                                                            ) !!}
+                                                        </div>
+                                                    {!! Form::close() !!}
+                                                @else
+                                                    <div class="btn-group">
                                                         <a href="{!! route('encuestador.editar-detalle-contacto', [$detalle->id, $entrevista->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
-                                                        {!! Form::button(
-                                                            '<i class="glyphicon glyphicon-trash"></i>',
-                                                            [
-                                                                'type' => 'submit', 
-                                                                'class' => 'btn btn-danger btn-xs', 
-                                                                'onclick' => "return confirm('¿Está seguro de eliminar este contacto?')"
-                                                            ]
-                                                        ) !!}
                                                     </div>
-                                                {!! Form::close() !!}
+                                                @endif
                                             </td>
-                                            <td>{!! $detalle !!}</td>
+                                            {{-- <td>{!! $detalle !!}</td> --}}
                                         </tr>
                                             
                                     @endforeach
