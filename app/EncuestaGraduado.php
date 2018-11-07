@@ -337,29 +337,10 @@ class EncuestaGraduado extends Model
 
 
     /** Este query permite obtener la lista de todas las encuestas de la base de datos de 
-     * la tabla tbl_graduados. 
+     * la tabla tbl_graduados, que no hayan sido eliminadas. 
      */
     public function scopeListaDeGraduados($query) {
-        return $query
-        ->select(
-                    'tbl_graduados.id',
-                    'identificacion_graduado', 
-                    'token', 
-                    'nombre_completo', 
-                    'annio_graduacion', 
-                    'link_encuesta', 
-                    'sexo', 
-                    'codigo_carrera', 
-                    'codigo_universidad', 
-                    'codigo_grado', 
-                    'codigo_disciplina', 
-                    'codigo_area',
-                    'codigo_agrupacion',
-                    'codigo_sector',
-                    'tipo_de_caso',
-                    'created_at',
-                    'updated_at'
-        );
+        return $query->select('*')->whereNull('deleted_at');
     }
 
     /** Coloca la encuesta seleccionada en un estado de no asignada */
@@ -391,6 +372,7 @@ class EncuestaGraduado extends Model
     /** Mostrara la lista de encuestas que no han sido asignadas */
     public function scopeListaDeEncuestasSinAsignar($query) {
         $id_estado_sin_asignar = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+        $id_estado_sin_asignar = $id_estado_sin_asignar->id;
 
         return $query
             ->select(
@@ -410,17 +392,27 @@ class EncuestaGraduado extends Model
                         'codigo_sector',
                         'tipo_de_caso'
                     )
-            ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
-            ->where('a.id_estado', $id_estado_sin_asignar->id);
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->where('tbl_asignaciones.id_estado', $id_estado_sin_asignar)
+            ->whereNull('tbl_graduados.deleted_at');
     }
 
     /** Obtiene los registros de las encuestas que han sido asignadas a un encuestador mediante
      * su código.
      */
     public function scopeListaEncuestasAsignadasEncuestador($query, $id_encuestador) {
-        $id_estado_asignado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ENTREVISTA COMPLETA')->first();
+        /* se garantioza que los estados ENTREVISTA COMPLETA, FALLECIDO y FUERA DEL PAÍS no aparezcan en las entrevistas
+        del encuestador */
+        $estado_completas = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'ENTREVISTA COMPLETA')->first();
+        $estado_completas = $estado_completas->id;
 
-                return $query
+        $estado_fallecido = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'FALLECIDO')->first();
+        $estado_fallecido = $estado_fallecido->id;
+
+        $estado_fuera_del_pais = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'FUERA DEL PAÍS')->first();
+        $estado_fuera_del_pais = $estado_fuera_del_pais->id;
+
+        return $query
             ->select(
                         'tbl_graduados.id',
                         'identificacion_graduado', 
@@ -441,7 +433,8 @@ class EncuestaGraduado extends Model
                         'tbl_graduados.updated_at'
                     )
             ->join('tbl_asignaciones as a', 'a.id_graduado', '=', 'tbl_graduados.id')
-            ->where('a.id_estado', '<>', $id_estado_asignado->id)
+            ->whereNotIn('a.id_estado', [$estado_completas, $estado_fallecido, $estado_fuera_del_pais])
+            // ->where('a.id_estado', '<>', $estado_completas)
             ->where('a.id_encuestador', '=', $id_encuestador);
     }
 
