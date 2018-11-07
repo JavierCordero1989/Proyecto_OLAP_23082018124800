@@ -32,6 +32,10 @@
                                     'class' => 'btn btn-danger btn-xs'
                                 ]
                             ) !!}
+                            <a href="{!! route('encuestas-graduados.agregar-contacto', $encuesta->id) !!}" class="btn btn-default btn-xs">
+                                {{-- <i class="fas fa-phone-square"></i> --}}
+                                <i class="far fa-user"></i>
+                            </a>
                         </div>
                     {!! Form::close() !!}
                 </td>
