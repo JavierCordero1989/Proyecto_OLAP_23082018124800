@@ -119,7 +119,7 @@
             })
             .on('success.form.bv', function(e){
                 //$('#success_message').slideDown({opacity: "show"}, "slow")
-                $('#form_prueba').data('bootstrapValidator').resetForm();
+                $('#form-change-password').data('bootstrapValidator').resetForm();
                 
                 //Previene el submit
                 e.preventDefault();

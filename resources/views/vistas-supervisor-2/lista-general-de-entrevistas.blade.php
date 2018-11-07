@@ -32,7 +32,8 @@
                     <thead>
                         <th>Identificacion</th>
                         <th>Nombre</th>
-                        <th>Año de graduación</th>
+                        <th>Sexo</th>
+                        {{-- <th>Año de graduación</th> --}}
                         <th>Carrera</th>
                         <th>Universidad</th>
                         <th>Grado</th>
@@ -50,7 +51,8 @@
                                 @include('vistas-supervisor-2.modal_ver_detalles_de_entrevista')
                             </td>
                             <td>{!! $entrevista->nombre_completo !!}</td>
-                            <td>{!! $entrevista->annio_graduacion !!}</td>
+                            <td>{!! $entrevista->sexo == 'M' ? 'Hombre' : ($entrevista->sexo == 'F' ? 'Mujer' : 'ND') !!}</td>
+                            {{-- <td>{!! $entrevista->annio_graduacion !!}</td> --}}
                             <td>{!! $entrevista->carrera->nombre !!}</td>
                             <td>{!! $entrevista->universidad->nombre !!}</td>
                             <td>{!! $entrevista->grado->nombre !!}</td>

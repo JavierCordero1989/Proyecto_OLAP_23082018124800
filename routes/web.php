@@ -357,7 +357,7 @@ Route::get('usuarios', function() {
 
   return view('pruebas.usuarios')
     ->with('datos', $datos);
-});
+})->name('usuarios');
 
 
 

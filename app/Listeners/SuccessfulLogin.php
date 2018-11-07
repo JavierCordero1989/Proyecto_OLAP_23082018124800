@@ -33,7 +33,7 @@ class SuccessfulLogin
                 'tabla' => 'users', 
                 'id_registro_afectado' => $event->user->id,
                 'dato_original' => '',
-                'dato_nuevo' => '',
+                'dato_nuevo' => 'El usuario '.$event->user->name.' ha iniciado sesión.',
                 'fecha_hora_transaccion' => \Carbon\Carbon::now(),
                 'id_usuario' => $event->user->id,
                 'created_at' => \Carbon\Carbon::now(),

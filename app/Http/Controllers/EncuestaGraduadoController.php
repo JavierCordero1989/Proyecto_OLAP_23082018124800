@@ -68,11 +68,12 @@ class EncuestaGraduadoController extends Controller
         $contacto = ContactoGraduado::create([
             'identificacion_referencia' => $request->identificacion_referencia,
             'nombre_referencia'         => $request->nombre_referencia,
-            'informacion_contacto'      => $request->informacion_contacto,
-            'observacion_contacto'      => $request->observacion_contacto,
+            'parentezco'                => $request->parentezco,
             'id_graduado'               => $id_encuesta,
             'created_at'                => \Carbon\Carbon::now()
         ]);
+
+        $contacto->agregarDetalle($request->informacion_contacto, $request->observacion_contacto);
 
         Flash::success('Se ha guardado correctamente la nueva información de contacto.');
         return redirect(route('encuestas-graduados.index'));
