@@ -59,6 +59,27 @@ class EncuestaGraduadoController extends Controller
         return redirect(route('encuestas-graduados.index'));
     }
 
+    public function create() {
+        return view('encuestas_graduados.agregar-nueva-encuesta');
+    }
+
+    public function store(Request $request) {
+        /* VALIDAR TODOS LOS CAMPOS UNICOS DE LA BD */
+        $encuesta = EncuestaGraduado::where('token', $request->token)->first();
+
+        if(!empty($encuesta)) {
+            Flash::error('El token que ingresó ya se encuentra registrado.');
+            return back();
+        }
+
+        $encuesta = EncuestaGraduado::create($request->all());
+
+        // dd($encuesta);
+
+        Flash::success('Encuesta agregada con éxito al sistema.');
+        return back();
+    }
+
     public function agregarContacto($id_encuesta) {
         return view('encuestas_graduados.agregar-contacto')->with('id_encuesta', $id_encuesta);
     }
