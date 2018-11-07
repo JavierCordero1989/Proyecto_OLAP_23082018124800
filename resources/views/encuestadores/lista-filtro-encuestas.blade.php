@@ -69,13 +69,13 @@
 
             //Reune todos los select del formulario en un array
             var form_data = [
-                $('#carrera').val(),
-                $('#universidad').val(),
+                // $('#carrera').val(),
+                // $('#universidad').val(),
                 $('#grado').val(),
                 $('#disciplina').val(),
                 $('#area').val(),
                 $('#agrupacion').val(),
-                $('#sector').val()
+                // $('#sector').val()
             ];
 
             //Inicia un contador para ver cuantos valores hay en blanco

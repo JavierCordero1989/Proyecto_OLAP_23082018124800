@@ -18,7 +18,7 @@
 
                 @foreach($mis_entrevistas as $entrevista)
                     <div class="col-md-6">
-                        <div class="box box-primary {{--collapsed-box--}}" >
+                        <div class="box box-primary collapsed-box" >
                             <!-- Encabezado del cuadro -->
                             <div class="box-header with-border">
                                 <h3 class="box-title">
@@ -30,7 +30,7 @@
                                     <div class='btn-group'>
                                         <!-- Boton para minimizar/maximiar cada cuadro -->
                                         <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                            <i class="fa fa-minus"></i>
+                                            <i class="fa fa-plus"></i>
                                         </button>
             
                                     </div>
