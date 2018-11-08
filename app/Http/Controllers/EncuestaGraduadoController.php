@@ -13,7 +13,10 @@ use App\ContactoGraduado;
 use App\DetalleContacto;
 use App\Asignacion;
 use App\Disciplina;
+use App\Agrupacion;
 use Carbon\Carbon;
+use App\Sector;
+use App\Grado;
 use App\Area;
 use App\User;
 use Flash;
@@ -60,10 +63,59 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function create() {
-        return view('encuestas_graduados.agregar-nueva-encuesta');
+        //Array con los datos del sexo
+        $sexo = [
+            ''=>'- - - SELECCIONE - - -',
+            'M' => 'HOMBRE',
+            'F'=>'MUJER',
+            'ND'=>'NO DISPONIBLE'
+        ];
+
+        // Array con los datos de los grados
+        $grados = Grado::allData()->pluck('nombre', 'id');
+        $grados->prepend('- - - SELECCIONE - - -', '');
+
+        // Array con los datos de las areas
+        $areas = Area::pluck('descriptivo', 'id');
+        $areas->prepend('- - - SELECCIONE - - -', '');
+
+        // Array con los datos de agrupacion
+        $agrupaciones = Agrupacion::allData()->pluck('nombre', 'id');
+        $agrupaciones->prepend('- - - SELECCIONE - - -', '');
+
+        // Array con los datos de los sectores
+        // $sectores = Sector::allData()->pluck('nombre', 'id');
+        // $sectores->prepend('- - - SELECCIONE - - -', '');
+
+        // Array con los tipos de caso posibles
+        $tipos_caso = [
+            ''=>'- - - SELECCIONE - - -',
+            'MUESTRA'=>'MUESTRA',
+            'CENSO'=>'CENSO',
+            'SUSTITUCION'=>'SUSTITUCION'
+        ];
+
+        $data = [
+            'sexo'=>$sexo,
+            'grados'=>$grados,
+            'areas'=>$areas,
+            'agrupaciones'=>$agrupaciones,
+            // 'sectores'=>$sectores,
+            'tipos_caso'=>$tipos_caso
+        ];
+
+        return view('encuestas_graduados.agregar-nueva-encuesta', compact('data'));
+    }
+
+    public function ajaxObtenerDisciplinasPorArea(Request $request){
+        if($request->ajax()) {
+
+        }
     }
 
     public function store(Request $request) {
+
+        dd($request->all());
         /* VALIDAR TODOS LOS CAMPOS UNICOS DE LA BD */
         $encuesta = EncuestaGraduado::where('token', $request->token)->first();
 
