@@ -39,7 +39,7 @@
 
 @section('content')
     <div id="logo_1" class="col-xs-6 col-sm-4 caja_de_imagen">
-        <img src="{!! asset(config('global.olap_login')) !!}" alt="logo del OLaP" class="imagen">
+        <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del OLaP" class="imagen">
     </div>
 
     <div id="login" class="col-xs-12 col-sm-4 caja-login">
@@ -99,7 +99,7 @@
     </div>
 
     <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
-        <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del CONARE" class="imagen">
+        <img src="{!! asset(config('global.olap_login')) !!}" alt="logo del CONARE" class="imagen">
     </div>
 @endsection
 
