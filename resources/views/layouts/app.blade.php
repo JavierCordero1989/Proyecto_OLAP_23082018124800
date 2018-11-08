@@ -126,13 +126,9 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1', 'Supervisor 2']))
+                                    {{-- @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1', 'Supervisor 2'])) --}}
                                         <a href="{!! route('users.edit_password', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Cambiar contraseña</a>
-                                    @endif
-
-                                    @if(Auth::user()->hasRole('Encuestador'))
-                                        {{-- <a href="{!! route('encuestadores.cambiar-contrasennia', [Auth::user()->id]) !!}" class="btn btn-default btn-flat">Cambiar contraseña</a> --}}
-                                    @endif
+                                    {{-- @endif --}}
                                 </div>
                                 
                                 <div class="pull-right">

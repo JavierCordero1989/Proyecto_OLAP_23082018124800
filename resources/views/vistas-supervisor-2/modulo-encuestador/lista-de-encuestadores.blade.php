@@ -43,10 +43,10 @@
                                                     <i class="glyphicon glyphicon-eye-open"></i>
                                                 </a> --}}
                     
-                                                <!-- Boton para editar los datos del encuestador -->
+                                                {{-- <!-- Boton para editar los datos del encuestador -->
                                                 <a href="{!! route('supervisor2.editar-encuestador', [$encuestador->id]) !!}" class='btn btn-default btn-xs'>
                                                     <i class="glyphicon glyphicon-edit"></i>
-                                                </a>
+                                                </a> --}}
             
                                                 <!-- Boton para minimizar/maximiar cada cuadro -->
                                                 <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
@@ -81,7 +81,7 @@
                 
                                         </div>
                                         
-                                        <div class="row" style="margin-top: 15px;">
+                                        {{-- <div class="row" style="margin-top: 15px;">
                                             <div class="col-xs-5 col-xs-offset-1">
                                                 <a href="{{ route('supervisor2.graficos-por-estado-de-encuestador', [$encuestador->id]) }}" class="btn btn-primary btn-sm col-sm-12">
                                                     <i class="fa fa-area-chart"></i> Ver estadísticas
@@ -93,7 +93,7 @@
                                                     <i class="fa fa-eyedropper"></i> Botón 2
                                                 </a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

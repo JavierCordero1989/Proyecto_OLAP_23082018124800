@@ -4,7 +4,7 @@
         <div class="input-group">
             <span class="input-group-addon"><i class="{!! $field_icon !!}"></i></span>
             {!! $form_field !!}
-            <input type="text" class="form-control" name="identificacion_graduado" id="identificacion_graduado">
+            {{-- <input type="text" class="form-control" name="identificacion_graduado" id="identificacion_graduado"> --}}
         </div>
     </div>
 </div>

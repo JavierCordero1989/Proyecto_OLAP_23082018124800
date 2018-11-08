@@ -39,8 +39,8 @@
                         <th>Grado</th>
                         <th>Disciplina</th>
                         <th>Área</th>
-                        <th>Agrupación</th>
-                        <th>Sector</th>
+                        {{-- <th>Agrupación</th> --}}
+                        {{-- <th>Sector</th> --}}
                         <th>Tipo de caso</th>
                     </thead>
                     <tbody>
@@ -58,8 +58,8 @@
                             <td>{!! $entrevista->grado->nombre !!}</td>
                             <td>{!! $entrevista->disciplina->descriptivo !!}</td>
                             <td>{!! $entrevista->area->descriptivo !!}</td>
-                            <td>{!! $entrevista->agrupacion->nombre !!}</td>
-                            <td>{!! $entrevista->sector->nombre !!}</td>
+                            {{-- <td>{!! $entrevista->agrupacion->nombre !!}</td> --}}
+                            {{-- <td>{!! $entrevista->sector->nombre !!}</td> --}}
                             <td>{!! $entrevista->tipo_de_caso !!}</td>
                         </tr>
                     @endforeach

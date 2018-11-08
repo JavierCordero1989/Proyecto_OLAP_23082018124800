@@ -84,7 +84,7 @@
 
                         </div>
                         
-                        <div class="row" style="margin-top: 15px;">
+                        {{-- <div class="row" style="margin-top: 15px;">
                             <div class="col-xs-5 col-xs-offset-1">
                                 <a href="#" class="btn btn-primary btn-sm col-sm-12">
                                     <i class="fa fa-eyedropper"></i> Botón 2
@@ -96,7 +96,7 @@
                                     <i class="fa fa-area-chart"></i> Ver estadísticas
                                 </a>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

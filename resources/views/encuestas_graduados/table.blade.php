@@ -3,7 +3,7 @@
 @endsection --}}
 
 @component('components.table')
-    @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Agrupación', 'Sector', 'Tipo de caso', 'Acciones'])
+    @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Tipo de caso', 'Acciones'])
     
     @slot('cuerpo_tabla')
         @foreach($encuestas as $encuesta)
@@ -19,8 +19,8 @@
                 <td>{!! $encuesta->grado->nombre !!}</td>
                 <td>{!! $encuesta->disciplina->descriptivo !!}</td>
                 <td>{!! $encuesta->area->descriptivo !!}</td>
-                <td>{!! $encuesta->agrupacion->nombre !!}</td>
-                <td>{!! $encuesta->sector->nombre !!}</td>
+                {{-- <td>{!! $encuesta->agrupacion->nombre !!}</td> --}}
+                {{-- <td>{!! $encuesta->sector->nombre !!}</td> --}}
                 <td>{!! $encuesta->tipo_de_caso !!}</td>
                 <td>
                     {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}

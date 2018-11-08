@@ -25,7 +25,8 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-address-card"></i></span>
-                                        <input type="text" class="form-control" name="identificacion_graduado" id="identificacion_graduado">
+                                        {!! Form::text('identificacion_graduado', null, ['class'=>'form-control', 'id'=>'identificacion_graduado']) !!}
+                                        {{-- <input type="text" class="form-control" name="identificacion_graduado" id="identificacion_graduado"> --}}
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +37,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-fingerprint"></i></span>
-                                        <input type="text" class="form-control" name="token" id="token">
+                                        {!! Form::text('token', null, ['class'=>'form-control', 'id'=>'token']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -47,7 +48,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user"></i></span>
-                                        <input type="text" class="form-control" name="nombre_completo" id="nombre_completo">
+                                        {!! Form::text('nombre_completo', null, ['class'=>'form-control', 'id'=>'nombre_completo']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +59,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span>
-                                        <input type="text" class="form-control" name="annio_graduacion" id="annio_graduacion">
+                                        {!! Form::number('annio_graduacion', null, ['class'=>'form-control', 'id'=>'annio_graduacion']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +70,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-link"></i></span>
-                                        <input type="text" class="form-control" name="link_encuesta" id="link_encuesta">
+                                        {!! Form::text('link_encuesta', null, ['class'=>'form-control', 'id'=>'link_encuesta']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -80,8 +81,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-transgender-alt"></i></span>
-                                        <!-- HACER UN SELECT AQUI -->
-                                        <input type="text" class="form-control" name="sexo" id="sexo">
+                                        {!! Form::select('sexo', $data['sexo'], null, ['class'=>'form-control', 'id'=>'sexo']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <input type="text" class="form-control" name="codigo_carrera" id="codigo_carrera">
+                                        {!! Form::number('codigo_carrera', null, ['class'=>'form-control', 'id'=>'codigo_carrera']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <input type="text" class="form-control" name="codigo_universidad" id="codigo_universidad">
+                                        {!! Form::number('codigo_universidad', null, ['class'=>'form-control', 'id'=>'codigo_universidad']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -114,8 +114,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <!-- HACER UN SELECT AQUI -->
-                                        <input type="text" class="form-control" name="codigo_grado" id="codigo_grado">
+                                        {!! Form::select('codigo_grado', $data['grados'], null, ['class'=>'form-control', 'id'=>'codigo_grado']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -126,8 +125,7 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <!-- HACER UN SELECT AQUI -->
-                                        <input type="text" class="form-control" name="codigo_area" id="codigo_area">
+                                        {!! Form::select('codigo_area', $data['areas'], null, ['class'=>'form-control', 'id'=>'codigo_area']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -150,23 +148,21 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <!-- HACER UN SELECT AQUI -->
-                                        <input type="text" class="form-control" name="codigo_agrupacion" id="codigo_agrupacion">
+                                        {!! Form::select('codigo_agrupacion', $data['agrupaciones'], null, ['class'=>'form-control', 'id'=>'codigo_agrupacion']) !!}
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Caja para el código del sector -->
+                            {{-- <!-- Caja para el código del sector -->
                             <div class="form-group col-md-6">
                                 <label class="control-label col-md-4" for="codigo_sector">Sector:</label>
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <!-- HACER UN SELECT AQUI -->
-                                        <input type="text" class="form-control" name="codigo_sector" id="codigo_sector">
+                                        {!! Form::select('codigo_sector', $data['sectores'], null, ['class'=>'form-control', 'id'=>'codigo_sector', 'disabled']) !!}
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Caja para el tipo de caso -->
                             <div class="form-group col-md-6">
@@ -174,20 +170,23 @@
                                 <div class="col-md-8 inputGroupContainer">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fas fa-user-graduate"></i></span>
-                                        <!-- HACER UN SELECT AQUI -->
-                                        <input type="text" class="form-control" name="tipo_de_caso" id="tipo_de_caso">
+                                        {!! Form::select('tipo_de_caso', $data['tipos_caso'], null, ['class'=>'form-control', 'id'=>'tipo_de_caso']) !!}
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Caja para los botones de guardar y cancelar -->
-                            <div class="form-group col-md-6">
-                                <label class="control-label col-md-4"></label>
-                                <div class="col-md-8">
-                                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-saved"></span> Guardar caso </button>
+                            <div class="form-group col-md-12">
+                                <label class="control-label col-md-2"></label>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-floppy-saved"></span> 
+                                        Guardar caso 
+                                    </button>
                                     <a href="{!! route('encuestas-graduados.index') !!}" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-arrow-left"></span>
-                                    Cancelar</a>
+                                        <span class="glyphicon glyphicon-arrow-left"></span>
+                                        Cancelar
+                                    </a>
                                 </div>
                             </div>
 
