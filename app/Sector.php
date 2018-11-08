@@ -34,4 +34,9 @@ class Sector extends Model
         $id_tipo = Tipo::select('id')->where('nombre', 'SECTOR')->first();
         return $query->where('nombre', 'Privado')->where('id_tipo', $id_tipo->id);
     }
+
+    public function scopeAllData($query) {
+        $id_tipo = Tipo::select('id')->where('nombre', 'SECTOR')->first();
+        return $query->where('id_tipo', $id_tipo->id)->get();
+    }
 }
