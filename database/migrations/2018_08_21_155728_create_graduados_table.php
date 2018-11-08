@@ -20,7 +20,7 @@ class CreateGraduadosTable extends Migration
             $table->string('nombre_completo', 50);
             $table->integer('annio_graduacion');
             $table->string('link_encuesta', 191)->unique();
-            $table->char('sexo', 1);
+            $table->char('sexo', 2); // M = Hombre, F = Mujer, ND = No Disponible
             $table->unsignedInteger('codigo_carrera');
             $table->unsignedInteger('codigo_universidad');
             $table->unsignedInteger('codigo_grado');
