@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\User;
@@ -122,12 +123,21 @@ class ResetPasswordController extends Controller
     }
 
     public function realizar_cambio_de_contrasennia($id, Request $request) {
+        //dd($request->all());
         //Se busca el regsitro en la tabla mediante el ID
         $registro = DB::table('password_resets')->find($id);
         
         //Si no existe el registro, se envia un mensaje de error.
         if(empty($registro)) {
             Flash::overlay('No hay un registro en el sistema, que coincida con el correo seleccionado.', 'Error en la solicitud')->warning();
+            return redirect(url('home'));
+        }
+
+        $user = User::findByEmail($registro->email)->first();
+
+        /* Si el usuario no se encuentra en los registros de la BD */
+        if(empty($user)) {
+            Flash::overlay('El usuario que intenta buscar no existe en los registros.');
             return redirect(url('home'));
         }
 
@@ -141,9 +151,25 @@ class ResetPasswordController extends Controller
             return redirect(url('home'));
         }
 
+        /* Se actualiza la contraseña del usuario */
+        $user->password = bcrypt($pass1);
+        $user->save();
+
         //Se actualiza el registro en la base de datos, pasando su estado a RESUELTA
         $update = DB::table('password_resets')->where('id', $id)->update(['estado'=>'R']);
  
+        /* Registro en la bitacora de cambios */
+        DB::table('tbl_bitacora_de_cambios')->insert([
+            'transaccion' => 'U',
+            'tabla' => 'password_resets',
+            'id_registro_afectado' => $registro->id,
+            'dato_original' => '{estado: NR}',
+            'dato_nuevo' => 'Se ha cambiado la contraseña del usuario '.$user->email.'. Estado en la tabla {estado:R}',
+            'fecha_hora_transaccion' => Carbon::now(),
+            'id_usuario' => Auth::user()->id,
+            'created_at' => Carbon::now()
+        ]);
+
         //Su la variable es igual a 1, el cambio en la BD se hizo correctamente.
         //Si es 0, quiere decir que no funcionó.
         if($update != 1) {
