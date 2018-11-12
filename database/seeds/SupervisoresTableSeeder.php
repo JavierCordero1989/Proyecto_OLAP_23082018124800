@@ -19,11 +19,15 @@ class SupervisoresTableSeeder extends Seeder
 
         for($i=0; $i<3; $i++) {
             $codigo = $faker->numerify('######');
+            $extension = $faker->numerify('####-####');
+            $mobile = $faker->numerify('####-####');
             $nombre = $faker->name;
             $email = Str::slug($nombre);
 
             $user = \App\User::create([
                 'user_code' => $codigo,
+                'extension'=>$extension,
+                'mobile'=>$mobile,
                 'name' => $nombre,
                 'email' => $email.'@conare.ac.cr',
                 'password' => bcrypt('secret')
@@ -34,11 +38,15 @@ class SupervisoresTableSeeder extends Seeder
 
         for($i=0; $i<2; $i++) {
             $codigo = $faker->numerify('######');
+            $extension = $faker->numerify('####-####');
+            $mobile = $faker->numerify('####-####');
             $nombre = $faker->name;
             $email = Str::slug($nombre);
 
             $user = \App\User::create([
                 'user_code' => $codigo,
+                'extension'=>$extension,
+                'mobile'=>$mobile,
                 'name' => $nombre,
                 'email' => $email.'@conare.ac.cr',
                 'password' => bcrypt('secret')
