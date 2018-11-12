@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\User;
 use Flash;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use DB;
 
 class SupervisoresController extends Controller
 {
@@ -46,12 +47,29 @@ class SupervisoresController extends Controller
         // Si las validaciones no se disparan, guardar el usuario nuevo en la BD
         $nuevo_supervisor = User::create([
             'user_code' => $input['user_code'],
+            'extension'=> $input['extension'],
+            'mobile'=>$input['mobile'],
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => bcrypt($input['password'])
         ]);
 
+        
         $nuevo_supervisor->assignRole($input['role_name']);
+
+        //En la tabla de bitácora se registra el cambio
+        $bitacora = [
+            'transaccion'            =>'I',
+            'tabla'                  =>'users',
+            'id_registro_afectado'   =>$nuevo_supervisor->id,
+            'dato_original'          =>null,
+            'dato_nuevo'             =>('Se ha agregado un nuevo supervisor. ROL:'.$input['role_name']. '. Datos: {'.$input['user_code'].' | '.$input['name'].' | '. $input['email'] .'}'),
+            'fecha_hora_transaccion' =>Carbon::now(),
+            'id_usuario'             =>Auth::user()->id,
+            'created_at'             =>Carbon::now()
+        ];
+
+        DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
         /** Mensaje de exito que se carga en la vista. */
         Flash::success('Se ha guardado el supervisor');
@@ -107,12 +125,35 @@ class SupervisoresController extends Controller
             return redirect(route('supervisores.index'));
         }
 
+        $datos_viejos = $supervisor->__toString();
+        $rol_viejo = $supervisor->getRoleNames()[0];
+
         /** Se modifican los datos del objeto enontrado con los datos del Request */
+        $supervisor->extension = $request->extension;
+        $supervisor->mobile = $request->mobile;
         $supervisor->name = $request->name;
         $supervisor->email = $request->email;
         $supervisor->password = bcrypt($request->password);
         $supervisor->syncRoles($request->role_name);
         $supervisor->save();
+
+        $supervisor->__toString();
+
+        $rol_nuevo = $supervisor->getRoleNames()[0];
+        
+        //En la tabla de bitácora se registra el cambio
+        $bitacora = [
+            'transaccion'            =>'U',
+            'tabla'                  =>'users',
+            'id_registro_afectado'   =>$supervisor->id,
+            'dato_original'          =>$datos_viejos.' [role_name: '.$rol_viejo.']',
+            'dato_nuevo'             =>$supervisor->__toString().' [role_name: '.$rol_nuevo.']',
+            'fecha_hora_transaccion' =>Carbon::now(),
+            'id_usuario'             =>Auth::user()->id,
+            'created_at'             =>Carbon::now()
+        ];
+
+        DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
         /** Se genera un mensaje de exito y se redirige a la ruta index */
         Flash::success('Se ha modificado con exito');
