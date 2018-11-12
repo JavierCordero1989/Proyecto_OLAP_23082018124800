@@ -25,7 +25,30 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
+                            <div class="form-group">
+                                <label for="extension" class="control-label col-md-5">Extensión: </label>
+                                <div class="col-md-5 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="glyphicon glyphicon-earphone"></i>
+                                        </span>
+                                        <input type="text" class="form-control" name="extension" id="extension" value="{!! $user->extension !!}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="mobile" class="control-label col-md-5">Celular: </label>
+                                <div class="col-md-5 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="glyphicon glyphicon-phone"></i>
+                                        </span>
+                                        <input type="text" class="form-control" name="mobile" id="mobile" value="{!! $user->mobile !!}" disabled>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Caja para el nombre del usuario -->
                             <div class="form-group">

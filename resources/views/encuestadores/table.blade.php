@@ -29,6 +29,8 @@
                                         @slot('id_modal', 'modal-'.$encuestador->id)
                                         @slot('nombre_encuestador', $encuestador->name)
                                         @slot('codigo_usuario', $encuestador->user_code)
+                                        @slot('extension', $encuestador->extension)
+                                        @slot('mobile', $encuestador->mobile)
                                         @slot('email', $encuestador->email)
                                         @slot('created_at', $encuestador->created_at)
                                         @slot('updated_at', $encuestador->updated_at)

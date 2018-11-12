@@ -21,6 +21,8 @@
                                         @slot('id_modal', 'modal-'.$supervisor->id)
                                         @slot('nombre_encuestador', $supervisor->name)
                                         @slot('codigo_usuario', $supervisor->user_code)
+                                        @slot('extension', $supervisor->extension)
+                                        @slot('mobile', $supervisor->mobile)
                                         @slot('email', $supervisor->email)
                                         @slot('created_at', $supervisor->created_at)
                                         @slot('updated_at', $supervisor->updated_at)

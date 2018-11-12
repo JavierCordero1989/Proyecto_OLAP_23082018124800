@@ -20,6 +20,18 @@
                                 <p>{!! $codigo_usuario !!}</p>
                             </div>
                             
+                            <!-- Extension Field -->
+                            <div class="form-group">
+                                {!! Form::label('extension', 'Extensión:') !!}
+                                <p>{!! $extension !!}</p>
+                            </div>
+
+                            <!-- Mobile Number -->
+                            <div class="form-group">
+                                {!! Form::label('mobile', 'Celular:') !!}
+                                <p>{!! $mobile !!}</p>
+                            </div>
+
                             <!-- Nombre Field -->
                             <div class="form-group">
                                 {!! Form::label('email', 'Email:') !!}

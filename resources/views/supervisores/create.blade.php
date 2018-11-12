@@ -17,9 +17,11 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => 'supervisores.store', 'id' => 'form-crear-nuevo-supervisor']) !!}
+                    {!! Form::open(['route' => 'supervisores.store', 'id' => 'form-crear-nuevo-supervisor', 'class'=>'form-horizontal']) !!}
 
-                        @include('supervisores.fields')
+                        <fieldset>
+                            @include('supervisores.fields')
+                        </fieldset>
 
                     {!! Form::close() !!}
                 </div>

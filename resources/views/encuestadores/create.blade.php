@@ -13,12 +13,16 @@
         <div class="box box-primary">
 
             <div class="box-body">
-                <div class="row">
-                    {!! Form::open(['route' => 'encuestadores.store', 'id'=>'form-crear-nuevo-encuestador']) !!}
-
-                        @include('encuestadores.fields')
-
-                    {!! Form::close() !!}
+                <div class="container">
+                    <div class="row">
+                        {!! Form::open(['route' => 'encuestadores.store', 'id'=>'form-crear-nuevo-encuestador', 'class'=>'form-horizontal']) !!}
+    
+                            <fieldset>
+                                @include('encuestadores.fields')
+                            </fieldset>
+    
+                        {!! Form::close() !!}
+                    </div>
                 </div>
             </div>
         </div>

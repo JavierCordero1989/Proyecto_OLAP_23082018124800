@@ -13,9 +13,11 @@
        <div class="box box-primary">
            <div class="box-body">
                <div class="row">
-                   {!! Form::model($supervisor, ['route' => ['supervisores.update', $supervisor->id], 'method' => 'patch']) !!}
+                   {!! Form::model($supervisor, ['route' => ['supervisores.update', $supervisor->id],'id'=>'form-editar-supervisor', 'class'=>'form-horizontal', 'method' => 'patch']) !!}
 
-                        @include('supervisores.fields-edit')
+                   <fieldset>
+                       @include('supervisores.fields-edit')
+                   </fieldset>
 
                    {!! Form::close() !!}
                </div>

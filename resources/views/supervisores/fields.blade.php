@@ -2,38 +2,87 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css">
 @endsection
 
-<div class="col-xs-12 col-sm-6 col-sm-offset-3">
-    <!-- Nombre Field -->
+    @php
+        $col_label = 'col-md-4';
+        $col_input = 'col-md-4';
+    @endphp
+
+    <!-- Codigo del usuario Field -->
     <div class="form-group">
-        {!! Form::label('user_code', 'Código de usuario:') !!}
-        {!! Form::text('user_code', null, ['class' => 'form-control', 'required' => 'required']) !!}
-        <span class="help-block"><strong id="user_code_error" class="text-danger"></strong></span>
+        <label for="user_code" class="control-label {!! $col_label !!}">Código de usuario:</label>
+        <div class="{!! $col_input !!} inputGroupContainer">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+                <input type="text" class="form-control" name="user_code" id="user_code">
+            </div>
+        </div>
+    </div>
+
+    <!-- Extension del usuario Field -->
+    <div class="form-group">
+        <label for="extension" class="control-label {!! $col_label !!}">Extensión:</label>
+        <div class="{!! $col_input !!} inputGroupContainer">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                <input type="tel" class="form-control" name="extension" id="extension">
+            </div>
+        </div>
+    </div>
+
+    <!-- Celular del usuario Field -->
+    <div class="form-group">
+        <label for="mobile" class="control-label {!! $col_label !!}">Celular:</label>
+        <div class="{!! $col_input !!} inputGroupContainer">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                <input type="tel" class="form-control" name="mobile" id="mobile">
+            </div>
+        </div>
     </div>
 
     <!-- Nombre Field -->
     <div class="form-group">
-        {!! Form::label('name', 'Nombre:') !!}
-        {!! Form::text('name', null, ['class' => 'form-control', 'required' => 'required']) !!}
+        <label for="name" class="control-label {!! $col_label !!}">Nombre:</label>
+        <div class="{!! $col_input !!} inputGroupContainer">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" class="form-control" name="name" id="name">
+            </div>
+        </div>
     </div>
 
     <!-- Email Field -->
     <div class="form-group">
-        {!! Form::label('email', 'Email:') !!}
-        {!! Form::text('email', null, ['class' => 'form-control', 'required' => 'required']) !!}
-        <span class="help-block"><strong id="email_error" class="text-danger"></strong></span>
+        <label for="email" class="control-label {!! $col_label !!}">Email:</label>
+        <div class="{!! $col_input !!} inputGroupContainer">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                <input type="text" class="form-control" name="email" id="email">
+            </div>
+        </div>
     </div>
 
     <!-- Password Field -->
     <div class="form-group">
-        {!! Form::label('password', 'Contraseña:') !!}
-        {!! Form::password('password', ['class' => 'form-control', 'required' => 'required']) !!}
+        <label for="password" class="control-label {!! $col_label !!}">Contraseña:</label>
+        <div class="{!! $col_input !!} inputGroupContainer">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input type="password" class="form-control" name="password" id="password">
+            </div>
+        </div>
     </div>
 
     <!-- Supervisor Field -->
     @if(Auth::user()->hasRole('Super Admin'))
         <div class="form-group">
-            {!! Form::label('role_name', 'Elija un rol:') !!}
-            {!! Form::select('role_name', [''=>'Elija un rol', 'Supervisor 1'=>'Supervisor 1', 'Supervisor 2'=>'Supervisor 2'], null, ['class' => 'form-control', 'required' => 'required']) !!}
+            <label for="role_name" class="control-label {!! $col_label !!}">Rol del supervisor:</label>
+            <div class="{!! $col_input !!} inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-option-vertical"></i></span>
+                    {!! Form::select('role_name', [''=>'Elija un rol', 'Supervisor 1'=>'Supervisor 1', 'Supervisor 2'=>'Supervisor 2'], null, ['class' => 'form-control']) !!}
+                </div>
+            </div>
         </div>
     @endif
 
@@ -45,10 +94,19 @@
 
     <!-- Submit Field -->
     <div class="form-group">
-        {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
-        <a href="{!! route('supervisores.index') !!}" class="btn btn-default">Cancelar</a>
+        <label class="control-label {!! $col_label !!}"></label>
+        <div class="{!! $col_input !!}">
+            {!! Form::button('<span class="glyphicon glyphicon-floppy-saved"></span> Guardar', [
+                'type' => 'submit',
+                'class'=> 'btn btn-primary'
+            ]) !!}
+            <a href="{!! route('supervisores.index') !!}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                Cancelar</a>
+            </a>
+            
+        </div>
     </div>
-</div>
 
 @section('scripts')
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
@@ -116,6 +174,28 @@
 
                                     return call;
                                 }
+                            }
+                        }
+                    },
+                    extension: {
+                        validators: {
+                            notEmpty: {
+                                message:'El número de extensión es requerido.'
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/,
+                                message: 'El número de teléfono debe solo contener dígitos, sin espacios o guiones'
+                            }
+                        }
+                    },
+                    mobile: {
+                        validators: {
+                            notEmpty: {
+                                message:'El número de celular es requerido.'
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/,
+                                message: 'El número de teléfono debe solo contener dígitos, sin espacios o guiones'
                             }
                         }
                     },
