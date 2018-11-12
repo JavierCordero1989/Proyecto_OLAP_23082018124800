@@ -72,6 +72,8 @@ class EncuestadoresController extends Controller
         // Si no existe ni el código ni el correo en otro usuario, se guarda en la base de datos.
         $nuevo_encuestador = User::create([
             'user_code' => $input['user_code'],
+            'extension'=> $input['extension'],
+            'mobile'=> $input['mobile'],
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => bcrypt($input['password'])
@@ -141,21 +143,18 @@ class EncuestadoresController extends Controller
             return redirect(route('encuestadores.index'));
         }
 
-        if($request->password == null) {
-            /** Se modifican los datos del objeto enontrado con los datos del Request */
-            $encuestador->user_code = $request->user_code;
-            $encuestador->name = $request->name;
-            $encuestador->email = $request->email;
-            $encuestador->save();
-        }
-        else {
-            /** Se modifican los datos del objeto enontrado con los datos del Request */
-            $encuestador->user_code = $request->user_code;
-            $encuestador->name = $request->name;
-            $encuestador->email = $request->email;
+        $encuestador->user_code = $request->user_code;
+        $encuestador->extension = $request->extension;
+        $encuestador->mobile = $request->mobile;
+        $encuestador->name = $request->name;
+        $encuestador->email = $request->email;
+
+        if($request->password != null) {
             $encuestador->password = bcrypt($request->password);
-            $encuestador->save();
+            /** Se modifican los datos del objeto enontrado con los datos del Request */
         }
+
+        $encuestador->save();
 
         /** Se genera un mensaje de exito y se redirige a la ruta index */
         Flash::success('Se ha modificado con exito');
