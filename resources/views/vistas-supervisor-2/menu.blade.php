@@ -1,9 +1,19 @@
-<li class="{{ Request::is('supervisor/2/encuestadores/lista-de-encuestadores') ? 'active' : '' }}">
+{{-- <li class="{{ Request::is('supervisor/2/encuestadores/lista-de-encuestadores') ? 'active' : '' }}">
     <a href="{!! route('supervisor2.lista-de-encuestadores') !!}"><i class="fas fa-check"></i><span> Ver encuestadores</span></a>
+</li> --}}
+
+{{-- Cambio de la ruta general para Super Admin y Supervisor 1, para dejarla para Supervisor 2 tambien --}}
+<li class="{{ Request::is('encuestadores*') ? 'active' : '' }}">
+    <a href="{!! route('encuestadores.index') !!}"><i class="fas fa-check"></i><span> Ver encuestadores</span></a>
 </li>
 
-<li class="{{ Request::is('supervisor/2/supervisores/lista-de-supervisores') ? 'active' : '' }}">
+{{-- <li class="{{ Request::is('supervisor/2/supervisores/lista-de-supervisores') ? 'active' : '' }}">
     <a href="{!! route('supervisor2.lista-de-supervisores') !!}"><i class="fas fa-check"></i><span> Ver supervisores</span></a>
+</li> --}}
+
+{{-- Cambio de la ruta general para Super Admin y Supervisor 1, para dejarla para Supervisor 2 tambien --}}
+<li class="{{ Request::is('supervisores*') ? 'active' : '' }}">
+    <a href="{!! route('supervisores.index') !!}"><i class="fas fa-check"></i><span> Ver supervisores</span></a>
 </li>
 
 <li class="{{ Request::is('supervisor/2/supervisores/lista-de-supervisores/entrevistas-graduados') ? 'active' : '' }}">

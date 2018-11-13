@@ -7,7 +7,7 @@
         <section class="content-header">
             <div class="col-xs-12">
                 <h1 class="pull-left">
-                    <a href="#" class="btn btn-default pull-left" v-on:click="clearInputs">Limpiar campos</a>
+                    <button class="btn btn-default pull-left" v-on:click="clearInputs"><i class="fas fa-brush"></i> Limpiar campos</button>
                 </h1>
                 <h1 class="pull-right">
                     <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('encuestadores.create') !!}">Agregar nuevo</a>
@@ -98,7 +98,6 @@
                     return route
                 },
                 clearInputs: function(event) {
-                    console.log('limpiando campos...')
                     this.user_code = ''
                     this.name = ''
                     this.email= ''

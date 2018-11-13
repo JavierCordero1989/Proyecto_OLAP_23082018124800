@@ -26,9 +26,9 @@
                     <!-- Botones de la parte superior derecha -->
                     <div class="box-tools pull-right">
                         @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
-                            <form :action="getDeleteRoute(encuestador.id)" method="delete">
+                            <form :action="getDeleteRoute(encuestador.id)" method="post">
                             {{ csrf_field() }}
-                            <input type="hidden" name="_method" value="DELETE">
+                            {{ method_field('DELETE') }}
                         @endif  
                             
                         <div class="btn-group">
@@ -89,9 +89,11 @@
                             </div>
                             <!-- termina el modal -->
 
-                            <a :href="getEditRoute(encuestador.id)" class='btn btn-default btn-xs'>
-                                <i class="glyphicon glyphicon-edit"></i>
-                            </a>
+                            @if (Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
+                                <a :href="getEditRoute(encuestador.id)" class='btn btn-default btn-xs'>
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                            @endif
         
                             @if(Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
                                 <!-- Boton para eliminar los datos del encuestador -->
