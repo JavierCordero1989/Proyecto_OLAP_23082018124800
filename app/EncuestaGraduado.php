@@ -560,6 +560,24 @@ class EncuestaGraduado extends Model
         return $this->token;
     }
 
+    public function changeCodesByNames() {
+        $carrer_name = Carrera::buscarPorId($this->codigo_carrera)->first()->nombre;
+        $university_name = Universidad::buscarPorId($this->codigo_universidad)->first()->nombre;
+        $grade_name = Grado::buscarPorId($this->codigo_grado)->first()->nombre;
+        $discipline_name = Disciplina::find($this->codigo_disciplina)->descriptivo;
+        $area_name = Area::find($this->codigo_area)->descriptivo;
+        $group_name = Agrupacion::buscarPorId($this->codigo_agrupacion)->first()->nombre;
+        $sector_name = Sector::buscarPorId($this->codigo_sector)->first()->nombre;
+
+        $this->codigo_carrera = $carrer_name;
+        $this->codigo_universidad = $university_name;
+        $this->codigo_grado = $grade_name;
+        $this->codigo_disciplina = $discipline_name;
+        $this->codigo_area = $area_name;
+        $this->codigo_agrupacion = $group_name;
+        $this->codigo_sector = $sector_name;
+    }
+
     // public function scope($query){
     //     return $query;
     // }
