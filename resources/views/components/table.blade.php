@@ -11,4 +11,4 @@
 
 </table>
 
-{!! $paginacion !!}
+{{-- {!! $paginacion !!} --}}

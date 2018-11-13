@@ -9,8 +9,10 @@
     @else
         <div class="alert
                     alert-{{ $message['level'] }}
-                    {{ $message['important'] ? 'alert-important' : '' }}"
+                    {{ $message['important'] ? 'alert-important' : '' }}
+                    alert-dismissible"
         >
+            <button class="close" type="button" data-dismiss="alert" aria-hidden="true">x</button>
             @if ($message['important'])
                 <button type="button"
                         class="close"
