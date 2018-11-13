@@ -25,13 +25,14 @@
                 <td>
                     {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
-                            {!! Form::button(
+                            <button class="btn btn-danger btn-xs" type="submit" v-on:click="eventoEliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                            {{-- {!! Form::button(
                                 '<i class="glyphicon glyphicon-trash"></i>',
                                 [
                                     'type' => 'submit', 
                                     'class' => 'btn btn-danger btn-xs'
                                 ]
-                            ) !!}
+                            ) !!} --}}
                             <a href="{!! route('encuestas-graduados.agregar-contacto', $encuesta->id) !!}" class="btn btn-default btn-xs">
                                 {{-- <i class="fas fa-phone-square"></i> --}}
                                 <i class="far fa-user"></i>
@@ -43,19 +44,7 @@
         @endforeach
     @endslot
 
-    @slot('paginacion', $encuestas->render())
+    {{-- @slot('paginacion', $encuestas->render()) --}}
 @endcomponent
 
 @include('components.error-message')
-
-@section('scripts')
-    {{-- @include('layouts.datatables_js') --}}
-    <script>
-        $('.btn-danger').on('click', function(event) {
-
-            if(!confirm('¿Desea eliminar el registro de todas formas?')) {
-                event.preventDefault();
-            }
-        });
-    </script>
-@endsection
