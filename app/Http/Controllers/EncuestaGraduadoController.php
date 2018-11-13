@@ -25,7 +25,14 @@ use DB;
 class EncuestaGraduadoController extends Controller
 {
     public function index() {
-        $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->paginate(25);
+        // $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->paginate(25);
+        
+        //NUEVA FORMA DE OBTENER LAS ENCUESTAS
+        $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->get();
+
+        foreach ($encuestas as $encuesta) {
+            $encuesta->changeCodesByNames();
+        }
 
         return view('encuestas_graduados.index', compact('encuestas'));
     }
