@@ -1,6 +1,23 @@
 <section class="content">
     <div class="row">
+
+        <div v-if="listaFiltro.length == 0" class="content">
+            <!-- cuadro que aparece cuando no hay resultados de busqueda -->
+            <div class="clearfix"></div>
+                <div class="card-panel">
+                    <div class="card-content text-muted text-center">
+                        <i class="fas fa-grin-beam-sweat fa-10x"></i>
+                        <br>
+                        <p class="fa-2x">
+                            No hay resultados para su búsqueda
+                        </p>
+                    </div>
+                </div>
+            <div class="clearfix"></div>
+        </div>
+            
         <div class="col-xs-12 col-sm-12 col-md-6" v-for="encuestador in listaFiltro">
+            
             <div class="box box-primary collapsed-box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
