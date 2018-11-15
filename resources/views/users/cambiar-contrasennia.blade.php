@@ -24,6 +24,15 @@
                                         {!! Form::password('password', ['class'=>'form-control', 'required'=>'required']) !!}
                                     </div>
                                 </div>
+                                <a 
+                                    href="#" 
+                                    data-toggle="popover" 
+                                    data-trigger="focus" 
+                                    title="Formato" 
+                                    data-content="Debe contener: Una mayúscula, una minúscula, un dígito, un carácter (@ $ ! % * ? . - _), de 8 a 15 caracteres y sin espacios en blanco"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
                             </div>
 
                             <!-- Campo para confirmar la contraseña -->
@@ -68,6 +77,7 @@
     <script src="{!! asset('//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js') !!}"></script>
     <script>
         $(function() {
+            $('[data-toggle="popover"]').popover();
             $('#form-change-password').bootstrapValidator({
                 feedbackIcons: {
                 valid: 'glyphicon glyphicon-ok',
