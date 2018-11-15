@@ -578,6 +578,11 @@ class EncuestaGraduado extends Model
         $this->codigo_sector = $sector_name;
     }
 
+    public function scopeContactsAndDetails($query) {
+        return $query->select('*')
+                     ->join('tbl_contactos_graduados as cg', 'cg.id_graduado', '=', 'tbl_graduados.id')
+                     ->join('tbl_detalle_contacto as dc', 'dc.id_contacto_graduado', '=', 'cg.id');
+    }
     // public function scope($query){
     //     return $query;
     // }

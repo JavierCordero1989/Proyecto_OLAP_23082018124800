@@ -343,7 +343,22 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
+        // $listaDeEncuestas = EncuestaGraduado::contactsAndDetails()->get();
+        // dd(json_encode($listaDeEncuestas));
         $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
+        
+        //TODO
+        $lista = [];
+
+        foreach($listaDeEncuestas as $encuesta) {
+            $encuesta->changeCodesByNames();
+        }
+
+        foreach($listaDeEncuestas as $key => $value) {
+            echo $value;
+        }
+        dd($lista);
+
         $encuestador = User::find($id_encuestador);
 
         return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas', 'encuestador'));

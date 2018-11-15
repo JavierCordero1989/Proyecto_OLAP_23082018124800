@@ -3,37 +3,14 @@
 @section('title', 'Encuestas sin asignar') 
 
 @section('content')
-<div id="app" class="box-header">
+<div class="box-header">
         <div class="box-body">
         <div class="clearfix"></div>
 
         @include('flash::message')
 
         <div class="clearfix"></div>
-        <pre class="col-xs-6">
-            @{{ lista_de_encuestas }}
-        </pre>
-        <pre class="col-xs-6">
-            @{{ encuestador }}
-        </pre>
-            <div class="row">
-                <div class="form-group">
-                    <!-- BOTONES DE BUSQUEDA, DESPLIEGUE Y LIMPIEZA -->
-                </div>
-                <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                    <input type="text" class="form-control" v-model="agrupacion" placeholder="Agrupación...">
-                </div>
-                <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                    <input type="text" class="form-control" v-model="grado" placeholder="Grado...">
-                </div>
-                <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                    <input type="text" class="form-control" v-model="disciplina" placeholder="Disciplina...">
-                </div>
-                <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                    <input type="text" class="form-control" v-model="area" placeholder="Área...">
-                </div>
-            </div>
-            <div v-if="listaFiltro.length <= 0">
+            @if(sizeof($listaDeEncuestas) <= 0)
                 <div class="content">
                     <div class="clearfix"></div>
                         <div class="card-panel">
@@ -47,66 +24,87 @@
                         </div>
                     <div class="clearfix"></div>
                 </div>
-            </div>
-            <div v-else>
+            @else
+
                 <div class="col-xs-12 text-center">
-                    <h3>@{{ encuestador.name }}</h3>
+                    <h3>{{ $encuestador->name }}</h3>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <!-- BOTONES DE BUSQUEDA, DESPLIEGUE Y LIMPIEZA -->
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
+                        <input type="text" class="form-control" v-model="agrupacion" placeholder="Agrupación...">
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
+                        <input type="text" class="form-control" v-model="grado" placeholder="Grado...">
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
+                        <input type="text" class="form-control" v-model="disciplina" placeholder="Disciplina...">
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
+                        <input type="text" class="form-control" v-model="area" placeholder="Área...">
+                    </div>
                 </div>
 
-                <div v-for="encuesta in listaFiltro" class="col-xs-12 col-md-6">
-                    <div class="box box-primary collapsed-box" >
-                        <!-- Encabezado del cuadro -->
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
-                                @{{ encuesta.nombre_completo }}
-                            </h3>
+                @foreach($listaDeEncuestas as $encuesta)
+                    <div class="col-xs-12 col-md-6">
+                        <div class="box box-primary collapsed-box" >
+                            <!-- Encabezado del cuadro -->
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+                                    {!! $encuesta->nombre_completo !!}
+                                </h3>
 
-                            <!-- Botones de la parte superior derecha -->
-                            <div class="box-tools pull-right">
-                                <div class='btn-group'>
-                                    <!-- Boton para minimizar/maximiar cada cuadro -->
-                                    <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                                <!-- Botones de la parte superior derecha -->
+                                <div class="box-tools pull-right">
+                                    <div class='btn-group'>
+                                        <!-- Boton para minimizar/maximiar cada cuadro -->
+                                        <button type="button" class="btn btn-info btn-xs" data-widget="collapse">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Imagen del cuadro -->
-                        <div class="box-body">
-                            <div class="col-md-12">
-                                <p><strong>Cédula:</strong> @{{ encuesta.identificacion_graduado }}</p>
-                                <p><strong>Carrera:</strong> @{{ encuesta.codigo_carrera }}</p>
-                                <p><strong>Universidad:</strong> @{{ encuesta.codigo_universidad }}</p>
-                                <p><strong>Año de graduación:</strong> @{{ encuesta.annio_graduacion }}</p>
+                            <!-- Imagen del cuadro -->
+                            <div class="box-body">
+                                <div class="col-md-12">
+                                    <p><strong>Cédula:</strong> {!! $encuesta->identificacion_graduado !!}</p>
+                                    <p><strong>Carrera:</strong> {!! $encuesta->carrera->nombre !!}</p>
+                                    <p><strong>Universidad:</strong> {!! $encuesta->universidad->nombre !!}</p>
+                                    <p><strong>Año de graduación:</strong> {!! $encuesta->annio_graduacion !!}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Botones del cuadro, parte inferior -->
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <a :href="removeInterviewerInterviews(encuesta.id)" class="btn btn-danger btn-sm col-sm-12">
-                                        <i class="fa fa-plus-square"></i> Quitar entrevista
-                                    </a>
-                                </div>
-                                <div class="col-xs-6">
-                                    <a :href="'#modal-ver-detalles-de-entrevista-'+encuesta.id" class="btn btn-default btn-sm col-sm-12" data-toggle="modal">
-                                        <i class="fa fa-plus-square"></i> Ver detalles
-                                    </a>
-                                    {{-- @include('modals.modal_ver_detalles_de_entrevista') --}}
-                                </div>
+                            <!-- Botones del cuadro, parte inferior -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <a href="{!! route('asignar-encuestas.remover-encuestas-a-encuestador', [$encuesta->id, $encuestador->id]) !!}" class="btn btn-danger btn-sm col-sm-12">
+                                            <i class="fa fa-plus-square"></i> Quitar entrevista
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <a href="#modal-ver-detalles-de-entrevista-{{$encuesta->id}}" class="btn btn-default btn-sm col-sm-12" data-toggle="modal">
+                                            <i class="fa fa-plus-square"></i> Ver detalles
+                                        </a>
+                                        @include('modals.modal_ver_detalles_de_entrevista')
+                                    </div>
 
-                                <div v-if="isUser" class="col-xs-12" style="margin-top: 15px;">
-                                    <a :href="performInterview(encuesta.id)" class="btn btn-primary btn-sm col-xs-6 col-xs-offset-3">
-                                        <i class="fa fa-plus-square"></i> Realizar encuesta
-                                    </a>
+                                    @if(Auth::user()->id == $encuestador->id)
+                                        <div class="col-xs-12" style="margin-top: 15px;">
+                                            <a href="{!! route('asignar-encuestas.realizar-entrevista', $encuesta->id) !!}" class="btn btn-primary btn-sm col-xs-6 col-xs-offset-3">
+                                                <i class="fa fa-plus-square"></i> Realizar encuesta
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                @endforeach
+            @endif
         </div>
     </div>
     
@@ -230,69 +228,7 @@
 
 @section('scripts')
     {{-- @include('layouts.datatables_js') --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
-    <script>
 
-        new Vue({
-            el: '#app',
-            data: {
-                agrupacion: '',
-                area: '',
-                disciplina: '',
-                grado: '',
-                lista_de_encuestas: '',
-                encuestador: '',
-                connectedUser: ''
-            },
-            created: function() {
-                this.getList()
-                this.getPollster()
-                this.connectedUser = '{{Auth::user()->id}}'
-            },
-            methods: {
-                getList: function() {
-                    this.lista_de_encuestas = <?php echo json_encode($listaDeEncuestas); ?>
-                },
-                getPollster: function() {
-                    this.encuestador = <?php echo json_encode($encuestador); ?>
-                },
-                removeInterviewerInterviews: function(id) {
-                    let route = '{{ route("asignar-encuestas.remover-encuestas-a-encuestador", [":id", ":encuestador"]) }}'
-                    route = route.replace(":id", id)
-                    route = route.replace(":encuestador", this.encuestador.id)
-                    return route
-                },
-                isUser: function() {
-                    return this.connectedUser == this.encuestador.id
-                },
-                performInterview: function(id) {
-                    let route = '{{ route("asignar-encuestas.realizar-entrevista", ":id") }}'
-                    route = route.replace(":id", id)
-                    return route
-                }
-            },
-            computed: {
-                listaFiltro: function() {
-                    let filtro = this.lista_de_encuestas
-                    
-                    if(this.agrupacion != '') {
-                        filtro = filtro.filter(el => el.codigo_agrupacion.toLowerCase().includes(this.agrupacion.toLowerCase()))
-                    }
-                    if(this.area != '') {
-                        filtro = filtro.filter(el => el.codigo_area.toLowerCase().includes(this.area.toLowerCase()))
-                    }
-                    if(this.disciplina != '') {
-                        filtro = filtro.filter(el => el.codigo_disciplina.toLowerCase().includes(this.disciplina.toLowerCase()))
-                    }
-                    if(this.grado != '') {
-                        filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes(this.grado.toLowerCase()))
-                    }
-
-                    return filtro
-                }
-            }
-        })
-    </script>
     <script>
         function verificar() {
             var suma = 0;
