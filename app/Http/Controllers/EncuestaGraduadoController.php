@@ -345,19 +345,51 @@ class EncuestaGraduadoController extends Controller
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
         // $listaDeEncuestas = EncuestaGraduado::contactsAndDetails()->get();
         // dd(json_encode($listaDeEncuestas));
-        $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->get();
-        
-        //TODO
-        $lista = [];
+        $listaDeEncuestas = EncuestaGraduado::listaEncuestasAsignadasEncuestador($id_encuestador)->with('contactos')->get();
 
+        /* se recorren las encuestas encontradas */
         foreach($listaDeEncuestas as $encuesta) {
+            /* se le cambian los codigos por numeros */
             $encuesta->changeCodesByNames();
+            /* se sacan los contactos por cada encuesta */
+            $contactos = $encuesta->contactos;
+
+            /* se recorren los contactos */
+            foreach($contactos as $contacto) {
+                /* se sacan los detalles de contacto, de cada contacto */
+                $detalles = $contacto->detalle();
+
+                /* se setean los detalles, en una variable de detalle para cada contacto */
+                $contacto->detalle = $detalles;
+            }
+            /* se setean los contactos en una variable de contacto para cada encuesta */
+            $encuesta->contactos = $contactos;
+            /* se setea un estado para cada encuesta */
+            $encuesta->estado = $encuesta->estado()->estado;
         }
 
-        foreach($listaDeEncuestas as $key => $value) {
-            echo $value;
-        }
-        dd($lista);
+        /* NOTA:
+        todo lo anterior tiene como fin, poder crear un objeto que permita ser cargado mediante vue.js en la vista,
+        de forma que puedan existir campos de filtro, sin necesidad de ir a la base de datos a realizar las consultas.
+        el objeto quedaría formado asi: datos = [
+            {
+                datos_de_cada_encuesta,
+                contactos : [
+                    {
+                        datos_de_cada_contacto,
+                        detalle: [
+                            {
+                                datos_de_cada_detalle
+                            }
+                        ]
+                    }
+                ],
+                estado
+            }
+        ]
+        Así se podrá leer en vue o javascript para cada encuesta: encuesta, encuesta.contactos, encuesta.contactos.detalle,
+        sin mayor complicación
+        */
 
         $encuestador = User::find($id_encuestador);
 
