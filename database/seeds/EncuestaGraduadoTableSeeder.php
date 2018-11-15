@@ -54,7 +54,7 @@ class EncuestaGraduadoTableSeeder extends Seeder
                 'nombre_completo'           => $faker->name,
                 'annio_graduacion'          => $faker->numberBetween($min = 2012, $max = 2015),
                 'link_encuesta'             => $links[$i],
-                'sexo'                      => $faker->randomElement(['M', 'F']),
+                'sexo'                      => $faker->randomElement(['M', 'F', 'SC']),
                 'codigo_carrera'            => $faker->randomElement($carreras),
                 'codigo_universidad'        => $universidad,
                 'codigo_grado'              => $faker->randomElement($grados),
