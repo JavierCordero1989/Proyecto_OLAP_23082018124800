@@ -44,7 +44,7 @@
         @endforeach
     @endslot
 
-    {{-- @slot('paginacion', $encuestas->render()) --}}
+    @slot('paginacion', $encuestas->appends(Request::all())->render())
 @endcomponent
 
 @include('components.error-message')

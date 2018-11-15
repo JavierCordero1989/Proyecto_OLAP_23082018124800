@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr v-for="encuesta in lista_encuestas">
+        <tr v-for="encuesta in listaFiltro">
             <td>
                 <!-- Botón que referencia al modal -->
                 <a :href="'#modal-ver-detalles-de-entrevista-'+encuesta.id" data-toggle="modal">@{{encuesta.identificacion_graduado}}</a>
@@ -78,6 +78,78 @@
                                             <p v-else>Sin clasificar</p>
                                         </div>
                     
+                                        <div class="col-xs-6">
+                                            <label for="info_de_contacto">Información de contacto</label>
+                                            <p v-if="encuesta.contactos.length <= 0" class="text-danger text-uppercase">
+                                                Esta entrevista no tiene información de contacto
+                                            </p>
+                                            <div v-else class="dropdown">
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    <i class="fas fa-address-card"></i>
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
+                                                    <li v-for="contacto in encuesta.contactos">
+                                                        <a :href="'#modal-'+contacto.id" data-toggle="modal" ><i class="fas fa-eye"></i>@{{contacto.nombre_referencia}}</a>
+                                                    </li>
+                                                </ul>
+                                                {{-- GENERACION DE LOS MODALES PARA LA INFO DE CONTACTOS--}}
+                                                <div v-for="contacto in encuesta.contactos" class="modal fade" :id="'modal-'+contacto.id">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <!-- ENCABEZADO DEL MODAL -->
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">@{{ contacto.identificacion_referencia}}</h4>
+                                                                <h4 class="modal-title">@{{ contacto.nombre_referencia}}</h4>
+                                                                <h4 class="modal-title">@{{ contacto.parentezco}}</h4>
+                                                            </div>
+
+                                                            <!-- CUERPO DEL MODAL PARA INFO DE CONTACTO-->
+                                                            <div class="modal-body">
+                                                                <div class="content">
+                                                                    <div class="clearfix"></div>
+                                                                    <div class="clearfix"></div>
+                                                                    <div class="box box-primary">
+                                                                        <div class="box-body">
+                                                                            <!-- TABLA CON LOS DATOS DE CONTACTO DE CADA ENCUESTA -->
+                                                                            <div class="table-responsive">
+                                                                                <table class="table table-striped">
+                                                                                    <thead>
+                                                                                        <th>Contacto</th>
+                                                                                        <th>Observación</th>
+                                                                                        <th>Estado del contacto</th>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <!-- AGREGAR EL DETALLE DE CADA CONTACTO CON UN V-FOR -->
+                                                                                        {{-- <tr v-for="detalle in contacto">
+                                                                                            <td>@{{detalle.contacto}}</td>
+                                                                                            <td v-if="detalle.observacion == ''">
+                                                                                                NO TIENE
+                                                                                            </td>
+                                                                                            <td v-else>@{{detalle.observacion}}</td>
+                                                                                            <td v-if="detalle.estado == 'F'">
+                                                                                                <i class="fas fa-check-circle" style="color: green;"></i>
+                                                                                            </td>
+                                                                                            <td v-else-if="detalle.estado == 'E'">
+                                                                                                <i class="fas fa-times-circle" style="color: red;"></i>
+                                                                                            </td>
+                                                                                            <td v-else>INDEFINIDO</td>
+                                                                                        </tr> --}}
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- CIERRA EL MODAL PARA INFO DE CONTACTO -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- CIERRE DE LOS MODALES PARA GENERAR INFO DE CONTACTOS -->
+                                            </div>
+                                        </div>
+
                                         <!-- Modal para ver la información de detalle de los contactos que pertenecen a la entrevista -->
                                         {{-- <div class="col-xs-6">
                                             {!! Form::label('info_de_contacto', 'Información de contacto') !!}
@@ -175,15 +247,51 @@
                     </div>
                 </div>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>@{{ encuesta.nombre_completo }}</td>
+            <td v-if="encuesta.sexo == 'M'">Hombre</td>
+            <td v-else-if="encuesta.sexo == 'F'">Mujer</td>
+            <td v-else>Sin Clasificar</td>
+            <td>@{{ encuesta.codigo_carrera }}</td>
+            <td>@{{ encuesta.codigo_universidad }}</td>
+            <td>@{{ encuesta.codigo_grado }}</td>
+            <td>@{{ encuesta.codigo_disciplina }}</td>
+            <td>@{{ encuesta.codigo_area }}</td>
+            <td>@{{ encuesta.tipo_de_caso }}</td>
+            <td>
+                <form action="#">
+                    <div class="btn-group">
+                        <button class="btn btn-danger btn-xs" type="submit" v-on:click="eventoEliminar">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
+
+                        <a :href="addContactRoute(encuesta.id)" class="btn btn-default btn-xs">
+                            {{-- <i class="fas fa-phone-square"></i> --}}
+                            <i class="far fa-user"></i>
+                        </a>
+                    </div>
+                </form>
+            </td>
         </tr>
     </tbody>
 </table>
+
+{{-- {!! $paginacion['encuestas']->render() !!} --}}
+<nav>
+    <ul class="pagination">
+        <li v-if="pagination.current_page > 1">
+            <a href="#" @click.prevent="changePage(pagination.current_page - 1)">
+                <span>Atrás</span>
+            </a>
+        </li>
+        <li v-for="page in pagesNumber" :class="[page == isActived ? 'active' : '']">
+            <a href="#" @click.prevent="changePage(page)">
+                @{{ page }}
+            </a>
+        </li>
+        <li v-if="pagination.current_page < pagination.last_page">
+            <a href="#" @click.prevent="changePage(pagination.current_page + 1)">
+                <span>Siguiente</span>
+            </a>
+        </li>
+    </ul>
+</nav>

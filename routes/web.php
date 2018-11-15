@@ -113,6 +113,8 @@ Route::group(['middleware'=>['auth']], function() {
   Route::delete('encuestas-graduados/{id}', 'EncuestaGraduadoController@destroy')                              ->name('encuestas-graduados.destroy')/*->middleware('')*/;
   Route::get('agregar-contacto-encuesta/{id_encuesta}', 'EncuestaGraduadoController@agregarContacto')          ->name('encuestas-graduados.agregar-contacto');
   Route::post('agregar-contacto-encuesta/guardar/{id_encuesta}', 'EncuestaGraduadoController@guardarContacto') ->name('encuestas-graduados.guardar-contacto');
+  // Route::get('lista-de-encuestas', 'EncuestaGraduadoController@listaDeEncuestas')->name('encuestas-graduados.lista-de-encuestas');
+  Route::get('filtro-encuestas', 'EncuestaGraduadoController@filtro_encuestas')->name('encuestas-graduados.filtro');
 });
 
 //Encuestas de los graduados
