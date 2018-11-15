@@ -11,10 +11,12 @@ use App\TiposDatosCarrera;
 use App\EncuestaGraduado;
 use App\ContactoGraduado;
 use App\DetalleContacto;
+use App\Universidad;
 use App\Asignacion;
 use App\Disciplina;
 use App\Agrupacion;
 use Carbon\Carbon;
+use App\Carrera;
 use App\Sector;
 use App\Grado;
 use App\Area;
@@ -25,17 +27,95 @@ use DB;
 class EncuestaGraduadoController extends Controller
 {
     public function index() {
-        // $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->paginate(25);
-        
-        //NUEVA FORMA DE OBTENER LAS ENCUESTAS
-        $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->get();
+        $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('id', 'ASC')->paginate(25);
+        return view('encuestas_graduados.index')->with('encuestas', $encuestas);
+    }
 
-        foreach ($encuestas as $encuesta) {
-            $encuesta->changeCodesByNames();
+    /* FUNCION QUE FILTRA LAS ENCUESTAS POR LOS DATOS QUE EL USUARIO INGRESE EN LOS CAMPOS */
+    public function filtro_encuestas(Request $request) {
+        $input = $request->all();
+
+        $encuestas = EncuestaGraduado::listaDeGraduados();
+
+        if(isset($request->identificacion_graduado)) {
+            //buscar por identificacion del graduado
+            $encuestas = $encuestas->where('identificacion_graduado', 'like', '%'.$request->identificacion_graduado.'%');
+        }
+        if(isset($request->nombre_completo)) {
+            //buscar por el nombre
+            $encuestas = $encuestas->where('nombre_completo', 'like', '%'.$request->nombre_completo.'%');
+        }
+        if(isset($request->sexo)) {
+            //buscar por el sexo
+            $encuestas = $encuestas->where('sexo', $request->sexo);
+        }
+        if(isset($request->codigo_carrera)) {
+            //buscar primero las carreras que coincidan con los nombres para obtener los codigos
+            $carreras = Carrera::buscarPorNombre($request->codigo_carrera)->pluck('id');
+            //buscar las encuestas que coincidan con los codigos encontrados
+            $encuestas = $encuestas->whereIn('codigo_carrera', $carreras);
+        }
+        if(isset($request->codigo_universidad)) {
+            //buscar primero las carreras que coincidan con los nombres para obtener los codigos
+            $universidades = Universidad::buscarPorNombre($request->codigo_universidad)->pluck('id');
+            //buscar las encuestas que coincidan con los codigos encontrados
+            $encuestas = $encuestas->where('codigo_universidad', $universidades);
+        }
+        if(isset($request->codigo_grado)) {
+            //buscar primero las carreras que coincidan con los nombres para obtener los codigos
+            $grados = Grado::buscarPorNombre($request->codigo_grado)->pluck('id');
+            //buscar las encuestas que coincidan con los codigos encontrados
+            $encuestas = $encuestas->whereIn('codigo_grado', $grados);
+        }
+        if(isset($request->codigo_disciplina)) {
+            //buscar primero las carreras que coincidan con los nombres para obtener los codigos
+            $disciplinas = Disciplina::buscarPorDescriptivo($request->codigo_disciplina)->pluck('id');
+            //buscar las encuestas que coincidan con los codigos encontrados
+            $encuestas = $encuestas->whereIn('codigo_disciplina', $disciplinas);
+        }
+        if(isset($request->codigo_area)) {
+            //buscar primero las carreras que coincidan con los nombres para obtener los codigos
+            $areas = Area::buscarPorDescriptivo($request->codigo_area)->pluck('id');
+            //buscar las encuestas que coincidan con los codigos encontrados
+            $encuestas = $encuestas->whereIn('codigo_area', $areas);
+        }
+        if(isset($request->tipo_de_caso)) {
+            //buscar por el tipo de caso
+            $encuestas = $encuestas->where('tipo_de_caso', $request->tipo_de_caso);
         }
 
-        return view('encuestas_graduados.index', compact('encuestas'));
+        $encuestas = $encuestas->orderBy('id', 'ASC')->paginate(15);
+
+        // dd($encuestas);
+        return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
+
+    /* METODO USADO PARA PAGINAR CON VUE.JS, NO FUNCIONO DE ACUERDO A MIS ESPECTATIVAS */
+    // public function listaDeEncuestas(Request $request) {
+    //     $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->with('contactos')->paginate(25);
+        
+    //     //NUEVA FORMA DE OBTENER LAS ENCUESTAS
+    //     // $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->with('contactos')->get();
+
+    //     foreach ($encuestas as $encuesta) {
+    //         $encuesta->changeCodesByNames();
+    //     }
+
+    //     $paginacion = [
+    //         'pagination' => [
+    //             'total'=>$encuestas->total(),
+    //             'current_page'=>$encuestas->currentPage(),
+    //             'per_page'=>$encuestas->perPage(),
+    //             'last_page'=>$encuestas->lastPage(),
+    //             'from'=>$encuestas->firstItem(),
+    //             'to'=>$encuestas->lastPage(),
+    //         ],
+    //         'encuestas' => $encuestas
+    //     ];
+
+    //     return $paginacion;
+    //     // return view('encuestas_graduados.index', compact('paginacion'));
+    // }
 
     public function destroy($id) {
         $encuesta = EncuestaGraduado::find($id);
