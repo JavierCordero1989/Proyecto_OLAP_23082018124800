@@ -60,6 +60,15 @@
                 <input type="text" class="form-control" name="email" id="email">
             </div>
         </div>
+        <a 
+            href="#" 
+            data-toggle="popover" 
+            data-trigger="focus" 
+            title="Formato" 
+            data-content="Debe contener: ninguno de estos caracteres (& * - / ¿ ¡ ! ? '), el formato @conare.ac.cr, sin espacios en blanco"
+        >
+            <i class="fas fa-info-circle"></i>
+        </a>
     </div>
 
     <!-- Password Field -->
@@ -71,6 +80,15 @@
                 <input type="password" class="form-control" name="password" id="password">
             </div>
         </div>
+        <a 
+            href="#" 
+            data-toggle="popover" 
+            data-trigger="focus" 
+            title="Formato" 
+            data-content="Debe contener: Una mayúscula, una minúscula, un dígito, un carácter (@ $ ! % * ? . - _), de 8 a 15 caracteres y sin espacios en blanco"
+        >
+            <i class="fas fa-info-circle"></i>
+        </a>
     </div>
 
     <!-- Supervisor Field -->
@@ -113,7 +131,6 @@
     
     <!-- Script para verificar codigo de usuario y correo ingresados -->
     <script>
-
         // Caja para el email del usuario
         let caja_email_usuario = $('#email');
 
@@ -139,6 +156,8 @@
         });
         
         $(function() {
+            $('[data-toggle="popover"]').popover();
+
             $('#form-crear-nuevo-supervisor').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
