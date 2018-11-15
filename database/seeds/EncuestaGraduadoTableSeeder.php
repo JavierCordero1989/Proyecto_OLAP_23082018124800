@@ -43,6 +43,8 @@ class EncuestaGraduadoTableSeeder extends Seeder
         $tokens = $this->generarTokens($totalDeDatosGenerados);
         $links = $this->generarLinksEncuestas($totalDeDatosGenerados);
 
+        $tipos_de_caso = ['MUESTRA', 'CENSO', 'SUSTITUCION'];
+
         for($i=0; $i<$totalDeDatosGenerados; $i++) {
             $universidad = $faker->randomElement($universidades);
 
@@ -60,7 +62,7 @@ class EncuestaGraduadoTableSeeder extends Seeder
                 'codigo_area'               => $faker->randomElement($areas),
                 'codigo_agrupacion'         => $this->obtenerAgrupacion($universidad),
                 'codigo_sector'             => $this->esPublica($universidad) ? $sector_publico->id : $sector_privado->id,
-                'tipo_de_caso'              => 'Muestra'
+                'tipo_de_caso'              => $faker->randomElement($tipos_de_caso)
             ]);
 
             $encuesta->asignarEstado($id_estado->id);
