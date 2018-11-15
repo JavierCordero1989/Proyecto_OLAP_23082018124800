@@ -66,6 +66,13 @@
                             <div class="col-xs-12 col-sm-3">
                                 {!! Form::select('tipo_de_caso', config('options.case_types'), null, ['class'=>'form-control', 'id'=>'tipo_de_caso']) !!}
                             </div>
+                            {{-- TODO --}}
+                            <div class="col-xs-12 col-sm-3">
+                                {!! Form::text('estado', null, ['class'=>'form-control', 'placeholder'=>'Estado...']) !!}
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                {!! Form::text('contacto', null, ['class'=>'form-control', 'placeholder'=>'Número o Correo']) !!}
+                            </div>
                         </div>
                     {!! Form::close() !!}
                 </div>
@@ -127,7 +134,7 @@
             datos.push($('#codigo_disciplina').val().trim());
             datos.push($('#codigo_area').val().trim());
             datos.push($('#tipo_de_caso').val().trim());
-
+            // TODO: campos de estado y contacto
             let contador = 0;
 
             datos.forEach(element=>{
@@ -136,7 +143,7 @@
                 }
             });
 
-            if(contador == 9) {
+            if(contador == 11) {
                 return true;
             }
 
