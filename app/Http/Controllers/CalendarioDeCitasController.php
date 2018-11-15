@@ -65,10 +65,22 @@ class CalendarioDeCitasController extends Controller
             return redirect(route(config('calendar-routes.'.$mal_encuestador)));
         }
 
+        $contactos_entrevista = array();
+        $contactos = $entrevista_cita->contactos;
+
+        foreach($contactos as $contacto) {
+            $detalles = $contacto->detalle();
+            $resumen_detalle = $detalles->pluck('contacto', 'id');
+            foreach($resumen_detalle as $key => $value) {
+                $contactos_entrevista[$value] = $value;
+            }
+        }
+
         /* Datos esenciales para las rutas */
         $datos_a_vista = [
-            'entrevista' => $entrevista,
-            'encuestador' => $encuestador
+            'entrevista'  => $entrevista,
+            'encuestador' => $encuestador,
+            'contactos'   => $contactos_entrevista
         ];
 
         /* Rutas a usar para las vistas */
@@ -89,37 +101,8 @@ class CalendarioDeCitasController extends Controller
      * @return View Vista con los datos de las acciones acontecidas en el proceso
      */
     public function guardar_cita_de_entrevista($entrevista, $encuestador, Request $request) {
-        // $entrevista_cita = Entrevista::find($entrevista);
 
-        // if(empty($entrevista_cita)) {
-        //     Flash::error();
-        //     return redirect(route('asignar-encuestas.realizar-entrevista', $entrevista));
-        // }
-
-        /* Convierte la fecha obtenida en un formato valido para mysql */
-        // $hora = $this->convertir_hora_24($request->hora_de_cita);
-
-        // $datos = [
-        //     'ID de encuesta' => $entrevista,
-        //     'fecha_sin_convetir' => $request->fecha_de_cita, 
-        //     'fecha_convertida' => $this->convertir_fecha_mysql($request->fecha_de_cita),
-        //     'hora_12' => $request->hora_de_cita,
-        //     'hora_24' => $hora,
-        //     'hora_12_conversion' => $this->convertir_hora_12($hora),
-        //     'fecha_mysql' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
-        //     'fecha_hora' => explode(' ', $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita)),
-        //     'datos_request' => $request->all()
-        // ];
-
-        // $datos_fecha = [
-        //     'fecha' => $datos['fecha_hora'][0], 
-        //     'hora' => $datos['fecha_hora'][1],
-        //     'fecha_form' => $this->convertir_fecha_formulario($datos['fecha_hora'][0]),
-        //     'hora_form' => $this->convertir_hora_12($datos['fecha_hora'][1])
-        // ];
-
-        // dd($datos, $datos_fecha);
-
+        dd($request->all());
         $cita = Cita::create([
             'fecha_hora' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
             'numero_contacto' => $request->numero_contacto,
