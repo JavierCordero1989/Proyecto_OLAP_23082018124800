@@ -28,7 +28,7 @@
 @endsection
 
 @section('content')
-    <div class="content">
+    <div id="app-vue" class="content">
 
         <!-- Cuadro para notificaciones -->
         <div class="clearfix"></div>
@@ -53,84 +53,30 @@
                 @endcomponent
             @endforeach
         </div>
-        
-        {{-- <div id="carrusel_datos_home" class="carousel slide" data-ride="carousel">
-            <!-- INDICADORES -->
-            <ol class="carousel-indicators">
-                <li data-target="#carrusel_datos_home" data-slide-to="0" class="active"></li>
-                <li data-target="#carrusel_datos_home" data-slide-to="1"></li>
-                <li data-target="#carrusel_datos_home" data-slide-to="2"></li>
-            </ol>
 
-            <!-- CONTENIDO DEL CARRUSEL -->
-            <div class="carousel-inner">
-                <div class="item active row">
-                    <!-- Componentes para mostrar la información por estados, de la información general -->
-                    @foreach($estados as $key => $value)
-                            @component('components.info-box')
-                                @slot('color_class', 'bg-green')
-                                @slot('icon', config('global.iconos_estados.'.$key))
-                                @slot('info_text', $key)
-                                @slot('data', $value)
-                                @if($key == 'TOTAL DE ENTREVISTAS')
-                                    @slot('percent', '')
-                                @else
-                                    @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
-                                @endif
-                            @endcomponent
-                    @endforeach
-                </div>
+        {{-- <information-box v-bind:list="information"></information-box> --}}
 
-                <div class="item row">
-                    <!-- Componentes para mostrar la información por estados, de la información general -->
-                    @foreach($estados as $key => $value)
-                            @component('components.info-box')
-                                @slot('color_class', 'bg-blue')
-                                @slot('icon', config('global.iconos_estados.'.$key))
-                                @slot('info_text', $key)
-                                @slot('data', $value)
-                                @if($key == 'TOTAL DE ENTREVISTAS')
-                                    @slot('percent', '')
-                                @else
-                                    @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
-                                @endif
-                            @endcomponent
-                    @endforeach
-                </div>
-
-                <div class="item row">
-                    <!-- Componentes para mostrar la información por estados, de la información general -->
-                    @foreach($estados as $key => $value)
-                            @component('components.info-box')
-                                @slot('color_class', 'bg-red')
-                                @slot('icon', config('global.iconos_estados.'.$key))
-                                @slot('info_text', $key)
-                                @slot('data', $value)
-                                @if($key == 'TOTAL DE ENTREVISTAS')
-                                    @slot('percent', '')
-                                @else
-                                    @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
-                                @endif
-                            @endcomponent
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- CONTROLES -->
-            <a class="left carousel-control" href="#carrusel_datos_home" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left"></span>
-                <span class="sr-only">Siguiente</span>
-            </a>
-            <a class="right carousel-control" href="#carrusel_datos_home" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right"></span>
-                <span class="sr-only">Anterior</span>
-            </a>
-        </div>         --}}
     </div>
 @endsection
 
 @section('scripts')
+    <script src="{!! asset('js/components-vue/components.js') !!}"></script>
     <script>
         $('#flash-overlay-modal').modal();
+
+        // new Vue({
+        //     el: '#app-vue',
+        //     data: {
+        //         information: [
+        //             {color:'bg-aqua',title:'titulo 1',text:'texto 1',icon:'ion ion-stats-bars', link: '#'},
+        //             {color:'bg-aqua',title:'titulo 2',text:'texto 2',icon:'ion ion-person', link: '#'},
+        //             {color:'bg-aqua',title:'titulo 3',text:'texto 3',icon:'ion ion-stats-bars', link: '#'},
+        //             {color:'bg-aqua',title:'titulo 4',text:'texto 4',icon:'ion ion-stats-bars', link: '#'},
+        //             {color:'bg-aqua',title:'titulo 5',text:'texto 5',icon:'ion ion-stats-bars', link: '#'},
+        //             {color:'bg-aqua',title:'titulo 6',text:'texto 6',icon:'ion ion-stats-bars', link: '#'},
+        //             {color:'bg-aqua',title:'titulo 7',text:'texto 7',icon:'ion ion-stats-bars', link: '#'},
+        //         ]
+        //     }
+        // })
     </script>
 @endsection

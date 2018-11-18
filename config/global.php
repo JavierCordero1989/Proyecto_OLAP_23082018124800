@@ -77,7 +77,7 @@
             'INCOMPLETA'             => 'ion-android-checkmark-circle',
             'FUERA DEL PAÍS'         => 'ion-plane',
             'ILOCALIZABLE'           => 'ion-sad-outline',
-            'FALLECIDO'              => 'ion-medkit',
+            'FALLECIDO'              => 'fas fa-cross',
             'EXTRANJERO'             => 'ion-ios-location',
             'CON CITA'               => 'ion-calendar',
             'MENSAJE'                => 'ion-android-textsms',
@@ -85,6 +85,7 @@
             'INFORMACIÓN POR CORREO' => 'ion-email',
             'ENTREVISTA COMPLETA'    => 'ion-android-done-all',
             'OTRO'                   => 'ion-compose',
+            'DISCIPLINA NO CORRESPONDE' => 'fas fa-ban',
             'TOTAL DE ENTREVISTAS'   => 'ion-earth'
         ],
     ];

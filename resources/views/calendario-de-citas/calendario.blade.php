@@ -19,14 +19,37 @@
         @include('flash::message')
         <div class="clearfix"></div>
 
-        <div class="box box-primary">
-            <div class="box-body">
-                <div class="row">
-                    <div id='calendar' class="col-xs-12"></div>
-                    @include('components.modal-cambiar-estado-cita')
-                    @include('components.modal-agregar-nueva-cita')
+        <div class="row">
+            <!-- Caja para colocar un formulario para agendar cita -->
+            <div class="col-md-3">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Agregar cita</h3>
+                    </div>
+                    <div class="box-body">
+
+                    </div>
+                </div>
+
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Hola</h3>
+                    </div>
+                    <div class="box-body">
+                        
+                    </div>
                 </div>
             </div>
+            <!-- Caja para el calendario -->
+            <div class="col-md-9">
+                <div class="box box-primary">
+                    <div class="box-body no-padding">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div>
+            @include('components.modal-cambiar-estado-cita')
+            @include('components.modal-agregar-nueva-cita')
         </div>
 
     </div>
