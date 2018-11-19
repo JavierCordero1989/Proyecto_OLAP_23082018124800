@@ -187,6 +187,7 @@ Route::group(['prefix'=>'disciplinas', 'middleware'=>'auth'], function() {
   Route::get('/{id}/edit', 'DisciplinasController@edit') ->name('disciplinas.edit')   /*->middleware('')*/;
   Route::patch('/{id}', 'DisciplinasController@update')  ->name('disciplinas.update') /*->middleware('')*/;
   Route::delete('/{id}', 'DisciplinasController@destroy')->name('disciplinas.destroy')/*->middleware('')*/;
+  Route::get('getDisciplinas/area/{id}', 'DisciplinasController@disciplinasPorAreaAxios')->name('disciplinas.axios');
 });
 
 // Rutas para el mantenimiento de las áreas
@@ -198,6 +199,7 @@ Route::group(['prefix'=>'areas', 'middleware'=>'auth'], function() {
   Route::get('/{id}/edit', 'AreasController@edit') ->name('areas.edit')   /*->middleware('')*/;
   Route::patch('/{id}', 'AreasController@update')  ->name('areas.update') /*->middleware('')*/;
   Route::delete('/{id}', 'AreasController@destroy')->name('areas.destroy')/*->middleware('')*/;
+  Route::get('getAreas/axios', 'AreasController@axiosAreas')->name('areas.axios');
 });
 
 // Rutas para el mantenimiento de los detalle de contacto
@@ -283,9 +285,10 @@ Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function()
 
 // Rutas para los reportes 
 Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
-  Route::get('', 'ReportesController@index')                                 ->name('reportes.index');
-  Route::get('filtro', 'ReportesController@filtro_reportes')                 ->name('reportes.filtro');
-  Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte') ->name('reportes.filtro-encuestas');
+  Route::get('filtro', 'ReportesController@vista_filtro_reportes')->name('reportes.filtro');
+  // Route::get('', 'ReportesController@index')                                 ->name('reportes.index');
+  // Route::get('filtro', 'ReportesController@filtro_reportes')                 ->name('reportes.filtro');
+  // Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte') ->name('reportes.filtro-encuestas');
 });
 
 Route::group(['prefix'=>'security'], function(){
