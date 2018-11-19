@@ -13,13 +13,13 @@
             'SUSTITUCION'=>'Sustitucion'
         ],
         'group_types' => [
-            '' => '- - - Agrupaciones - - -',
-            'UCR'=>'UCR',
-            'UNA'=>'UNA',
-            'UNED'=>'UNED',
-            'ITCR'=>'ITCR',
-            'UTN'=>'UTN',
-            'PRIVADO'=>'PRIVADO',
+            '' => '- - - AGRUPACIÓN - - -',
+            '281'=>'UCR',
+            '285'=>'UNA',
+            '282'=>'UNED',
+            '284'=>'ITCR',
+            '283'=>'UTN',
+            '286'=>'PRIVADO',
         ],
         'grade_types' => [
             '' => '- - - Grados - - -',
@@ -50,6 +50,11 @@
             '13' => 'ENTREVISTA COMPLETA',
             '14' => 'RECORDATORIO',
             '15' => 'DISCIPLINA NO CORRESPONDE',
+        ],
+        'sector_types' => [
+            '' => '- - - SELECCIONE - - -',
+            '1'=>'PÚBLICO',
+            '2'=>'PRIVADO',
         ]
     ];
 ?>
