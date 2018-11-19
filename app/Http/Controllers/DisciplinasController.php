@@ -5,10 +5,19 @@ namespace App\Http\Controllers;
 use App\DatosCarreraGraduado;
 use Illuminate\Http\Request;
 use App\Disciplina;
+use App\Area;
 use Flash;
 
 class DisciplinasController extends Controller
 {
+    public function disciplinasPorAreaAxios($id) {
+        $area = Area::find($id);
+
+        $disciplinas = $area->disciplinas->pluck('descriptivo', 'id')->all();
+
+        return $disciplinas;
+    }
+
     public function index() {
         // $disciplinas = DatosCarreraGraduado::porDisciplina()->get();
         $disciplinas = Disciplina::all();
