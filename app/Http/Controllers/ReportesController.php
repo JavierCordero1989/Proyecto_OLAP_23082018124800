@@ -13,6 +13,10 @@ use DB;
 
 class ReportesController extends Controller
 {
+    public function vista_filtro_reportes() {
+        return view('reportes.opciones-reporte');
+    }
+
     public function index() {
         $reporte = [
             'titulo' => 'Cuadro resumen del grado de avance del trabajo de campo de la encuesta de seguimiento de la condición laboral de las personas graduadas 2011-2013 de universidades estatales correspondiente al área de Educación al 24-04-2016',
