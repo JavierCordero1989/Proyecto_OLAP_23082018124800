@@ -40,13 +40,16 @@
             </div>
 
             <div class="form-group col-md-12">
-                {!! Form::button('<i class="fas fa-clipboard"></i> Generar reporte', ['class'=>'btn btn-primary pull-left', 'v-on:click'=>'generarReporte']) !!}
+                <button class="btn btn-primary pull-left" v-on:click="generarReporte" :disabled="activarBotonGenerarReporte">
+                    <i class="fas fa-clipboard"></i> 
+                    Generar reporte
+                </button>
             </div>
         </div>
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body with-border">
-                @{{reporte}}
+                @{{reporte['TOTAL']}}
             </div>
         </div>
     </div>
@@ -66,7 +69,8 @@
                 disciplina: '',
                 lista_areas: [],
                 lista_disciplinas: [],
-                reporte: []
+                reporte: [],
+                btnActive: true
             },
             methods: {
                 cleanInputs: function() {
@@ -74,6 +78,9 @@
                     this.agrupacion = '',
                     this.area = '',
                     this.disciplina = ''
+                    this.btnActive = true
+                    this.reporte = []
+                    this.lista_disciplinas = []
                 },
                 getCarreras: function() {
                     url = '{{ route("areas.axios") }}'
@@ -95,7 +102,29 @@
                     }
                 },
                 generarReporte: function() {
-                    this.reporte = 'HOLA REPORTE'
+                    let url = '{{ route("reportes.generar") }}'
+                    axios.get(url, {
+                        params: {
+                            sector: this.sector,
+                            agrupacion: this.agrupacion,
+                            area: this.area,
+                            disciplina: this.disciplina
+                        }
+                    }).then(response=>{
+                        this.reporte = response.data
+                    })
+                }
+            },
+            computed: {
+                activarBotonGenerarReporte: function() {
+                    let activo = true;
+
+                    if(this.sector != '') { activo = false }
+                    if(this.agrupacion != '') { activo = false }
+                    if(this.area != '') { activo = false }
+                    if(this.disciplina != '') { activo = false }
+
+                    return activo;
                 }
             }
         })
