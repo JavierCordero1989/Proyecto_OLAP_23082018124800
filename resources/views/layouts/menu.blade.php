@@ -103,11 +103,11 @@
     </a>
     <ul class="treeview-menu">
         <li class="#">
-            <a href="{!! route('reportes.index') !!}"><i class="fa fa-edit"></i><span>Reportes</span></a>
+            <a href="{!! route('reportes.filtro') !!}"><i class="fa fa-edit"></i><span>Reportes</span></a>
         </li>
 
-        <li class="#">
+        {{-- <li class="#">
             <a href="{!! route('reportes.filtro') !!}"><i class="fa fa-edit"></i><span>Filtro</span></a>
-        </li>
+        </li> --}}
     </ul>
 </li>
