@@ -9,6 +9,20 @@ use Flash;
 use Carbon\Carbon;
 use App\CitaCalendario as Cita;
 
+/* para utilizar un begin transaction, se usa al inicio de la sentencia 
+DB::beginTransaction();
+
+para despues de eso, cuando las transacciones han sido completadas, usar
+
+DB::commit();
+
+Pero si las transacciones salen mal por algun motivo, se puede usar un
+
+DB::rollback();
+
+*/
+
+
 /**
  * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
  * @version 1.0
@@ -259,5 +273,30 @@ class CalendarioDeCitasController extends Controller
         }
 
         return $ruta;
+    }
+
+    public function resumen_cita($id) {
+        $cita = Cita::find($id);
+
+        if(empty($cita)) {
+            Flash::overlay('La cita que busca no se encuentra registrada', 'Error en la búsqueda')->error();
+            return redirect(url('home'));
+        }
+
+        $encuestador = Usuario::find($cita->id_encuestador);
+
+        $entrevista = null;
+
+        if(!is_null($encuestador->id_entrevista)) {
+            $entrevista = Entrevista::find($encuestador->id_entrevista);
+        }
+
+        $data = [
+            'cita' => $cita,
+            'encuestador' => $encuestador,
+            'entrevista'=>$entrevista
+        ];
+
+        return view('calendario-de-citas.resumen-de-cita')->with('data', $data);
     }
 }

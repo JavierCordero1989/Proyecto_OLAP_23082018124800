@@ -149,7 +149,7 @@
 
                         <div class="form-group col-sm-4">
                             {!! Form::label('estados', 'Estados:') !!}
-                            {!! Form::select('estados', $estados, $entrevista->estado()->id, ['class' => 'form-control', 'placeholder'=>'Elija un estado']) !!}
+                            {!! Form::select('estados', config('options.survey_estatuses'), $entrevista->estado()->id, ['class' => 'form-control']) !!}
                         </div>
 
                         <!-- Campo del tipo de caso -->

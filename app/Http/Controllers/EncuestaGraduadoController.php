@@ -481,9 +481,9 @@ class EncuestaGraduadoController extends Controller
             return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
         }
         
-        $estados = DB::table('tbl_estados_encuestas')->get()->pluck('estado', 'id');
+        // $estados = DB::table('tbl_estados_encuestas')->get()->pluck('estado', 'id');
 
-        return view('encuestadores.realizar-entrevista', compact('entrevista', 'estados'));
+        return view('encuestadores.realizar-entrevista', compact('entrevista'));
     }
 
     public function agregar_contacto($id_entrevista) {

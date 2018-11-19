@@ -30,6 +30,26 @@
             'ESPECIALIDAD PROFESIONAL'=>'ESPECIALIDAD PROFESIONAL',
             'MAESTRIA'=>'MAESTRIA',
             'DOCTORADO'=>'DOCTORADO'
+        ],
+        'grade_types_used' => [
+            'PREGRADO'=>'PREGRADO',
+            'BACHILLERATO'=>'BACHILLERATO',
+            'LICENCIATURA'=>'LICENCIATURA',
+        ],
+        'survey_estatuses' => [
+            '' => '- - - Estados - - -',
+            '3' => 'RECHAZADA',
+            '4' => 'INCOMPLETA',
+            '5' => 'FUERA DEL PAÍS',
+            '6' => 'ILOCALIZABLE',
+            '7' => 'FALLECIDO',
+            '9' => 'CON CITA',
+            '10' => 'MENSAJE',
+            '11' => 'LINK AL CORREO',
+            '12' => 'INFORMACIÓN POR CORREO',
+            '13' => 'ENTREVISTA COMPLETA',
+            '14' => 'RECORDATORIO',
+            '15' => 'DISCIPLINA NO CORRESPONDE',
         ]
     ];
 ?>

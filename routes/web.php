@@ -136,7 +136,6 @@ Route::group(['middleware'=>['auth']], function() {
   Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@guardar_detalle_contacto')                         ->name('asignar-encuestas.guardar-detalle-contacto');
   Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_detalle_contacto')          ->name('asignar-encuestas.actualizar-detalle-contacto');
   Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_contacto_entrevista') ->name('asignar-encuestas.actualizar-contacto-entrevista');
-
 });
 
 //Gráficos
@@ -278,6 +277,7 @@ Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function()
   Route::get('lista-citas/obtener-citas-calendario', 'CalendarioDeCitasController@obtener_citas_calendario')->name('obtener-citas-calendario');
   Route::post('cambiar-estado-de-citas/{id_cita}/{id_usuario}','CalendarioDeCitasController@cambiar_estado_de_cita')->name('cambiar-estado-de-cita');
   Route::post('agendar-cita-desde-calendario', 'CalendarioDeCitasController@agendar_cita_desde_calendario')->name('agendar-cita-desde-calendario');
+  Route::get('resumen-de-cita/{id_cita}', 'CalendarioDeCitasController@resumen_cita')->name('resumen-de-cita');
 });
 
 // Rutas para los reportes 

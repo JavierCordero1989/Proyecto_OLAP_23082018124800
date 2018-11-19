@@ -25,7 +25,7 @@
             {{-- <b>Javier Cordero</b> --}}
             <span class="logo-mini"><b>{{ config('global.sidebar_title_min') }}</b></span>
             {{-- <span class="logo-lg"><b>{{ config('global.sidebar_title') }}</b></span> --}}
-            <span class="logo-lg"><b>{{ Auth::user()->getRoleNames() }}</b></span>
+            <span class="logo-lg"><b>{{ Auth::user()->getRoleNames()[0] }}</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -151,7 +151,7 @@
 <!-- Script para cargar las alertas del calendario en la página principal en cada REFRESH-->
 <script>
     $(function() {
-
+        $('[data-toggle="popover"]').popover();
         //Solicitud para los eventos de calendario
         $.ajax({
             url: '{{ route("obtener-citas-calendario") }}',
@@ -176,8 +176,11 @@
 
                     // se recorren las citas obtenidas y se agregan al menú
                     for(index in data.citas) {
+                        let url = '{{route( "resumen-de-cita", ":id" )}}'
+                        url = url.replace(":id", data.citas[index].id)
+
                         let li = $('<li>').appendTo(menu_notificaciones);
-                        let a = $('<a>', { 'href': '{{route( "ver-calendario", Auth::user()->id )}}'}).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
+                        let a = $('<a>', { 'href': url }).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
                         $('<i>', {
                             'class': 'fas fa-users text-aqua'
                         }).appendTo(a);

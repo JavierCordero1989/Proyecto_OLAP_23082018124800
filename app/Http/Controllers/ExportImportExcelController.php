@@ -261,7 +261,7 @@ class ExportImportExcelController extends Controller
     }
 
     public function importar_desde_excel(Request $request) {
-
+        
         // sleep(2);
 
         /** Si viene un archivo en el request
@@ -269,20 +269,39 @@ class ExportImportExcelController extends Controller
          * en la página html.
          */
         if($request->hasFile('archivo_nuevo')) {
+            DB::beginTransaction();
+            // try {
+
+            // }
+            // catch(\Exception $e) {
+            //     DB::rollback();
+            // }
+
             //Llama a la función para guardar desde el excel a la BD
             self::guardar_a_base_de_datos($request);
 
             $reporte = $this->obtenerReporteArchivo();
             $data_file = $this->data_file;
 
+            dd($reporte, $data_file);
+            
             /* Cuando el arreglo de reporte tenga solo un dato, es porque solo se almacenó
             la variable de contador de entrevistas guardadas, por lo que no será
             necesario enviar alguna alerta. */
             if(sizeof($reporte) == 1) {
+                $numeroDeCasos = 0;
                 foreach($data_file as $data ) {
                     $entrevista = Entrevista::create($data);
                     $entrevista->asignarEstado($this->id_estado);
+                    $numeroDeCasos++;
                 }
+
+                $report = [
+                    'cantidad_de_casos' => $numeroDeCasos,
+                    'grado'=>$data_file[0],
+                    'area'=>'',
+                    'disciplina'=>''
+                ];
 
                 Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
                 return redirect(route('encuestas-graduados.index'));
