@@ -17,6 +17,37 @@ class ReportesController extends Controller
         return view('reportes.opciones-reporte');
     }
 
+    public function generar_reporte(Request $request) {
+        $sector = $request->sector;
+        $agrupacion = $request->agrupacion;
+        $area = $request->area;
+        $disciplina = $request->disciplina;
+
+        $entrevistas = Entrevista::whereNull('deleted_at');
+
+        if(isset($sector)) {
+            $entrevistas = $entrevistas->where('codigo_sector', $sector);
+        }
+
+        if(isset($agrupacion)) {
+            $entrevistas = $entrevistas->where('codigo_agrupacion', $agrupacion);
+        }
+
+        if(isset($area)) {
+            $entrevistas = $entrevistas->where('codigo_area', $area);
+        }
+        
+        if(isset($disciplina)) {
+            $entrevistas = $entrevistas->where('codigo_disciplina', $disciplina);
+        }
+
+        //FALTA FILTRAR POR GRADO (PREGRADO, BACHILLER Y LICENCIATURA)
+        $entrevistas = $entrevistas->whereIn('codigo_grado', [74,75,76,77]);
+
+        return array('ENTREVISTAS'=>$entrevistas->get(), 'TOTAL'=>$entrevistas->count());
+        // $entrevistas = Entrevista::where('codigo_sector', )
+    }
+
     public function index() {
         $reporte = [
             'titulo' => 'Cuadro resumen del grado de avance del trabajo de campo de la encuesta de seguimiento de la condición laboral de las personas graduadas 2011-2013 de universidades estatales correspondiente al área de Educación al 24-04-2016',
