@@ -71,6 +71,7 @@ Route::group(['middleware'=>'auth'], function(){
   Route::post('importar-excel-bd/guardar-aceptados/data-file', 'ExportImportExcelController@guardarRegistrosAceptados')->name('excel.guardar-aceptados');
   Route::get('importar-archivo-contactos', 'ExportImportExcelController@createArchivoContactos')->name('excel.subir-contactos');
   Route::post('importar-archivo-contactos', 'ExportImportExcelController@subirArchivoExcelContactos')->name('excel.subir-archivo-contactos');
+  Route::get('confirmacion/archivos/excel/{respuesta}', 'ExportImportExcelController@respuesta_archivo_muestra')->name('excel.respuesta-archivo');
 });
 
 //Encuestadores
