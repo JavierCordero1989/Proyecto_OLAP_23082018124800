@@ -99,7 +99,7 @@ class ExportImportExcelController extends Controller
                 $nombre_completo         = $row['nombre'];
                 $annio_graduacion        = $row['ano_de_graduacion'];
                 $link_encuesta           = $row['link_de_encuesta'];
-                $sexo                    = ($row['sexo'] == '1' ? 'M' : ($row['sexo'] == '2' ? 'F' : 'SC'));
+                $sexo                    = ($row['sexo'] == 'M' ? 'M' : ($row['sexo'] == 'F' ? 'F' : 'SC'));
                 $token                   = $row['token'];
                 $codigo_carrera          = $row['codigo_carrera'];
                 $codigo_universidad      = $row['codigo_universidad'];
@@ -269,42 +269,56 @@ class ExportImportExcelController extends Controller
          * en la página html.
          */
         if($request->hasFile('archivo_nuevo')) {
-            DB::beginTransaction();
-            // try {
-
-            // }
-            // catch(\Exception $e) {
-            //     DB::rollback();
-            // }
-
             //Llama a la función para guardar desde el excel a la BD
             self::guardar_a_base_de_datos($request);
 
             $reporte = $this->obtenerReporteArchivo();
             $data_file = $this->data_file;
-
-            dd($reporte, $data_file);
+            /* SE GUARDAN LOS DATOS DEL EXCEL EN UNA VARIABLE DE SESION*/
+            // session(['data_excel' => $data_file]);
+            session()->put('data_excel',$data_file);
             
             /* Cuando el arreglo de reporte tenga solo un dato, es porque solo se almacenó
             la variable de contador de entrevistas guardadas, por lo que no será
             necesario enviar alguna alerta. */
             if(sizeof($reporte) == 1) {
                 $numeroDeCasos = 0;
+                // $total_por_sexo = [
+                //     'M'=>0,
+                //     'F'=>0,
+                //     'SC'=>0,
+                // ];
+
+                $total_por_sexo = array();
+                $universidades = array();
+
                 foreach($data_file as $data ) {
-                    $entrevista = Entrevista::create($data);
-                    $entrevista->asignarEstado($this->id_estado);
+                    if(isset($total_por_sexo[$data['sexo']])) {
+                        $total_por_sexo[$data['sexo']]++;
+                    }
+                    else {
+                        $total_por_sexo[$data['sexo']] = 1;
+                    }
+
                     $numeroDeCasos++;
                 }
 
+                $agrupacion = Agrupacion::buscarPorId($data_file[0]['codigo_agrupacion'])->first();
+                $area = Area::find($data_file[0]['codigo_area']);
+                $disciplina = Disciplina::find($data_file[0]['codigo_disciplina']);
+
                 $report = [
                     'cantidad_de_casos' => $numeroDeCasos,
-                    'grado'=>$data_file[0],
-                    'area'=>'',
-                    'disciplina'=>''
+                    'total_por_sexo'=> $total_por_sexo,
+                    'tipo_de_archivo'=>$data_file[0]['tipo_de_caso'],
+                    'agrupacion'=>$agrupacion->nombre,
+                    'area'=>$area->descriptivo,
+                    'disciplina'=>$disciplina->descriptivo
                 ];
 
-                Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
-                return redirect(route('encuestas-graduados.index'));
+                // Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
+                // return redirect(route('encuestas-graduados.index'));
+                return view('excel.confirmacion-muestra')->with('report', $report);
             }
             /* Cuando el arreglo tiene mas de un dato, quiere decir que hubo errores al leer los datos del
             archivo de excel, por lo que deben ser mostrados en una vista que indique todo los sucedido. */
@@ -320,6 +334,43 @@ class ExportImportExcelController extends Controller
             return redirect(route('home'));
         }
     }// Fin de la funcion importar_desde_excel
+
+    public function respuesta_archivo_muestra($respuesta) {
+        if(isset($respuesta)){
+            if($respuesta == 'SI') {
+
+                $data_file = session()->get('data_excel');
+                
+                DB::beginTransaction();
+                try {
+                    foreach($data_file as $data ) {
+                        $entrevista = Entrevista::create($data);
+                        $entrevista->asignarEstado($this->id_estado);
+                    }
+
+                    DB::commit();
+
+                    Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
+                    return redirect(route('encuestas-graduados.index'));
+                }
+                catch(\Exception $ex) {
+                    DB::rollback();
+                    Flash::overlay('Error en el sistema', $ex)->error();
+                    return redirect(url('home'));
+                }
+            }
+            else if($respuesta == 'NO') {
+                session()->forget('data_excel');
+                return redirect(url('home'));
+            }
+            else {
+                return back();
+            }
+        }
+        else {
+            return back();
+        }
+    }
 
     /* Guardará todos los registros que el usuario decida salvar después de recibir la notificación.
     Se recibe un arreglo con los datos en forma de arreglo de cada entrevista, serializados desde
