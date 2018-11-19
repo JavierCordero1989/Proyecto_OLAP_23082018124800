@@ -9,6 +9,12 @@ use Flash;
 
 class AreasController extends Controller
 {
+    public function axiosAreas() {
+        $areas = Area::pluck('descriptivo', 'id');
+
+        return $areas;
+    }
+
     public function index() {
         // $areas = DatosCarreraGraduado::porArea()->get();
         $areas = Area::all();
