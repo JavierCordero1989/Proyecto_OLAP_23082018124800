@@ -18,34 +18,13 @@ class ReportesController extends Controller
     }
 
     public function generar_reporte(Request $request) {
+        
         $sector = $request->sector;
         $agrupacion = $request->agrupacion;
         $area = $request->area;
         $disciplina = $request->disciplina;
 
-        $entrevistas = Entrevista::whereNull('deleted_at');
-
-        if(isset($sector)) {
-            $entrevistas = $entrevistas->where('codigo_sector', $sector);
-        }
-
-        if(isset($agrupacion)) {
-            $entrevistas = $entrevistas->where('codigo_agrupacion', $agrupacion);
-        }
-
-        if(isset($area)) {
-            $entrevistas = $entrevistas->where('codigo_area', $area);
-        }
-        
-        if(isset($disciplina)) {
-            $entrevistas = $entrevistas->where('codigo_disciplina', $disciplina);
-        }
-
-        //FALTA FILTRAR POR GRADO (PREGRADO, BACHILLER Y LICENCIATURA)
-        $entrevistas = $entrevistas->whereIn('codigo_grado', [74,75,76,77]);
-
-        return array('ENTREVISTAS'=>$entrevistas->get(), 'TOTAL'=>$entrevistas->count());
-        // $entrevistas = Entrevista::where('codigo_sector', )
+        return array($sector, $agrupacion, $area, $disciplina);
     }
 
     public function index() {
