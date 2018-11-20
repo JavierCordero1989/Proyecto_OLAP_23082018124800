@@ -182,9 +182,11 @@
                         let li = $('<li>').appendTo(menu_notificaciones);
                         let a = $('<a>', { 'href': url }).appendTo(li); //PONERLE UN LINK HACIA ALGÚN LUGAR PARA CAMBIAR EL ESTADO
                         $('<i>', {
-                            'class': 'fas fa-users text-aqua'
+                            'class': 'fas fa-caret-right text-aqua'
                         }).appendTo(a);
-                        a.append(' '+data.citas[index].observacion);
+
+                        // a.append(' '+data.citas[index].observacion);
+                        a.append(' Ir a la cita');
                     }
                 }
             }, 

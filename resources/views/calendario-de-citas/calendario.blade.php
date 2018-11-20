@@ -27,7 +27,7 @@
                         <h3 class="box-title">Agregar cita</h3>
                     </div>
                     <div class="box-body">
-
+                        
                     </div>
                 </div>
 
