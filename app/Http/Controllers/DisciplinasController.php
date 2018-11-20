@@ -11,10 +11,30 @@ use Flash;
 class DisciplinasController extends Controller
 {
     public function disciplinasPorAreaAxios($id) {
-        $area = Area::find($id);
 
-        $disciplinas = $area->disciplinas->pluck('descriptivo', 'id')->all();
+        $areas = Area::whereIn('id', explode(',', $id))->get();
 
+        $disciplinas = array();
+
+        foreach($areas as $area) {
+            $array_areas_por_disciplina = array();
+            $temp_disciplinas = array();
+
+            foreach ($area->disciplinas as $key => $value) {
+                $dis = array();
+                $dis['id'] = $value->id;
+                $dis['nombre'] = $value->descriptivo;
+                $temp_disciplinas[] = $dis;
+            }
+
+
+            $array_areas_por_disciplina[$area->id] = $area->descriptivo;
+            $array_areas_por_disciplina['disciplinas'] = $temp_disciplinas;
+            // $disciplinas[] = $array_areas_por_disciplina;
+            $disciplinas[$area->descriptivo] = $temp_disciplinas;
+        }
+
+        // dd($disciplinas);
         return $disciplinas;
     }
 
