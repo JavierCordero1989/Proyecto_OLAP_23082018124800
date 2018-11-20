@@ -116,9 +116,10 @@ class CalendarioDeCitasController extends Controller
      */
     public function guardar_cita_de_entrevista($entrevista, $encuestador, Request $request) {
 
-        dd($request->all());
+        $fecha_hora = Carbon::createFromFormat('Y-m-d H:i', ($request->datepicker.' '.$request->timepicker))->format('Y-m-d H:i:s');
+
         $cita = Cita::create([
-            'fecha_hora' => $this->fecha_hora_mysql($request->fecha_de_cita, $request->hora_de_cita),
+            'fecha_hora' => $fecha_hora,
             'numero_contacto' => $request->numero_contacto,
             'observacion' => $request->observacion_de_cita,
             'estado' => 'P',
@@ -179,7 +180,7 @@ class CalendarioDeCitasController extends Controller
      */
     public function obtener_citas_calendario(Request $request) {
         if($request->ajax()) {
-
+            dd($request->all());
             $usuario = Usuario::find($request->id);
 
             if(empty($usuario)) {
