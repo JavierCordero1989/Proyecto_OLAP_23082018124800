@@ -136,7 +136,7 @@
         });
 
         function validar_submit() {
-            event.preventDefault();
+            // event.preventDefault();
 
             let fecha = $('[name="datepicker"]').val();
             let hora = $('[name="timepicker"]').val();
@@ -147,15 +147,15 @@
 
             if (selected_date < current) {
                 alert("La fecha que seleccionó es menor a la actual");
-                return;
+                return false;
             }
 
             if (selected_date.hour() == 18 && selected_date.minute() > 0) {
                 alert("No está permitido poner citas después de las 06:00 P.M.");
-                return;
+                return false;
             }
             
-            alert("OK!");
+            return true;
         }
     </script>
 @endsection
