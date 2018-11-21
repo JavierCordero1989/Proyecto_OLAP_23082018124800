@@ -3,9 +3,8 @@
 @section('title', "Nueva cita")
 
 @section('css')
-    {{-- <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' /> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="{!! asset('fullcalendar/css/fullcalendar.min.css') !!}">
-    {{-- <link rel="stylesheet" href="{!! asset('fullcalendar/css/fullcalendar.print.min.css') !!}"> --}}
     <link rel="stylesheet" href="{{ asset('datePicker/css/bootstrap-datepicker3.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('form-helper/css/bootstrap-formhelpers.min.css') }}">
@@ -22,26 +21,26 @@
         <div class="row">
             <!-- Caja para colocar un formulario para agendar cita -->
             <div class="col-md-3">
-                <div class="box box-solid">
+                {{-- <div class="box box-solid">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Agregar cita</h3>
+                        <h3 class="box-title">Agregar recordatorio</h3>
                     </div>
                     <div class="box-body">
                         
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="box box-solid">
+                {{-- <div class="box box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Hola</h3>
                     </div>
                     <div class="box-body">
                         
                     </div>
-                </div>
+                </div> --}}
             </div>
             <!-- Caja para el calendario -->
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-body no-padding">
                         <div id='calendar'></div>
@@ -66,8 +65,12 @@
     <!-- Para prueba -->
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> --}}
     <script type="text/javascript" src="{{ asset('form-helper/js/bootstrap-formhelpers.min.js') }}"></script>
+
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/es.js"></script>
     <script>
-        $(document).ready(function() {
+        $(function() {
             var caracteres_maximos = 200;
             $('#caracteres_restantes').html(caracteres_maximos + ' caracteres restantes');
 
@@ -76,6 +79,18 @@
                 var restantes = caracteres_maximos - tamannio_texto;
 
                 $('#caracteres_restantes').html(restantes + ' caracteres restantes');
+            });
+
+            moment.updateLocale("es", {
+                week: {
+                dow: 0 // 0 => DOMINGO
+                }
+            });
+
+            $("#timepicker").datetimepicker({
+                format: "HH:mm",
+                ignoreReadonly: true,
+                enabledHours: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
             });
         });
     </script>
@@ -91,6 +106,7 @@
     <script src="{!! asset('js/funciones_varias.js') !!}"></script>
     <script>
         let evento;
+        let esHoy = false;
 
         $(document).ready(function() {
             let citas = <?php echo $citas; ?>;
@@ -121,11 +137,11 @@
                 events : array_citas,
                 hiddenDays: [0],
                 selectable: true, // permite seleccionar el dia
-                header: {
-                    left: 'prev,next,today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
+                // header: {
+                //     left: 'prev,next,today',
+                //     center: 'title',
+                //     right: 'month,agendaWeek,agendaDay'
+                // },
                 eventClick: function(event) {
                     
                     let url = "{{ route('cambiar-estado-de-cita', [':date', ':user']) }}";
@@ -138,21 +154,17 @@
                     $('#modal-cambiar-estado-cita').find('#form_cambiar_estado').attr('action', url);
                 },
                 select: function(start, end, event) {
-                    let fechaSeleccionada = start.format();
-                    fechaSeleccionada = fechaSeleccionada.length <= 10 ? fechaSeleccionada : fechaSeleccionada.concat('Z');
-
-                    let fechaActual = new Date(); // Obtiene la fecha actual
-                    fechaActual = convertUTCDateToLocalDate(fechaActual);
-                    let otraFecha = new Date(fechaSeleccionada); // Obtiene la fecha seleccionada en el calendario
-
-                    console.log(fechaSeleccionada, otraFecha);
-
-                    if(otraFecha.getTime() < fechaActual.getTime()) {
-                        alert('La fecha seleccionada es anterior al día de hoy.\n\nPor favor, seleccione el día de hoy o un día posterior.');
+                    selected = moment(start.format())
+                    today = moment().subtract(1, 'days')
+                    hoy = moment()
+                    
+                    if(selected < today) {
+                        esHoy = false;
+                        alert('No se puede seleccionar una fecha anterior al día actual.')
                     }
-                    else {
-                        
-                        $('#modal-nueva-cita').find('[name=fecha_seleccionada]').attr('value', fechaSeleccionada);
+                    else{                  
+                        esHoy = (selected.format('Y-M-D') == hoy.format('Y-M-D'));
+                        $('#modal-nueva-cita').find('[name=fecha_seleccionada]').attr('value', selected.format('Y-M-D'));
                         $('#modal-nueva-cita').find('[name=usuario]').attr('value', '{{ Auth::user()->id}}');
                         $('#modal-nueva-cita').modal('show');
                     }
@@ -166,6 +178,29 @@
 
         $('#form-agregar-cita').submit(function(evento){
             evento.preventDefault();
+
+            let hora = $('[name="timepicker"]').val();
+            let horaInt = parseInt(hora.substring(0,2));
+            let minutosInt = parseInt(hora.substring(3,6));
+
+            if(horaInt < 8) {
+                alert('No se permite agendar citas antes de las 08:00 A.M.')
+                return
+            }
+
+            if(horaInt >= 18 && minutosInt > 30 || horaInt > 19) {
+                alert('No se permite agendar citas después de las 06:30 P.M.');
+                return;
+            }
+
+            today = moment()
+
+            if( (horaInt <= parseInt(today.hour()) && minutosInt <= parseInt(today.minute())) ) {
+                if(esHoy) {
+                    alert('Para poder agendar la cita, la hora ingresada debe ser mayor a la hora actual.')
+                    return
+                }
+            }
 
             if($('[name="numero_contacto"]').val().length == 0) {
                 alert('Debe ingresar un número de teléfono');
