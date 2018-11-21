@@ -150,16 +150,20 @@ class CalendarioDeCitasController extends Controller
 
     public function agendar_cita_desde_calendario(Request $request) {
 
-        $array = explode('T', $request->fecha_seleccionada);
+        // dd($request->all());
+
+        $fecha = Carbon::createFromFormat('Y-m-d H:i', ($request->fecha_seleccionada.' '.$request->timepicker))->format('Y-m-d H:i:s');
+        // $array = explode('T', $request->fecha_seleccionada);
+
         // La fecha obtenida se pasa a un formato para poder convertirla a formato de mysql
-        $fecha = Carbon::createFromFormat('Y-m-d', $array[0])->format('d-m-Y');
+        // $fecha = Carbon::createFromFormat('Y-m-d', $array[0])->format('d-m-Y');
         // Se obtiene la hora ingresada en el form y se pasa a formato de mysql
-        $hora = $this->convertir_hora_24($request->hora_de_cita);
+        // $hora = $this->convertir_hora_24($request->hora_de_cita);
         // Se unen la fecha y la hora en formato mysql
-        $fecha_hora = $this->fecha_hora_mysql($fecha, $hora);
+        // $fecha_hora = $this->fecha_hora_mysql($fecha, $hora);
 
         $data = [
-            'fecha_hora'        => $fecha_hora,
+            'fecha_hora'        => $fecha,
             'numero_contacto'   => $request->numero_contacto,
             'observacion'       => $request->observacion_de_cita,
             'estado'            => 'P',
@@ -173,52 +177,94 @@ class CalendarioDeCitasController extends Controller
         return redirect(route('ver-calendario', $request->usuario));
     }
 
-    /** Este método permite obtener mediante AJAX las citas del día, para que aparezcan las mismas
-     * en la vista principal. Cada vez que la aplicación se refresque, se llama a este método.
-     * @param Request $request Datos enviados por la petición AJAX
-     * @return response Una respuesta con datos en formato JSON.
-     */
     public function obtener_citas_calendario(Request $request) {
-        if($request->ajax()) {
-            dd($request->all());
-            $usuario = Usuario::find($request->id);
+        $usuario = Usuario::find($request->id);
 
-            if(empty($usuario)) {
-                $data = [
-                    'count' => 0,
-                    'citas' => []
-                ];
-            }
+        $data = null;
 
-            $citas;
-
-            if($usuario->hasRole('Encuestador')) {
-                $citas = Cita::listaDePendientes()->where('id_encuestador', $usuario->id)->get();
-            }
-            else {
-                $citas = Cita::listaDePendientes()->get(); // Se obtienen todas las citas pendientes.
-            }
-
-            $citas_del_dia = []; //Arreglo con las citas que se filtrarán por fecha
-
-            //Se recorren las citas obtenidas de la BD
-            foreach($citas as $cita) {
-                // Se compara cada fecha de la cita contra la fecha del día
-                if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
-                    $citas_del_dia[] = $cita; //Se guarda la fecha dentro del array
-                }
-            }
-
-            // Se crea un nuevo array con los datos que se necesitan en la vista
+        if(empty($usuario)) {
             $data = [
-                'count' => count($citas_del_dia),
-                'citas' => $citas_del_dia
+                'count'=>0,
+                'citas'=>[]
             ];
-
-            //Se regresa la respuesta a la petición AJAX
-            return response()->json($data);
         }
+
+        $citas = null;
+
+        if($usuario->hasRole('Encuestador')) {
+            $citas = Cita::listaDePendientes()->where('id_encuestador', $usuario->id)->get();
+        }
+        else {
+            $citas = Cita::listaDePendientes()->get();
+        }
+
+        $citas_del_dia = array();
+
+        //Se recorren las citas obtenidas de la BD
+        foreach($citas as $cita) {
+            // Se compara cada fecha de la cita contra la fecha del día
+            if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
+                $cita->setUser();
+                $cita->setInterview();
+                $citas_del_dia[] = $cita; //Se guarda la cita dentro del array
+            }
+        }
+
+        // Se crea un nuevo array con los datos que se necesitan en la vista
+        $data = [
+            'count' => count($citas_del_dia),
+            'citas' => $citas_del_dia
+        ];
+
+        return $data;
     }
+
+    // /** Este método permite obtener mediante AJAX las citas del día, para que aparezcan las mismas
+    //  * en la vista principal. Cada vez que la aplicación se refresque, se llama a este método.
+    //  * @param Request $request Datos enviados por la petición AJAX
+    //  * @return response Una respuesta con datos en formato JSON.
+    //  */
+    // public function obtener_citas_calendario(Request $request) {
+    //     if($request->ajax()) {
+    //         dd($request->all());
+    //         $usuario = Usuario::find($request->id);
+
+    //         if(empty($usuario)) {
+    //             $data = [
+    //                 'count' => 0,
+    //                 'citas' => []
+    //             ];
+    //         }
+
+    //         $citas;
+
+    //         if($usuario->hasRole('Encuestador')) {
+    //             $citas = Cita::listaDePendientes()->where('id_encuestador', $usuario->id)->get();
+    //         }
+    //         else {
+    //             $citas = Cita::listaDePendientes()->get(); // Se obtienen todas las citas pendientes.
+    //         }
+
+    //         $citas_del_dia = []; //Arreglo con las citas que se filtrarán por fecha
+
+    //         //Se recorren las citas obtenidas de la BD
+    //         foreach($citas as $cita) {
+    //             // Se compara cada fecha de la cita contra la fecha del día
+    //             if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
+    //                 $citas_del_dia[] = $cita; //Se guarda la fecha dentro del array
+    //             }
+    //         }
+
+    //         // Se crea un nuevo array con los datos que se necesitan en la vista
+    //         $data = [
+    //             'count' => count($citas_del_dia),
+    //             'citas' => $citas_del_dia
+    //         ];
+
+    //         //Se regresa la respuesta a la petición AJAX
+    //         return response()->json($data);
+    //     }
+    // }
 
     /** Convierte la fecha obtenida en un formato para guardarlo en MYSQL */
     private function convertir_fecha_mysql($fecha) {
@@ -288,8 +334,8 @@ class CalendarioDeCitasController extends Controller
 
         $entrevista = null;
 
-        if(!is_null($encuestador->id_entrevista)) {
-            $entrevista = Entrevista::find($encuestador->id_entrevista);
+        if(!is_null($cita->id_entrevista)) {
+            $entrevista = Entrevista::find($cita->id_entrevista);
         }
 
         $data = [
