@@ -91,7 +91,7 @@ class EstadosEncuestasTableSeeder extends Seeder
 
         DB::table('tbl_estados_encuestas')
             ->insert([
-                'estado' => 'OTRO'
+                'estado' => 'RECORDATORIO'
                 // 'descripcion' => 'un estado para cualquier otro caso.'
             ]);
 
