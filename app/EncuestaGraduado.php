@@ -583,4 +583,13 @@ class EncuestaGraduado extends Model
                      ->join('tbl_contactos_graduados as cg', 'cg.id_graduado', '=', 'tbl_graduados.id')
                      ->join('tbl_detalle_contacto as dc', 'dc.id_contacto_graduado', '=', 'cg.id');
     }
+
+    public function scopeEntrevistasCompletadas($query) {
+        $estado_completa = DB::table('tbl_estados_encuestas')->where('estado', 'ENTREVISTA COMPLETA')->first();
+        $estado_completa = $estado_completa->id;
+
+        $asignaciones_completas = Asignacion::where('id_estado', $estado_completa)->pluck('id');
+
+        return $query->whereIn('id', $asignaciones_completas);
+    }
 }
