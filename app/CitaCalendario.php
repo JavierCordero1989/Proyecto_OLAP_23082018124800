@@ -48,4 +48,17 @@ class CitaCalendario extends Model
     public function scopeListaDeListas($query) {
         return $query->where('estado', 'L');
     }
+
+    public function setUser() {
+        $user = User::find($this->id_encuestador);
+        $this->id_encuestador = array('id'=>$user->id, 'nombre'=>$user->name);
+    }
+
+    public function setInterview() {
+        $entrevista = EncuestaGraduado::find($this->id_entrevista);
+
+        if(!empty($entrevista)) {
+            $this->id_entrevista = array('id'=>$entrevista->id, 'nombre'=>$entrevista->nombre_completo);
+        }
+    }
 }
