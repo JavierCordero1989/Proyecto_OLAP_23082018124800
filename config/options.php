@@ -23,14 +23,20 @@
         ],
         'grade_types' => [
             '' => '- - - Grados - - -',
-            'DIPLOMADO'=>'DIPLOMADO',
-            'PROFESORADO'=>'PROFESORADO',
+            'PREGRADO'=>'PREGRADO',
             'BACHILLERATO'=>'BACHILLERATO',
             'LICENCIATURA'=>'LICENCIATURA',
-            'ESPECIALIDAD PROFESIONAL'=>'ESPECIALIDAD PROFESIONAL',
-            'MAESTRIA'=>'MAESTRIA',
-            'DOCTORADO'=>'DOCTORADO'
         ],
+        // 'grade_types' => [
+        //     '' => '- - - Grados - - -',
+        //     'DIPLOMADO'=>'DIPLOMADO',
+        //     'PROFESORADO'=>'PROFESORADO',
+        //     'BACHILLERATO'=>'BACHILLERATO',
+        //     'LICENCIATURA'=>'LICENCIATURA',
+        //     'ESPECIALIDAD PROFESIONAL'=>'ESPECIALIDAD PROFESIONAL',
+        //     'MAESTRIA'=>'MAESTRIA',
+        //     'DOCTORADO'=>'DOCTORADO'
+        // ],
         'grade_types_used' => [
             'PREGRADO'=>'PREGRADO',
             'BACHILLERATO'=>'BACHILLERATO',

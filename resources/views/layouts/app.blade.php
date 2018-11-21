@@ -160,6 +160,7 @@
             data: {id: '{{ Auth::user()->id }}'},
             dataType: 'json',
             success: function(data) {
+                console.log(data)
                 // Si vienen datos, carga la campana con las notificaciones.
                 if(data.count > 0) {
                     $('#campana_notificaciones').removeClass('hide');
@@ -185,8 +186,12 @@
                             'class': 'fas fa-caret-right text-aqua'
                         }).appendTo(a);
 
-                        // a.append(' '+data.citas[index].observacion);
-                        a.append(' Ir a la cita');
+                        if(data.citas[index].id_entrevista == null) {
+                            a.append(' Ir al recordatorio que creó '+data.citas[index].id_encuestador.nombre);
+                        }
+                        else {
+                            a.append(' Ir a la cita de la encuesta de '+data.citas[index].id_entrevista.nombre);
+                        }
                     }
                 }
             }, 

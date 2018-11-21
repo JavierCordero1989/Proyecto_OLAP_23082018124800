@@ -77,7 +77,7 @@
             'INCOMPLETA'             => 'ion-android-checkmark-circle',
             'FUERA DEL PAÍS'         => 'ion-plane',
             'ILOCALIZABLE'           => 'ion-sad-outline',
-            'FALLECIDO'              => 'fas fa-cross',
+            'FALLECIDO'              => 'fas fa-ban',
             'EXTRANJERO'             => 'ion-ios-location',
             'CON CITA'               => 'ion-calendar',
             'MENSAJE'                => 'ion-android-textsms',

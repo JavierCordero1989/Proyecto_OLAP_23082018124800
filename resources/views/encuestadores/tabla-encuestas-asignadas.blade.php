@@ -365,7 +365,7 @@
                         filtro = filtro.filter(el => el.codigo_disciplina.toLowerCase().includes(this.disciplina.toLowerCase()))
                     }
                     if(this.grado != '') {
-                        filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes(this.grado.toLowerCase()))
+                        filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes('diplomado') || el.codigo_grado.toLowerCase().includes('profesorado'))
                     }
 
                     return filtro

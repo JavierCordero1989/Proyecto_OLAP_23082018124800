@@ -15,9 +15,14 @@
                             {!! Form::hidden('fecha_seleccionada', '') !!}
                             {!! Form::hidden('usuario', '') !!}
                             
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 {!! Form::label('hora_de_cita', 'Hora de la cita:') !!}
                                 <div class="bfh-timepicker" data-name="hora_de_cita" data-mode="12h"></div>
+                            </div> --}}
+
+                            <div class="form-group">
+                                <label for="timepicker" class="control-label col-xs-4">Hora: </label>
+                                <input type="text" class="form-control datepick" name="timepicker" id="timepicker" readonly>
                             </div>
 
                             <div class="form-group">

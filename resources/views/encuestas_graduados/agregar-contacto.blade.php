@@ -74,37 +74,6 @@
                     validating: 'glyphicon glyphicon-refresh'
                 }, 
                 fields: {
-                    identificacion_referencia: {
-                        validators: {
-
-                        }
-                    },
-                    nombre_referencia: {
-                        validators: {
-                            callback:{
-                                message: 'Al menos el nombre del contacto es requerido.',
-                                callback: function(value, validator, $field) {
-                                    let parentezco_contacto = $('#parentezco').val();
-                                    console.log('Nombre: '+parentezco_contacto);
-
-                                    return (value != '' || parentezco_contacto != '');
-                                }
-                            }
-                        }
-                    },
-                    parentezco: {
-                        validators: {
-                            callback:{
-                                message: 'Al menos el parentezco con el graduado es requerido.',
-                                callback: function(value, validator, $field) {
-                                    let nombre_contacto = $('#nombre_referencia').val();
-                                    console.log('Parentezco: ' + nombre_contacto);
-
-                                    return (value != '' || nombre_contacto != '');
-                                }
-                            }
-                        }
-                    },
                     informacion_contacto: {
                         validators: {
                             notEmpty:{

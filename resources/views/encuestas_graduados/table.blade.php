@@ -23,9 +23,13 @@
                 {{-- <td>{!! $encuesta->sector->nombre !!}</td> --}}
                 <td>{!! $encuesta->tipo_de_caso !!}</td>
                 <td>
-                    {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}
+                    @if (Auth::user()->hasRole('Super Admin'))
+                        {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}
+                    @endif
                         <div class='btn-group'>
-                            <button class="btn btn-danger btn-xs" type="submit" v-on:click="eventoEliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                            @if (Auth::user()->hasRole('Super Admin'))
+                                <button class="btn btn-danger btn-xs" type="submit" v-on:click="eventoEliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                            @endif
                             {{-- {!! Form::button(
                                 '<i class="glyphicon glyphicon-trash"></i>',
                                 [
@@ -38,7 +42,9 @@
                                 <i class="far fa-user"></i>
                             </a>
                         </div>
-                    {!! Form::close() !!}
+                        @if (Auth::user()->hasRole('Super Admin'))
+                            {!! Form::close() !!}
+                        @endif
                 </td>
             </tr>
         @endforeach

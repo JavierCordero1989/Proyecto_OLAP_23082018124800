@@ -26,9 +26,11 @@
                             </a>
                         </h1>
                         {{-- <h1 class="pull-left">Lista de encuestas</h1> --}}
-                        <h1 class="pull-right">
-                            <a id="btn-search" class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('encuestas-graduados.create') !!}">Agregar nueva</a>
-                        </h1>
+                        @if (Auth::user()->hasRole('Super Admin'))
+                            <h1 class="pull-right">
+                                <a id="btn-search" class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('encuestas-graduados.create') !!}">Agregar nueva</a>
+                            </h1>
+                        @endif
                     </div>
                 </div>
 
