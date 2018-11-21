@@ -14,7 +14,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => ['asignar-encuestas.guardar-contacto-entrevista-supervisor', 'id_entrevista'=>$id_entrevista, 'id_supervisor'=>Auth::user()->id], 'onsubmit'=>'return validar_campos();']) !!}
+                    {!! Form::open(['route' => ['asignar-encuestas.guardar-contacto-entrevista-supervisor', 'id_entrevista'=>$id_entrevista, 'id_supervisor'=>Auth::user()->id], 'id'=>'form-nuevo-contacto']) !!}
 
                         <!-- Campo para la identificacion de la referencia -->
                         <div class="form-group col-sm-6">
@@ -60,7 +60,7 @@
 @endsection
 
 @section('scripts') 
-    <script>
+    {{-- <script>
         function validar_campos() {
             var identificacion = $('#identificacion_referencia');
             var nombre = $('#nombre_referencia');
@@ -75,5 +75,51 @@
                 return true;
             }
         }
+    </script> --}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js"></script>
+    <script>
+         $(function() {
+            $('#form-nuevo-contacto').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                }, 
+                fields: {
+                    informacion_contacto: {
+                        validators: {
+                            notEmpty:{
+                                message: 'El contacto es un dato requerido.'
+                            }
+                        }
+                    },
+                    observacion_contacto: {
+                        validators: {
+                            stringLength:{
+                                min: 0,
+                                max: 200,
+                                message: 'La observación no puede contener más de 200 caractéres.'
+                            }
+                        }
+                    },
+                }
+            })
+            .on('success.form.bv', function(e){
+                //$('#success_message').slideDown({opacity: "show"}, "slow")
+                $('#form-nuevo-contacto').data('bootstrapValidator').resetForm();
+                
+                //Previene el submit
+                e.preventDefault();
+                
+                // Obtiene la instancia del formulario
+                let $formulario = $(e.target);
+                
+                //Obtiene la instancia del validador de bootstrap
+                let bv = $formulario.data('bootstrapValidator');
+                
+                // Hacer algo con el submit
+                this.submit();
+            });
+        });
     </script>
 @endsection
