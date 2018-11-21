@@ -77,15 +77,54 @@
                                     <div class="{{ $col_input }} inputGroupContainer">
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <i class="glyphicon glyphicon-eye-open"></i>
+                                                <i class="glyphicon glyphicon-user"></i>
                                             </span>
-                                            {!! Form::textarea('observacion', $data['cita']->observacion, ['class'=>'form-control', 'readonly', 'maxlength'=>'200', 'cols'=>200, 'rows'=>4]) !!}
+                                            {!! Form::text('encuestador', $data['encuestador']->name, ['class'=>'form-control', 'readonly']) !!}
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- entrevista -->
-                                
+                                @if (!is_null($data['entrevista']))
+                                    <!-- entrevista -->
+                                    <div class="form-group">
+                                        <label for="" class="control-label {{$col_label}}">Persona a contactar: </label>
+                                        <div class="{{ $col_input }} inputGroupContainer">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-list-alt"></i>
+                                                </span>
+                                                {!! Form::text('entrevista', $data['entrevista']->nombre_completo, ['class'=>'form-control', 'readonly']) !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <!-- entrevista -->
+                                    <div class="form-group">
+                                        <label for="" class="control-label {{$col_label}}"></label>
+                                        <div class="{{ $col_input }} inputGroupContainer">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-info-sign"></i>
+                                                </span>
+                                                {!! Form::text('entrevista', 'Este es un recordatorio para una entrevista', ['class'=>'form-control', 'readonly']) !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- botón de volver -->
+                                <div class="form-group">
+                                    <label for="" class="control-label {{$col_label}}"></label>
+                                    <div class="{{ $col_input }} inputGroupContainer">
+                                        <div class="input-group">
+                                            <a href="{!! route('ver-calendario', $data['encuestador']->id) !!}" class="btn btn-default">
+                                                <i class="glyphicon glyphicon-arrow-left"></i>
+                                                Volver
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </fieldset>
                         {!! Form::close() !!}
                     </div>
