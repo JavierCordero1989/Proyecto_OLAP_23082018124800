@@ -19,6 +19,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/reporte-general', 'HomeController@reportes_generales')->name('home.reporte-general')->middleware('auth');
 
 //Rutas para los roles
 Route::group(['middleware'=>['auth']], function() {
