@@ -11,6 +11,7 @@ use App\Disciplina;
 use App\Area;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Str;
 
 class EncuestaGraduado extends Model
 {
@@ -552,7 +553,7 @@ class EncuestaGraduado extends Model
      * Obtiene el total de encuestas almacenadas en la BD
      */
     public function scopeTotalDeEncuestas($query) {
-        return $query->count('*');
+        return $query->whereNull('deleted_at')->count();
     }
 
     public function getRouteKeyName()
@@ -584,12 +585,135 @@ class EncuestaGraduado extends Model
                      ->join('tbl_detalle_contacto as dc', 'dc.id_contacto_graduado', '=', 'cg.id');
     }
 
-    public function scopeEntrevistasCompletadas($query) {
-        $estado_completa = DB::table('tbl_estados_encuestas')->where('estado', 'ENTREVISTA COMPLETA')->first();
-        $estado_completa = $estado_completa->id;
+    /* --------------------------------- */
+    /* ENTREVISTAS ASIGNADAS             */
+    /* --------------------------------- */
 
-        $asignaciones_completas = Asignacion::where('id_estado', $estado_completa)->pluck('id');
+    /** Este método obtiene la cuenta de todas las entrevistas que han sido asignadas,es decir, que
+     * su estado es diferente de NO ASIGNADA. Se debe usar el método de Eloquent count() para obtener
+     * el resultado.
+    */
+    public function scopeTotalEntrevistasAsignadas($query) {
+        //id del estado NO ASIGNADA
+        $id_no_asignada = DB::table('tbl_estados_encuestas')->where('estado', 'NO ASIGNADA')->first();
+        $id_no_asignada = $id_no_asignada->id;
 
-        return $query->whereIn('id', $asignaciones_completas);
+        //saca todas los id de los graduados, en donde es estado es diferente de NO ASIGNADA
+        $estado_no_asignada = Asignacion::where('id_estado', '<>', $id_no_asignada)->pluck('id_graduado');
+
+        // saca las entrevistas, en base a los ids sacados de la línea anterior.
+        $entrevistasAsignadas = EncuestaGraduado::whereIn('id', $estado_no_asignada)
+                                    ->whereNull('deleted_at');
+
+        return $entrevistasAsignadas;
+    }
+
+    /** Este método obtiene la cuenta de todas las entrevistas que han sido completadas, es decir, las
+     * que tienen como estado ENTREVISTA COMPLETA. Se debe usar el método de Eloquent count() para obtener
+     * el resultado.
+    */
+    public function scopeTotalEntrevistasCompletas($query) {
+        //id del estado ENTREVISTA COMPLETA
+        $id_completa = DB::table('tbl_estados_encuestas')->where('estado', 'ENTREVISTA COMPLETA')->first();
+        $id_completa = $id_completa->id;
+
+        //saca los id de los graduados, en donde el estado es el de ENTREVISTA COMPLETA
+        $estado_completa = Asignacion::where('id_estado', $id_completa)->pluck('id_graduado');
+
+        //saca las entrevistas, en base a los id de las entrevistas completas
+        $entrevistasCompletas = EncuestaGraduado::whereIn('id', $estado_completa)
+                                    ->whereNull('deleted_at');
+
+        return $entrevistasCompletas;
+    }
+
+    /* --------------------------------- */
+    /* ENTREVISTAS POR ÁREA              */
+    /* --------------------------------- */
+
+    /** Con este método, se obtiene la cantidad de entrevistas ASIGNADAS por área. Se debe usar
+     * el método count() de eloquent, para sacar el resultado.
+     */
+    public function scopeTotalAsignadasPorArea($query, $id_area) {
+        //id del estado NO ASIGNADA
+        $id_no_asignada = DB::table('tbl_estados_encuestas')->where('estado', 'NO ASIGNADA')->first();
+        $id_no_asignada = $id_no_asignada->id;
+
+        //saca todas los id de los graduados, en donde es estado es diferente de NO ASIGNADA
+        $entrevistasAsignadas = Asignacion::where('id_estado', '<>', $id_no_asignada)->pluck('id_graduado');
+
+        $entrevistasCount = $query->whereIn('id', $entrevistasAsignadas)
+                                    ->where('codigo_area', $id_area)
+                                    ->whereNull('deleted_at');
+
+        return $entrevistasCount;
+    }
+
+    /** Con este método, se obtiene la cantidad de entrevistas COMPLETAS por área. Se debe usar
+     * el método count() de eloquent, para sacar el resultado.
+     */
+    public function scopeTotalCompletasPorArea($query, $id_area) {
+        //id del estado ENTREVISTA COMPLETA
+        $id_completa = DB::table('tbl_estados_encuestas')->where('estado', 'ENTREVISTA COMPLETA')->first();
+        $id_completa = $id_completa->id;
+
+        //saca los id de los graduados, en donde el estado es el de ENTREVISTA COMPLETA
+        $estado_completa = Asignacion::where('id_estado', $id_completa)->pluck('id_graduado');
+
+        $completasPorArea = $query->whereIn('id', $estado_completa)
+                                ->where('codigo_area', $id_area)
+                                ->whereNull('deleted_at');
+
+        return $completasPorArea;
+    }
+
+    /* --------------------------------- */
+    /* ENTREVISTAS POR AGRUPACION        */
+    /* --------------------------------- */
+
+    /* Esta función va a permitir obtener todas las encuestas asignadas por cada agrupacion que se especifique,
+    por el ID. Se debe utilizar el método count() de Eloquent para obtener el resultado. */
+    public function scopeTotalAsignadasPorAgrupacion($query, $id_agrupacion) {
+        //id del estado NO ASIGNADA
+        $id_no_asignada = DB::table('tbl_estados_encuestas')->where('estado', 'NO ASIGNADA')->first();
+        $id_no_asignada = $id_no_asignada->id;
+
+        //saca todas los id de los graduados, en donde es estado es diferente de NO ASIGNADA
+        $entrevistasAsignadas = Asignacion::where('id_estado', '<>', $id_no_asignada)->pluck('id_graduado');
+
+        //saca todas las entrevistas asignadas por agrupación
+        $entrevistasCount = $query->whereIn('id', $entrevistasAsignadas)
+                                    ->where('codigo_agrupacion', $id_agrupacion)
+                                    ->whereNull('deleted_at');
+
+            return $entrevistasCount;
+    }
+
+    /* Esta función va a permitir obtener todas las entrevistas completas por cada agrupacion mediante el
+    ID de la misma. Se debe utilizar el método count() de Eloquent para obtener el resultado. */
+    public function scopeTotalCompletasPorAgrupacion($query, $id_agrupacion) {
+        //id del estado ENTREVISTA COMPLETA
+        $id_completa = DB::table('tbl_estados_encuestas')->where('estado', 'ENTREVISTA COMPLETA')->first();
+        $id_completa = $id_completa->id;
+
+        //saca los id de los graduados, en donde el estado es el de ENTREVISTA COMPLETA
+        $estado_completa = Asignacion::where('id_estado', $id_completa)->pluck('id_graduado');
+
+        //saca todas las entrevistas completas por agrupacion
+        $completasPorAgrupacion = $query->whereIn('id', $estado_completa)
+                                ->where('codigo_agrupacion', $id_agrupacion)
+                                ->whereNull('deleted_at');
+
+        return $completasPorAgrupacion;
+    }
+
+    public function scopeTotalAsignadasPorEstado($query, $id_estado) {
+        //saca los id de los graduados, en donde el estado es el que entra por parámetros.
+        $ids_por_estado = Asignacion::where('id_estado', $id_estado)->pluck('id_graduado');
+
+        $entrevistas = $query->whereIn('id', $ids_por_estado)
+                            ->whereNull('deleted_at');
+
+        return $entrevistas;
     }
 }
