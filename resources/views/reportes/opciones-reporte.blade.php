@@ -143,14 +143,14 @@
                 </div>
             </div>
         </div>
-        <pre class="hide">
+        {{-- <pre class="hide">
             debug mode:  <br>
             sectores: @{{sector}} <br>
             agrupaciones: @{{agrupacion}} <br>
             areas: @{{area}} <br>
             disciplinas: @{{disciplina}} <br>
             reporte: @{{reporte}} <br>
-        </pre>
+        </pre> --}}
     </div>
 @endsection
 
