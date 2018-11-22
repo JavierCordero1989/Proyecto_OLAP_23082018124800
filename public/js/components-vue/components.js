@@ -1,17 +1,43 @@
 Vue.component("information-box", {
-    props: ["list"],
+    props: ["list", "color"],
     template: `
     <div class="row">
-        <div v-for="item in list" class="col-xs-6 col-sm-6 col-md-3">
-            <div :class="'small-box '+item.color">
+        <div v-for="(item, index) in list" class="col-xs-6 col-sm-6 col-md-3">
+            <div :class="'small-box '+color">
                 <div class="inner">
-                    <h3>{{item.title}}</h3>
-                    <p>{{item.text}}</p>
+                    <h4>{{index}}</h4>
+                    <p>Asignadas: {{item.asignadas}}</p>
+                    <p>Completas: {{item.completas}}</p>
+                    <p>Respuesta: {{item.respuesta}} %</p>
                 </div>
                 <div class="icon">
-                    <i :class="item.icon"></i>
+                    <i class="fas fa-adjust"></i>
                 </div>
-                <a :href="item.link" class="small-box-footer">
+                <a href="#" class="small-box-footer">
+                    Más información
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    `
+})
+
+Vue.component("information-box-general", {
+    props: ["list", "color"],
+    template: `
+    <div class="row">
+        <div v-for="(item, index) in list" class="col-xs-6 col-sm-6 col-md-3">
+            <div :class="'small-box '+color">
+                <div class="inner">
+                    <h4>{{ index.toUpperCase() }}</h4>
+                    <p v-if="index == 'respuesta'">{{ item }} %</p>
+                    <p v-else>{{ item }}</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <a href="#" class="small-box-footer">
                     Más información
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
