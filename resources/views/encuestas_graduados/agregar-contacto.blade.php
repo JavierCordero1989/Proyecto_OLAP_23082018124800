@@ -18,42 +18,72 @@
 
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => ['encuestas-graduados.guardar-contacto', $id_encuesta], 'id'=>'form-nuevo-contacto']) !!}
-
+                    {!! Form::open(['route' => ['encuestas-graduados.guardar-contacto', $id_encuesta], 'id'=>'form-nuevo-contacto', 'class'=>'form-horizontal']) !!}
+                        
                         <!-- Campo para la identificacion de la referencia -->
-                        <div class="form-group col-sm-6">
-                            {!! Form::label('identificacion_referencia', 'Identificacion de la referencia:') !!}
-                            {!! Form::text('identificacion_referencia', null, ['class' => 'form-control']) !!}
+                        <div class="form-group">
+                            {!! Form::label('user_code', 'Identificación de la referencia: ', ['class'=>'control-label col-md-4']) !!}
+                            <div class="inputGroupContainer col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
+                                    {!! Form::text('user_code', null, ['class'=>'form-control']) !!}
+                                </div>
+                            </div>
                         </div>
-
+                        
                         <!-- Campo para el nombre de la referencia -->
-                        <div class="form-group col-sm-6">
-                            {!! Form::label('nombre_referencia', 'Nombre de la referencia:') !!}
-                            {!! Form::text('nombre_referencia', null, ['class' => 'form-control']) !!}
+                        <div class='form-group'>
+                            <label for='nombre_referencia' class='control-label col-md-4'>Nombre de referencia: </label>
+                            <div class='col-md-6 inputGroupContainer'>
+                                <div class='input-group'>
+                                    <span class='input-group-addon'><i class='glyphicon glyphicon-user'></i></span>
+                                    <input type='text' class='form-control' name='nombre_referencia' id='nombre_referencia'>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Campo para el parentezco -->
-                        <div class="form-group col-sm-6">
-                            {!! Form::label('parentezco', 'Parentezco con el graduado:') !!}
-                            {!! Form::text('parentezco', null, ['class' => 'form-control']) !!}
+                        <div class='form-group'>
+                            <label for='parentezco' class='control-label col-md-4'>Parentezco con el graduado: </label>
+                            <div class='col-md-6 inputGroupContainer'>
+                                <div class='input-group'>
+                                    <span class='input-group-addon'><i class='fas fa-users'></i></span>
+                                    <input type='text' class='form-control' name='parentezco' id='parentezco'>
+                                </div>
+                            </div>
                         </div>
-
+                            
                         <!-- Campo para el nombre de la referencia -->
-                        <div class="form-group col-sm-6">
-                            {!! Form::label('informacion_contacto', 'Información de contacto:') !!}
-                            {!! Form::text('informacion_contacto', null, ['class' => 'form-control']) !!}
+                        <div class='form-group'>
+                            <label for='informacion_contacto' class='control-label col-md-4'>Información de contacto: </label>
+                            <div class='col-md-6 inputGroupContainer'>
+                                <div class='input-group'>
+                                    <span class='input-group-addon'><i class='fas fa-calendar-plus'></i></span>
+                                    <input type='text' class='form-control' name='informacion_contacto' id='informacion_contacto'>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Campo para la observacion -->
-                        <div class="form-group col-sm-6">
-                            {!! Form::label('observacion_contacto', 'Observación:') !!}
-                            {!! Form::textarea('observacion_contacto', null, ['class' => 'form-control', 'rows' => 2, 'cols' => 40]) !!}
+                        <div class='form-group'>
+                            <label for='observacion_contacto' class='control-label col-md-4'>Observación:</label>
+                            <div class='col-md-6 inputGroupContainer'>
+                                <div class='input-group'>
+                                    <span class='input-group-addon'><i class='far fa-eye'></i></span>
+                                    <input type='textarea' class='form-control' name='observacion_contacto' id='observacion_contacto' rows='2', cols='40'>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Submit Field -->
-                        <div class="form-group col-sm-12">
-                            {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
-                            <a href="{!! route('encuestas-graduados.index') !!}" class="btn btn-default">Cancelar</a>
+                        <div class='form-group'>
+                            <label for='' class='control-label col-md-4'></label>
+                            <div class='col-md-6 inputGroupContainer'>
+                                <div class='input-group'>
+                                    <button type="submit" class='btn btn-primary'>Guardar</button>
+                                    <a href="{!! route('encuestas-graduados.index') !!}" class="btn btn-default">Cancelar</a>
+                                </div>
+                            </div>
                         </div>
 
                     {!! Form::close() !!}
