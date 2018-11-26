@@ -85,7 +85,7 @@
             'INFORMACIÓN POR CORREO' => 'ion-email',
             'ENTREVISTA COMPLETA'    => 'ion-android-done-all',
             'OTRO'                   => 'ion-compose',
-            'DISCIPLINA NO CORRESPONDE' => 'fas fa-ban',
+            'DISCIPLINA NO CORRESPONDE' => 'ion ion-information-circled',
             'TOTAL DE ENTREVISTAS'   => 'ion-earth'
         ],
     ];
