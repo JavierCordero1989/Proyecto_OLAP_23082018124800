@@ -52,27 +52,7 @@
                         </div>
                         <div id="panel-por-estados" class="panel-collapse collapse">
                             <div class="panel-body" style="background-color: #ecf0f5;">
-                                <ul>
-                                    <li v-for="(item, index) in report_list">
-                                        @{{item.estado}}
-                                        @{{item.total}}
-                                        @{{item.porcentaje_respuesta}}
-                                    </li>
-                                </ul>
-                                <!-- Componentes para mostrar la información por estados, de la información general -->
-                                {{-- @foreach($reporte as $key => $value)
-                                    @component('components.info-box')
-                                        @slot('color_class', 'bg-green')
-                                        @slot('icon', config('global.iconos_estados.'.$key))
-                                        @slot('info_text', $key)
-                                        @slot('data', $value)
-                                        @if($key == 'TOTAL DE ENTREVISTAS')
-                                            @slot('percent', '')
-                                        @else
-                                            @slot('percent', round(($value / $reporte['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
-                                        @endif
-                                    @endcomponent
-                                @endforeach --}}
+                                <info-box-small :list="report_list" :icons="iconos_estados"></info-box-small>
                             </div>
                         </div>
                     </div>
