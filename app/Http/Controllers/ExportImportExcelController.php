@@ -6,6 +6,7 @@ use App\EncuestaGraduado as Entrevista;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\ContactoGraduado;
+use App\DetalleContacto;
 use App\Universidad;
 use App\Disciplina;
 use App\Agrupacion;
@@ -35,6 +36,12 @@ class ExportImportExcelController extends Controller
     private $data_file = [];
     private $entrevistas_guardadas = 0;
     private $id_estado;
+
+    /* PARA REPORTE DEL ARCHIVO DE CONTACTOS */
+    private $cedulas_graduados_repetidas = array();
+    private $graduado_no_existen = array();
+    private $numeros_ya_almacenados = array();
+    private $data_general_contactos = array();
 
     public function __construct() {
         $this->id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
@@ -395,85 +402,374 @@ class ExportImportExcelController extends Controller
     public function subirArchivoExcelContactos(Request $request) {
         if($request->hasFile('archivo_contactos')) {
             $archivo = $request->file('archivo_contactos');
+            
+            // $encabezados = config('encabezados_contactos');
 
             Excel::load($archivo, function ($reader) {
 
                 foreach ($reader->get() as $key => $row) {
+                    // echo $row . "<br><br>";
+                    /* ARRAY CON LOS DATOS DE CADA FILA */
+                    $info_por_fila = array();
 
-                    $cedula_graduado = $row['cedula_encuestado'];
-                    echo $cedula_graduado.'<br>';
-                    $graduados = Entrevista::listaPorIdentificacion($cedula_graduado)->get();
-                    
-                    /* Si no hay un registro que coincida con la cédula obtenida */
-                    if(sizeof($graduados) == 0) {
-                        /* Guardar un reporte, especificando que la cédula obtenida no corresponde
-                        a ningún graduado y guardar para mostrarlo al final de la carga del 
-                        archivo. */
+                    /* INFORMACIÓN DE PERFIL */
+                    $cedula = $row['identificacion'];
+
+                    $info_por_fila['identificacion_graduado'] = $cedula;
+                    $info_por_fila['ids_graduado'] = $this->obtenerIdsPorCedula($cedula);
+
+                    /* se comprueba que el graduado exista en la BD */
+                    if(!$this->buscarGraduadoPorCedula($cedula)) {
+                        $this->graduado_no_existen[] = 'No existe un graduado con la cédula <b>'.$cedula.'</b> en los registros.';
                         continue;
                     }
-                    
-                    $ids_graduados = [];
 
-                    /* Se recorren los graduados encontrados con la cédula, y se 
-                    guardan los ID unicamente. */
-                    foreach($graduados as $graduado) {
-                        $ids_graduados[] = $graduado->id;
-                        echo 'ID del graduado: '.$graduado->id.'<br><br>';
+                    $info_de_contacto = array();
+
+                    /* RESIDENCIALES DE PERFIL */
+                    $residenciales = array();
+
+                    $residenciales[] = $row['residencial_1'];
+                    $residenciales[] = $row['residencial_2'];
+                    $residenciales[] = $row['residencial_3'];
+                    $residenciales[] = $row['residencial_4'];
+                    $residenciales[] = $row['residencial_5'];
+
+                    $residenciales = $this->comprobarNumeros($residenciales);
+                    $info_de_contacto = $this->llenarArrayContacto('', '', 'Residencial', $residenciales);
+                    $info_por_fila['contactos'][] = $info_de_contacto;
+
+                    /* CELULARES DE PERFIL */
+                    $celulares = array();
+
+                    $celulares[] = $row['celular_1'];
+                    $celulares[] = $row['celular_2'];
+                    $celulares[] = $row['celular_3'];
+                    $celulares[] = $row['celular_4'];
+                    $celulares[] = $row['celular_5'];
+
+                    $celulares = $this->comprobarNumeros($celulares);
+                    $info_de_contacto = $this->llenarArrayContacto('', '', 'Celular', $celulares);
+                    $info_por_fila['contactos'][] = $info_de_contacto;
+                    
+                    /* CORREOS DE PERFIL */
+                    $correos = array();
+
+                    $correos[] = $row['correo_1'];
+                    $correos[] = $row['correo_2'];
+                    $correos[] = $row['correo_3'];
+                    $correos[] = $row['correo_4'];
+
+                    $correos = $this->comprobarNumeros($correos);
+                    $info_de_contacto = $this->llenarArrayContacto('', '', 'Correo', $correos);
+                    $info_por_fila['contactos'][] = $info_de_contacto;
+
+                    /* INFORMACIÓN DE LA MADRE */
+                    $info_madre = array();
+
+                    $cedula_madre = $row['cedula_madre'];
+                    $nombre_madre = $row['nombre_madre'];
+                    $info_madre[] = $row['telefono_madre_1'];
+                    $info_madre[] = $row['telefono_madre_2'];
+                    $info_madre[] = $row['celular_madre_1'];
+                    $info_madre[] = $row['celular_madre_2'];
+
+                    $info_madre = $this->comprobarNumeros($info_madre);
+
+                    if(sizeof($info_madre) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_madre, $nombre_madre, 'Madre', $info_madre);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
                     }
 
-                    $datos_contacto = [];
+                    /* INFORMACIÓN DEL PADRE */
+                    $info_padre = array();
 
-                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_1'];
-                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_1'];
-                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_1'];
-                    $datos_contacto['contacto_1'] = $row['contacto_1a'];
-                    $datos_contacto['contacto_2'] = $row['contacto_1b'];
-                    $datos_contacto['contacto_3'] = $row['contacto_1c'];
-                    $datos_contacto['contacto_4'] = $row['contacto_1d'];
+                    $cedula_padre = $row['cedula_padre'];
+                    $nombre_padre = $row['nombre_padre'];
+                    $info_padre[] = $row['telefono_padre_1'];
+                    $info_padre[] = $row['telefono_padre_2'];
+                    $info_padre[] = $row['celular_padre_1'];
+                    $info_padre[] = $row['celular_padre_2'];
 
-                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+                    $info_padre = $this->comprobarNumeros($info_padre);
 
-                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_2'];
-                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_2'];
-                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_2'];
-                    $datos_contacto['contacto_1'] = $row['contacto_2a'];
-                    $datos_contacto['contacto_2'] = $row['contacto_2b'];
-                    $datos_contacto['contacto_3'] = $row['contacto_2c'];
-                    $datos_contacto['contacto_4'] = $row['contacto_2d'];
+                    if(sizeof($info_padre) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_padre, $nombre_padre, 'Padre', $info_padre);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
 
-                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+                    /* INFORMACIÓN DEL CONYUGE */
+                    $info_conyuge = array();
 
-                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_3'];
-                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_3'];
-                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_3'];
-                    $datos_contacto['contacto_1'] = $row['contacto_3a'];
-                    $datos_contacto['contacto_2'] = $row['contacto_3b'];
-                    $datos_contacto['contacto_3'] = $row['contacto_3c'];
-                    $datos_contacto['contacto_4'] = $row['contacto_3d'];
+                    $cedula_conyuge = $row['cedula_conyuge'];
+                    $nombre_conyuge = $row['nombre_conyuge'];
+                    $info_conyuge[] = $row['telefono_conyuge_1'];
+                    $info_conyuge[] = $row['telefono_conyuge_2'];
+                    $info_conyuge[] = $row['celular_conyuge_1'];
+                    $info_conyuge[] = $row['celular_conyuge_2'];
 
-                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+                    $info_conyuge = $this->comprobarNumeros($info_conyuge);
+                    
+                    if(sizeof($info_conyuge) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_conyuge, $nombre_conyuge, 'Conyuge', $info_conyuge);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
 
-                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_4'];
-                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_4'];
-                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_4'];
-                    $datos_contacto['contacto_1'] = $row['contacto_4a'];
-                    $datos_contacto['contacto_2'] = $row['contacto_4b'];
-                    $datos_contacto['contacto_3'] = $row['contacto_4c'];
-                    $datos_contacto['contacto_4'] = $row['contacto_4d'];
+                    /* INFORMACIÓN DEL HIJO 1 */
+                    $info_hijo_1 = array();
 
-                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+                    $cedula_hijo_1 = $row['cedula_hijo_1'];
+                    $nombre_hijo_1 = $row['nombre_hijo_1'];
+                    $info_hijo_1[] = $row['telefono_hijo_1_a'];
+                    $info_hijo_1[] = $row['telefono_hijo_1_b'];
+                    $info_hijo_1[] = $row['celular_hijo_1_c'];
+                    $info_hijo_1[] = $row['celular_hijo_1_d'];
 
-                    $datos_contacto['cedula_contacto'] = $row['cedula_contacto_5'];
-                    $datos_contacto['nombre_contacto'] = $row['nombre_contacto_5'];
-                    $datos_contacto['parentezco_contacto'] = $row['parentezco_contacto_5'];
-                    $datos_contacto['contacto_1'] = $row['contacto_5a'];
-                    $datos_contacto['contacto_2'] = $row['contacto_5b'];
-                    $datos_contacto['contacto_3'] = $row['contacto_5c'];
-                    $datos_contacto['contacto_4'] = $row['contacto_5d'];
+                    $info_hijo_1 = $this->comprobarNumeros($info_hijo_1);
 
-                    $this->guardarContactoGraduado($datos_contacto, $ids_graduados);
+                    if(sizeof($info_hijo_1) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hijo_1, $nombre_hijo_1, 'Hijo', $info_hijo_1);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HIJO 2 */
+                    $info_hijo_2 = array();
+
+                    $cedula_hijo_2 = $row['cedula_hijo_2'];
+                    $nombre_hijo_2 = $row['nombre_hijo_2'];
+                    $info_hijo_2[] = $row['telefono_hijo_2_a'];
+                    $info_hijo_2[] = $row['telefono_hijo_2_b'];
+                    $info_hijo_2[] = $row['celular_hijo_2_c'];
+                    $info_hijo_2[] = $row['celular_hijo_2_d'];
+
+                    $info_hijo_2 = $this->comprobarNumeros($info_hijo_2);
+
+                    if(sizeof($info_hijo_2) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hijo_2, $nombre_hijo_2, 'Hijo', $info_hijo_2);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HIJO 3 */
+                    $info_hijo_3 = array();
+
+                    $cedula_hijo_3 = $row['cedula_hijo_3'];
+                    $nombre_hijo_3 = $row['nombre_hijo_3'];
+                    $info_hijo_3[] = $row['telefono_hijo_3_a'];
+                    $info_hijo_3[] = $row['telefono_hijo_3_b'];
+                    $info_hijo_3[] = $row['celular_hijo_3_c'];
+                    $info_hijo_3[] = $row['celular_hijo_3_d'];
+
+                    $info_hijo_3 = $this->comprobarNumeros($info_hijo_3);
+
+                    if(sizeof($info_hijo_3) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hijo_3, $nombre_hijo_3, 'Hijo', $info_hijo_3);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HIJO 4 */
+                    $info_hijo_4 = array();
+
+                    $cedula_hijo_4 = $row['cedula_hijo_4'];
+                    $nombre_hijo_4 = $row['nombre_hijo_4'];
+                    $info_hijo_4[] = $row['telefono_hijo_4_a'];
+                    $info_hijo_4[] = $row['telefono_hijo_4_b'];
+                    $info_hijo_4[] = $row['celular_hijo_4_c'];
+                    $info_hijo_4[] = $row['celular_hijo_4_d'];
+
+                    $info_hijo_4 = $this->comprobarNumeros($info_hijo_4);
+
+                    if(sizeof($info_hijo_4) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hijo_4, $nombre_hijo_4, 'Hijo', $info_hijo_4);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HIJO 5 */
+                    $info_hijo_5 = array();
+
+                    $cedula_hijo_5 = $row['cedula_hijo_5'];
+                    $nombre_hijo_5 = $row['nombre_hijo_5'];
+                    $info_hijo_5[] = $row['telefono_hijo_5_a'];
+                    $info_hijo_5[] = $row['telefono_hijo_5_b'];
+                    $info_hijo_5[] = $row['celular_hijo_5_c'];
+                    $info_hijo_5[] = $row['celular_hijo_5_d'];
+
+                    $info_hijo_5 = $this->comprobarNumeros($info_hijo_5);
+
+                    if(sizeof($info_hijo_5) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hijo_5, $nombre_hijo_5, 'Hijo', $info_hijo_5);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HERMANO 1 */
+                    $info_hermano_1 = array();
+
+                    $cedula_hermano_1 = $row['cedula_hermano_1'];
+                    $nombre_hermano_1 = $row['nombre_hermano_1'];
+                    $info_hermano_1[] = $row['telefono_hermano_1_a'];
+                    $info_hermano_1[] = $row['telefono_hermano_1_b'];
+                    $info_hermano_1[] = $row['celular_hermano_1_c'];
+                    $info_hermano_1[] = $row['celular_hermano_1_d'];
+
+                    $info_hermano_1 = $this->comprobarNumeros($info_hermano_1);
+
+                    if(sizeof($info_hermano_1) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hermano_1, $nombre_hermano_1, 'Hermano', $info_hermano_1);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HERMANO 2 */
+                    $info_hermano_2 = array();
+
+                    $cedula_hermano_2 = $row['cedula_hermano_2'];
+                    $nombre_hermano_2 = $row['nombre_hermano_2'];
+                    $info_hermano_2[] = $row['telefono_hermano_2_a'];
+                    $info_hermano_2[] = $row['telefono_hermano_2_b'];
+                    $info_hermano_2[] = $row['celular_hermano_2_c'];
+                    $info_hermano_2[] = $row['celular_hermano_2_d'];
+
+                    $info_hermano_2 = $this->comprobarNumeros($info_hermano_2);
+
+                    if(sizeof($info_hermano_2) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hermano_2, $nombre_hermano_2, 'Hermano', $info_hermano_2);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HERMANO 3 */
+                    $info_hermano_3 = array();
+
+                    $cedula_hermano_3 = $row['cedula_hermano_3'];
+                    $nombre_hermano_3 = $row['nombre_hermano_3'];
+                    $info_hermano_3[] = $row['telefono_hermano_3_a'];
+                    $info_hermano_3[] = $row['telefono_hermano_3_b'];
+                    $info_hermano_3[] = $row['celular_hermano_3_c'];
+                    $info_hermano_3[] = $row['celular_hermano_3_d'];
+
+                    $info_hermano_3 = $this->comprobarNumeros($info_hermano_3);
+
+                    if(sizeof($info_hermano_3) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hermano_3, $nombre_hermano_3, 'Hermano', $info_hermano_3);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HERMANO 4 */
+                    $info_hermano_4 = array();
+
+                    $cedula_hermano_4 = $row['cedula_hermano_4'];
+                    $nombre_hermano_4 = $row['nombre_hermano_4'];
+                    $info_hermano_4[] = $row['telefono_hermano_4_a'];
+                    $info_hermano_4[] = $row['telefono_hermano_4_b'];
+                    $info_hermano_4[] = $row['celular_hermano_4_c'];
+                    $info_hermano_4[] = $row['celular_hermano_4_d'];
+
+                    $info_hermano_4 = $this->comprobarNumeros($info_hermano_4);
+
+                    if(sizeof($info_hermano_4) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hermano_4, $nombre_hermano_4, 'Hermano', $info_hermano_4);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* INFORMACIÓN DEL HERMANO 5 */
+                    $info_hermano_5 = array();
+
+                    $cedula_hermano_5 = $row['cedula_hermano_5'];
+                    $nombre_hermano_5 = $row['nombre_hermano_5'];
+                    $info_hermano_5[] = $row['telefono_hermano_5_a'];
+                    $info_hermano_5[] = $row['telefono_hermano_5_b'];
+                    $info_hermano_5[] = $row['celular_hermano_5_c'];
+                    $info_hermano_5[] = $row['celular_hermano_5_d'];
+
+                    $info_hermano_5 = $this->comprobarNumeros($info_hermano_5);
+
+                    if(sizeof($info_hermano_5) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto($cedula_hermano_5, $nombre_hermano_5, 'Padre', $info_hermano_5);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* CORREOS DE PERFIL */
+                    $correos_perfil = array();
+                    
+                    $correos_perfil[] = $row['correo_p_1'];
+                    $correos_perfil[] = $row['correo_p_2'];
+                    $correos_perfil[] = $row['correo_p_3'];
+                    $correos_perfil[] = $row['correo_p_4'];
+
+                    $correos_perfil = $this->comprobarNumeros($correos_perfil);
+
+                    if(sizeof($correos_perfil) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto('', '', 'Correo de perfil', $correos_perfil);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* TELEFONOS DE PERFIL */
+                    $telefonos_perfil = array();
+
+                    $telefonos_perfil[] = $row['telefono_p_1'];
+                    $telefonos_perfil[] = $row['telefono_p_2'];
+                    $telefonos_perfil[] = $row['telefono_p_3'];
+                    $telefonos_perfil[] = $row['telefono_p_4'];
+                    $telefonos_perfil[] = $row['telefono_p_5'];
+                    $telefonos_perfil[] = $row['telefono_p_6'];
+                    $telefonos_perfil[] = $row['telefono_p_7'];
+                    $telefonos_perfil[] = $row['telefono_p_8'];
+                    $telefonos_perfil[] = $row['telefono_p_9'];
+                    
+                    $telefonos_perfil = $this->comprobarNumeros($telefonos_perfil);
+
+                    if(sizeof($telefonos_perfil) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto('', '', 'Números de perfil', $telefonos_perfil);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    /* TELEFONOS DE COLEGIOS Y ESCUELAS*/
+                    $telefonos_otros = array();
+
+                    $nombre_otro = $row['otro_p_nombre_1'];
+                    $telefono_otro = $row['otro_p_numero_1'];
+
+                    if(!is_null($telefono_otro)) {
+                        $info_de_contacto = $this->llenarArrayContacto($nombre_otro, '', 'Otro', array($telefono_otro));
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+                    $nombre_otro = $row['otro_p_nombre_2'];
+                    $telefono_otro = $row['otro_p_numero_2'];
+
+                    if(!is_null($telefono_otro)) {
+                        $info_de_contacto = $this->llenarArrayContacto($nombre_otro, '', 'Otro', array($telefono_otro));
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+                    $nombre_otro = $row['otro_p_nombre_3'];
+                    $telefono_otro = $row['otro_p_numero_3'];
+
+                    if(!is_null($telefono_otro)) {
+                        $info_de_contacto = $this->llenarArrayContacto($nombre_otro, '', 'Otro', array($telefono_otro));
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+                    $nombre_otro = $row['otro_p_nombre_4'];
+                    $telefono_otro = $row['otro_p_numero_4'];
+
+                    if(!is_null($telefono_otro)) {
+                        $info_de_contacto = $this->llenarArrayContacto($nombre_otro, '', 'Otro', array($telefono_otro));
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    $telefonos_colegios = array();
+
+                    $telefonos_colegios[] = $row['telefono_colegio_1'];
+                    $telefonos_colegios[] = $row['telefono_colegio_2'];
+                    $telefonos_colegios[] = $row['telefono_colegio_3'];
+
+                    $telefonos_colegios = $this->comprobarNumeros($telefonos_colegios);
+
+                    if(sizeof($telefonos_colegios) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto('', '', 'Escuela/Colegio', $telefonos_colegios);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
+
+                    $this->data_general_contactos[] = $info_por_fila;
                 }
             });
+
+            dd($this->data_general_contactos);
         }
         else {
             $error = 'No ha subido ningún archivo.';
@@ -584,73 +880,97 @@ class ExportImportExcelController extends Controller
         return $reporte;
     }
 
-    /* Esta función permitirá obtener un arreglo por parámetros y evaluarlo ante la BD 
-    para comprobar la información, además recibe los IDS de los graduados si existen
-    alguno que tenga varias carreras. */
-    private function guardarContactoGraduado($array_contacto, $ids) {
+    private function buscarGraduadoPorCedula($identificacion) {
+        $existe = Entrevista::where('identificacion_graduado', $identificacion)->exists();
 
-        /* El registro es adecuado para guardarlo*/
-        if($this->comprobarDatosEnBlanco($array_contacto) == 1) {
-            $existe_contacto = ContactoGraduado::buscarPorIdentificacion($array_contacto['cedula_contacto'])->first();
+        return $existe;
+    }
 
-            /* Si no existe un registro con la cédula del contacto ingresada, se puede guardar como
-            un registro nuevo. Si no está vacío, se deberá ligar el encontrado a las entrevistas
-            que coincidan */
-            if(empty($existe_contacto)) {
-                $contactos = $this->obtenerNumerosDeContacto($array_contacto);
+    private function obtenerIdsPorCedula($cedula) {
+        return Entrevista::where('identificacion_graduado', $cedula)->pluck('id');
+    }
 
-                foreach($ids as $id) {
-                    $nuevo_contacto = ContactoGraduado::create([
-                        'identificacion_referencia' => $array_contacto['cedula_contacto'],
-                        'nombre_referencia' => $array_contacto['nombre_contacto'],
-                        'parentezco' => $array_contacto['parentezco_contacto'],
-                        'id_graduado' => $id
-                    ]);
+    private function obtenerIdGraduadoPorCedula($identificacion) {
+        $graduado = Entrevista::where('identificacion_graduado', $identificacion)->pluck('id', 'token');
+        $ids = array();
 
-                    foreach($contactos as $contacto) {
-                        $nuevo_detalle = DetalleContacto::create([
-                            'contacto' => $contacto,
-                            'observacion' => '',
-                            'estado' => 'F',
-                            'id_contacto_graduado' => $nuevo_contacto->id
-                        ]);
-                    }
-                }
+        if(sizeof($graduado > 1)) {
+            $mensaje = 'Los casos con token <b>';
+
+            foreach ($graduado as $key => $value) {
+                $mensaje .= $key.', ';
+                $ids[] = $value;
             }
-            else {
-                /* Se debe reportar que el registro que tiene la cédula X ya le corresponde a otro 
-                registro, para analizar referencias familiares. */
-                $existe_contacto->id_graduado;
-            }
+
+            $mensaje .= '</b> tendrán la misma información de contacto, para la cédula <b>'.$identificacion.'</b>.';
+            
+            $this->cedulas_graduados_repetidas[] = $mensaje;
         }
-        /* No se puede guardar el registro, reportarlo */
         else {
-            /*  */
+            foreach ($graduado as $key => $value) {
+                $ids[] = $value;
+            }
+        }
+
+        return $ids;
+    }
+
+    private function comprobarNumeros($array) {
+        $data = array();
+
+        foreach ($array as $key => $value) {
+            if(!is_null($value)) {
+                $data[] = $value;
+            }
+        }
+
+        return $data;
+    }
+
+    private function guardarInfoDeContacto($identificacion, $nombre, $parentezco, $id_graduado, $contactos) {
+
+        $contacto = ContactoGraduado::create([
+            'identificacion_referencia' => $identificacion,
+            'nombre_referencia'         => $nombre,
+            'parentezco'                => $parentezco,
+            'id_graduado'               => $id_graduado
+        ]);
+
+        foreach ($contactos as $key => $value) {
+            $detalle = DetalleContacto::create([
+                'contacto'             =>$value,
+                'observacion'          =>'',
+                'estado'               => 'F',
+                'id_contacto_graduado' => $contacto->id
+            ]);
         }
     }
 
-    /** Permite recorrer los datos del array y ver cuales están vacíos, si los tres primeros (identificacion,
-     * nombre y parentezco) están vacíos, el registro es inútil porque carece de información. */
-    public function comprobarDatosEnBlanco($array) {
-        if( $array['cedula_contacto'] == '' && 
-            $array['nombre_contacto'] == '' && 
-            $array['parentezco_contacto'] == '')
-        {
-            /* Retorna FALSE por registro no utilizable*/
-            return false;
-        }
+    private function llenarArrayContacto($identificacion_referencia, $nombre_referencia, $parentezco, $contactos) {
+        $array = array();
+        
+        $array['identificacion_referencia'] = $identificacion_referencia;
+        $array['nombre_referencia'] = $nombre_referencia;
+        $array['parentezco'] = $parentezco;
+        $array['contactos'] = $contactos;
 
-        return true;
+        return $array;
     }
 
-    public function obtenerNumerosDeContacto($array) {
-        $temp = [];
+    private function dataExampleContactsFile() {
+        $cantidad_de_casos = Entrevista::totalDeEncuestas();
 
-        if($array['contacto_1'] != ''){ $temp[] = $array['contacto_1']; }
-        if($array['contacto_2'] != ''){ $temp[] = $array['contacto_2']; }
-        if($array['contacto_3'] != ''){ $temp[] = $array['contacto_3']; }
-        if($array['contacto_4'] != ''){ $temp[] = $array['contacto_4']; }
+        $faker = Factory::create('es_ES');
+        $numeros = array();
 
-        return $temp;
+        for($i=0; $i<$cantidad_de_casos*78; $i++) { 
+            $numero = $faker->phoneNumber; 
+            while(in_array($numero, $numeros)) { 
+                $numero = $faker->phoneNumber; 
+            } 
+            $numeros[] = $numero; 
+        }
+
+        $data_numbers = array_chunk($numeros, $cantidad_de_casos);
     }
 }
