@@ -714,4 +714,22 @@ class EncuestaGraduado extends Model
 
         return $entrevistas;
     }
+
+    public function otrasCarreras() {
+        $otras = EncuestaGraduado::where('identificacion_graduado', $this->identificacion_graduado)->get();
+        $otras_carreras = array();
+
+        foreach($otras as $encuesta) {
+            if($encuesta->id != $this->id) {
+                $otras_carreras[] = $encuesta->id;
+            }
+        }
+
+        if(sizeof($otras_carreras) > 0) {
+            return $otras_carreras;
+        }
+        else {
+            return null;
+        }
+    }
 }
