@@ -127,6 +127,11 @@
                             <p>{!! $encuesta->tipo_de_caso !!}</p>
                         </div>
     
+                        <!-- Indicador de otras carreras -->
+                        @if (!is_null($encuesta->otrasCarreras()))
+                            {!! Form::label('otras_carreras', 'Este usuario posee otras carreras: ') !!}
+                            <p>Combo box here</p>
+                        @endif
                         {{-- <!-- Created At Field -->
                         <div class="col-xs-6">
                             {!! Form::label('created_at', 'Creado el:') !!}

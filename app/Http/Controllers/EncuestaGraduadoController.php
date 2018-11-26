@@ -366,6 +366,7 @@ class EncuestaGraduadoController extends Controller
             $encuesta->contactos = $contactos;
             /* se setea un estado para cada encuesta */
             $encuesta->estado = $encuesta->estado()->estado;
+            $encuesta->otras_carreras = $encuesta->otrasCarreras();
         }
 
         /* NOTA:
