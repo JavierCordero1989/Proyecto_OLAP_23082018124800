@@ -399,6 +399,8 @@ class ExportImportExcelController extends Controller
         return view('excel.subir-archivo-contactos');
     }
 
+
+
     public function subirArchivoExcelContactos(Request $request) {
         if($request->hasFile('archivo_contactos')) {
             $archivo = $request->file('archivo_contactos');
@@ -436,8 +438,11 @@ class ExportImportExcelController extends Controller
                     $residenciales[] = $row['residencial_5'];
 
                     $residenciales = $this->comprobarNumeros($residenciales);
-                    $info_de_contacto = $this->llenarArrayContacto('', '', 'Residencial', $residenciales);
-                    $info_por_fila['contactos'][] = $info_de_contacto;
+
+                    if(sizeof($residenciales) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto('', '', 'Residencial', $residenciales);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
 
                     /* CELULARES DE PERFIL */
                     $celulares = array();
@@ -449,8 +454,11 @@ class ExportImportExcelController extends Controller
                     $celulares[] = $row['celular_5'];
 
                     $celulares = $this->comprobarNumeros($celulares);
-                    $info_de_contacto = $this->llenarArrayContacto('', '', 'Celular', $celulares);
-                    $info_por_fila['contactos'][] = $info_de_contacto;
+
+                    if(sizeof($celulares) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto('', '', 'Celular', $celulares);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
                     
                     /* CORREOS DE PERFIL */
                     $correos = array();
@@ -461,8 +469,11 @@ class ExportImportExcelController extends Controller
                     $correos[] = $row['correo_4'];
 
                     $correos = $this->comprobarNumeros($correos);
-                    $info_de_contacto = $this->llenarArrayContacto('', '', 'Correo', $correos);
-                    $info_por_fila['contactos'][] = $info_de_contacto;
+
+                    if(sizeof($correos) > 0) {
+                        $info_de_contacto = $this->llenarArrayContacto('', '', 'Correo', $correos);
+                        $info_por_fila['contactos'][] = $info_de_contacto;
+                    }
 
                     /* INFORMACIÓN DE LA MADRE */
                     $info_madre = array();
@@ -769,7 +780,7 @@ class ExportImportExcelController extends Controller
                 }
             });
 
-            dd($this->data_general_contactos);
+            dd($this->data_general_contactos[0]);
         }
         else {
             $error = 'No ha subido ningún archivo.';
