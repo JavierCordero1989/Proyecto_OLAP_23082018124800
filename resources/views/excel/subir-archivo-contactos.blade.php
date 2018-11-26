@@ -18,7 +18,7 @@
                         <!-- Nombre Field -->
                         <div class="form-group col-sm-6">
                             {!! Form::label('archivo_contactos', 'Seleccione el archivo a importar:') !!}
-                            {!! Form::file('archivo_contactos', ['class' => 'form-control-file', 'accept'=>'.xlsx,.xls', 'required']) !!}
+                            {!! Form::file('archivo_contactos', ['class' => 'form-control-file', 'accept'=>'.xlsx,.xls, .csv', 'required']) !!}
                             {{-- <input class="form-control" type="file" name="archivo_nuevo" id="archivo_nuevo" accept=".xlsx,.xls" required> --}}
                         </div>
                         
