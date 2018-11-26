@@ -129,8 +129,10 @@
     
                         <!-- Indicador de otras carreras -->
                         @if (!is_null($encuesta->otrasCarreras()))
-                            {!! Form::label('otras_carreras', 'Este usuario posee otras carreras: ') !!}
-                            <p>Combo box here</p>
+                            <div class="col-xs-6">
+                                {!! Form::label('otras_carreras', 'Este usuario posee otras carreras: ') !!}
+                                <p>Combo box here</p> <!-- TODO -->
+                            </div>
                         @endif
                         {{-- <!-- Created At Field -->
                         <div class="col-xs-6">
