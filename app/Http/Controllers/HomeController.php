@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\EncuestaGraduado as Entrevista;
 use App\Area;
 use App\Agrupacion;
+use DB;
 
 class HomeController extends Controller
 {
@@ -19,22 +20,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //Se obtiene la cantidad de entrevistas asignadas
-        $total_encuestas_asignadas = Entrevista::totalEntrevistasAsignadas()->count();
-        //Se obtiene el total de entrevistas almacenadas
-        $total_de_encuestas = Entrevista::totalDeEncuestas();
+        $reporte = $this->obtenerReportePorEstados();
+        $reporte['TOTAL DE ENTREVISTAS'] = Entrevista::totalDeEncuestas();        
 
-        $estados_temp = Entrevista::totalesPorEstado()->get();
-
-        $estados = [];
-
-        foreach($estados_temp as $key => $value) {
-            $estados[$value->estado] = $value->total;
-        }
-
-        $estados['TOTAL DE ENTREVISTAS'] = Entrevista::totalDeEncuestas();
-
-        return view('home', compact('estados'));
+        return view('home', compact('reporte'));
     }
 
     public function reportes_generales() {
@@ -104,4 +93,32 @@ class HomeController extends Controller
         }
 
     }
+
+    private function obtenerReportePorEstados() {
+        $estados = DB::table('tbl_estados_encuestas')->orderBy('id')->pluck('estado','id');
+        $reporte = array();
+        $data = array();
+        $totalAsignadas = Entrevista::totalEntrevistasAsignadas()->count();
+        $totalEncuestas = Entrevista::totalDeEncuestas();
+        
+        foreach ($estados as $key => $value) {
+            $data['estado'] = $value;
+
+            if($value == 'ASIGNADA') {
+                $data['total'] = Entrevista::totalEntrevistasAsignadas()->count();
+                $data['porcentaje_respuesta'] = $this->obtenerPorcentaje($data['total'], $totalEncuestas);
+            }
+            else if($value == 'NO ASIGNADA') {
+                $data['total'] = Entrevista::totalDeEncuestasPorEstado($key)->count();
+                $data['porcentaje_respuesta'] = $this->obtenerPorcentaje($data['total'], $totalEncuestas);
+            }
+            else {
+                $data['total'] = Entrevista::totalDeEncuestasPorEstado($key)->count();
+                $data['porcentaje_respuesta'] = $this->obtenerPorcentaje($data['total'], $totalAsignadas);
+            }
+            $reporte[] = $data;
+        }
+        
+        return $reporte;
+    } 
 }

@@ -52,8 +52,15 @@
                         </div>
                         <div id="panel-por-estados" class="panel-collapse collapse">
                             <div class="panel-body" style="background-color: #ecf0f5;">
+                                <ul>
+                                    <li v-for="item in report_list">
+                                        @{{item.estado}}
+                                        @{{item.total}}
+                                        @{{item.porcentaje_respuesta}}
+                                    </li>
+                                </ul>
                                 <!-- Componentes para mostrar la información por estados, de la información general -->
-                                @foreach($estados as $key => $value)
+                                {{-- @foreach($reporte as $key => $value)
                                     @component('components.info-box')
                                         @slot('color_class', 'bg-green')
                                         @slot('icon', config('global.iconos_estados.'.$key))
@@ -62,10 +69,10 @@
                                         @if($key == 'TOTAL DE ENTREVISTAS')
                                             @slot('percent', '')
                                         @else
-                                            @slot('percent', round(($value / $estados['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
+                                            @slot('percent', round(($value / $reporte['TOTAL DE ENTREVISTAS']) * 100 , 0) . '%')
                                         @endif
                                     @endcomponent
-                                @endforeach
+                                @endforeach --}}
                             </div>
                         </div>
                     </div>
@@ -159,6 +166,8 @@
             },
             data: {
                 information: [],
+                report_list: [],
+                iconos_estados: [],
                 color: "bg-aqua"
             },
             methods: {
@@ -168,6 +177,9 @@
                     axios.get(url).then(response=>{
                         this.information = response.data
                     })
+
+                    this.report_list = <?php echo json_encode($reporte); ?>;
+                    this.iconos_estados = <?php echo json_encode(config('global.iconos_estados')); ?>;
                 }
             }
         })

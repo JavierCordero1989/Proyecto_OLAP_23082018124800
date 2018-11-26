@@ -707,12 +707,10 @@ class EncuestaGraduado extends Model
         return $completasPorAgrupacion;
     }
 
-    public function scopeTotalAsignadasPorEstado($query, $id_estado) {
-        //saca los id de los graduados, en donde el estado es el que entra por parámetros.
-        $ids_por_estado = Asignacion::where('id_estado', $id_estado)->pluck('id_graduado');
+    public function scopeTotalDeEncuestasPorEstado($query, $id) {
+        $estado_graduado = Asignacion::where('id_estado', $id)->whereNull('deleted_at')->pluck('id_graduado');
 
-        $entrevistas = $query->whereIn('id', $ids_por_estado)
-                            ->whereNull('deleted_at');
+        $entrevistas = $query->whereIn('id', $estado_graduado)->whereNull('deleted_at');
 
         return $entrevistas;
     }
