@@ -48,19 +48,19 @@ Vue.component("information-box-general", {
 })
 
 Vue.component("info-box-small", {
-    props: ["list"],
+    props: ["list", "icons"],
     template: `
     <div class="row">
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div v-for="(item, index) in list" class="col-md-3 col-sm-6 col-xs-12">
             <div class="info-box">
-                <span :class="'info-box-icon '+item.color">
-                    <i :class="item.icon"></i>
+                <span class="info-box-icon bg-green">
+                    <i :class="icons[item.estado]"></i>
                 </span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">{{item.text}}</span>
-                    <span class="info-box-number">{{item.data}}</span>
-                    <span class="info-box-text">{{item.percent}}</span>
+                    <span class="info-box-text">{{item.estado}}</span>
+                    <span class="info-box-number">{{item.total}}</span>
+                    <span v-if="item.estado != 'TOTAL DE ENTREVISTAS'" class="info-box-text">{{item.porcentaje_respuesta}}</span>
                 </div>
             </div>
         </div>
