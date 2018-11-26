@@ -53,7 +53,7 @@
                         <div id="panel-por-estados" class="panel-collapse collapse">
                             <div class="panel-body" style="background-color: #ecf0f5;">
                                 <ul>
-                                    <li v-for="item in report_list">
+                                    <li v-for="(item, index) in report_list">
                                         @{{item.estado}}
                                         @{{item.total}}
                                         @{{item.porcentaje_respuesta}}
