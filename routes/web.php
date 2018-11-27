@@ -117,6 +117,7 @@ Route::group(['middleware'=>['auth']], function() {
   Route::post('agregar-contacto-encuesta/guardar/{id_encuesta}', 'EncuestaGraduadoController@guardarContacto') ->name('encuestas-graduados.guardar-contacto');
   // Route::get('lista-de-encuestas', 'EncuestaGraduadoController@listaDeEncuestas')->name('encuestas-graduados.lista-de-encuestas');
   Route::get('filtro-encuestas', 'EncuestaGraduadoController@filtro_encuestas')->name('encuestas-graduados.filtro');
+  Route::get('ver-otras-entrevistas/{ids}', 'EncuestaGraduadoController@ver_otras_carreras')->name('encuestas-graduados.otras-carreras');
 });
 
 //Encuestas de los graduados

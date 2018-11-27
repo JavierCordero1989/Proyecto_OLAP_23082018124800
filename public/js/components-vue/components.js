@@ -60,7 +60,7 @@ Vue.component("info-box-small", {
                 <div class="info-box-content">
                     <span class="info-box-text">{{item.estado}}</span>
                     <span class="info-box-number">{{item.total}}</span>
-                    <span v-if="item.estado != 'TOTAL DE ENTREVISTAS'" class="info-box-text">{{item.porcentaje_respuesta}}</span>
+                    <span v-if="item.estado != 'TOTAL DE ENTREVISTAS'" class="info-box-text">{{item.porcentaje_respuesta}} %</span>
                 </div>
             </div>
         </div>

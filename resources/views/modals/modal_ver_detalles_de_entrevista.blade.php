@@ -130,8 +130,24 @@
                         <!-- Indicador de otras carreras -->
                         @if (!is_null($encuesta->otrasCarreras()))
                             <div class="col-xs-6">
+                                @php
+                                    $ids = '';
+                                    $otras = $encuesta->otrasCarreras();
+
+                                    for($i=0; $i<sizeof($otras); $i++) {
+                                        if($i >= sizeof($otras)-1) {
+                                            $ids .= $otras[$i];
+                                        }
+                                        else {
+                                            $ids .= $otras[$i].'-';
+                                        }
+                                    }
+                                @endphp
+
                                 {!! Form::label('otras_carreras', 'Este usuario posee otras carreras: ') !!}
-                                <p>Combo box here</p> <!-- TODO -->
+                                <a href="{!! route('encuestas-graduados.otras-carreras', $ids) !!}">Ir a las entrevistas</a>
+
+                                {{-- <p>{!! $encuesta->otrasCarreras() !!}</p> <!-- TODO --> --}}
                             </div>
                         @endif
                         {{-- <!-- Created At Field -->

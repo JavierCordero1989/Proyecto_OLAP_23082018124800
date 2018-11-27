@@ -16,9 +16,9 @@
                                 'onclick' => 'eventoForm()'
                             ]) !!}
 
-                            <button id="btn-show" style="margin-top: -10px;margin-bottom: 5px;" class="btn btn-info pull-left" data-toggle="collapse" data-target="#panel-collapse" data-toggle="tooltip" title="Pulse para ver los campos de búsqueda" data-placement="top">
+                            <button id="btn-show" style="margin-top: -10px;margin-bottom: 5px;" class="btn btn-info pull-left" data-toggle="collapse" data-target="#panel-collapse">
                                 {{-- <i class="fas fa-sort-up"></i> --}}
-                                <i class="fas fa-sort-down"></i>
+                                <i class="fas fa-sort-down" data-toggle="tooltip" title="Pulse para ver los campos de búsqueda" data-placement="top"></i>
                             </button>
 
                             <a href="{!! route('encuestas-graduados.index') !!}" style="margin-top: -10px;margin-bottom: 5px;" class="btn btn-primary pull-right" data-toggle="tooltip" title="Pulse para limpiar la búsqueda" data-placement="bottom">
@@ -70,7 +70,8 @@
                             </div>
                             {{-- TODO --}}
                             <div class="col-xs-12 col-sm-3">
-                                {!! Form::text('estado', null, ['class'=>'form-control', 'placeholder'=>'Estado...']) !!}
+                                {!! Form::select('estado', config('options.survey_estatuses'), null, ['class'=>'form-control']) !!}
+                                {{-- {!! Form::text('estado', null, ['class'=>'form-control', 'placeholder'=>'Estado...']) !!} --}}
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 {!! Form::text('contacto', null, ['class'=>'form-control', 'placeholder'=>'Número o Correo']) !!}
@@ -101,6 +102,8 @@
 
 @section('scripts')
     <script>
+
+        $('#flash-overlay-modal').modal();
 
         $('.btn-danger').on('click', function(evento){
             if(!confirm('¿Desea eliminar el registro de todas formas?')) {

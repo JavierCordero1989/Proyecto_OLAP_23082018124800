@@ -3,7 +3,7 @@
 @endsection --}}
 
 @component('components.table')
-    @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Tipo de caso', 'Acciones'])
+    @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Tipo de caso', 'Opciones'])
     
     @slot('cuerpo_tabla')
         @foreach($encuestas as $encuesta)
@@ -26,25 +26,23 @@
                     @if (Auth::user()->hasRole('Super Admin'))
                         {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}
                     @endif
-                        <div class='btn-group'>
+                        <div class="btn-group-vertical">
                             @if (Auth::user()->hasRole('Super Admin'))
-                                <button class="btn btn-danger btn-xs" type="submit" v-on:click="eventoEliminar"><i class="glyphicon glyphicon-trash"></i></button>
+                                <button class="btn btn-danger btn-xs" type="submit" v-on:click="eventoEliminar" data-toggle="tooltip" title="Eliminar encuesta" data-placement="left"><i class="glyphicon glyphicon-trash"></i></button>
+                                
+                                <a href="{!! route('encuestas-graduados.edit', $encuesta->id) !!}" class="btn btn-default btn-xs" data-toggle="tooltip" title="Editar datos" data-placement="left">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                             @endif
-                            {{-- {!! Form::button(
-                                '<i class="glyphicon glyphicon-trash"></i>',
-                                [
-                                    'type' => 'submit', 
-                                    'class' => 'btn btn-danger btn-xs'
-                                ]
-                            ) !!} --}}
-                            <a href="{!! route('encuestas-graduados.agregar-contacto', $encuesta->id) !!}" class="btn btn-default btn-xs">
+                            
+                            <a href="{!! route('encuestas-graduados.agregar-contacto', $encuesta->id) !!}" class="btn btn-default btn-xs" data-toggle="tooltip" title="Agregar contacto" data-placement="left">
                                 {{-- <i class="fas fa-phone-square"></i> --}}
                                 <i class="far fa-user"></i>
                             </a>
                         </div>
-                        @if (Auth::user()->hasRole('Super Admin'))
-                            {!! Form::close() !!}
-                        @endif
+                    @if (Auth::user()->hasRole('Super Admin'))
+                        {!! Form::close() !!}
+                    @endif
                 </td>
             </tr>
         @endforeach

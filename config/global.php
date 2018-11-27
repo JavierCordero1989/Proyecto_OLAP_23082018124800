@@ -71,22 +71,22 @@
             ]
         ],
         'iconos_estados' => [
-            'NO ASIGNADA'            => 'ion-close-circled',
-            'ASIGNADA'               => 'ion-checkmark-round',
-            'RECHAZADA'              => 'ion-close-round',
-            'INCOMPLETA'             => 'ion-android-checkmark-circle',
-            'FUERA DEL PAÍS'         => 'ion-plane',
-            'ILOCALIZABLE'           => 'ion-sad-outline',
-            'FALLECIDO'              => 'fas fa-ban',
-            'EXTRANJERO'             => 'ion-ios-location',
-            'CON CITA'               => 'ion-calendar',
-            'MENSAJE'                => 'ion-android-textsms',
-            'LINK AL CORREO'         => 'ion-ios-list-outline',
-            'INFORMACIÓN POR CORREO' => 'ion-email',
-            'ENTREVISTA COMPLETA'    => 'ion-android-done-all',
-            'OTRO'                   => 'ion-compose',
+            'NO ASIGNADA'               => 'ion-close-circled',
+            'ASIGNADA'                  => 'ion-checkmark-round',
+            'RECHAZADA'                 => 'ion-close-round',
+            'INCOMPLETA'                => 'ion-android-checkmark-circle',
+            'FUERA DEL PAÍS'            => 'ion-plane',
+            'ILOCALIZABLE'              => 'ion-sad-outline',
+            'FALLECIDO'                 => 'fas fa-ban',
+            'EXTRANJERO'                => 'ion-ios-location',
+            'CON CITA'                  => 'ion-calendar',
+            'MENSAJE'                   => 'ion-android-textsms',
+            'LINK AL CORREO'            => 'ion-ios-list-outline',
+            'INFORMACIÓN POR CORREO'    => 'ion-email',
+            'ENTREVISTA COMPLETA'       => 'ion-android-done-all',
+            'RECORDATORIO'              => 'ion-compose',
             'DISCIPLINA NO CORRESPONDE' => 'ion ion-information-circled',
-            'TOTAL DE ENTREVISTAS'   => 'ion-earth'
+            'TOTAL DE ENTREVISTAS'      => 'ion-earth'
         ],
     ];
 ?>
