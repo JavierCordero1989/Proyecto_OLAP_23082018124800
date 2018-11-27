@@ -17,6 +17,7 @@ use App\Disciplina;
 use App\Agrupacion;
 use Carbon\Carbon;
 use App\Carrera;
+use App\Estado;
 use App\Sector;
 use App\Grado;
 use App\Area;
@@ -83,10 +84,42 @@ class EncuestaGraduadoController extends Controller
             //buscar por el tipo de caso
             $encuestas = $encuestas->where('tipo_de_caso', $request->tipo_de_caso);
         }
+        if(isset($request->estado)) {
+            $id = Estado::find($request->estado);
+            $id = $id->id;
+
+            $ids_graduados = Asignacion::where('id_estado', $id)->pluck('id_graduado');
+
+            $encuestas = $encuestas->whereIn('id', $ids_graduados);
+        }
+        if(isset($request->contacto)) {
+            $ids = [];
+
+            foreach($encuestas->get() as $encuesta) {
+                $contactos = $encuesta->contactos;
+                foreach($contactos as $c) {
+                    $detalle = $c->detalle();
+                    foreach($detalle as $d) {
+                        if($d->contacto == $request->contacto) {
+                            $ids[] = $encuesta->id;
+                        }
+                    }
+                }
+            }
+
+            $encuestas = $encuestas->whereIn('id', $ids);
+        }
 
         $encuestas = $encuestas->orderBy('id', 'ASC')->paginate(15);
 
-        // dd($encuestas);
+        return view('encuestas_graduados.index')->with('encuestas', $encuestas);
+    }
+
+    public function ver_otras_carreras($ids) {
+        $ids = explode('-', $ids);
+        
+        $encuestas = EncuestaGraduado::whereIn('id', $ids)->orderBy('id', 'ASC')->paginate(25);
+
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
 
@@ -116,6 +149,45 @@ class EncuestaGraduadoController extends Controller
     //     return $paginacion;
     //     // return view('encuestas_graduados.index', compact('paginacion'));
     // }
+
+    public function edit($id) {
+        $encuesta = EncuestaGraduado::find($id);
+
+        if(empty($encuesta)) {
+            Flash::overlay('No se ha encontrado la entrevista solicitada', 'Error en la búsqueda')->error();
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $datos_academicos = array();
+
+        $datos_academicos['sexo'] = array('M'=>'HOMBRE', 'F'=>'MUJER', 'SC'=>'SIN CLASIFICAR');
+        $datos_academicos['carreras'] = Carrera::allData()->pluck('nombre', 'id');
+        $datos_academicos['universidades'] = Universidad::allData()->pluck('nombre', 'id');
+        $datos_academicos['grados'] = Grado::allData()->pluck('nombre', 'id');
+        $datos_academicos['disciplinas'] = Disciplina::all()->pluck('descriptivo', 'id');
+        $datos_academicos['areas'] = Area::all()->pluck('descriptivo', 'id');
+        $datos_academicos['agrupaciones'] = Agrupacion::allData()->pluck('nombre', 'id');
+        $datos_academicos['sectores'] = Sector::allData()->pluck('nombre', 'id');
+        $datos_academicos['tipos'] = array('CENSO'=>'CENSO','MUESTRA'=>'MUESTRA','SUSTITUCION'=>'SUSTITUCION');
+
+        return view('encuestas_graduados.editar-encuesta')->with('encuesta', $encuesta)->with('datos_academicos', $datos_academicos);
+    }
+
+    public function update($id, Request $request) {
+        $encuesta = EncuestaGraduado::find($id);
+
+        if(empty($encuesta)) {
+            Flash::overlay('No se ha encontrado la entrevista solicitada', 'Error en la búsqueda')->error();
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        // dd($request->all());
+
+        $encuesta->update($request->all());
+
+        Flash::success('Los datos de la encuesta han sido actualizados correctamente.');
+        return redirect(route('encuestas-graduados.index'));
+    }
 
     public function destroy($id) {
         $encuesta = EncuestaGraduado::find($id);
@@ -366,7 +438,28 @@ class EncuestaGraduadoController extends Controller
             $encuesta->contactos = $contactos;
             /* se setea un estado para cada encuesta */
             $encuesta->estado = $encuesta->estado()->estado;
-            $encuesta->otras_carreras = $encuesta->otrasCarreras();
+
+            $ids_carreras = '';
+            $otras_carreras = $encuesta->otrasCarreras();
+
+            // dd($otras_carreras);
+
+            if(!is_null($otras_carreras)) {
+                $tam = sizeof($otras_carreras);
+                for($i=0; $i<$tam; $i++) {
+                    if($i>=$tam-1) {
+                        $ids_carreras .= $otras_carreras[$i];
+                    }
+                    else {
+                        $ids_carreras .= $otras_carreras[$i] . '-';
+                    }
+                }
+    
+                $encuesta->otras_carreras = $ids_carreras;
+            }
+            else {
+                $encuesta->otras_carreras = null;
+            }
         }
 
         /* NOTA:
