@@ -275,6 +275,16 @@
                                                                 {!! Form::label('tipo_de_caso', 'Tipo de caso:') !!}
                                                                 <p>@{{ encuesta.tipo_de_caso }}</p>
                                                             </div>
+
+                                                            <!-- Indicador de varias encuestas -->
+                                                            <div v-if="encuesta.otras_carreras != null" class="col-xs-6">
+                                                                {!! Form::label('otras_carreras', 'Tiene otras carreras: ') !!}
+                                                                <p>
+                                                                    <a :href="rutaOtrasCarreras(encuesta.otras_carreras)">
+                                                                        Ir a las entrevistas
+                                                                    </a>
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Volver</button>
                                                     </div>
@@ -349,6 +359,11 @@
                 collapsePanel: function(event) {
                     //TODO
                     console.log(event.target);
+                },
+                rutaOtrasCarreras: function(ids) {
+                    let route = '{{ route("encuestas-graduados.otras-carreras", ":ids") }}';
+                    route = route.replace(":ids", ids);
+                    return route;
                 }
             },
             computed: {
