@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Editar detalle de contacto')
+
 @section('content')
     <section class="content-header">
         <h1>

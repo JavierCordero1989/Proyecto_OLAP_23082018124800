@@ -632,7 +632,7 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function agregar_detalle_contacto($id_contacto, $id_entrevista) {
-        return view('encuestador.agregar-detalle-contacto', compact('id_contacto', 'id_entrevista'));
+        return view('encuestadores.agregar-detalle-contacto', compact('id_contacto', 'id_entrevista'));
     }
 
     public function borrar_detalle_contacto($id_detalle_contacto, $id_entrevista) {
@@ -712,6 +712,7 @@ class EncuestaGraduadoController extends Controller
 
         $detalle->contacto = $request->contacto;
         $detalle->observacion = $request->observacion;
+        $detalle->estado = $request->estado;
         $detalle->updated_at = Carbon::now();
         $detalle->save();
 

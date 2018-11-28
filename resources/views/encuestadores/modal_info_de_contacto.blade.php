@@ -31,6 +31,7 @@
                                 <thead>
                                     <th>Contacto</th>
                                     <th>Observación</th>
+                                    <th>Estado</th>
                                     <th>Opciones</th>
                                 </thead>
                                 <tbody>
@@ -39,8 +40,9 @@
                                         <tr>
                                             <td>{!! $detalle->contacto !!}</td>
                                             <td>{!! $detalle->observacion !!}</td>
+                                            <td>{!! $detalle->estado == 'F' ? '<i class="fas fa-check-circle" style="color: green;"></i>' : ($detalle->estado == 'E' ? '<i class="fas fa-times-circle" style="color: red;"></i>' : 'INDEFINIDO') !!}</td>
                                             <td>
-                                                {!! $detalle->id !!} - {!! $entrevista->id !!}
+                                                {{-- {!! $detalle->id !!} - {!! $entrevista->id !!} --}}
                                                 {!! Form::open(['route' => ['asignar-encuestas.borrar-detalle-contacto', $detalle->id, $entrevista->id], 'method' => 'delete']) !!}
                                                     <div class='btn-group'>
                                                         <a href="{!! route('asignar-encuestas.editar-detalle-contacto', [$detalle->id, $entrevista->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
