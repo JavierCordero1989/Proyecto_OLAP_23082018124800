@@ -37,19 +37,20 @@
                                                 <td>{!! $detalle->observacion == '' ? 'NO TIENE' : $detalle->observacion !!}</td>
                                                 <td>{!! $detalle->estado == 'F' ? '<i class="fas fa-check-circle" style="color: green;"></i>' : ($detalle->estado == 'E' ? '<i class="fas fa-times-circle" style="color: red;"></i>' : 'INDEFINIDO') !!}</td>
                                                 <td>
-                                                    {{-- {!! Form::open(['route' => ['encuestador.borrar-detalle-contacto', $detalle->id, $encuesta->id], 'method' => 'delete']) !!} --}}
+                                                    {!! Form::open(['route' => ['encuestador.borrar-detalle-contacto', $detalle->id, $encuesta->id], 'method' => 'delete', 'id'=>'form-eliminar-contacto-entrevista']) !!}
                                                         <div class='btn-group'>
                                                             <a href="{!! route('encuestador.editar-detalle-contacto', [$detalle->id, $encuesta->id]) !!}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
                                                             {!! Form::button(
                                                                 '<i class="glyphicon glyphicon-trash"></i>',
                                                                 [
-                                                                    'type' => 'submit', 
-                                                                    'class' => 'btn btn-danger btn-xs', 
+                                                                    'type' => 'submit',
+                                                                    'class' => 'btn btn-danger btn-xs',
+                                                                    'form'=>'form-eliminar-contacto-entrevista',
                                                                     'onclick' => "return confirm('¿Está seguro de eliminar este contacto?')"
                                                                 ]
                                                             ) !!}
                                                         </div>
-                                                    {{-- {!! Form::close() !!} --}}
+                                                    {!! Form::close() !!}
                                                 </td>
                                             </tr>
                                                 

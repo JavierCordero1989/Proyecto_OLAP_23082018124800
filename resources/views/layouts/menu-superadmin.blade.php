@@ -17,6 +17,10 @@
     </ul>
 </li>
 
+<li>
+    <a href="{!! route('encuestas-graduados.hacer-sustitucion') !!}"><i class="fas fa-exchange-alt"></i><span> Hacer sustitución</span></a>
+</li>
+
 <li class="{{ Request::is('encuestadores*') ? 'active' : '' }}">
     <a href="{!! route('encuestadores.index') !!}"><i class="fas fa-check"></i><span> Ver encuestadores</span></a>
 </li>
