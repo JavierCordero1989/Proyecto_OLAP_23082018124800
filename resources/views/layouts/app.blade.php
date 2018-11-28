@@ -24,8 +24,8 @@
         <a href="{!! url('/home') !!}" class="logo">
             {{-- <b>Javier Cordero</b> --}}
             <span class="logo-mini"><b>{{ config('global.sidebar_title_min') }}</b></span>
-            {{-- <span class="logo-lg"><b>{{ config('global.sidebar_title') }}</b></span> --}}
-            <span class="logo-lg"><b>{{ Auth::user()->getRoleNames()[0] }}</b></span>
+            <span class="logo-lg"><b>{{ config('global.sidebar_title') }}</b></span>
+            {{-- <span class="logo-lg"><b>{{ Auth::user()->getRoleNames()[0] }}</b></span> --}}
         </a>
 
         <!-- Header Navbar -->
@@ -33,6 +33,7 @@
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
+                <span style="margin-left: 20px;">Sistema de Automatización de Entrevistas</span>
             </a>
 
             <!-- Navbar Right Menu -->
