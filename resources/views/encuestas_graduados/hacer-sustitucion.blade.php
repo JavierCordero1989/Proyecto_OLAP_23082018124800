@@ -42,9 +42,9 @@
             </div>
         </div>
 
-        <div class="box box-primary">
-            <div class="box-body with-border">
-                <p>Hola mundo</p>
+        <div id="survey-box" class="box box-primary hide">
+            <div id="survey-body" class="box-body with-border">
+                
             </div>
         </div>
     </div>
@@ -88,6 +88,11 @@
         }
 
         function cargarEncuestaEncontrada(encuesta) {
+            $('#survey-box').removeClass('hide');
+            $('#survey-box').addClass('show');
+
+            $('#survey-body');
+            
             // Carga la encuesta
             console.log('DATOS ENCONTRADOS: ' + encuesta);
         }
