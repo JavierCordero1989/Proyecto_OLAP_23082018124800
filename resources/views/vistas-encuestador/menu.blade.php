@@ -2,9 +2,9 @@
     <a href="{!! route('encuestador.mis-entrevistas', Auth::user()->id) !!}"><i class="fas fa-list-ul"></i><span> Mis encuestas</span></a>
 </li>
 
-<li class="{{ Request::is('encuestador/reportes-de-encuestador/graficos/*') ? 'active' : '' }}">
+{{-- <li class="{{ Request::is('encuestador/reportes-de-encuestador/graficos/*') ? 'active' : '' }}">
     <a href="{!! route('encuestador.reportes-de-encuestador', Auth::user()->id) !!}"><i class="fas fa-chart-bar"></i><span> Reportes</span></a>
-</li>
+</li> --}}
 
 <!-- Menú desplegable para datos de carrera-->
 <li class="treeview">

@@ -16,10 +16,15 @@
     <a href="{!! route('supervisores.index') !!}"><i class="fas fa-check"></i><span> Ver supervisores</span></a>
 </li>
 
-<li class="{{ Request::is('supervisor/2/supervisores/lista-de-supervisores/entrevistas-graduados') ? 'active' : '' }}">
+{{-- <li class="{{ Request::is('supervisor/2/supervisores/lista-de-supervisores/entrevistas-graduados') ? 'active' : '' }}">
     <a href="{!! route('supervisor2.lista-general-de-entrevistas') !!}"><i class="fas fa-check"></i><span> Lista de encuestas</span></a>
+</li> --}}
+
+<li class="">
+    <a href="{!! route('encuestas-graduados.index') !!}"><i class="fas fa-check"></i><span> Lista de encuestas</span></a>
 </li>
-{{-- 
+
+{{-- encuestas-graduados.index
 <li class="{{ Request::is('supervisor/2/supervisores/lista-de-supervisores/estadisticas-generales') ? 'active' : '' }}">
     <a href="{!! route('supervisor2.estadisticas_generales') !!}"><i class="fas fa-chart-area"></i><span> Estadísticas generales</span></a>
 </li> --}}

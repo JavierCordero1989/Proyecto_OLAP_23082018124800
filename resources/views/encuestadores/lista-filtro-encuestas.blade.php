@@ -53,7 +53,12 @@
 
                         <div class="form-group col-sm-12">
                             {!! Form::submit('Buscar', ['class' => 'btn btn-primary']) !!}
-                            <a href="{!! route('encuestadores.index') !!}" class="btn btn-default">Cancelar</a>
+                            @if ($rol_usuario == 'Encuestador')
+                                <a href="{!! route('encuestadores.index') !!}" class="btn btn-default">Cancelar</a> 
+                            @endif
+                            @if ($rol_usuario == 'Supervisor')
+                                <a href="{!! route('supervisores.index') !!}" class="btn btn-default">Cancelar</a> 
+                            @endif
                         </div>
                     {!! Form::close() !!}
 

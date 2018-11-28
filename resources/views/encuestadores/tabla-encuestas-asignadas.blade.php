@@ -25,7 +25,10 @@
                         </a>
                     </div>
                     <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                        {!! Form::select('agrupacion', config('options.group_types'), null, ['class'=>'form-control', 'v-model'=>'agrupacion']) !!}
+                        <select name="agrupacion" class="form-control" v-model="agrupacion">
+                            <option v-for="item in lista_agrupaciones" :value="item.id">@{{item.name}}</option>
+                        </select>
+                        {{-- {!! Form::select('agrupacion', config('options.group_types'), null, ['class'=>'form-control', 'v-model'=>'agrupacion']) !!} --}}
                         {{-- <input type="text" class="form-control" v-model="agrupacion" placeholder="Agrupación..."> --}}
                     </div>
                     <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
@@ -323,11 +326,13 @@
                 lista_de_encuestas: '',
                 encuestador: '',
                 connectedUser: '',
+                lista_agrupaciones: []
             },
             created: function() {
                 this.getList()
                 this.getPollster()
                 this.connectedUser = '{{Auth::user()->id}}'
+                this.lista_agrupaciones = [{id:'', name:'- - - AGRUPACIÓN - - -'},{id:'UCR', name:'UCR'},{id:'UNA', name:'UNA'},{id:'UNED', name:'UNED'},{id:'ITCR', name:'ITCR'},{id:'UTN', name:'UTN'},{id:'PRIVADO', name:'PRIVADO'}]
             },
             methods: {
                 getList: function() {
@@ -380,7 +385,13 @@
                         filtro = filtro.filter(el => el.codigo_disciplina.toLowerCase().includes(this.disciplina.toLowerCase()))
                     }
                     if(this.grado != '') {
-                        filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes('diplomado') || el.codigo_grado.toLowerCase().includes('profesorado'))
+                        if(this.grado == 'PREGRADO')
+                        {
+                            filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes('diplomado') || el.codigo_grado.toLowerCase().includes('profesorado'))
+                        }
+                        else {
+                            filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes(this.grado.toLowerCase()))
+                        }
                     }
 
                     return filtro

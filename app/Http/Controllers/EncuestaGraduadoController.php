@@ -316,6 +316,10 @@ class EncuestaGraduadoController extends Controller
      * pueda seleccionar todos los filtros adecuados.
     */
     public function asignar($id_supervisor, $id_encuestador) {
+        $user = User::find($id_encuestador);
+
+        $rol_usuario = $user->hasRole('Encuestador') ? 'Encuestador' : 'Supervisor';
+
         // $id_carrera =       TiposDatosCarrera::carrera()->first();
         // $id_universidad =   TiposDatosCarrera::universidad()->first();
         $id_grado =         TiposDatosCarrera::grado()->first();
@@ -345,7 +349,7 @@ class EncuestaGraduadoController extends Controller
         ];
 
         return view('encuestadores.lista-filtro-encuestas', 
-            compact('id_supervisor', 'id_encuestador', 'datos_carrera'));
+            compact('id_supervisor', 'id_encuestador', 'datos_carrera', 'rol_usuario'));
     }
 
     /** Recibe las encuestas seleccionadas por la persona que realiza la asignacion, y realiza algunas
@@ -354,7 +358,6 @@ class EncuestaGraduadoController extends Controller
      * cambiar el estado de las encuestas de uno a otra.
      */
     public function crearAsignacion($id_supervisor, $id_encuestador, Request $request) {
-
         /** Se obtiene el supervisor por el ID */
         $supervisor = User::find($id_supervisor);
 
