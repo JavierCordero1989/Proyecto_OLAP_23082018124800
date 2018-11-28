@@ -118,6 +118,9 @@ Route::group(['middleware'=>['auth']], function() {
   // Route::get('lista-de-encuestas', 'EncuestaGraduadoController@listaDeEncuestas')->name('encuestas-graduados.lista-de-encuestas');
   Route::get('filtro-encuestas', 'EncuestaGraduadoController@filtro_encuestas')->name('encuestas-graduados.filtro');
   Route::get('ver-otras-entrevistas/{ids}', 'EncuestaGraduadoController@ver_otras_carreras')->name('encuestas-graduados.otras-carreras');
+  Route::get('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion')->name('encuestas-graduados.hacer-sustitucion');
+  Route::post('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion_post')->name('encuestas-graduados.hacer-sustitucion-post');
+  Route::get('buscar-encuesta', 'EncuestaGraduadoController@buscar_encuesta')->name('encuestas-graduados.buscar-encuesta');
 });
 
 //Encuestas de los graduados
