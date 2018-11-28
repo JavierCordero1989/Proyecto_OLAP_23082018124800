@@ -17,6 +17,33 @@
   src: url('https://fonts.googleapis.com/css?family=Cabin');
 }
 
+.btn-primary {
+  border-color: var(--color-azul-oscuro);
+  background-color: var(--color-azul-oscuro);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-azul-claro);
+}
+
+.btn-info {
+  background-color: var(--color-azul-claro);
+}
+
+.panel-primary {
+  border-color: var(--color-azul-oscuro);
+}
+
+.panel-primary>.panel-heading {
+  color: #fff;
+  background-color: var(--color-azul-oscuro);
+  border-color: var(--color-azul-oscuro);
+}
+
+.bg-aqua {
+  background-color: var(--color-azul-claro);
+}
+
 .skin-conare .main-header .navbar {
   background-color: var(--color-azul-claro);
 }
@@ -44,7 +71,7 @@
   color: #fff;
 }
 .skin-conare .main-header .navbar .sidebar-toggle:hover {
-  background-color: var(--color-azul-oscuro);
+  background-color: var(--color-gris);
 }
 @media (max-width: 767px) {
   .skin-conare .main-header .navbar .dropdown-menu li.divider {

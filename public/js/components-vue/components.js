@@ -2,10 +2,10 @@ Vue.component("information-box", {
     props: ["list", "color"],
     template: `
     <div class="row">
-        <div v-for="(item, index) in list" class="col-xs-6 col-sm-6 col-md-3">
+        <div v-for="(item, index) in list" class="col-md-6">
             <div :class="'small-box '+color">
                 <div class="inner">
-                    <h4>{{index}}</h4>
+                    <h3><u>{{index}}</u></h3>
                     <p>Asignadas: {{item.asignadas}}</p>
                     <p>Completas: {{item.completas}}</p>
                     <p>Respuesta: {{item.respuesta}} %</p>
@@ -13,10 +13,10 @@ Vue.component("information-box", {
                 <div class="icon">
                     <i class="fas fa-adjust"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <!--<a href="#" class="small-box-footer">
                     Más información
                     <i class="fa fa-arrow-circle-right"></i>
-                </a>
+                </a>-->
             </div>
         </div>
     </div>

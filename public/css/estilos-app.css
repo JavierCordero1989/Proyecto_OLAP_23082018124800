@@ -3,7 +3,7 @@
     --error-color: #C62828;
 }
 
-.btn-info {
+/* .btn-info {
     background-color: #003865;
     border-color: #003865;
 }
@@ -30,7 +30,7 @@
     background-color: #CCCCCC;
     color: #000000;
     transition: 0.5s;
-}
+} */
 
 /* Estilos CSS para el cuadro de mensaje de error */
 .error {
