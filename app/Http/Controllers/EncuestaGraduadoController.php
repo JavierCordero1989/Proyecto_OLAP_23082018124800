@@ -318,6 +318,10 @@ class EncuestaGraduadoController extends Controller
     public function asignar($id_supervisor, $id_encuestador) {
         $user = User::find($id_encuestador);
 
+        if(empty($user)) {
+            Flash::overlay('No se ha encontrado un usuario con el ID especificado', 'Error en la búsqueda')->error();
+            return redirect(url('/home'));
+        }
         $rol_usuario = $user->hasRole('Encuestador') ? 'Encuestador' : 'Supervisor';
 
         // $id_carrera =       TiposDatosCarrera::carrera()->first();
@@ -739,5 +743,73 @@ class EncuestaGraduadoController extends Controller
 
         Flash::success('El contacto ha sido actualizado correctamente.');
         return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+    }
+
+    public function hacer_sustitucion() {
+        return view('encuestas_graduados.hacer-sustitucion');
+    }
+
+    public function hacer_sustitucion_post(Request $request) {
+        $ruta = 'encuestas-graduados.hacer-sustitucion';
+
+        /* SE BUSCA LA ENCUESTA POR MEDIO DEL TOKEN INGRESADO */
+        $encuesta = EncuestaGraduado::where('token', $request->token_entrevista)->first();
+
+        /* SI LA ENCUESTA NO EXISTE, SE DEVOLVERÁ UN ERROR */
+        if(empty($encuesta)) {
+            Flash::error('La entrevista que busca por token, no corresponde con los registros del sistema.');
+            // Flash::overlay('La entrevista que busca por token, no corresponde con los registros del sistema.', 'Error de búsqueda')->error();
+            return redirect(route($ruta));
+        }
+        else {
+            /* SI LA ENCUESTA EXISTE Y CORRESPONDE A UN CASO DE CENSO, SE MOSTRARÁ UN ERROR */
+            if($encuesta->tipo_de_caso == 'CENSO') {
+                Flash::error('El caso que busca corresponde a Censo, no se puede sustituir.');
+                // Flash::overlay('El caso que busca corresponde a Censo, no se puede sustituir.', 'Error de tipo de caso')->error();
+                return redirect(route($ruta));
+            }
+            else {
+                /* SI LA ENCUESTA EXISTE Y NO ES CENSO, SE HARÁ UNA BÚSQUEDA PARA ENCONTRAR EL REEMPLAZO */
+                $tipo_de_caso = 'Sustitución';
+    
+                $encuesta_nueva = EncuestaGraduado::where('codigo_grado', $encuesta->codigo_grado)
+                    ->where('codigo_disciplina', $encuesta->codigo_disciplina)
+                    ->where('codigo_area', $encuesta->codigo_area)
+                    ->where('codigo_agrupacion', $encuesta->codigo_agrupacion)
+                    ->where('tipo_de_caso', $tipo_de_caso)
+                    ->first();
+    
+                /* SI EL REEMPLAZO NO SE ENCUENTRA, MOSTRARÁ UN ERROR */
+                if(empty($encuesta_nueva)) {
+                    Flash::error('No se ha encontrado una sustitución que coincida con las características.');
+                    // Flash::overlay('No se ha encontrado una sustitución que coincida con las características.', 'Error en la búsqueda de sustituciones')->error();
+                    return redirect(route($ruta));
+                }
+
+                /* SI EXISTE EL REEMPLAZO, SE LE CAMBIA EL ESTADO */
+                $encuesta_nueva->tipo_de_caso = $encuesta->tipo_de_caso;
+                $save = $encuesta_nueva->save();
+
+                /* A LA ENCUESTA ENCONTRADA POR TOKEN, SE LE CAMBIA EL TIPO DE CASO */
+                $estado = Asignacion::where('id_graduado', $encuesta->id)->first();
+                $estado = Estado::find($estado->id);
+                $encuesta->tipo_de_caso = $estado->estado;
+                $encuesta->save();
+
+                /* SI TODO SALE BIEN,  */
+                Flash::success('La sustitución se ha realizado con éxito.');
+                return redirect(route('home'));
+            }
+        }       
+    }
+
+    function buscar_encuesta(Request $request) {
+        $encuesta = EncuestaGraduado::where('token', $request->token)->first();
+
+        if(empty($encuesta)) {
+            return 'encuesta no encontrada';
+        }
+
+        return $encuesta;
     }
 }
