@@ -2,7 +2,9 @@
 :root {
   --color-azul-oscuro: #003865;
   --color-azul-claro: #80C6CF;
+  --color-azul-claro-degradado-claro: hsl(187, 60%, 66%);
   --color-gris: #CCCCCC;
+  --color-gris-degradado-oscuro: hsl(0, 0%, 70%);
   --color-verde: #62A60A;
   --color-naranja: #FF8200;
 }
@@ -30,6 +32,10 @@
   background-color: var(--color-azul-claro);
 }
 
+.btn-info:hover {
+  background-color: var(--color-azul-oscuro);
+}
+
 .panel-primary {
   border-color: var(--color-azul-oscuro);
 }
@@ -41,12 +47,22 @@
 }
 
 .bg-aqua {
-  background-color: var(--color-azul-claro);
+  background-color: var(--color-azul-claro) !important;
+}
+
+.bg-green {
+  background-color: var(--color-verde) !important;
 }
 
 .skin-conare .main-header .navbar {
-  background-color: var(--color-azul-claro);
+  background: var(--color-azul-claro);
 }
+
+.pagination > .active > a {
+  background-color: var(--color-azul-oscuro);
+  border-color: var(--color-azul-oscuro);
+}
+
 .skin-conare .main-header .navbar .nav > li > a {
   color: #ffffff;
 }
@@ -57,7 +73,8 @@
 .skin-conare .main-header .navbar .nav .open > a:hover,
 .skin-conare .main-header .navbar .nav .open > a:focus,
 .skin-conare .main-header .navbar .nav > .active > a {
-  background: rgba(0, 0, 0, 0.1);
+  /* background: rgba(0, 0, 0, 0.1); */
+  background: var(--color-azul-claro-degradado-claro);
   color: #f6f6f6;
 }
 .skin-conare .main-header .navbar .sidebar-toggle {
@@ -71,8 +88,10 @@
   color: #fff;
 }
 .skin-conare .main-header .navbar .sidebar-toggle:hover {
-  background-color: var(--color-gris);
+  /* background-color: var(--color-azul-oscuro); */
+  background-color: var(--color-azul-claro-degradado-claro);
 }
+
 @media (max-width: 767px) {
   .skin-conare .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
@@ -125,7 +144,7 @@
 }
 .skin-conare .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
-  background: var(--color-gris);
+  background: var(--color-gris-degradado-oscuro);
 }
 .skin-conare .sidebar a {
   color: var(--color-azul-oscuro);

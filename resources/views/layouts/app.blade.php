@@ -33,7 +33,7 @@
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
-                <span style="margin-left: 20px;">Sistema de Automatización de Entrevistas</span>
+                <span style="margin-left: 20px;">Sistema Automatizado de Encuestas</span>
             </a>
 
             <!-- Navbar Right Menu -->

@@ -1,37 +1,7 @@
 @extends('layouts.app-logout')
 
 @section('css')
-    <style>
-        .btn-info {
-            background-color: #003865;
-            border-color: #003865;
-        }
-
-        .btn-info:focus {
-            background-color: #003865;
-            border-color: #003865;
-        }
-
-        .btn-info:hover {
-            background-color: #CCCCCC;
-            border-color: #CCCCCC;
-            color: #000000;
-            transition: 0.5s;
-        }
-
-        .btn-primary {
-            background-color: #80C6CF;
-            border-color: #003865;
-            color: #000000;
-        }
-
-        .btn-primary:hover {
-            background-color: #CCCCCC;
-            color: #000000;
-            transition: 0.5s;
-        }
-    </style>
-
+    <link rel="stylesheet" href="{{ asset(config('global.css.link_skin_conare')) }}">
     <link rel="stylesheet" href="{!! asset('css/estilos-login.css') !!}">
 @endsection
 

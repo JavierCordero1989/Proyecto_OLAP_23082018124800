@@ -1,6 +1,6 @@
 <?php
     return [
-        'nombre_sistema'             => 'Sistema de Automatización de Entrevistas',
+        'nombre_sistema'             => 'Sistema Automatizado de Encuestas',
         'olap_login'                 =>'img/logo_oficial_olap_transparente.png',
         'conare_login'               => 'img/logo_oficial_conare_transparente.png',
         'shortcut-icon'              => 'img/olap.png',
