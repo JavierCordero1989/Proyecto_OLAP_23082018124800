@@ -7,6 +7,24 @@
   --color-gris-degradado-oscuro: hsl(0, 0%, 70%);
   --color-verde: #62A60A;
   --color-naranja: #FF8200;
+  /* COLORES DE LAS UNIVERSIDADES */
+  --color-ucr: #5BC2E7;
+  --color-itcr: #002855;
+  --color-una: #E4002B;
+  --color-uned: #004DFF;
+  --color-utn: #00205B;
+
+  /* COLORES DE LAS AGRUPACIONES */
+  --artes-y-letras: #EF3340;
+  --ciencias-basicas: #89813D;
+  --ciencias-economicas: #4080C9;
+  --ciencias-sociales: #DD5900;
+  --educacion: #FFC72C;
+  --recursos-naturales: #72B431;
+  --ingenieria: #512D6D;
+  --ciencias-de-la-salud: #0093B2;
+  --derecho: #75787B;
+  --computacion: #D0006F;
 }
 
 @font-face {
