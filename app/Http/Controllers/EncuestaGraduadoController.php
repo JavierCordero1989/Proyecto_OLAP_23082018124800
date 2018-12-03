@@ -807,9 +807,9 @@ class EncuestaGraduadoController extends Controller
         $encuesta = EncuestaGraduado::where('token', $request->token)->first();
 
         if(empty($encuesta)) {
-            return 'encuesta no encontrada';
+            return array('encontrada'=> false, 'encuesta'=>null);
         }
 
-        return $encuesta;
+        return array('encontrada'=> true, 'encuesta'=>$encuesta);
     }
 }
