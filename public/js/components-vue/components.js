@@ -1,9 +1,9 @@
 Vue.component("information-box", {
-    props: ["list", "color"],
+    props: ["list", "colors"],
     template: `
     <div class="row">
         <div v-for="(item, index) in list" class="col-md-6">
-            <div :class="'small-box '+color">
+            <div :class="'small-box '+colors[index]">
                 <div class="inner">
                     <h3><u>{{index}}</u></h3>
                     <p>Asignadas: {{item.asignadas}}</p>

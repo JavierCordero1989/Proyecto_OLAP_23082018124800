@@ -750,6 +750,7 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function hacer_sustitucion_post(Request $request) {
+        // dd($request->all());
         $ruta = 'encuestas-graduados.hacer-sustitucion';
 
         /* SE BUSCA LA ENCUESTA POR MEDIO DEL TOKEN INGRESADO */
@@ -763,14 +764,14 @@ class EncuestaGraduadoController extends Controller
         }
         else {
             /* SI LA ENCUESTA EXISTE Y CORRESPONDE A UN CASO DE CENSO, SE MOSTRARÁ UN ERROR */
-            if($encuesta->tipo_de_caso == 'CENSO') {
-                Flash::error('El caso que busca corresponde a Censo, no se puede sustituir.');
+            if($encuesta->tipo_de_caso == 'CENSO' || $encuesta->tipo_de_caso == 'SUSTITUCION') {
+                Flash::error('El caso que busca corresponde a Censo o una Sustitucion, no se puede sustituir.');
                 // Flash::overlay('El caso que busca corresponde a Censo, no se puede sustituir.', 'Error de tipo de caso')->error();
                 return redirect(route($ruta));
             }
             else {
                 /* SI LA ENCUESTA EXISTE Y NO ES CENSO, SE HARÁ UNA BÚSQUEDA PARA ENCONTRAR EL REEMPLAZO */
-                $tipo_de_caso = 'Sustitución';
+                $tipo_de_caso = 'SUSTITUCION';
     
                 $encuesta_nueva = EncuestaGraduado::where('codigo_grado', $encuesta->codigo_grado)
                     ->where('codigo_disciplina', $encuesta->codigo_disciplina)

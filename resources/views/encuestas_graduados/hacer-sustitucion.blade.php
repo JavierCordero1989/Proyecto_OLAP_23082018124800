@@ -17,7 +17,6 @@
                     <div class="form-group">
                         {!! Form::label('token_entrevista', 'Ingrese el token de la entrevista a sustituir:') !!}
                         {!! Form::text('token_entrevista', null, ['class'=>'form-control', 'v-model'=>'token', 'v-bind:readonly'=>'setReadonly']) !!}
-                        <span id="mensaje-alerta"></span>
                     </div>
 
                     <div class="form-group">
@@ -29,7 +28,7 @@
                         {!! Form::button('<i class="fas fa-exchange-alt"></i> Sustituir', [
                             'class'=>'btn btn-primary',
                             'type'=>'submit',
-                            'onclick'=>'return validarTokenEnBlanco();',
+                            'onclick'=>'return verificar_solicitud();',
                             'v-bind:disabled'=>'setActive'
                         ]) !!}
 
@@ -48,6 +47,7 @@
             </div>
         </div>
 
+        <!-- Caja donde se muestra la información de la entrevista encontrada -->
         <div v-if="encuesta_encontrada" class="box box-primary">
             <div id="survey-body" class="box-body with-border">
                 <div class="col-md-6">
@@ -124,6 +124,10 @@
 @section('scripts')
     <script>
 
+        function verificar_solicitud() {
+            return confirm('¿Está seguro de realizar el reemplazo con los datos solicitados?')
+        }
+
         new Vue({
             el: '#app-vue-sustitucion', 
             data: {
@@ -146,7 +150,6 @@
                                 token: this.token
                             }
                         }).then(response => {
-                            // console.log(response.data)
 
                             let encontrada = response.data.encontrada
                             this.encuesta = response.data.encuesta

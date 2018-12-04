@@ -101,7 +101,7 @@
                                         <div id="panel-areas" class="panel-collapse collapse">
                                             <div class="panel-body">
 
-                                                <information-box v-bind:list="information.areas" :color="color"></information-box>
+                                                <information-box v-bind:list="information.areas" :colors="areas_colors"></information-box>
 
                                             </div>
                                         </div>
@@ -119,7 +119,7 @@
                                         <div id="panel-agrupaciones" class="panel-collapse collapse">
                                             <div class="panel-body">
 
-                                                <information-box v-bind:list="information.agrupaciones" :color="color"></information-box>
+                                                <information-box v-bind:list="information.agrupaciones" :colors="agrupaciones_colors"></information-box>
 
                                             </div>
                                         </div>
@@ -148,7 +148,9 @@
                 information: [],
                 report_list: [],
                 iconos_estados: [],
-                color: "bg-aqua"
+                color: "bg-aqua",
+                agrupaciones_colors: [],
+                areas_colors: []
             },
             methods: {
                 getReporte: function() {
@@ -160,6 +162,8 @@
 
                     this.report_list = <?php echo json_encode($reporte); ?>;
                     this.iconos_estados = <?php echo json_encode(config('global.iconos_estados')); ?>;
+                    this.agrupaciones_colors = <?php echo json_encode(config('clases_colores.agrupaciones'))?>;
+                    this.areas_colors = <?php echo json_encode(config('clases_colores.areas')); ?>;
                 }
             }
         })

@@ -72,6 +72,55 @@
   background-color: var(--color-verde) !important;
 }
 
+/* CLASES CON LOS COLORES DE LAS UNIVERSIDADES */
+.bg-color-ucr {
+  background-color: var(--color-ucr) !important;
+}
+.bg-color-itcr {
+  background-color: var(--color-itcr) !important;
+}
+.bg-color-una {
+  background-color: var(--color-una) !important;
+}
+.bg-color-uned {
+  background-color: var(--color-uned) !important;
+}
+.bg-color-utn {
+  background-color: var(--color-utn) !important;
+}
+
+/* CLASES CON LOS COLORES DE LAS AREAS */
+.bg-color-artes-y-letras {
+  background-color: var(--artes-y-letras) !important;
+}
+.bg-color-ciencias-basicas {
+  background-color: var(--ciencias-basicas) !important;
+}
+.bg-color-ciencias-economicas {
+  background-color: var(--ciencias-economicas) !important;
+}
+.bg-color-ciencias-sociales {
+  background-color: var(--ciencias-sociales) !important;
+}
+.bg-color-educacion {
+  background-color: var(--educacion) !important;
+}
+.bg-color-recursos-naturales {
+  background-color: var(--recursos-naturales) !important;
+}
+.bg-color-ingenieria {
+  background-color: var(--ingenieria) !important;
+}
+.bg-color-ciencias-de-la-salud {
+  background-color: var(--ciencias-de-la-salud) !important;
+}
+.bg-color-derecho {
+  background-color: var(--derecho) !important;
+}
+.bg-color-computacion {
+  background-color: var(--computacion) !important;
+}
+
 .skin-conare .main-header .navbar {
   background: var(--color-azul-claro);
 }
