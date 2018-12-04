@@ -94,9 +94,9 @@ $(document).ready(function () {
         event.preventDefault();
         formulario = new FormData(document.getElementById('form_registro'));
 
-        for(var value of formulario.values()) {
-            console.log("Valor: ", value);
-        }
+        // for(var value of formulario.values()) {
+        //     console.log("Valor: ", value);
+        // }
 
         $.ajax({
             url: 'register',
@@ -109,7 +109,7 @@ $(document).ready(function () {
             complete: function(data) {
 
                 if(data.statusText == "OK") {
-                    console.log(data);
+                    // console.log(data);
                     if (usernameError == true || emailError == true || passwordError == true || passConfirm == true) {
                         $('.name, .email, .pass, .passConfirm').blur();
                     } else {
@@ -125,7 +125,7 @@ $(document).ready(function () {
                 }
             },
             error: function(data) {
-                console.log("Error: ", data.responseText);
+                // console.log("Error: ", data.responseText);
                 // var error_mail = $('#span_error_mail');
                 // console.log("Object: ", error_mail);
                 error_mail.text('El correo que ingresó ya está en uso').fadeIn();

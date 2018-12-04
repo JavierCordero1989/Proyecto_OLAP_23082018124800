@@ -237,7 +237,7 @@
                         }
                     }).then(response=>{
                         this.reporte = response.data
-                        console.log(this.reporte)
+                        // console.log(this.reporte)
                     })
                 },
                 limpiar: function() {

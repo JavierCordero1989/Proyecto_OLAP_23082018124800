@@ -363,7 +363,7 @@
                 },
                 collapsePanel: function(event) {
                     //TODO
-                    console.log(event.target);
+                    // console.log(event.target);
                 },
                 rutaOtrasCarreras: function(ids) {
                     let route = '{{ route("encuestas-graduados.otras-carreras", ":ids") }}';

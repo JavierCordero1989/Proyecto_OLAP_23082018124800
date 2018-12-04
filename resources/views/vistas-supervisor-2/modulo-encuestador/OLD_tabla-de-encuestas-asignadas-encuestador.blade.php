@@ -139,7 +139,7 @@
                 }
             }
 
-            console.log(suma);
+            // console.log(suma);
 
             if(suma == 0){
                 alert('Debe seleccionar al menos una encuesta');
@@ -155,13 +155,13 @@
             var checks = document.getElementsByName('encuestas[]');
 
             if($('[name=select_all]').get(0).checked) {
-                console.log('Entra al if');
+                // console.log('Entra al if');
                 for(indice=0, j = checks.length; indice<j; indice++) {
                     checks[indice].checked = true;
                 }
             }
             else {
-                console.log('Entra al else');
+                // console.log('Entra al else');
                 for(indice=0, j = checks.length; indice<j; indice++) {
                     checks[indice].checked = false;
                 }

@@ -161,7 +161,7 @@
             data: {id: '{{ Auth::user()->id }}'},
             dataType: 'json',
             success: function(data) {
-                console.log(data)
+                // console.log(data)
                 // Si vienen datos, carga la campana con las notificaciones.
                 if(data.count > 0) {
                     $('#campana_notificaciones').removeClass('hide');

@@ -803,13 +803,28 @@ class EncuestaGraduadoController extends Controller
         }       
     }
 
+    /* Permite buscar una entrevista por TOKEN, devolviendo el resultado en forma de array, esto porque
+    la funcion se llama mediante AXIOS. Se devuelve Si fue encontrada o no, la encuesta y un mensaje para el usuario. */
     function buscar_encuesta(Request $request) {
+        /* se busca la encuesta mediante el token */
         $encuesta = EncuestaGraduado::where('token', $request->token)->first();
 
+        /* si la encuesta no se encuentra, se devuelven los datos para informar al usuario. */
         if(empty($encuesta)) {
-            return array('encontrada'=> false, 'encuesta'=>null);
+            return array('encontrada'=> false, 'encuesta'=>null, 'mensaje'=>'No se ha encontrado una encuesta con el token ingresado.');
         }
 
-        return array('encontrada'=> true, 'encuesta'=>$encuesta);
+        /* si la encuesta encontrada es un censo, se devuelve un mensaje informando al usuario */
+        if($encuesta->tipo_de_caso == 'CENSO') {
+            return array('encontrada'=> false, 'encuesta'=>null, 'mensaje'=>'La encuesta encontrada pertenece a CENSO, no se puede hacer el reemplazo con la misma.');
+        }
+
+        /* si la encuesta encontrada es una sustitucion, se devuelve un mensaje informando al usuario */
+        if($encuesta->tipo_de_caso == 'SUSTITUCION') {
+            return array('encontrada'=> false, 'encuesta'=>null, 'mensaje'=>'La encuesta encontrada pertenece a una SUSTITUCION, no se puede hacer el reemplazo con la misma.');
+        }
+
+        /* si ninguna de las condiciones nteriores se cumple, se devuelve la informacion correcta */
+        return array('encontrada'=> true, 'encuesta'=>$encuesta, 'mensaje'=>'Se ha encontrado una coincidencia.');
     }
 }

@@ -62,10 +62,10 @@ function evento_sectores(check_seleccionado) {
         },
         url: '{{ route("universidades.sector") }}',
         beforeSend: function() {
-            console.log('beforeSend: ', valores_checks);
+            // console.log('beforeSend: ', valores_checks);
         },
         success: function(respuesta) {
-            console.log('success: ', respuesta.mensaje);
+            // console.log('success: ', respuesta.mensaje);
             cargarUniversidades(respuesta.datos_obtenidos);
         },
         error: function(jqXHR, respuesta_servidor, errorThrown) {
@@ -75,7 +75,7 @@ function evento_sectores(check_seleccionado) {
 }
 
 function evento_areas(check_seleccionado) {
-    console.log('Área: ', check_seleccionado.attr('value'));
+    // console.log('Área: ', check_seleccionado.attr('value'));
 }
 
 //Llena la caja con los datos de las universidades que se seleccionaron.
@@ -108,5 +108,5 @@ function cargarUniversidades(data) {
 }
 
 function evento_universidades(check_seleccionado) {
-    console.log('Universidad: ', check_seleccionado.attr('value'));
+    // console.log('Universidad: ', check_seleccionado.attr('value'));
 }

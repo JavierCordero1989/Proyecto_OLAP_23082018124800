@@ -1,5 +1,5 @@
 $(function() {
-	console.log("LA PAGINA HA CARGADO");
+	// console.log("LA PAGINA HA CARGADO");
 
 	let mediaquery = window.matchMedia("(max-width: 768px)");
 	if (mediaquery.matches) {

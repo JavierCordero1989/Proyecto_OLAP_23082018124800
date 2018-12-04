@@ -146,36 +146,32 @@
                                 token: this.token
                             }
                         }).then(response => {
-                            console.log(response.data)
+                            // console.log(response.data)
 
                             let encontrada = response.data.encontrada
                             this.encuesta = response.data.encuesta
+                            let mensaje = response.data.mensaje
 
                             if(!encontrada) {
                                 this.encuesta_encontrada = false
                                 this.setActive = true
-                                alert('ENCUESTA NO ENCONTRADA')
+                                alert(mensaje)
                             }
                             else {
-                                if(this.encuesta.tipo_de_caso == 'CENSO' || this.encuesta.tipo_de_caso == 'SUSTITUCION') {
-                                    this.encuesta_encontrada = false
-                                    this.setActive = true
-                                    alert('LA ENCUESTRA ENCONTRADA CORRESPONDE A UN CENSO O UNA SUSTITUCIÓN EN SÍ, NO PUEDE REALIZAR UNA SUSTITUCIÓN CON ESTE CASO.')
-                                }
-                                else {
-                                    this.encuesta_encontrada = true
-                                    this.setActive = false
-                                    alert('SE ENCONTRÓ UNA COINCIDENCIA')
-                                }
+                                this.encuesta_encontrada = true
+                                this.setActive = false
+                                this.setReadonly = true
+                                alert(mensaje)
                             }
                         })
                     }
                 },
                 cleanToken: function() {
-                    this.token = '',
-                    this.encuesta_encontrada = false,
-                    this.encuesta = null,
+                    this.token = ''
+                    this.encuesta_encontrada = false
+                    this.encuesta = null
                     this.setActive = true
+                    this.setReadonly = false
                 }
             }
         })
