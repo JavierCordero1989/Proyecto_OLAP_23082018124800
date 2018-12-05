@@ -25,13 +25,23 @@ set_time_limit(300);
 
 class ArchivosExcelController extends Controller
 {
+    private $reporte = array();
+
     public function subir_archivo_de_contactos(Request $request) {
         if($request->hasFile('archivo_contactos')) {
             $archivo = $request->file('archivo_contactos');
 
             Excel::load($archivo, function ($reader) {
                 foreach ($reader->get() as $key => $row) {
-                    $row['identificacion'];
+                    $identificacion = $row['identificacion'];
+                    $ids_graduados = $this->buscar_graduado($identificacion);
+
+                    if(sizeof($ids_graduados) <= 0) {
+                        $this->reporte['graduados_no_encontrados'][] = 'El graduado con cédula '.$identificacion.' no ha sido encontrado en los registros.';
+                        continue;
+                    }
+
+                    $this->verificar_contacto($ids_graduados, $row['residencial_1']);
 
                     $row['residencial_1'];
                     $row['residencial_2'];
@@ -182,6 +192,26 @@ class ArchivosExcelController extends Controller
                     $row['correo_escuela_3'];
                 }
             });
+        }
+    }
+
+    private function buscar_graduado($identificacion) {
+        $graduado = EncuestaGraduado::where('identificacion_graduado', $identificacion)->pluck('id');
+
+        return $graduado;
+    }
+
+    private function verificar_contacto($ids_graduados, $contacto_excel) {
+        $encontrados = DetalleContacto::where('contacto', $contacto_excel)->with('contacto_graduado')->get();
+
+        if(sizeof($encontrados) <= 0) {
+            //Guardar el numero
+        }
+        else {
+            foreach($encontrados as $detalle) {
+                
+                in_array($detalle->contacto_graduado->id_graduado, $ids_graduados->toArray());
+            }
         }
     }
 }

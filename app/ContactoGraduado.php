@@ -28,14 +28,18 @@ class ContactoGraduado extends Model
     }
 
     public function detalle() {
-        $id_contacto = $this->id;
-
-        $detalle_contactos = DetalleContacto::where('id_contacto_graduado', $this->id)
-            // ->whereNull('deleted_at')
-            ->get();
-
-        return $detalle_contactos;
+        return $this->hasMany(DetalleContacto::class, 'id_contacto_graduado');
     }
+
+    // public function detalle() {
+    //     $id_contacto = $this->id;
+
+    //     $detalle_contactos = DetalleContacto::where('id_contacto_graduado', $this->id)
+    //         // ->whereNull('deleted_at')
+    //         ->get();
+
+    //     return $detalle_contactos;
+    // }
 
     public function agregarDetalle($contacto, $observacion) {
         $detalle = DetalleContacto::create([

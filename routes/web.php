@@ -420,3 +420,33 @@ Route::get('findUserByEmail', function(\Illuminate\Http\Request $request) {
     return response()->json($datos_respuesta);
   }
 })->name('findUserByEmail');
+
+
+Route::get('prueba-archivo', function() {
+  $identificacion = '9 - 331 - 895';
+
+  $graduado = App\EncuestaGraduado::where('identificacion_graduado', $identificacion)->pluck('id')->toArray();
+
+  if(sizeof($graduado) <= 0) {
+    dd('No se ha encontrado un graduado con esa cedula');
+  }
+  else {
+    $contacto_excel = '935-04-9011';
+    $encontrados = App\DetalleContacto::where('contacto', $contacto_excel)->with('contacto_graduado')->get();
+
+    if(sizeof($encontrados) <= 0) {
+      dd('No se ha encontrado una coincidencia de telefono');
+    }
+    else {
+      foreach($encontrados as $detalle) {          
+        if(in_array($detalle->contacto_graduado->id_graduado, $graduado)) {
+          echo 'Existe coincidencia <br>';
+        }
+        else {
+          echo 'No existe coincidencia <br>';
+        }
+      }
+    }
+  }
+
+});
