@@ -71,8 +71,9 @@ Route::group(['middleware'=>'auth'], function(){
   Route::get('importar-excel-bd/create', 'ExportImportExcelController@create')                  ->name('excel.create')->middleware(['role:Super Admin|Supervisor 1']);
   Route::post('importar-excel-bd/guardar-aceptados/data-file', 'ExportImportExcelController@guardarRegistrosAceptados')->name('excel.guardar-aceptados');
   Route::get('importar-archivo-contactos', 'ExportImportExcelController@createArchivoContactos')->name('excel.subir-contactos');
-  Route::post('importar-archivo-contactos', 'ExportImportExcelController@subirArchivoExcelContactos')->name('excel.subir-archivo-contactos');
+  // Route::post('importar-archivo-contactos', 'ExportImportExcelController@subirArchivoExcelContactos')->name('excel.subir-archivo-contactos');
   Route::get('confirmacion/archivos/excel/{respuesta}', 'ExportImportExcelController@respuesta_archivo_muestra')->name('excel.respuesta-archivo');
+  Route::post('importar-archivo-contactos', 'ArchivosExcelController@subir_archivo_de_contactos')->name('excel.subir-archivo-contactos');
 });
 
 //Encuestadores
@@ -423,30 +424,16 @@ Route::get('findUserByEmail', function(\Illuminate\Http\Request $request) {
 
 
 Route::get('prueba-archivo', function() {
-  $identificacion = '9 - 331 - 895';
+  $list = App\EncuestaGraduado::all();
 
-  $graduado = App\EncuestaGraduado::where('identificacion_graduado', $identificacion)->pluck('id')->toArray();
-
-  if(sizeof($graduado) <= 0) {
-    dd('No se ha encontrado un graduado con esa cedula');
-  }
-  else {
-    $contacto_excel = '935-04-9011';
-    $encontrados = App\DetalleContacto::where('contacto', $contacto_excel)->with('contacto_graduado')->get();
-
-    if(sizeof($encontrados) <= 0) {
-      dd('No se ha encontrado una coincidencia de telefono');
-    }
-    else {
-      foreach($encontrados as $detalle) {          
-        if(in_array($detalle->contacto_graduado->id_graduado, $graduado)) {
-          echo 'Existe coincidencia <br>';
-        }
-        else {
-          echo 'No existe coincidencia <br>';
-        }
-      }
-    }
+  foreach($list as $el) {
+    echo $el->identificacion_graduado . '<br>';
   }
 
+});
+
+/** Ruta para abrir el modulo para subir el catalogo */
+Route::group(['prefix'=>'catalogo', 'middleware'=>['auth','role:Super Admin']], function(){
+  Route::get('subir-catalogo', 'CatalogoController@subir_catalogos')->name('catalogo.subir');
+  Route::post('subir-catalogo', 'CatalogoController@cargar_catalogo')->name('catalogo.cargar');
 });
