@@ -29,12 +29,58 @@
 
 @font-face {
   font-family: 'Syntax';
-  src: url('');
+  src: url('../../fonts/Syntax/hinted-SyntaxLTStd-Bold.woff2');
+}
+
+@font-face {
+  font-family: 'ITC Novarese Bold';
+  src: url('../../fonts/ITC_Novarese/hinted-NovareseStd-Bold.woff2');
+}
+
+@font-face {
+  font-family: 'ITC Novarese Bold Italic';
+  src: url('../../fonts/ITC_Novarese/hinted-NovareseStd-BoldItalic.woff2');
+}
+
+@font-face {
+  font-family: 'ITC Novarese Book';
+  src: url('../../fonts/ITC_Novarese/hinted-NovareseStd-Book.woff2');
+}
+
+@font-face {
+  font-family: 'ITC Novarese Book Italic';
+  src: url('../../fonts/ITC_Novarese/hinted-NovareseStd-BookItalic.woff2');
+}
+
+@font-face {
+  font-family: 'ITC Novarese Medium';
+  src: url('../../fonts/ITC_Novarese/hinted-NovareseStd-Medium.woff2');
+}
+
+@font-face {
+  font-family: 'ITC Novarese Ultra';
+  src: url('../../fonts/ITC_Novarese/hinted-NovareseStd-Ultra.woff2');
 }
 
 @font-face {
   font-family: 'Cabin';
   src: url('https://fonts.googleapis.com/css?family=Cabin');
+}
+
+body {
+  font-family: 'Syntax';
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'ITC Novarese Book';
+}
+
+span {
+  font-family: 'Syntax';
+}
+
+b {
+  font-family: 'ITC Novarese Book';
 }
 
 .btn-primary {
@@ -143,14 +189,15 @@
   /* background: rgba(0, 0, 0, 0.1); */
   background: var(--color-azul-claro-degradado-claro);
   color: #f6f6f6;
+  font-family: 'Cabin';
 }
-.skin-conare .main-header .navbar .sidebar-toggle {
+/* .skin-conare .main-header .navbar .sidebar-toggle {
   color: #ffffff;
 }
 .skin-conare .main-header .navbar .sidebar-toggle:hover {
   color: #f6f6f6;
   background: rgba(0, 0, 0, 0.1);
-}
+} */
 .skin-conare .main-header .navbar .sidebar-toggle {
   color: #fff;
 }

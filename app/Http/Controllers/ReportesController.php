@@ -6,6 +6,7 @@ use App\EncuestaGraduado as Entrevista;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Universidad;
+use App\EncuestaGraduado;
 use App\Disciplina;
 use Carbon\Carbon;
 use App\Area;
@@ -18,13 +19,37 @@ class ReportesController extends Controller
     }
 
     public function generar_reporte(Request $request) {
-        
+        $graduados = EncuestaGraduado::whereNull('deleted_at')->get();
+        $para_reporte = EncuestaGraduado::whereNull('deleted_at');
+
         $sector = $request->sector;
         $agrupacion = $request->agrupacion;
         $area = $request->area;
         $disciplina = $request->disciplina;
+        
+        $reporte = [
+            'encuestas'=>$graduados,
+            'total_de_encuestas' => sizeof($graduados),
+            'sectores_elegidos' => $sector,
+            'agrupaciones_elegidas' => $agrupacion,
+            'areas_elegidas' => $area,
+            'disciplinas_elegidas' => $disciplina
+        ];
 
-        return array($sector, $agrupacion, $area, $disciplina);
+        if(isset($request->sector)) {
+            $sector = $request->sector;
+            $para_reporte = $para_reporte->whereIn('codigo_sector', $sector);
+        }
+
+        if(isset($request->agrupacion)) {
+            $agrupacion = $request->agrupacion;
+            $para_reporte = $para_reporte->whereIn('codigo_agrupacion', $agrupacion);
+        }
+
+        
+        
+
+        return array($reporte);
     }
 
     public function index() {
