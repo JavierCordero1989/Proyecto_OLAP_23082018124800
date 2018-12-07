@@ -203,6 +203,8 @@ class AreasDisciplinasSeeder extends Seeder
                 '90002'=>'Ingeniería Civil',
                 '90003'=>'Ingeniería Topográfica',
                 '90004'=>'Ingeniería Industrial',
+                '90920'=>'Ingeniería Mecatrónica',
+                '90921'=>'Ingeniería Mantenimiento Industrial',
                 '90005'=>'Ingeniería Mecánica',
                 '90006'=>'Ingeniería Eléctrica',
                 '90007'=>'Ingeniería Electrónica',

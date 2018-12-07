@@ -37,10 +37,12 @@ Vue.component("information-box-general", {
                 <div class="icon">
                     <i class="fas fa-adjust"></i>
                 </div>
+                <!--
                 <a href="#" class="small-box-footer">
                     Más información
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
+                -->
             </div>
         </div>
     </div>
