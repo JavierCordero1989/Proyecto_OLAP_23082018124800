@@ -74,6 +74,9 @@
 </li>
 
 @if(Auth::user()->hasRole('Super Admin'))
+    <li>
+        <a href="{!! route('catalogo.subir') !!}"><i class="fas fa-file"></i><span> Subir catálogos</span></a>
+    </li>
     @include('layouts.menu-superadmin')
 @endif
 

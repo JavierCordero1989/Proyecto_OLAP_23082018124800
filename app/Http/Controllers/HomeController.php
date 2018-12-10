@@ -120,7 +120,7 @@ class HomeController extends Controller
         $data = array();
         /* se obtiene el total de entrevistas asignadas y el total de encuestas a nivel general. */
         $totalAsignadas = Entrevista::totalEntrevistasAsignadas()->count();
-        $totalEncuestas = Entrevista::totalDeEncuestas();
+        $totalEncuestas = Entrevista::totalDeEncuestas()->count();
         
         /* se recorre el array de estados */
         foreach ($estados as $key => $value) {

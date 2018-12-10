@@ -14,7 +14,7 @@
                         </div>
 
                         <div class="form-group col-sm-6">
-                            {!! Form::label('catalogo_disciplina', 'Seleccione el archivo de disciplinas:') !!}
+                            {!! Form::label('catalogo_disciplinas', 'Seleccione el archivo de disciplinas:') !!}
                             {!! Form::file('catalogo_disciplinas', ['class' => 'form-control-file', 'accept'=>'.xlsx,.xls, .csv']) !!}
                         </div>
 

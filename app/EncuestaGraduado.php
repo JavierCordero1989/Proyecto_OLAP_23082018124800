@@ -742,6 +742,19 @@ class EncuestaGraduado extends Model
             ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE']);
     }
 
+    public function scopeTotalCompletasPorAreaPorAgrupacion($query, $id_agrupacion, $id_area){
+        $estado = Estado::where('estado', 'ENTREVISTA COMPLETA')->first()->id;
+
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_area', $id_area)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE'])
+            ->where('tbl_asignaciones.id_estado', $estado);
+    }
+      
+        
     public function scopeTotalPorAreaPorAgrupacionPorGrado($query, $id_agrupacion, $id_area, $grado) {
         return $query
             ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
