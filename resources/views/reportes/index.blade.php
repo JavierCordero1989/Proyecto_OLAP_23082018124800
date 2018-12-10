@@ -43,20 +43,23 @@
                                             <thead>
                                                 <tr>
                                                     <th rowspan="2" class="text-center info">Agrupación</th>
-                                                    <th colspan="3" class="text-center info">Población</th>
-                                                    <th colspan="3" class="text-center info">Muestra</th>
-                                                    <th colspan="2" class="text-center info">Entrevistas realizadas</th>
+                                                    <th colspan="4" class="text-center info">Población</th>
+                                                    <th colspan="4" class="text-center info">Muestra</th>
+                                                    <th colspan="3" class="text-center info">Entrevistas realizadas</th>
                                                     <th rowspan="2" class="text-center info">Porcentaje de avance</th>
                                                 </tr>
                                                 <tr>
+                                                    <th class="success">Pregrado</th>
                                                     <th class="success">Bachiller</th>
                                                     <th class="success">Licenciatura</th>
                                                     <th class="success">Total</th>
                                                     
+                                                    <th class="warning">Pregrado</th>
                                                     <th class="warning">Bachiller</th>
                                                     <th class="warning">Licenciatura</th>
                                                     <th class="warning">Total</th>
 
+                                                    <th class="warning">Pregrado</th>
                                                     <th class="warning">Bachiller</th>
                                                     <th class="warning">Licenciatura</th>
                                                 </tr>
@@ -159,21 +162,24 @@
                                                     <tr>
                                                         <th rowspan="2" class="text-center info">Área</th>
                                                         <th rowspan="2" class="text-center info">Disciplina</th>
-                                                        <th colspan="3" class="text-center info">Población</th>
-                                                        <th colspan="3" class="text-center info">Muestra</th>
-                                                        <th colspan="2" class="text-center info">Entrevistas realizadas</th>
+                                                        <th colspan="4" class="text-center info">Población</th>
+                                                        <th colspan="4" class="text-center info">Muestra</th>
+                                                        <th colspan="3" class="text-center info">Entrevistas realizadas</th>
                                                         <th rowspan="2" class="text-center info">Porcentaje de avance</th>
                                                         <th rowspan="2" class="text-center info">* Estado</th>
                                                     </tr>
                                                     <tr>
+                                                        <th class="success">Pregrado</th>
                                                         <th class="success">Bachiller</th>
                                                         <th class="success">Licenciatura</th>
                                                         <th class="success">Total</th>
 
+                                                        <th class="warning">Pregrado</th>
                                                         <th class="warning">Bachiller</th>
                                                         <th class="warning">Licenciatura</th>
                                                         <th class="warning">Total</th>
 
+                                                        <th class="warning">Pregrado</th>
                                                         <th class="warning">Bachiller</th>
                                                         <th class="warning">Licenciatura</th>
                                                     </tr>

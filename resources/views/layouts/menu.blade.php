@@ -106,8 +106,8 @@
             <a href="{!! route('reportes.filtro') !!}"><i class="fa fa-edit"></i><span>Reportes</span></a>
         </li>
 
-        {{-- <li class="#">
-            <a href="{!! route('reportes.filtro') !!}"><i class="fa fa-edit"></i><span>Filtro</span></a>
-        </li> --}}
+        <li class="#">
+            <a href="{!! route('reportes.index') !!}"><i class="fa fa-edit"></i><span>Filtro</span></a>
+        </li>
     </ul>
 </li>

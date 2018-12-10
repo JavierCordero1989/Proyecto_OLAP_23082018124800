@@ -732,4 +732,68 @@ class EncuestaGraduado extends Model
             return null;
         }
     }
+
+    public function scopeTotalPorAreaPorAgrupacion($query, $id_agrupacion, $id_area) {
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_area', $id_area)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE']);
+    }
+
+    public function scopeTotalPorAreaPorAgrupacionPorGrado($query, $id_agrupacion, $id_area, $grado) {
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_area', $id_area)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE'])
+            ->where('codigo_grado', Grado::buscarPorNombre($grado)->first()->id);
+    }
+
+    public function scopeTotalCompletasPorAreaPorAgrupacionPorGrado($query, $id_agrupacion, $id_area, $grado) {
+        $estado = Estado::where('estado', 'ENTREVISTA COMPLETA')->first()->id;
+
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_area', $id_area)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE'])
+            ->where('codigo_grado', Grado::buscarPorNombre($grado)->first()->id)
+            ->where('tbl_asignaciones.id_estado', $estado);
+    }
+
+    public function scopeTotalPorDisciplinaPorAgrupacion($query, $id_agrupacion, $id_disciplina) {
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_disciplina', $id_disciplina)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE']);
+    }
+
+    public function scopeTotalPorDisciplinaPorAgrupacionPorGrado($query, $id_agrupacion, $id_disciplina, $grado) {
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_disciplina', $id_disciplina)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE'])
+            ->where('codigo_grado', Grado::buscarPorNombre($grado)->first()->id);
+    }
+
+    public function scopeTotalCompletasPorDisciplinaPorAgrupacionPorGrado($query, $id_agrupacion, $id_disciplina, $grado) {
+        $estado = Estado::where('estado', 'ENTREVISTA COMPLETA')->first()->id;
+
+        return $query
+            ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
+            ->join('tbl_estados_encuestas','tbl_estados_encuestas.id','=','tbl_asignaciones.id_estado')
+            ->where('codigo_agrupacion', $id_agrupacion)
+            ->where('codigo_disciplina', $id_disciplina)
+            ->whereNotIn('tbl_estados_encuestas.estado', ['FALLECIDO', 'FUERA DEL PAIS', 'ILOCALIZABLE'])
+            ->where('codigo_grado', Grado::buscarPorNombre($grado)->first()->id)
+            ->where('tbl_asignaciones.id_estado', $estado);
+    }
 }

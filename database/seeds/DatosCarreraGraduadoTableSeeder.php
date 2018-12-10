@@ -132,10 +132,7 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
             '2'=>'DIPLOMADO',
             '3'=>'PROFESORADO',
             '4'=>'BACHILLERATO',
-            '5'=>'LICENCIATURA',
-            '6'=>'ESPECIALIDAD PROFESIONAL',
-            '7'=>'MAESTRIA',
-            '8'=>'DOCTORADO'
+            '5'=>'LICENCIATURA'
         ];
 
         foreach($grados as $clave => $valor) {

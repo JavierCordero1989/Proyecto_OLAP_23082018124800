@@ -7,8 +7,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Universidad;
 use App\EncuestaGraduado;
+use App\Agrupacion;
 use App\Disciplina;
 use Carbon\Carbon;
+use App\Grado;
 use App\Area;
 use DB;
 
@@ -52,18 +54,179 @@ class ReportesController extends Controller
         return array($reporte);
     }
 
+    /** 
+     * Permite obtener un arreglo de datos, con los totales por agrupacion, por area.
+     * Obtiene los totales por Pregrado, Bachiller y Licenciatura
+     */
+    private function agrupacion_por_area($id_agrupacion, $id_area) {
+        /* AQUI SE SACAN LOS TOTALES POR AREA Y POR AGRUPACION, ADEMAS SE SACAN LOS TOTALES POR GRADO */
+        /* SE SACA EL TOTAL POR PROFESORADO Y DIPLOMADO, PARA OBTENER EL DE PREGRADO, QUE ES LA SUMA DE AMBAS. */
+        $total_agrupacion_profesorado = EncuestaGraduado::totalPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'PROFESORADO')->count();
+        $total_agrupacion_diplomado = EncuestaGraduado::totalPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'DIPLOMADO')->count();
+        $total_agrupacion_pregrado = $total_agrupacion_profesorado + $total_agrupacion_diplomado;
+
+        /* SE SACA EL TOTAL POR BACHILLER */
+        $total_agrupacion_bachiller = EncuestaGraduado::totalPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'BACHILLERATO')->count();
+
+        /* SE SACA EL TOTAL POR LICENCIATURA */
+        $total_agrupacion_licenciatura = EncuestaGraduado::totalPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'LICENCIATURA')->count();
+
+        /* SUMANDO LOS TRES TOTALES ANTERIORES, SE SACA EL TOTAL POR EL AREA */
+        $total_agrupacion = $total_agrupacion_pregrado + $total_agrupacion_bachiller + $total_agrupacion_licenciatura;
+
+        /* AQUI SE SACAN LOS TOTALES POR AREA Y AGRUPACION, ADEMAS DE LOS TOTALES POR GRADO, PERO SOLO
+        DE LAS ENTREVISTAS QUE ESTAN COMPLETAS. */
+        /* SE SACA EL TOTAL POR PROFESORADO Y DIPLOMADO, PARA OBTENER EL DE PREGRADO, QUE ES LA SUMA DE AMBAS. */
+        $total_completas_profesorado = EncuestaGraduado::totalCompletasPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'PROFESORADO')->count();
+        $total_completas_diplomado = EncuestaGraduado::totalCompletasPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'DIPLOMADO')->count();
+        $total_completas_pregrado = $total_completas_profesorado + $total_completas_diplomado;
+
+        /* SE SACA EL TOTAL POR BACHILLER */
+        $total_completas_bachiller = EncuestaGraduado::totalCompletasPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'BACHILLERATO')->count();
+
+        /* SE SACA EL TOTAL POR LICENCIATURA */
+        $total_completas_licenciatura = EncuestaGraduado::totalCompletasPorAreaPorAgrupacionPorGrado($id_agrupacion, $id_area, 'LICENCIATURA')->count();
+
+        /* SUMANDO LOS TRES TOTALES ANTERIORES, SE SACA EL TOTAL POR EL AREA */
+        $total_completas = ($total_completas_pregrado + $total_completas_bachiller + $total_completas_licenciatura);
+
+        return [
+            Agrupacion::buscarPorId($id_agrupacion)->first()->nombre,
+            0, // total por poblacion - pregrado
+            0, // total por poblacion - bachiller
+            0, // total por poblacion - licenciatura
+            0, // total por poblacion - total (pregrado+bachiller+licenciatura)
+            $total_agrupacion_pregrado, //total por pregrado (profesorado y diplomado) 
+            $total_agrupacion_bachiller, // total por bachiller
+            $total_agrupacion_licenciatura, // total por licenciatura
+            $total_agrupacion, // total de los tres grados
+            $total_completas_pregrado, // total completas pregrado
+            $total_completas_bachiller, // total completas bachiller
+            $total_completas_licenciatura, // total completas licenciatura
+            $total_agrupacion == 0 ? 0 : round( (($total_completas / $total_agrupacion) * 100) , 2)  // porcentaje avance (totalRealizadas / totalMuestra * 100)
+        ];
+    }
+
+    private function obtenerTotales($array, $length) {
+        $arrayTotales = array();
+
+        for($i=1; $i<$length; $i++) {
+            $arrayTotales[] = array_sum(array_column($array, $i));
+        }
+
+        return $arrayTotales;
+    }
+
+    private function disciplinas_por_area_y_agrupacion($id_agrupacion, $id_disciplina) {
+        /* AQUI SE SACAN LOS TOTALES POR AREA Y POR AGRUPACION, ADEMAS SE SACAN LOS TOTALES POR GRADO */
+        /* SE SACA EL TOTAL POR PROFESORADO Y DIPLOMADO, PARA OBTENER EL DE PREGRADO, QUE ES LA SUMA DE AMBAS. */
+        $total_agrupacion_profesorado = EncuestaGraduado::totalPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'PROFESORADO')->count();
+        $total_agrupacion_diplomado = EncuestaGraduado::totalPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'DIPLOMADO')->count();
+        $total_agrupacion_pregrado = $total_agrupacion_profesorado + $total_agrupacion_diplomado;
+
+        /* SE SACA EL TOTAL POR BACHILLER */
+        $total_agrupacion_bachiller = EncuestaGraduado::totalPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'BACHILLERATO')->count();
+
+        /* SE SACA EL TOTAL POR LICENCIATURA */
+        $total_agrupacion_licenciatura = EncuestaGraduado::totalPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'LICENCIATURA')->count();
+
+        /* SUMANDO LOS TRES TOTALES ANTERIORES, SE SACA EL TOTAL POR EL AREA */
+        $total_agrupacion = $total_agrupacion_pregrado + $total_agrupacion_bachiller + $total_agrupacion_licenciatura;
+
+        /* AQUI SE SACAN LOS TOTALES POR AREA Y AGRUPACION, ADEMAS DE LOS TOTALES POR GRADO, PERO SOLO
+        DE LAS ENTREVISTAS QUE ESTAN COMPLETAS. */
+        /* SE SACA EL TOTAL POR PROFESORADO Y DIPLOMADO, PARA OBTENER EL DE PREGRADO, QUE ES LA SUMA DE AMBAS. */
+        $total_completas_profesorado = EncuestaGraduado::totalCompletasPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'PROFESORADO')->count();
+        $total_completas_diplomado = EncuestaGraduado::totalCompletasPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'DIPLOMADO')->count();
+        $total_completas_pregrado = $total_completas_profesorado + $total_completas_diplomado;
+
+        /* SE SACA EL TOTAL POR BACHILLER */
+        $total_completas_bachiller = EncuestaGraduado::totalCompletasPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'BACHILLERATO')->count();
+
+        /* SE SACA EL TOTAL POR LICENCIATURA */
+        $total_completas_licenciatura = EncuestaGraduado::totalCompletasPorDisciplinaPorAgrupacionPorGrado($id_agrupacion, $id_disciplina, 'LICENCIATURA')->count();
+
+        /* SUMANDO LOS TRES TOTALES ANTERIORES, SE SACA EL TOTAL POR EL AREA */
+        $total_completas = ($total_completas_pregrado + $total_completas_bachiller + $total_completas_licenciatura);
+
+        return [
+            Disciplina::where('id', $id_disciplina)->first()->descriptivo,
+            0, // total por poblacion - pregrado
+            0, // total por poblacion - bachiller
+            0, // total por poblacion - licenciatura
+            0, // total por poblacion - total (pregrado+bachiller+licenciatura)
+            $total_agrupacion_pregrado, //total por pregrado (profesorado y diplomado) 
+            $total_agrupacion_bachiller, // total por bachiller
+            $total_agrupacion_licenciatura, // total por licenciatura
+            $total_agrupacion, // total de los tres grados
+            $total_completas_pregrado, // total completas pregrado
+            $total_completas_bachiller, // total completas bachiller
+            $total_completas_licenciatura, // total completas licenciatura
+            $total_agrupacion == 0 ? 0 : round( (($total_completas / $total_agrupacion) * 100) , 2)  // porcentaje avance (totalRealizadas / totalMuestra * 100)
+        ];
+    }
+
     public function index() {
+
+        $ucr = $this->agrupacion_por_area(
+            Agrupacion::buscarPorNombre('UCR')->first()->id,
+            Area::buscarPorCodigo(1)->first()->id
+        );
+
+        $una = $this->agrupacion_por_area(
+            Agrupacion::buscarPorNombre('UNA')->first()->id,
+            Area::buscarPorCodigo(1)->first()->id
+        );
+
+        $itcr = $this->agrupacion_por_area(
+            Agrupacion::buscarPorNombre('ITCR')->first()->id,
+            Area::buscarPorCodigo(1)->first()->id
+        );
+
+        $uned = $this->agrupacion_por_area(
+            Agrupacion::buscarPorNombre('UNED')->first()->id,
+            Area::buscarPorCodigo(1)->first()->id
+        );
+
+        $utn = $this->agrupacion_por_area(
+            Agrupacion::buscarPorNombre('UTN')->first()->id,
+            Area::buscarPorCodigo(1)->first()->id
+        );
+
+        $privado = $this->agrupacion_por_area(
+            Agrupacion::buscarPorNombre('PRIVADO')->first()->id,
+            Area::buscarPorCodigo(1)->first()->id
+        );
+
+        $array_agrupaciones = array($ucr, $una, $itcr, $uned, $utn, $privado);
+
         $reporte = [
             'titulo' => 'Cuadro resumen del grado de avance del trabajo de campo de la encuesta de seguimiento de la condición laboral de las personas graduadas 2011-2013 de universidades estatales correspondiente al área de Educación al 24-04-2016',
-            'data' => [
-                array('ucr'  , 1315, 452,  1767, 683,  430,  1113, 370, 248, 55.5),
-                array('una'  , 1197, 660,  1858, 807,  508,  1315, 233, 148, 29.0),
-                array('itcr' , 203,  6,    209,  124,  0,    124,  29,  0,   23.4),
-                array('uned' , 1318, 990,  2308, 342,  204,  546,  79,  31,  20.1),
-                array('utn'  , 524,  0,    524,  197,  0,    197,  3,   0,   1.5)
-            ],
-            'total'=> array(4557, 2108, 6666, 2153, 1142, 3295, 714, 427, 34.63)
+            'data' => $array_agrupaciones,
+            'total'=> $this->obtenerTotales($array_agrupaciones, sizeof($array_agrupaciones[0]))
         ];
+
+        $reporte_areas_ucr = [
+            'titulo'=> 'Universidad de Costa Rica',
+            'fecha' => Carbon::now()->format('d - m - Y'),
+            'data' => [
+                
+            ]
+        ];
+
+        $areas = Area::whereNull('deleted_at')->get();
+
+        foreach($areas as $area) {
+            $reporte_areas_ucr['data'][$area->descriptivo] = array();
+
+            $disciplinas = $area->disciplinas;
+
+            foreach($disciplinas as $disciplina) {
+                $reporte_areas_ucr['data'][$area->descriptivo][] = $this->disciplinas_por_area_y_agrupacion(Agrupacion::buscarPorNombre('UCR')->first()->id, $disciplina->id);
+            }
+        }
+
+        $reporte_areas_ucr['data'][$area->descriptivo][] = array();
 
         $reporte_areas_ucr = [
             'titulo'=> 'Universidad de Costa Rica',
@@ -71,7 +234,8 @@ class ReportesController extends Controller
             'data' => [
                 'Educación' => [
                     array('Total Educación'                 , 1315, 452, 1767, 683, 430, 1113, 370, 248, 55.53, 0), 
-                    array('Administración Educativa'        , 0,    79,  79,   0,   79,  79,   0,   47,  59.49, 0),
+                    // array('Administración Educativa'        , 0,    79,  79,   0,   79,  79,   0,   47,  59.49, 0),
+                    $this->disciplinas_por_area_y_agrupacion(Agrupacion::buscarPorNombre('UCR')->first()->id, 130),
                     array('Artes Industriales'              , 1,    0,   1,    0,   0,   0,    0,   0,   0.0,   0),
                     array('Docencia'                        , 0,    2,   2,    0,   0,   0,    0,   0,   0.0,   0),
                     array('Educación  Preescolar'           , 126,  56,  182,  30,  56,  86,   10,  34,  51.16, 0),

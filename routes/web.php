@@ -293,7 +293,7 @@ Route::group(['prefix'=>'calendario-de-citas', 'middleware'=>'auth'], function()
 Route::group(['prefix'=>'reportes', 'middleware'=>'auth'], function() {
   Route::get('filtro', 'ReportesController@vista_filtro_reportes')->name('reportes.filtro');
   Route::get('generar/reporte/filtro', 'ReportesController@generar_reporte')->name('reportes.generar');
-  // Route::get('', 'ReportesController@index')                                 ->name('reportes.index');
+  Route::get('', 'ReportesController@index')                                 ->name('reportes.index');
   // Route::get('filtro', 'ReportesController@filtro_reportes')                 ->name('reportes.filtro');
   // Route::post('filtro', 'ReportesController@filtrar_encuestas_para_reporte') ->name('reportes.filtro-encuestas');
 });
