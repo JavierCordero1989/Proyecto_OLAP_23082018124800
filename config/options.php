@@ -1,61 +1,70 @@
 <?php
     return [
         'sex_types' => [
-            ''=>'- - - Seleccione - - -',
-            'M'=>'Hombre',
-            'F'=>'Mujer',
-            'SC'=>'Sin Clasificar'
+            ''=>'- - - SEXO - - -',
+            'M'=>'HOMBRE',
+            'F'=>'MUJER',
+            'SC'=>'SIN CLASIFICAR'
         ],
         'case_types' => [
-            '' => '- - - Seleccione - - -',
-            'MUESTRA'=>'Muestra',
-            'CENSO'=>'Censo',
-            'SUSTITUCION'=>'Sustitucion'
+            '' => '- - - TIPOS DE CASO - - -',
+            'CENSO'=>'CENSO',
+            'MUESTRA'=>'MUESTRA',
+            'REEMPLAZO'=>'REEMPLAZO'
         ],
         'group_types' => [
             '' => '- - - AGRUPACIÓN - - -',
-            '281'=>'UCR',
-            '285'=>'UNA',
-            '282'=>'UNED',
-            '284'=>'ITCR',
-            '283'=>'UTN',
-            '286'=>'PRIVADO',
+            '1' => 'UCR',
+            '4' => 'UNED',
+            '58' => 'UTN',
+            '2' => 'ITCR',
+            '3' => 'UNA',
+            '6' => 'PRIVADO'
+
         ],
         'grade_types' => [
-            '' => '- - - Grados - - -',
-            'PREGRADO'=>'PREGRADO',
-            'BACHILLERATO'=>'BACHILLERATO',
-            'LICENCIATURA'=>'LICENCIATURA',
+            '' => '- - - GRADOS - - -',
+            '3'=>'PREGRADO', // Corresponde a Profesorado y Diplomado, códigos 3 y 2 respectivamente
+            '4'=>'BACHILLERATO',
+            '5'=>'LICENCIATURA',
         ],
-        // 'grade_types' => [
-        //     '' => '- - - Grados - - -',
-        //     'DIPLOMADO'=>'DIPLOMADO',
-        //     'PROFESORADO'=>'PROFESORADO',
+        // 'grade_types_used' => [
+        //     'PREGRADO'=>'PREGRADO',
         //     'BACHILLERATO'=>'BACHILLERATO',
         //     'LICENCIATURA'=>'LICENCIATURA',
-        //     'ESPECIALIDAD PROFESIONAL'=>'ESPECIALIDAD PROFESIONAL',
-        //     'MAESTRIA'=>'MAESTRIA',
-        //     'DOCTORADO'=>'DOCTORADO'
         // ],
-        'grade_types_used' => [
-            'PREGRADO'=>'PREGRADO',
-            'BACHILLERATO'=>'BACHILLERATO',
-            'LICENCIATURA'=>'LICENCIATURA',
-        ],
         'survey_estatuses' => [
-            '' => '- - - Estados - - -',
+            '' => '- - - ESTADOS - - -',
+            '1' => 'NO ASIGNADA',
+            '2' => 'ASIGNADA',
+            '3' => 'RECHAZADA',
+            '4' => 'INCOMPLETA',
+            '5' => 'FUERA DEL PAÍS',
+            '6' => 'ILOCALIZABLE',
+            '7' => 'FALLECIDO',
+            // '8' => 'EXTRANJERO',
+            '9' => 'CON CITA',
+            '10' =>	'MENSAJE',
+            '11' =>	'LINK AL CORREO',
+            '12' =>	'INFORMACIÓN POR CORREO',
+            '13' =>	'ENTREVISTA COMPLETA',
+            '14' =>	'RECORDATORIO',
+            '15' =>	'DISCIPLINA NO CORRESPONDE',
+        ],
+        'survey_estatuses_used' => [
+            '' => '- - - ESTADOS - - -',
             '3' => 'RECHAZADA',
             '4' => 'INCOMPLETA',
             '5' => 'FUERA DEL PAÍS',
             '6' => 'ILOCALIZABLE',
             '7' => 'FALLECIDO',
             '9' => 'CON CITA',
-            '10' => 'MENSAJE',
-            '11' => 'LINK AL CORREO',
-            '12' => 'INFORMACIÓN POR CORREO',
-            '13' => 'ENTREVISTA COMPLETA',
-            '14' => 'RECORDATORIO',
-            '15' => 'DISCIPLINA NO CORRESPONDE',
+            '10' =>	'MENSAJE',
+            '11' =>	'LINK AL CORREO',
+            '12' =>	'INFORMACIÓN POR CORREO',
+            '13' =>	'ENTREVISTA COMPLETA',
+            '14' =>	'RECORDATORIO',
+            '15' =>	'DISCIPLINA NO CORRESPONDE',
         ],
         'sector_types' => [
             '' => '- - - SELECCIONE - - -',

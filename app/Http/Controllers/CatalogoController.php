@@ -19,7 +19,7 @@ set_time_limit(300);
 class CatalogoController extends Controller
 {
     private $archivos_subidos = array();
-
+    
     public function subir_catalogos() {
         return view('catalogo.subir-catalogos');
     }
@@ -45,7 +45,7 @@ class CatalogoController extends Controller
                         Area::create($data);
                     }
                 }
-                $this->archivos_subidos[] = "Archivo de áreas subido";
+                $this->archivos_subidos[] = "Archivo de áreas cargado.";
             });
         }
 
@@ -69,7 +69,7 @@ class CatalogoController extends Controller
                         Disciplina::create($data);
                     }
                 }
-                $this->archivos_subidos[] = "Archivo de disciplinas subido";
+                $this->archivos_subidos[] = "Archivo de disciplinas cargado.";
             });
         }
 
@@ -93,7 +93,7 @@ class CatalogoController extends Controller
                         Universidad::create($data);
                     }
                 }
-                $this->archivos_subidos[] = "Archivo de universidades subido";
+                $this->archivos_subidos[] = "Archivo de universidades cargado.";
             });
         }
 
@@ -117,7 +117,7 @@ class CatalogoController extends Controller
                         Carrera::create($data);
                     }
                 }
-                $this->archivos_subidos[] = "Archivo de carreras subido";
+                $this->archivos_subidos[] = "Archivo de carreras cargado.";
             });
         }
 

@@ -161,12 +161,12 @@ class DatosCarreraGraduadoTableSeeder extends Seeder
 
         //Se crean las agrupaciones
         $agrupaciones = [
-            '1'=>'UCR',
-            '2'=>'UNED',
-            '3'=>'UTN',
-            '4'=>'ITCR',
-            '5'=>'UNA',
-            '6'=>'PRIVADO'
+            '1' => 'UCR',
+            '4' => 'UNED',
+            '58' => 'UTN',
+            '2' => 'ITCR',
+            '3' => 'UNA',
+            '6' => 'PRIVADO'
         ];
 
         foreach ($agrupaciones as $clave => $valor) {

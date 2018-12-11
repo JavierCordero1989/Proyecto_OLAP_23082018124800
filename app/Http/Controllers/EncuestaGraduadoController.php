@@ -28,77 +28,141 @@ use DB;
 class EncuestaGraduadoController extends Controller
 {
     public function index() {
+        if(EncuestaGraduado::totalDeEncuestas()->count() <= 0) {
+            Flash::info('Aún no existen encuestas en el sistema, contacte con el Administrador para más información');
+            return redirect(url('home'));
+        }
+
         $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('id', 'ASC')->paginate(25);
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
 
     /* FUNCION QUE FILTRA LAS ENCUESTAS POR LOS DATOS QUE EL USUARIO INGRESE EN LOS CAMPOS */
     public function filtro_encuestas(Request $request) {
-        $input = $request->all();
-
+        // se sacan todas las encuestas de la base de datos.
         $encuestas = EncuestaGraduado::listaDeGraduados();
 
+        /* COMPRUEBA QUE LA IDNETIFICACION DEL GRADUADO TENGA DATOS */
         if(isset($request->identificacion_graduado)) {
             //buscar por identificacion del graduado
             $encuestas = $encuestas->where('identificacion_graduado', 'like', '%'.$request->identificacion_graduado.'%');
         }
+        /* COMPRUEBA QUE EL NOMBRE TENGA DATOS */
         if(isset($request->nombre_completo)) {
             //buscar por el nombre
             $encuestas = $encuestas->where('nombre_completo', 'like', '%'.$request->nombre_completo.'%');
         }
+        /* COMPRUEBA QUE EL SEXO TENGA DATOS */
         if(isset($request->sexo)) {
             //buscar por el sexo
             $encuestas = $encuestas->where('sexo', $request->sexo);
         }
+        /* COMPRUEBA QUE EL CODIGO DE LA CARRERA TENGA DATOS, LO QUE VIENE ES UN NOMBRE */
         if(isset($request->codigo_carrera)) {
             //buscar primero las carreras que coincidan con los nombres para obtener los codigos
             $carreras = Carrera::buscarPorNombre($request->codigo_carrera)->pluck('id');
+
             //buscar las encuestas que coincidan con los codigos encontrados
             $encuestas = $encuestas->whereIn('codigo_carrera', $carreras);
         }
+        /* COMPRUEBA QUE EL CODIGO DE LA UNIVERSIDAD TENGA DATOS, LO QUE VIENE ES UN NOMBRE */
         if(isset($request->codigo_universidad)) {
             //buscar primero las carreras que coincidan con los nombres para obtener los codigos
             $universidades = Universidad::buscarPorNombre($request->codigo_universidad)->pluck('id');
+
             //buscar las encuestas que coincidan con los codigos encontrados
-            $encuestas = $encuestas->where('codigo_universidad', $universidades);
+            $encuestas = $encuestas->whereIn('codigo_universidad', $universidades);
         }
+        /* COMPRUEBA QUE EL CODIGO DE LA AGRUPACION TENGA DATOS, LO QUE VIENE ES EL CÓDIGO */
+        if(isset($request->codigo_agrupacion)) {
+            // buscar primero el ID de la base de datos de la agrupacion con el código
+            $agrupacion = Agrupacion::buscarPorCodigo($request->codigo_agrupacion)->first();
+
+            if(!empty($agrupacion)) {
+                // busca las encuestas que coincidan con la agrupación seleccionada.
+                $encuestas = $encuestas->where('codigo_agrupacion', $agrupacion->id);
+            }
+            else {
+                // meter un dato para que no devuelva nada
+                $encuestas = $encuestas->where('codigo_agrupacion', '');
+            }
+        }
+        /* COMPRUEBA QUE EL CODIGO DEL GRADO TENGA DATOS, LO QUE VIENE ES EL CÓDIGO */
         if(isset($request->codigo_grado)) {
-            //buscar primero las carreras que coincidan con los nombres para obtener los codigos
-            $grados = Grado::buscarPorNombre($request->codigo_grado)->pluck('id');
-            //buscar las encuestas que coincidan con los codigos encontrados
-            $encuestas = $encuestas->whereIn('codigo_grado', $grados);
+            $profesorado = null;
+            $diplomado = null;
+            $bachillerato = null;
+            $licenciatura = null;
+
+            // se setean las disciplinas, dependiendo de las que el usuario ingresó.
+            switch($request->codigo_grado) {
+                case 3:
+                    $profesorado = Grado::buscarPorCodigo(2)->first();
+                    $diplomado = Grado::buscarPorCodigo(3)->first();
+                break;
+
+                case 4:
+                    $bachillerato = Grado::buscarPorCodigo($request->codigo_grado)->first();
+                break;
+
+                case 5:
+                    $licenciatura = Grado::buscarPorCodigo($request->codigo_grado)->first();
+                break;
+            }
+
+            // dependiendo de cual dato no sea nulo, entrará a uno de los tres if siguientes para realizar el filtro.
+            if(!is_null($profesorado) && !is_null($diplomado)) {
+                $encuestas = $encuestas->whereIn('codigo_grado', [$profesorado->id, $diplomado->id]);
+            }
+            else if(!is_null($bachillerato)) {
+                $encuestas = $encuestas->where('codigo_grado', $bachillerato->id);
+            }
+            else if(!is_null($licenciatura)) {
+                $encuestas = $encuestas->where('codigo_grado', $licenciatura->id);
+            }
+            else {
+                $encuestas = $encuestas->where('codigo_grado', '');
+            }
         }
+        /* COMPRUEBA QUE EL CODIGO DE LA DISCIPLINA TENGA DATOS, LO QUE VIENE ES EL NOMBRE */
         if(isset($request->codigo_disciplina)) {
             //buscar primero las carreras que coincidan con los nombres para obtener los codigos
             $disciplinas = Disciplina::buscarPorDescriptivo($request->codigo_disciplina)->pluck('id');
+
             //buscar las encuestas que coincidan con los codigos encontrados
             $encuestas = $encuestas->whereIn('codigo_disciplina', $disciplinas);
         }
+        /* COMPRUEBA QUE EL CODIGO DEL ÁREA TENGA DATOS, LO QUE VIENE ES EL NOMBRE */
         if(isset($request->codigo_area)) {
             //buscar primero las carreras que coincidan con los nombres para obtener los codigos
             $areas = Area::buscarPorDescriptivo($request->codigo_area)->pluck('id');
+
             //buscar las encuestas que coincidan con los codigos encontrados
             $encuestas = $encuestas->whereIn('codigo_area', $areas);
         }
+        /* COMPRUEBA QUE EL TIPO DE CASO TENGA DATOS, LO QUE VIENE ES EL TIPO DE CASO COMO TAL */
         if(isset($request->tipo_de_caso)) {
             //buscar por el tipo de caso
             $encuestas = $encuestas->where('tipo_de_caso', $request->tipo_de_caso);
         }
+        /* COMPRUEBA QUE EL ESTADO TENGA DATOS, LO QUE VIENE ES EL ID DEL ESTADO */
         if(isset($request->estado)) {
-            $id = Estado::find($request->estado);
-            $id = $id->id;
-
-            $ids_graduados = Asignacion::where('id_estado', $id)->pluck('id_graduado');
-
-            $encuestas = $encuestas->whereIn('id', $ids_graduados);
+            $estado = Estado::find($request->estado);
+            
+            if(!empty($estado)) {
+                $ids_graduados = Asignacion::where('id_estado', $estado->id)->pluck('id_graduado');
+    
+                $encuestas = $encuestas->whereIn('id', $ids_graduados);
+            }
         }
+        /* COMPRUEBA QUE EL CONTACTO TENGA DATOS, LO QUE VIENE ES UN CORREO O UN NÚMERO */
         if(isset($request->contacto)) {
             $ids = [];
 
             foreach($encuestas->get() as $encuesta) {
                 $contactos = $encuesta->contactos;
                 foreach($contactos as $c) {
-                    $detalle = $c->detalle();
+                    $detalle = $c->detalle;
                     foreach($detalle as $d) {
                         if($d->contacto == $request->contacto) {
                             $ids[] = $encuesta->id;
@@ -107,9 +171,12 @@ class EncuestaGraduadoController extends Controller
                 }
             }
 
-            $encuestas = $encuestas->whereIn('id', $ids);
+            if(sizeof($ids) > 0) {
+                $encuestas = $encuestas->whereIn('id', $ids);
+            }
         }
 
+        /* DE LAS ENTREVISTAS OBTENIDAS, SE PAGINAN DE 15 EN 15, Y SE ORDENAN ASCENDENTEMENTE POR EL ID */
         $encuestas = $encuestas->orderBy('id', 'ASC')->paginate(15);
 
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
@@ -123,7 +190,7 @@ class EncuestaGraduadoController extends Controller
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
 
-    /* METODO USADO PARA PAGINAR CON VUE.JS, NO FUNCIONO DE ACUERDO A MIS ESPECTATIVAS */
+    /* METODO USADO PARA PAGINAR CON VUE.JS, NO FUNCIONO DE ACUERDO A LAS ESPECTATIVAS */
     // public function listaDeEncuestas(Request $request) {
     //     $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->with('contactos')->paginate(25);
         
@@ -746,6 +813,11 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function hacer_sustitucion() {
+        if(EncuestaGraduado::totalDeEncuestas()->count() <= 0) {
+            Flash::info('Aún no existen encuestas en el sistema, no tiene sentido realizar una sustitución.');
+            return redirect(url('home'));
+        }
+
         return view('encuestas_graduados.hacer-sustitucion');
     }
 

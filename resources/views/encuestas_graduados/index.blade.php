@@ -55,10 +55,11 @@
                                 <input type="text" name="codigo_universidad" id="codigo_universidad" class="form-control" placeholder="Universidad...">
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <input type="text" name="codigo_grado" id="codigo_grado" class="form-control" placeholder="Grado...">
+                                {!! Form::select('codigo_agrupacion', config('options.group_types'), null, ['class'=>'form-control', 'id'=>'codigo_agrupacion']) !!}
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <input type="text" name="codigo_disciplina" id="codigo_disciplina" class="form-control" placeholder="Disciplina...">
+                                {!! Form::select('codigo_grado', config('options.grade_types'), null, ['class'=>'form-control', 'id'=>'codigo_grado']) !!}
+                                {{-- <input type="text" name="codigo_grado" id="codigo_grado" class="form-control" placeholder="Grado..."> --}}
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 <input type="text" name="codigo_area" id="codigo_area" class="form-control" placeholder="Área...">
@@ -66,15 +67,18 @@
                         </div>
                         <div class="panel-body">
                             <div class="col-xs-12 col-sm-3">
+                                <input type="text" name="codigo_disciplina" id="codigo_disciplina" class="form-control" placeholder="Disciplina...">
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
                                 {!! Form::select('tipo_de_caso', config('options.case_types'), null, ['class'=>'form-control', 'id'=>'tipo_de_caso']) !!}
                             </div>
                             {{-- TODO --}}
                             <div class="col-xs-12 col-sm-3">
-                                {!! Form::select('estado', config('options.survey_estatuses'), null, ['class'=>'form-control']) !!}
+                                {!! Form::select('estado', config('options.survey_estatuses'), null, ['class'=>'form-control', 'id'=>'estado']) !!}
                                 {{-- {!! Form::text('estado', null, ['class'=>'form-control', 'placeholder'=>'Estado...']) !!} --}}
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                {!! Form::text('contacto', null, ['class'=>'form-control', 'placeholder'=>'Número o Correo']) !!}
+                                {!! Form::text('contacto', null, ['class'=>'form-control', 'placeholder'=>'Número o Correo', 'id'=>'contacto']) !!}
                             </div>
                         </div>
                     {!! Form::close() !!}
@@ -135,10 +139,14 @@
             datos.push($('#sexo').val().trim());
             datos.push($('#codigo_carrera').val().trim());
             datos.push($('#codigo_universidad').val().trim());
+            datos.push($('#codigo_agrupacion').val().trim());
             datos.push($('#codigo_grado').val().trim());
             datos.push($('#codigo_disciplina').val().trim());
             datos.push($('#codigo_area').val().trim());
             datos.push($('#tipo_de_caso').val().trim());
+            datos.push($('#estado').val().trim());
+            datos.push($('#contacto').val().trim());
+
             // TODO: campos de estado y contacto
             let contador = 0;
 
@@ -148,7 +156,7 @@
                 }
             });
 
-            if(contador == 11) {
+            if(contador == datos.length) {
                 return true;
             }
 

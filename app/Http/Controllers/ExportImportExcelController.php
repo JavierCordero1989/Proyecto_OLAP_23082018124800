@@ -28,6 +28,7 @@ set_time_limit(300);
 class ExportImportExcelController extends Controller
 {
     private $casos_duplicados = [];
+    private $segundas_carreras = [];
     private $carreras_no_encontradas = [];
     private $universidades_no_encontradas = [];
     private $grados_no_encontrados = [];
@@ -105,14 +106,14 @@ class ExportImportExcelController extends Controller
              * $reader->get() nos permite obtener todas las filas de nuestro archivo
              */
             foreach ($reader->get() as $key => $row) {
-
+                
                 $identificacion_graduado = $row['identificacion'];
                 $nombre_completo         = $row['nombre'];
                 // $annio_graduacion        = $row['ano_de_graduacion'];
                 $annio_graduacion        = $row['ano'];
                 // $link_encuesta           = $row['link_de_encuesta'];
                 $link_encuesta           = $row['link'];
-                $sexo                    = ($row['sexo'] == 'Hombre' ? 'M' : ($row['sexo'] == 'Mujer' ? 'F' : 'SC'));
+                $sexo                    = (strtolower($row['sexo']) == 'hombre' ? 'M' : (strtolower($row['sexo']) == 'mujer' ? 'F' : 'SC'));
                 $token                   = $row['token'];
                 $codigo_carrera          = $row['codigo_carrera'];
                 $codigo_universidad      = $row['codigo_universidad'];
@@ -121,7 +122,7 @@ class ExportImportExcelController extends Controller
                 $codigo_area             = $row['codigo_area'];
                 $codigo_agrupacion       = $row['codigo_agrupacion'];
                 $codigo_sector           = $row['codigo_sector'];
-                $tipo_de_caso            = $row['tipo_de_caso'];
+                $tipo_de_caso            = strtoupper($row['tipo_de_caso']);
                 $created_at              = Carbon::now();
 
                 //Se busca el duplicado por el token
@@ -132,6 +133,12 @@ class ExportImportExcelController extends Controller
                     //Guardar el evento generado por esta acción.
                     array_push($this->casos_duplicados, ('El caso con el token <b>'.$token.'</b> ya se encuentra registrado.'));
                     continue;
+                }
+
+                $segunda_carrera = $this->buscarCedulaGraduado($identificacion_graduado);
+
+                if(!empty($segunda_carrera)) {
+                    $this->segundas_carreras[] = 'El graduado con cédula <b>' . $segunda_carrera->identificacion_graduado . '</b> posee más de una carrera en los registros.';
                 }
 
                 /* Se busca la carrera por código y así comprobar su existencia */
@@ -276,7 +283,7 @@ class ExportImportExcelController extends Controller
     public function importar_desde_excel(Request $request) {
         
         // sleep(2);
-        dd($request->hasFile('archivo_nuevo'));
+        // dd($request->hasFile('archivo_nuevo'));
         /** Si viene un archivo en el request
          * 'archivo_nuevo' => es el nombre del campo que tiene el formulario
          * en la página html.
@@ -802,6 +809,11 @@ class ExportImportExcelController extends Controller
         return $entrevista;
     }
 
+    private function buscarCedulaGraduado($identificacion_graduado) {
+        $entrevista = Entrevista::where('identificacion_graduado', $identificacion_graduado)->first();
+        return $entrevista;
+    }
+
     private function buscarCarreraPorCodigo($codigo_carrera) {
         $carrera = Carrera::buscarPorCodigo($codigo_carrera)->first();
         return $carrera;
@@ -845,6 +857,11 @@ class ExportImportExcelController extends Controller
             // $reporte['casos_duplicados'] = $this->casos_duplicados;
             $reporte[] = $this->casos_duplicados;
             array_push($encabezados_panel, 'Casos duplicados');
+        }
+
+        if(sizeof($this->segundas_carreras) > 0) {
+            $reporte[] = $this->segundas_carreras;
+            array_push($encabezados_panel, 'Segundas Carreras');
         }
 
         if(sizeof($this->carreras_no_encontradas) > 0) {

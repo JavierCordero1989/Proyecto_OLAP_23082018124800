@@ -553,7 +553,7 @@ class EncuestaGraduado extends Model
      * Obtiene el total de encuestas almacenadas en la BD
      */
     public function scopeTotalDeEncuestas($query) {
-        return $query->whereNull('deleted_at')->count();
+        return $query->whereNull('deleted_at');
     }
 
     public function getRouteKeyName()
