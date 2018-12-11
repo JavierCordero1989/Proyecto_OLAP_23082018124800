@@ -4,7 +4,7 @@
 @if (sizeof($encuestas) > 0)
     
     @component('components.table')
-        @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Tipo de caso', 'Opciones'])
+        @slot('encabezados', ['Identificación', 'Nombre', 'Sexo', 'Carrera', 'Universidad', 'Grado', 'Disciplina', 'Área', 'Tipo de caso', 'Asignado a', 'Asignado por', 'Opciones'])
         
         @slot('cuerpo_tabla')
             @foreach($encuestas as $encuesta)
@@ -23,6 +23,8 @@
                     {{-- <td>{!! $encuesta->agrupacion->nombre !!}</td> --}}
                     {{-- <td>{!! $encuesta->sector->nombre !!}</td> --}}
                     <td>{!! $encuesta->tipo_de_caso !!}</td>
+                    <td>{!! $encuesta->encuestadorAsignado() !!}</td>
+                    <td>{!! $encuesta->supervisorAsignado() !!}</td>
                     <td>
                         @if (Auth::user()->hasRole('Super Admin'))
                             {!! Form::open(['route' => ['encuestas-graduados.destroy', $encuesta->id], 'method' => 'delete']) !!}

@@ -33,7 +33,7 @@ class EncuestaGraduadoController extends Controller
             return redirect(url('home'));
         }
 
-        $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('id', 'ASC')->paginate(25);
+        $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('identificacion_graduado', 'ASC')->paginate(25);
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
 
@@ -185,7 +185,7 @@ class EncuestaGraduadoController extends Controller
     public function ver_otras_carreras($ids) {
         $ids = explode('-', $ids);
         
-        $encuestas = EncuestaGraduado::whereIn('id', $ids)->orderBy('id', 'ASC')->paginate(25);
+        $encuestas = EncuestaGraduado::whereIn('id', $ids)->orderBy('identificacion_graduado', 'ASC')->paginate(25);
 
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
@@ -899,5 +899,16 @@ class EncuestaGraduadoController extends Controller
 
         /* si ninguna de las condiciones nteriores se cumple, se devuelve la informacion correcta */
         return array('encontrada'=> true, 'encuesta'=>$encuesta, 'mensaje'=>'Se ha encontrado una coincidencia.');
+    }
+
+    public function reasignar_caso($id) {
+        $encuesta = EncuestaGraduado::find($id);
+
+        if(empty($encuesta)) {
+            Flash::error('No se ha encontrado la entrevista solicitada');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+        }
+
+        dd('Continuar desde aqui, ID: ' . $id);
     }
 }

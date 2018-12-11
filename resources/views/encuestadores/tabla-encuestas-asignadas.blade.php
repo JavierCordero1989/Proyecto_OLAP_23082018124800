@@ -298,9 +298,14 @@
                                     <!-- FINALIZA EL MODAL PARA EL DETALLE DE LA ENCUESTA -->
                                 </div>
 
-                                <div v-if="isUser" class="col-xs-12" style="margin-top: 15px;">
-                                    <a :href="performInterview(encuesta.id)" class="btn btn-primary btn-sm col-xs-6 col-xs-offset-3">
+                                <div v-if="isUser" class="col-xs-6" style="margin-top: 15px;">
+                                    <a :href="performInterview(encuesta.id)" class="btn btn-primary btn-sm col-xs-12">
                                         <i class="fa fa-plus-square"></i> Realizar encuesta
+                                    </a>
+                                </div>
+                                <div class="col-xs-6" style="margin-top: 15px;">
+                                    <a :href="rutaReasignar(encuesta.id)" class="btn btn-info btn-sm col-xs-12">
+                                        <i class="fas fa-exchange-alt"></i> Reasignar caso
                                     </a>
                                 </div>
                             </div>
@@ -369,6 +374,12 @@
                     let route = '{{ route("encuestas-graduados.otras-carreras", ":ids") }}';
                     route = route.replace(":ids", ids);
                     return route;
+                },
+                rutaReasignar: function(id) {
+                    let route = '{{ route("asignar-encuestas.reasignar-caso", [":id", ":encuestador"]) }}'
+                    route = route.replace(":id", id)
+                    route = route.replace(":encuestador", '')
+                    return route
                 }
             },
             computed: {

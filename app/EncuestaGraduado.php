@@ -487,6 +487,52 @@ class EncuestaGraduado extends Model
         return $estado_encuesta;
     }
 
+    public function encuestadorAsignado() {
+        $asignacion = Asignacion::where('id_graduado', $this->id)->first();
+
+        if(empty($asignacion)) {
+            return 'SIN ASIGNAR';
+            // return 'asignacion vacia';
+        }
+
+        if(is_null($asignacion->id_encuestador)) {
+            return 'SIN ASIGNAR';
+            // return 'id nulo';
+        }
+
+        $usuario = User::find($asignacion->id_encuestador);
+
+        if(empty($usuario)){
+            return 'SIN ASIGNAR';
+            // return 'usuario vacio';
+        }
+
+        return $usuario->user_code;
+    }
+
+    public function supervisorAsignado() {
+        $asignacion = Asignacion::where('id_graduado', $this->id)->first();
+
+        if(empty($asignacion)) {
+            return 'SIN ASIGNAR';
+            // return 'asignacion vacia';
+        }
+
+        if(is_null($asignacion->id_supervisor)) {
+            return 'SIN ASIGNAR';
+            // return 'id nulo';
+        }
+
+        $usuario = User::find($asignacion->id_supervisor);
+
+        if(empty($usuario)){
+            return 'SIN ASIGNAR';
+            // return 'usuario vacio';
+        }
+
+        return $usuario->user_code;
+    }
+
     public function desasignarEntrevista() {
         $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
 
