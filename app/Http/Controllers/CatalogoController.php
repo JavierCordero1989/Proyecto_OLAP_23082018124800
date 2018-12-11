@@ -10,16 +10,22 @@ use App\Area;
 use App\Disciplina;
 use Flash;
 
+/*
+ * Impide que el servidor genere un error debido al tiempo
+ * de espera seteado de 60 segundos.
+*/ 
+set_time_limit(300);
+
 class CatalogoController extends Controller
 {
+    private $archivos_subidos = array();
+
     public function subir_catalogos() {
         return view('catalogo.subir-catalogos');
     }
 
     public function cargar_catalogo(Request $request) {
         
-        $archivos_subidos = array();
-
         if(isset($request->catalogo_areas)) {
             $archivo = $request->file('catalogo_areas');
 
@@ -39,7 +45,7 @@ class CatalogoController extends Controller
                         Area::create($data);
                     }
                 }
-                $archivos_subidos[] = "Archivo de áreas subido";
+                $this->archivos_subidos[] = "Archivo de áreas subido";
             });
         }
 
@@ -63,7 +69,7 @@ class CatalogoController extends Controller
                         Disciplina::create($data);
                     }
                 }
-                $archivos_subidos[] = "Archivo de disciplinas subido";
+                $this->archivos_subidos[] = "Archivo de disciplinas subido";
             });
         }
 
@@ -87,7 +93,7 @@ class CatalogoController extends Controller
                         Universidad::create($data);
                     }
                 }
-                $archivos_subidos[] = "Archivo de universidades subido";
+                $this->archivos_subidos[] = "Archivo de universidades subido";
             });
         }
 
@@ -111,12 +117,12 @@ class CatalogoController extends Controller
                         Carrera::create($data);
                     }
                 }
-                $archivos_subidos[] = "Archivo de carreras subido";
+                $this->archivos_subidos[] = "Archivo de carreras subido";
             });
         }
 
         Flash::success('Los archivos han sido subidos');
-        return view('catalogo.resumen-subida-catalogo')->with('archivos_subidos', $archivos_subidos);
+        return view('catalogo.resumen-subida-catalogo')->with('archivos_subidos', $this->archivos_subidos);
         // if($request->hasFile('archivo_nuevo')) {
         //     $archivo = $request->file('archivo_nuevo');
         // }

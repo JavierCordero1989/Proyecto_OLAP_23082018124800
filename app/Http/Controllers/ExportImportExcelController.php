@@ -106,7 +106,7 @@ class ExportImportExcelController extends Controller
                 $nombre_completo         = $row['nombre'];
                 $annio_graduacion        = $row['ano_de_graduacion'];
                 $link_encuesta           = $row['link_de_encuesta'];
-                $sexo                    = ($row['sexo'] == 'M' ? 'M' : ($row['sexo'] == 'F' ? 'F' : 'SC'));
+                $sexo                    = ($row['sexo'] == 'Hombre' ? 'M' : ($row['sexo'] == 'Mujer' ? 'F' : 'SC'));
                 $token                   = $row['token'];
                 $codigo_carrera          = $row['codigo_carrera'];
                 $codigo_universidad      = $row['codigo_universidad'];

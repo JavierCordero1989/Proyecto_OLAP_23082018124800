@@ -13,6 +13,7 @@
   --color-una: #E4002B;
   --color-uned: #004DFF;
   --color-utn: #00205B;
+  --color-privado: hsl(210, 0%, 60%);
 
   /* COLORES DE LAS AGRUPACIONES */
   --artes-y-letras: #EF3340;
@@ -25,6 +26,7 @@
   --ciencias-de-la-salud: #0093B2;
   --derecho: #75787B;
   --computacion: #D0006F;
+  --tecnologias-informacion: hsl(210, 0%, 60%);
 }
 
 @font-face {
@@ -134,6 +136,9 @@ b {
 .bg-color-utn {
   background-color: var(--color-utn) !important;
 }
+.bg-color-privado {
+  background-color: var(--color-privado) !important;
+}
 
 /* CLASES CON LOS COLORES DE LAS AREAS */
 .bg-color-artes-y-letras {
@@ -165,6 +170,9 @@ b {
 }
 .bg-color-computacion {
   background-color: var(--computacion) !important;
+}
+.bg-color-tecnologias-informacion {
+  background-color: var(--tecnologias-informacion) !important;
 }
 
 .skin-conare .main-header .navbar {
