@@ -13,10 +13,12 @@ use App\Agrupacion;
 use Carbon\Carbon;
 use App\Carrera;
 use App\Sector;
+use App\Estado;
 use App\Grado;
 use App\Area;
 use Flash;
 use DB;
+
 /*
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
@@ -44,45 +46,47 @@ class ExportImportExcelController extends Controller
     private $data_general_contactos = array();
 
     public function __construct() {
-        $this->id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
-        $this->id_estado = $this->id_estado->id;
+        $this->id_estado = Estado::where('estado', 'NO ASIGNADA')->first()->id;
+        // $this->id_estado = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+        // $this->id_estado = $this->id_estado->id;
     }
 
     public function create() {
         return view('excel.create');
     }
 
-    public function exportar_a_excel() {
-        //Se deben tomar los datos que se quieren exportar al archivo excel
-        $data = Model::all();
+    // public function exportar_a_excel() {
+    //     //Se deben tomar los datos que se quieren exportar al archivo excel
+    //     $data = Model::all();
 
-        /** Si no existen datos almacenados, se devuelve un mensaje de error. */
-        if(empty($data)) {
-            Flash::error('mensaje de error');
-            return redirect(route('ruta_a_dirigir'));
-        }
+    //     /** Si no existen datos almacenados, se devuelve un mensaje de error. */
+    //     if(empty($data)) {
+    //         Flash::error('mensaje de error');
+    //         return redirect(route('ruta_a_dirigir'));
+    //     }
 
-        //Se crea el archivo de excel
-        Excel::create('nombre del archivo', function($excel) use($data){
-            //Se crea una hoja del libro de excel
-            $excel->sheet('nombre de la hoja', function($excel) use($data) {
-                //Se insertan los datos en la hoja con el metodo with o fromArray
-                /* Parametros:
-                1: datos a guardar,
-                2: valores del encabezado de la columna,
-                3: celda de inicio,
-                4: comparacionn estricta de los valores del encabezado,
-                5: impresion de los encabezados */
-                $sheet->with($data, null, 'A1', false, false);
-            });
-            /** Se descarga el archivo a la extension deseada, xlsx, xls */
-        })->download('xlsx');
+    //     //Se crea el archivo de excel
+    //     Excel::create('nombre del archivo', function($excel) use($data){
+    //         //Se crea una hoja del libro de excel
+    //         $excel->sheet('nombre de la hoja', function($excel) use($data) {
+    //             //Se insertan los datos en la hoja con el metodo with o fromArray
+    //             /* Parametros:
+    //             1: datos a guardar,
+    //             2: valores del encabezado de la columna,
+    //             3: celda de inicio,
+    //             4: comparacionn estricta de los valores del encabezado,
+    //             5: impresion de los encabezados */
+    //             $sheet->with($data, null, 'A1', false, false);
+    //         });
+    //         /** Se descarga el archivo a la extension deseada, xlsx, xls */
+    //     })->download('xlsx');
 
-        Flash::success('mensaje de exito');
-        return redirect(route('ruta_a_dirigir'));
-    }// Fin de la funcion exportar_a_excel
+    //     Flash::success('mensaje de exito');
+    //     return redirect(route('ruta_a_dirigir'));
+    // }// Fin de la funcion exportar_a_excel
 
     protected function guardar_a_base_de_datos(Request $request) {
+        /* SE SOLICITA EL ARCHIVO DEL REQUEST */
         $archivo = $request->file('archivo_nuevo');
 
         /** El método load permite cargar el archivo definido como primer parámetro */
@@ -104,8 +108,10 @@ class ExportImportExcelController extends Controller
 
                 $identificacion_graduado = $row['identificacion'];
                 $nombre_completo         = $row['nombre'];
-                $annio_graduacion        = $row['ano_de_graduacion'];
-                $link_encuesta           = $row['link_de_encuesta'];
+                // $annio_graduacion        = $row['ano_de_graduacion'];
+                $annio_graduacion        = $row['ano'];
+                // $link_encuesta           = $row['link_de_encuesta'];
+                $link_encuesta           = $row['link'];
                 $sexo                    = ($row['sexo'] == 'Hombre' ? 'M' : ($row['sexo'] == 'Mujer' ? 'F' : 'SC'));
                 $token                   = $row['token'];
                 $codigo_carrera          = $row['codigo_carrera'];
@@ -246,7 +252,7 @@ class ExportImportExcelController extends Controller
                     array_push($this->data_file, $data);
                     $contador_entrevistas++; //Se incrementa para guardarlo como total de casos
                 }
-            }
+            } // Este ciclo se repite hasta que los registros del archivo se acaben.
 
             $this->entrevistas_guardadas = $contador_entrevistas;
 
@@ -261,16 +267,16 @@ class ExportImportExcelController extends Controller
             ];
 
             /* Se guarda el reporte en la tabla con los datos recién subidos desde Excel a la BD. */
-            if(!empty($data_reporte)) {
+            // if(!empty($data_reporte)) {
                 // DB::table('tbl_reportes_entrevistas')->insert($data_reporte);
-            }
+            // }
         });
     }
 
     public function importar_desde_excel(Request $request) {
         
         // sleep(2);
-
+        dd($request->hasFile('archivo_nuevo'));
         /** Si viene un archivo en el request
          * 'archivo_nuevo' => es el nombre del campo que tiene el formulario
          * en la página html.
@@ -281,6 +287,7 @@ class ExportImportExcelController extends Controller
 
             $reporte = $this->obtenerReporteArchivo();
             $data_file = $this->data_file;
+
             /* SE GUARDAN LOS DATOS DEL EXCEL EN UNA VARIABLE DE SESION*/
             // session(['data_excel' => $data_file]);
             session()->put('data_excel',$data_file);
