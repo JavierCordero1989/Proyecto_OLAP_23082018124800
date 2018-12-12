@@ -391,23 +391,14 @@ class EncuestaGraduadoController extends Controller
         }
         $rol_usuario = $user->hasRole('Encuestador') ? 'Encuestador' : 'Supervisor';
 
-        // $id_carrera =       TiposDatosCarrera::carrera()->first();
-        // $id_universidad =   TiposDatosCarrera::universidad()->first();
-        $id_grado =         TiposDatosCarrera::grado()->first();
-        // $id_disciplina =    TiposDatosCarrera::disciplina()->first();
-        // $id_area =          TiposDatosCarrera::area()->first();
-        $id_agrupacion =    TiposDatosCarrera::agrupacion()->first();
-        // $id_sector =        TiposDatosCarrera::sector()->first();
 
-        // $carreras =      DatosCarreraGraduado::where('id_tipo', $id_carrera->id)     ->pluck('nombre', 'id');
-        // $universidades = DatosCarreraGraduado::where('id_tipo', $id_universidad->id) ->pluck('nombre', 'id');
-        $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
-        // $disciplinas =   DatosCarreraGraduado::where('id_tipo', $id_disciplina->id)  ->pluck('nombre', 'id');
+        $id_grado =      TiposDatosCarrera::grado()->first();
+        $id_agrupacion = TiposDatosCarrera::agrupacion()->first();
+        // $grados =        DatosCarreraGraduado::where('id_tipo', $id_grado->id)       ->pluck('nombre', 'id');
+        $grados =        Grado::allData()->pluck('nombre', 'id');
         $disciplinas =   Disciplina::pluck('descriptivo', 'id')->all();
-        // $areas =         DatosCarreraGraduado::where('id_tipo', $id_area->id)        ->pluck('nombre', 'id');
         $areas =         Area::pluck('descriptivo', 'id')->all();
         $agrupaciones =  DatosCarreraGraduado::where('id_tipo', $id_agrupacion->id)  ->pluck('nombre', 'id');
-        // $sectores =      DatosCarreraGraduado::where('id_tipo', $id_sector->id)      ->pluck('nombre', 'id');
 
         $datos_carrera = [
             // 'carreras' => $carreras,
@@ -568,6 +559,7 @@ class EncuestaGraduadoController extends Controller
      * que el usuario haya agregado en la vista.
      */
     public function filtrar_muestra_a_asignar($id_supervisor, $id_encuestador, Request $request) {
+
         $input = $request->all();
 
         $resultado = EncuestaGraduado::listaDeEncuestasSinAsignar();
@@ -581,7 +573,24 @@ class EncuestaGraduadoController extends Controller
         // }
 
         if(!is_null($input['grado'])) {
-            $resultado->where('codigo_grado', $input['grado']);
+            // es pregrado (profesorado y diplomado)
+            if($input['grado'] == 3){
+
+            }
+            else if($input['grado'] == 4){ // bachillerato
+
+            }
+            else if($input['grado'] == 5) { //licenciatura
+
+            }
+            $grado = Grado::buscarPorCodigo($input['grado'])->first();
+
+            if(!empty($grado)){
+                $resultado->where('codigo_grado', $grado->id);
+            }
+            else {
+                $resultado->where('codigo_grado', '');
+            }
         }
 
         if(!is_null($input['disciplina'])) {
@@ -593,7 +602,14 @@ class EncuestaGraduadoController extends Controller
         }
 
         if(!is_null($input['agrupacion'])) {
-            $resultado->where('codigo_agrupacion', $input['agrupacion']);
+            $agrupacion = Agrupacion::buscarPorCodigo($input['agrupacion'])->first();
+
+            if(!empty($agrupacion)) {
+                $resultado->where('codigo_agrupacion', $agrupacion->id);
+            }
+            else {
+                $resultado->where('codigo_agrupacion', '');
+            }
         }
 
         // if(!is_null($input['sector'])) {

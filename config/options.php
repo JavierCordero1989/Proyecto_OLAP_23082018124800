@@ -13,7 +13,7 @@
             'REEMPLAZO'=>'REEMPLAZO'
         ],
         'group_types' => [
-            '' => '- - - AGRUPACIÓN - - -',
+            '' => 'Elija una agrupación',
             '1' => 'UCR',
             '4' => 'UNED',
             '58' => 'UTN',
@@ -23,7 +23,7 @@
 
         ],
         'grade_types' => [
-            '' => '- - - GRADOS - - -',
+            '' => 'Elija un grado',
             '3'=>'PREGRADO', // Corresponde a Profesorado y Diplomado, códigos 3 y 2 respectivamente
             '4'=>'BACHILLERATO',
             '5'=>'LICENCIATURA',

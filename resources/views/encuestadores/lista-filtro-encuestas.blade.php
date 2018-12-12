@@ -28,22 +28,22 @@
 
                         <div class="form-group col-sm-6">
                             {!! Form::label('agrupacion', 'Agrupación:') !!}
-                            {!! Form::select('agrupacion', $datos_carrera['agrupaciones'], null, ['class' => 'form-control', 'placeholder'=>'Elija una agrupación']) !!}
+                            {!! Form::select('agrupacion', config('options.group_types'), null, ['class' => 'form-control', 'placeholder'=>'Elija una agrupación']) !!}
                         </div>
 
                         <div class="form-group col-sm-6">
                             {!! Form::label('grado', 'Grado:') !!}
-                            {!! Form::select('grado', $datos_carrera['grados'], null, ['class' => 'form-control', 'placeholder'=>'Elija un grado']) !!}
+                            {!! Form::select('grado', config('options.grade_types'), null, ['class' => 'form-control']) !!}
                         </div>
 
                         <div class="form-group col-sm-6">
                             {!! Form::label('area', 'Área:') !!}
-                            {!! Form::select('area', $datos_carrera['areas'], null, ['class' => 'form-control', 'placeholder'=>'Elija un área', 'id'=>'select_areas']) !!}
+                            {!! Form::select('area', $datos_carrera['areas'], null, ['class' => 'form-control', 'placeholder'=>'Elija un área', 'id'=>'area']) !!}
                         </div>
 
                         <div class="form-group col-sm-6">
                             {!! Form::label('disciplina', 'Disciplina:') !!}
-                            <select class="form-control" name="select_disciplinas" id="select_disciplinas">
+                            <select class="form-control" name="disciplina" id="disciplina">
                                 <option value="">Elija una disciplina</option>
                             </select>
                             {{-- {!! Form::select('disciplina', $datos_carrera['disciplinas'], null, ['class' => 'form-control', 'placeholder'=>'Elija una disciplina']) !!} --}}
@@ -73,7 +73,7 @@
 
 @section('scripts')
     <script>
-        $('#select_areas').on('change', function() {
+        $('#area').on('change', function() {
             let value = $(this).val()
             if(value != "") {
                 // llenar el select con las disciplinas seleccionadas
@@ -87,13 +87,21 @@
 
 
         function obtenerDisciplinas(area) {
-            disciplinas = []
+            
             let url = '{{ route("disciplinas.axios", ":id") }}'
             url = url.replace(":id", area)
 
             axios.get(url).then(response => {
-                disciplinas = response.data
+                let disciplinas = response.data
 
+                $('#disciplina').empty()
+                $('#disciplina').append('<option value="">Elija una disciplina</option>')
+                
+                $.each(disciplinas, function(index, item) {
+                    $.each(item, function(a,b) {
+                        $('#disciplina').append('<option value="'+b.id+'">'+b.nombre+'</option>')
+                    })
+                })
                 //cargar el select
             }); 
         }
@@ -115,7 +123,8 @@
             var contador = 0;
 
             //Recorre el array con los datos del formulario, y cuenta los que estan vacios
-            form_data.forEach( function(data) {
+            
+            form_data.forEach( function(data) { 
                 if(data.length == 0) {
                     contador++;
                 }
