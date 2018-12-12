@@ -2,6 +2,11 @@
 
 @section('title', 'Carga de catálogo')
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/modal_letters.css') }}">
+    {{-- <link rel="stylesheet" href="{!! asset('css/estilos-app.min.css') !!}"> --}}
+@endsection
+
 @section('content')
     <div class="content">
         <div class="box box-primary">

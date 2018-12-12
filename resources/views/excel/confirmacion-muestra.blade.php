@@ -20,12 +20,29 @@
                             {!! Form::text('', $item, ['class'=>'form-control', 'disabled']) !!}
                         @endforeach
                     </div>
+                    <div class="clearfix"></div>
                     <hr>
-                    {!! Form::label('', 'Tipo de los casos: ') !!}
-                    {!! Form::text('', $report['tipo_de_archivo'], ['class'=>'form-control','disabled']) !!}
+                    {!! Form::label('', 'Totales por tipo de caso') !!}
+                    <div class="col-md-12">
+                        @foreach ($report['totales_por_tipo_de_caso'] as $key => $item)
+                            <div class="col-md-4">
+                                {!! Form::label('', $key) !!}
+                                {!! Form::text('', $item, ['class'=>'form-control', 'disabled']) !!}
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="clearfix"></div>
                     <hr>
-                    {!! Form::label('', 'Agrupación a la que pertenecen: ') !!}
-                    {!! Form::text('', $report['agrupacion'], ['class'=>'form-control','disabled']) !!}
+                    {!! Form::label('', 'Totales por agrupación') !!}
+                    <div class="col-md-12">
+                        @foreach ($report['totales_por_agrupacion'] as $key => $item)
+                            <div class="col-md-4">
+                                {!! Form::label('', $key) !!}
+                                {!! Form::text('', $item, ['class'=>'form-control', 'disabled']) !!}    
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="clearfix"></div>
                     <hr>
                     {!! Form::label('', 'Área y Disciplina de la muestra: ') !!}
                     {!! Form::text('', $report['area'].' - '.$report['disciplina'], ['class'=>'form-control','disabled']) !!}

@@ -341,7 +341,7 @@ class EncuestaGraduado extends Model
      * la tabla tbl_graduados, que no hayan sido eliminadas. 
      */
     public function scopeListaDeGraduados($query) {
-        return $query->whereNull('deleted_at');
+        return $query->whereNull('deleted_at')->where('tipo_de_caso', '<>', 'REEMPLAZO');
     }
 
     /** Coloca la encuesta seleccionada en un estado de no asignada */

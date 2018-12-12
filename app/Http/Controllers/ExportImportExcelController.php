@@ -304,16 +304,23 @@ class ExportImportExcelController extends Controller
             necesario enviar alguna alerta. */
             if(sizeof($reporte) == 1) {
                 $numeroDeCasos = 0;
-                // $total_por_sexo = [
-                //     'M'=>0,
-                //     'F'=>0,
-                //     'SC'=>0,
-                // ];
 
                 $total_por_sexo = array();
                 $universidades = array();
+                $totales_por_tipo_de_caso = array();
+                $totales_por_agrupacion = array();
+
+                $agrupaciones = Agrupacion::allData()->pluck('nombre', 'id');
 
                 foreach($data_file as $data ) {
+
+                    if(isset($totales_por_tipo_de_caso[$data['tipo_de_caso']])) {
+                        $totales_por_tipo_de_caso[$data['tipo_de_caso']]++;
+                    }
+                    else {
+                        $totales_por_tipo_de_caso[$data['tipo_de_caso']] = 1;
+                    }
+
                     if(isset($total_por_sexo[$data['sexo']])) {
                         $total_por_sexo[$data['sexo']]++;
                     }
@@ -321,22 +328,29 @@ class ExportImportExcelController extends Controller
                         $total_por_sexo[$data['sexo']] = 1;
                     }
 
+                    if(isset($totales_por_agrupacion[$agrupaciones[$data['codigo_agrupacion']]])) {
+                        $totales_por_agrupacion[$agrupaciones[$data['codigo_agrupacion']]]++;
+                    }
+                    else {
+                        $totales_por_agrupacion[$agrupaciones[$data['codigo_agrupacion']]] = 1;
+                    }
+
                     $numeroDeCasos++;
                 }
 
-                $agrupacion = Agrupacion::buscarPorId($data_file[0]['codigo_agrupacion'])->first();
                 $area = Area::find($data_file[0]['codigo_area']);
                 $disciplina = Disciplina::find($data_file[0]['codigo_disciplina']);
 
                 $report = [
                     'cantidad_de_casos' => $numeroDeCasos,
                     'total_por_sexo'=> $total_por_sexo,
-                    'tipo_de_archivo'=>$data_file[0]['tipo_de_caso'],
-                    'agrupacion'=>$agrupacion->nombre,
+                    'totales_por_tipo_de_caso' => $totales_por_tipo_de_caso,
+                    'totales_por_agrupacion' => $totales_por_agrupacion,
                     'area'=>$area->descriptivo,
                     'disciplina'=>$disciplina->descriptivo
                 ];
 
+                // dd($report);
                 // Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
                 // return redirect(route('encuestas-graduados.index'));
                 return view('excel.confirmacion-muestra')->with('report', $report);
