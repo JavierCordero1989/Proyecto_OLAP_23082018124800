@@ -378,7 +378,7 @@
                 rutaReasignar: function(id) {
                     let route = '{{ route("asignar-encuestas.reasignar-caso", [":id", ":encuestador"]) }}'
                     route = route.replace(":id", id)
-                    route = route.replace(":encuestador", '')
+                    route = route.replace(":encuestador", this.encuestador.id)
                     return route
                 }
             },

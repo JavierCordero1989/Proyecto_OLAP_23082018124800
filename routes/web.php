@@ -144,6 +144,7 @@ Route::group(['middleware'=>['auth']], function() {
   Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_detalle_contacto')          ->name('asignar-encuestas.actualizar-detalle-contacto');
   Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_contacto_entrevista') ->name('asignar-encuestas.actualizar-contacto-entrevista');
   Route::get('reasignar-caso-encuestador/{id_entrevista}/{id_encuestador}', 'EncuestaGraduadoController@reasignar_caso')->name('asignar-encuestas.reasignar-caso');
+  Route::post('reasignar-caso-encuestador/{id_entrevista}/{id_encuestador}', 'EncuestaGraduadoController@reasignar_caso_post')->name('asignar-encuestas.reasignar-caso-post');
 });
 
 //Gráficos

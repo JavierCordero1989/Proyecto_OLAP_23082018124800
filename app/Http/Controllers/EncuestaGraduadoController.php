@@ -901,14 +901,31 @@ class EncuestaGraduadoController extends Controller
         return array('encontrada'=> true, 'encuesta'=>$encuesta, 'mensaje'=>'Se ha encontrado una coincidencia.');
     }
 
-    public function reasignar_caso($id) {
-        $encuesta = EncuestaGraduado::find($id);
+    public function reasignar_caso($id_entrevista, $id_encuestador) {
+        $encuesta = EncuestaGraduado::find($id_entrevista);
 
         if(empty($encuesta)) {
             Flash::error('No se ha encontrado la entrevista solicitada');
             return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
         }
 
-        dd('Continuar desde aqui, ID: ' . $id);
+        $encuestador = User::find($id_encuestador);
+
+        if(empty($encuestador)) {
+            Flash::error('No se ha encontrado el encuestador en cuestión.');
+            return redirect(route('home'));
+        }
+
+        return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
+    }
+
+    public function reasignar_caso_post($id_entrevista, $id_encuestador, Request $request) {
+        $data = [
+            'id_entrevista'=>$id_entrevista,
+            'id_encuestador'=>$id_encuestador,
+            'user_code'=>$request->user_code
+        ];
+
+        dd($data);
     }
 }
