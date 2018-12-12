@@ -372,7 +372,7 @@ class EncuestaGraduado extends Model
 
     /** Mostrara la lista de encuestas que no han sido asignadas */
     public function scopeListaDeEncuestasSinAsignar($query) {
-        $id_estado_sin_asignar = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
+        $id_estado_sin_asignar = Estado::where('estado', 'NO ASIGNADA')->first();
         $id_estado_sin_asignar = $id_estado_sin_asignar->id;
 
         return $query
@@ -395,7 +395,8 @@ class EncuestaGraduado extends Model
                     )
             ->join('tbl_asignaciones', 'tbl_asignaciones.id_graduado', '=', 'tbl_graduados.id')
             ->where('tbl_asignaciones.id_estado', $id_estado_sin_asignar)
-            ->whereNull('tbl_graduados.deleted_at');
+            ->whereNull('tbl_graduados.deleted_at')
+            ->where('tbl_graduados.tipo_de_caso', '<>', 'REEMPLAZO');
     }
 
     /** Obtiene los registros de las encuestas que han sido asignadas a un encuestador mediante

@@ -27,23 +27,26 @@
                         </div> --}}
 
                         <div class="form-group col-sm-6">
+                            {!! Form::label('agrupacion', 'Agrupación:') !!}
+                            {!! Form::select('agrupacion', $datos_carrera['agrupaciones'], null, ['class' => 'form-control', 'placeholder'=>'Elija una agrupación']) !!}
+                        </div>
+
+                        <div class="form-group col-sm-6">
                             {!! Form::label('grado', 'Grado:') !!}
                             {!! Form::select('grado', $datos_carrera['grados'], null, ['class' => 'form-control', 'placeholder'=>'Elija un grado']) !!}
                         </div>
 
                         <div class="form-group col-sm-6">
-                            {!! Form::label('disciplina', 'Disciplina:') !!}
-                            {!! Form::select('disciplina', $datos_carrera['disciplinas'], null, ['class' => 'form-control', 'placeholder'=>'Elija una disciplina']) !!}
-                        </div>
-
-                        <div class="form-group col-sm-6">
                             {!! Form::label('area', 'Área:') !!}
-                            {!! Form::select('area', $datos_carrera['areas'], null, ['class' => 'form-control', 'placeholder'=>'Elija un área']) !!}
+                            {!! Form::select('area', $datos_carrera['areas'], null, ['class' => 'form-control', 'placeholder'=>'Elija un área', 'id'=>'select_areas']) !!}
                         </div>
 
                         <div class="form-group col-sm-6">
-                            {!! Form::label('agrupacion', 'Agrupación:') !!}
-                            {!! Form::select('agrupacion', $datos_carrera['agrupaciones'], null, ['class' => 'form-control', 'placeholder'=>'Elija una agrupación']) !!}
+                            {!! Form::label('disciplina', 'Disciplina:') !!}
+                            <select class="form-control" name="select_disciplinas" id="select_disciplinas">
+                                <option value="">Elija una disciplina</option>
+                            </select>
+                            {{-- {!! Form::select('disciplina', $datos_carrera['disciplinas'], null, ['class' => 'form-control', 'placeholder'=>'Elija una disciplina']) !!} --}}
                         </div>
 
                         {{-- <div class="form-group col-sm-6">
@@ -70,6 +73,31 @@
 
 @section('scripts')
     <script>
+        $('#select_areas').on('change', function() {
+            let value = $(this).val()
+            if(value != "") {
+                // llenar el select con las disciplinas seleccionadas
+                let lista = obtenerDisciplinas(value)
+            }
+            else {
+                // vaciar el select
+                console.log("No ha seleccionado nada");
+            }
+        });
+
+
+        function obtenerDisciplinas(area) {
+            disciplinas = []
+            let url = '{{ route("disciplinas.axios", ":id") }}'
+            url = url.replace(":id", area)
+
+            axios.get(url).then(response => {
+                disciplinas = response.data
+
+                //cargar el select
+            }); 
+        }
+
         function validar_submit() {
 
             //Reune todos los select del formulario en un array
