@@ -391,6 +391,16 @@ class EncuestaGraduadoController extends Controller
         }
         $rol_usuario = $user->hasRole('Encuestador') ? 'Encuestador' : 'Supervisor';
 
+        if(EncuestaGraduado::totalDeEncuestas()->count() <= 0) {
+            Flash::info('Aún no existen encuestas en el sistema, contacte con el Administrador para más información');
+
+            if($rol_usuario == 'Encuestador') {
+                return redirect(route('encuestadores.index'));
+            }
+            else {
+                return redirect(route('supervisores.index'));
+            }
+        }
 
         $id_grado =      TiposDatosCarrera::grado()->first();
         $id_agrupacion = TiposDatosCarrera::agrupacion()->first();
