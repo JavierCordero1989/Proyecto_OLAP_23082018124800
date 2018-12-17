@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Carrera;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Universidad;
-use App\Area;
 use App\Disciplina;
+use App\Carrera;
+use App\Area;
 use Flash;
 
 /*
@@ -56,13 +57,25 @@ class CatalogoController extends Controller
                 }
                 $this->archivos_subidos[] = "Archivo de áreas cargado.";
             });
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_areas',
+                'id_registro_afectado'   =>null,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>('El archivo del catálogo de áreas ha sido cargado en la base de datos del sistema.'),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->id,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
         }
 
         /* COMPROBAR QUE VIENE UN ARCHIVO DE DISCIPLINAS */
         if(isset($request->catalogo_disciplinas)) {
             $archivo = $request->file('catalogo_disciplinas');
-
-
 
             /** El método load permite cargar el archivo definido como primer parámetro */
             Excel::load($archivo, function ($reader) {
@@ -91,6 +104,20 @@ class CatalogoController extends Controller
                 }
                 $this->archivos_subidos[] = "Archivo de disciplinas cargado.";
             });
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_disciplinas',
+                'id_registro_afectado'   =>null,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>('El archivo del catálogo de disciplinas ha sido cargado en la base de datos del sistema.'),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->id,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
         }
 
         /* COMPROBAR QUE VIENE UN ARCHIVO DE UNIVERSIDADES */
@@ -124,6 +151,20 @@ class CatalogoController extends Controller
                 }
                 $this->archivos_subidos[] = "Archivo de universidades cargado.";
             });
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_datos_carrera_graduado',
+                'id_registro_afectado'   =>null,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>('El archivo del catálogo de universidades ha sido cargado en la base de datos del sistema.'),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->id,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
         }
 
         /* COMPROBAR QUE VIENE UN ARCHIVO DE CARRERAS */
@@ -157,6 +198,20 @@ class CatalogoController extends Controller
                 }
                 $this->archivos_subidos[] = "Archivo de carreras cargado.";
             });
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_datos_carrera_graduado',
+                'id_registro_afectado'   =>null,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>('El archivo del catálogo de carreras ha sido cargado en la base de datos del sistema.'),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->id,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
         }
 
         Flash::success('Los archivos han sido subidos');

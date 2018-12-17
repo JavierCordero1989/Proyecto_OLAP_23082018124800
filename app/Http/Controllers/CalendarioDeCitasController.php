@@ -83,7 +83,7 @@ class CalendarioDeCitasController extends Controller
         $contactos = $entrevista_cita->contactos;
 
         foreach($contactos as $contacto) {
-            $detalles = $contacto->detalle();
+            $detalles = $contacto->detalle;
             $resumen_detalle = $detalles->pluck('contacto', 'id');
             foreach($resumen_detalle as $key => $value) {
                 $contactos_entrevista[$value] = $value;

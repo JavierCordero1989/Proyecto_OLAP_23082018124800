@@ -504,7 +504,7 @@ class EncuestaGraduadoController extends Controller
             /* se recorren los contactos */
             foreach($contactos as $contacto) {
                 /* se sacan los detalles de contacto, de cada contacto */
-                $detalles = $contacto->detalle();
+                $detalles = $contacto->detalle;
 
                 /* se setean los detalles, en una variable de detalle para cada contacto */
                 $contacto->detalle = $detalles;

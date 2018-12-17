@@ -35,7 +35,7 @@
                                     <th>Opciones</th>
                                 </thead>
                                 <tbody>
-                                    @foreach($contacto->detalle() as $detalle)
+                                    @foreach($contacto->detalle as $detalle)
                                     
                                         <tr>
                                             <td>{!! $detalle->contacto !!}</td>

@@ -93,7 +93,11 @@
                                                     <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
                                                     @foreach($encuesta->contactos as $contacto)
                                                         <li>
-                                                            <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
+                                                            @if ($contacto->nombre_referencia != "")
+                                                                <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
+                                                            @else
+                                                                <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->parentezco !!}</a>
+                                                            @endif
                                                         </li>
                                                     @endforeach
                                                     <li><a href="{!! route('encuestadores.agregar-contacto', $encuesta->id ) !!}">Agregar contacto</a></li>

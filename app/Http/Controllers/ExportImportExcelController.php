@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\EncuestaGraduado as Entrevista;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\ContactoGraduado;
 use App\DetalleContacto;
@@ -27,6 +28,11 @@ set_time_limit(600);
 
 class ExportImportExcelController extends Controller
 {
+    /** Guarda los datos del archivo de excel */
+    private $array_datos_archivo = array();
+    /** Guarda los datos que no se encuentran registrados. */
+    private $datos_incorrectos = array();
+
     private $casos_duplicados = [];
     private $segundas_carreras = [];
     private $carreras_no_encontradas = [];
@@ -102,267 +108,302 @@ class ExportImportExcelController extends Controller
             $disciplina = 0;
             $tipo_de_caso = 0;
 
+            $carreras = Carrera::allData()->pluck('id', 'codigo');
+            $universidades = Universidad::allData()->pluck('id', 'codigo');
+            $grados = Grado::allData()->pluck('id', 'codigo');
+            $disciplinas = Disciplina::pluck('id', 'codigo');
+            $areas = Area::pluck('id', 'codigo');
+            $agrupaciones = Agrupacion::allData()->pluck('id', 'codigo');
+            $sector = Sector::allData()->pluck('id', 'codigo');
+
             /**
              * $reader->get() nos permite obtener todas las filas de nuestro archivo
              */
             foreach ($reader->get() as $key => $row) {
+
+                $data_excel_file = array();
                 
-                $identificacion_graduado = $row['identificacion'];
-                $nombre_completo         = $row['nombre'];
-                // $annio_graduacion        = $row['ano_de_graduacion'];
-                $annio_graduacion        = $row['ano'];
-                // $link_encuesta           = $row['link_de_encuesta'];
-                $link_encuesta           = $row['link'];
-                $sexo                    = (strtolower($row['sexo']) == 'hombre' ? 'M' : (strtolower($row['sexo']) == 'mujer' ? 'F' : 'SC'));
-                $token                   = $row['token'];
-                $codigo_carrera          = $row['codigo_carrera'];
-                $codigo_universidad      = $row['codigo_universidad'];
-                $codigo_grado            = $row['codigo_grado'];
-                $codigo_disciplina       = $row['codigo_disciplina'];
-                $codigo_area             = $row['codigo_area'];
-                $codigo_agrupacion       = $row['codigo_agrupacion'];
-                $codigo_sector           = $row['codigo_sector'];
-                $tipo_de_caso            = strtoupper($row['tipo_de_caso']);
-                $created_at              = Carbon::now();
+                $data_excel_file['identificacion_graduado'] = (string)$row['identificacion'];
+                $data_excel_file['nombre_completo'] = $row['nombre'];
+                $data_excel_file['annio_graduacion'] = $row['ano'];
+                $data_excel_file['link_encuesta'] = $row['link'];
+                $data_excel_file['sexo'] = (strtolower($row['sexo']) == 'hombre' ? 'M' : (strtolower($row['sexo']) == 'mujer' ? 'F' : 'SC'));
+                $data_excel_file['token'] = $row['token'];
 
-                //Se busca el duplicado por el token
-                $entrevista_duplicada = $this->buscarTokenDuplicado($token);
+                /* 
+                 * LAS SIGUIENTES EXCEPCIONES, CONTROLAN QUE LOS CÓDIGOS PARA LAS CARRERAS, UNIVERSIDADES,
+                 * GRADOS, DISCIPLINAS, AREAS, AGRUPACION Y SECTORES, EXISTAN EN LOS REGISTROS DE LA BASE
+                 * DE DATOS, ES DECIR, QUE ESTÉN EN EL CATÁLOGO. pOR LO QUE AL NO EXISTIR, SE LANZARÁ UNA
+                 * EXCEPCIÓN QUE GUARDARÁ UN DATO EN UN ARRAY PARA PASARLO A UNA VISTA Y ASÍ INFORMAR
+                 * AL USUARIO QUE CARGA EL ARCHIVO. 
+                 */
+                try {
+                    $data_excel_file['codigo_carrera'] = $carreras[$row['codigo_carrera']];
+                }
+                catch(\Exception $e) {
 
-                //Si la entrevista obtenida no es nula, quiere decir que existe un registro con el token 
-                if(!empty($entrevista_duplicada)) {
-                    //Guardar el evento generado por esta acción.
-                    array_push($this->casos_duplicados, ('El caso con el token <b>'.$token.'</b> ya se encuentra registrado.'));
-                    continue;
+                    if(!isset($this->datos_incorrectos['carreras'][$row['codigo_carrera']])) {
+                        $this->datos_incorrectos['carreras'][$row['codigo_carrera']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['carreras'][$row['codigo_carrera']]++;
+                    }
+                }
+                
+                try {
+                    $data_excel_file['codigo_universidad'] = $universidades[$row['codigo_universidad']];
+                }
+                catch(\Exception $ex) {
+                    if(!isset($this->datos_incorrectos['universidades'][$row['codigo_universidad']])) {
+                        $this->datos_incorrectos['universidades'][$row['codigo_universidad']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['universidades'][$row['codigo_universidad']]++;
+                    }
+                }
+                
+                try {
+                    $data_excel_file['codigo_grado'] = $grados[$row['codigo_grado']];
+                }
+                catch(\Exception $ex) {
+                    if(!isset($this->datos_incorrectos['grados'][$row['codigo_grado']])) {
+                        $this->datos_incorrectos['grados'][$row['codigo_grado']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['grados'][$row['codigo_grado']]++;
+                    }
+                }
+                
+                try {
+                    $data_excel_file['codigo_disciplina'] = $disciplinas[$row['codigo_disciplina']];
+                }
+                catch(\Exception $ex) {
+                    if(!isset($this->datos_incorrectos['disciplinas'][$row['codigo_disciplina']])) {
+                        $this->datos_incorrectos['disciplinas'][$row['codigo_disciplina']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['disciplinas'][$row['codigo_disciplina']]++;
+                    }
                 }
 
-                $segunda_carrera = $this->buscarCedulaGraduado($identificacion_graduado);
-
-                if(!empty($segunda_carrera)) {
-                    $this->segundas_carreras[] = 'El graduado con cédula <b>' . $segunda_carrera->identificacion_graduado . '</b> posee más de una carrera en los registros.';
+                try {
+                    $data_excel_file['codigo_area'] = $areas[$row['codigo_area']];
+                }
+                catch(\Exception $ex) {
+                    if(!isset($this->datos_incorrectos['areas'][$row['codigo_area']])) {
+                        $this->datos_incorrectos['areas'][$row['codigo_area']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['areas'][$row['codigo_area']]++;
+                    }
                 }
 
-                /* Se busca la carrera por código y así comprobar su existencia */
-                $carrera_buscada = $this->buscarCarreraPorCodigo($codigo_carrera);
-
-                /* Si la carrera obtenida está vacía, quiere decir que el código ingresado no 
-                corresponde a ningun dato en la BD. */
-                if(empty($carrera_buscada)) {
-                    array_push($this->carreras_no_encontradas, ('Carrera no encontrada con el código <b>'.$codigo_carrera.'</b> para el caso con token '.$token));
-                    continue;
+                try {
+                    $data_excel_file['codigo_agrupacion'] = $agrupaciones[$row['codigo_agrupacion']];
                 }
-                else {
-                    //Se guarda el ID para pasarlo a la BD
-                    $codigo_carrera = $carrera_buscada->id;
+                catch(\Exception $ex) {
+                    if(!isset($this->datos_incorrectos['agrupaciones'][$row['codigo_agrupacion']])) {
+                        $this->datos_incorrectos['agrupaciones'][$row['codigo_agrupacion']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['agrupaciones'][$row['codigo_agrupacion']]++;
+                    }
                 }
 
-                /* Se busca la universidad por código y así poder comprobar su existencia. */
-                $universidad_buscada = $this->buscarUniversidadPorCodigo($codigo_universidad);
-
-                /* Si la universidad obtenida está vacía, quiere decir que el código ingresado no
-                corresponde a ningun dato en la BD. */
-                if(empty($universidad_buscada)) {
-                    array_push($this->universidades_no_encontradas, ('Universidad no encontrada con el código <b>'.$codigo_universidad.'</b> para el caso con token '.$token));
-                    continue;
+                try {
+                    $data_excel_file['codigo_sector'] = $sector[$row['codigo_sector']];
                 }
-                else {
-                    $codigo_universidad = $universidad_buscada->id;
+                catch(\Exception $ex) {
+                    if(!isset($this->datos_incorrectos['sectores'][$row['codigo_sector']])) {
+                        $this->datos_incorrectos['sectores'][$row['codigo_sector']] = 1;
+                    }
+                    else {
+                        $this->datos_incorrectos['sectores'][$row['codigo_sector']]++;
+                    }
                 }
+                
+                $data_excel_file['tipo_de_caso'] = strtoupper($row['tipo_de_caso']);
+                $data_excel_file['created_at'] = Carbon::now();
 
-                /* Se busca el grado por el código y así poder comprobar su existencia */
-                $grado_buscado = $this->buscarGradoPorCodigo($codigo_grado);
-
-                /* Si el grado obtenido está vacío, quiere decir que el código ingresado no
-                corresponde a ningun dato en la BD. */
-                if(empty($grado_buscado)) {
-                    array_push($this->grados_no_encontrados, ('Grado no encontrado con el código <b>'.$codigo_grado.'</b> para el caso con token '.$token));
-                    continue;
-                }
-                else {
-                    $codigo_grado = $grado_buscado->id;
-                }
-
-                /* Se busca la disciplina por el código y así poder comprobar su existencia */
-                $disciplina_buscada = $this->buscarDisciplinaPorCodigo($codigo_disciplina);
-
-                /* Si la disciplina obtenida está vacía, quiere decir que el código ingresado no
-                corresponde a ningun dato en la BD. */
-                if(empty($disciplina_buscada)) {
-                    array_push($this->disciplinas_no_encontradas, ('Disciplina no encontrada con el código <b>'.$codigo_disciplina.'</b> para el caso con token '.$token));
-                    continue;
-                }
-                else {
-                    $codigo_disciplina = $disciplina_buscada->id;
-                }
-
-                /* Se busca el área por el código y así poder comprobar su existencia */
-                $area_buscada = $this->buscarAreaPorCodigo($codigo_area);
-
-                /* Si el área obtenida está vacía, quiere decir que el código ingresado no
-                corresponde a ningun dato en la BD. */
-                if(empty($area_buscada)) {
-                    array_push($this->areas_no_encontradas, ('Área no encontrada con el código <b>'.$codigo_area.'</b> para el caso con token '.$token));
-                    continue;
-                }
-                else {
-                    $codigo_area = $area_buscada->id;
-                }
-
-                /* Se busca la agrupcación por el código y así poder comprobar su existencia */
-                $agrupación_buscada = $this->buscarAgrupacionPorCodigo($codigo_agrupacion);
-
-                /* Si la agrupación obtenida está vacía, quiere decir que el código ingresado no
-                corresponde a ningun dato en la BD. */
-                if(empty($agrupación_buscada)) {
-                    array_push($this->agrupaciones_no_encontradas, ('Agrupación no encontrada con el código <b>'.$codigo_agrupacion.'</b> para el caso con token '.$token));
-                    continue;
-                }
-                else {
-                    $codigo_agrupacion = $agrupación_buscada->id;
-                }
-
-                /* Se busca el sector por el código y así poder comprobar su existencia */
-                $sector_buscado = $this->buscarSectorPorCodigo($codigo_sector);
-
-                /* Si el sector obtenido está vacío, quiere decir que el código ingresado no
-                corresponde a ningun dato en la BD. */
-                if(empty($sector_buscado)) {
-                    array_push($this->sectores_no_encontrados, ('Sector no encontrado con el código <b>'.$codigo_sector.'</b> para el caso con token '.$token));
-                    continue;
-                }
-                else {
-                    $codigo_sector = $sector_buscado->id;
-                }      
-
-                /* SI TODAS LAS VALIDACIONES HAN SALIDO BIEN HASTA ESTE PUNTO, SE PROCEDE A GUARDAR EL REGISTRO
-                EN LA BASE DE DATOS. */
-                $data = [
-                    'identificacion_graduado' => $identificacion_graduado,
-                    'nombre_completo'         => $nombre_completo,
-                    'annio_graduacion'        => $annio_graduacion,
-                    'link_encuesta'           => $link_encuesta,
-                    'sexo'                    => $sexo,
-                    'token'                   => $token,
-                    'codigo_carrera'          => $codigo_carrera,
-                    'codigo_universidad'      => $codigo_universidad,
-                    'codigo_grado'            => $codigo_grado,
-                    'codigo_disciplina'       => $codigo_disciplina,
-                    'codigo_area'             => $codigo_area,
-                    'codigo_agrupacion'       => $codigo_agrupacion,
-                    'codigo_sector'           => $codigo_sector,
-                    'tipo_de_caso'            => $tipo_de_caso,
-                    'created_at'              => $created_at
-                ];
-
-                /* Una vez obtenido los datos de la fila procedemos a registrarlos */
-                if(!empty($data)){
-                    // Entrevista::create($data);
-                    array_push($this->data_file, $data);
-                    $contador_entrevistas++; //Se incrementa para guardarlo como total de casos
-                }
+                $this->array_datos_archivo[] = $data_excel_file;
             } // Este ciclo se repite hasta que los registros del archivo se acaben.
-
-            $this->entrevistas_guardadas = $contador_entrevistas;
-
-            /* Se crea un array con los datos que contendrá el reporte */
-            $data_reporte = [
-                'codigo_disciplina'  => $codigo_disciplina,
-                'codigo_grado'       => $codigo_grado,
-                'codigo_universidad' => $codigo_universidad,
-                'tipo_de_caso'       => $tipo_de_caso,
-                'total_casos'        => $contador_entrevistas,
-                'created_at'         => $created_at
-            ];
-
-            /* Se guarda el reporte en la tabla con los datos recién subidos desde Excel a la BD. */
-            // if(!empty($data_reporte)) {
-                // DB::table('tbl_reportes_entrevistas')->insert($data_reporte);
-            // }
         });
     }
 
-    public function importar_desde_excel(Request $request) {
+    /**
+     * @param $array Arreglo con los datos del archivo de excel de la muestra
+     * @return Array Arreglo con los tokens duplicados y la cantidad de veces.
+     * 
+     * Obtiene un arreglo con clave como el token, y valor la cantidad de veces que
+     * el token aparece en el archivo.
+     */
+    private function buscar_tokens_duplicados($array) {
         
-        // sleep(2);
-        // dd($request->hasFile('archivo_nuevo'));
+        $tokens = array();
+
+        foreach($array as $key => $value) {
+            $tokens[] = (string)$value['token'];
+        }
+
+        $repetidos = array_count_values($tokens);
+
+        $temp = array();
+
+        foreach($repetidos as $key => $value) {
+            if($value > 1) {
+                $temp[$key] = $value; 
+            }
+        }
+        return $temp;
+    }
+
+    /**
+     * @param $array Arreglo con los datos del archivo de excel de la muestra.
+     * @return Array Arreglo con las coincidencias por cedula.
+     * 
+     * Permite buscar las cedulas del archivo de excel para ver cuales se repiten
+     * en mas de una ocasion y obtener un arreglo en donde la clave es la cedula
+     * y el valor las repeticiones. 
+     */
+    private function buscar_segundas_carreras($array) {
+        $cedulas = array();
+
+        foreach($array as $key => $data) {
+            $cedulas[] = $data['identificacion_graduado'];
+        }
+
+        $cedulas = array_count_values($cedulas);
+        $temp = array();
+
+        foreach($cedulas as $key=>$data) {
+            if($data > 1) {
+                $temp[$key] = $data;
+            }
+        }
+        
+        return $temp;
+    }
+
+    /**
+     * @param $array Arreglo con los datos del archivo de la muestra.
+     * @return Array Arreglo con los totales por tipo de cada caso.
+     * 
+     * Permite obtener los totales por cada tipo de caso distinto que haya en el
+     * archivo de la muestra, sumandolos para generar un numero por cada uno.
+     */
+    private function cantidad_por_tipo_de_caso($array) {
+        $totales = array();
+
+        foreach($array as $key => $value) {
+            if(isset($totales[$value['tipo_de_caso']])) {
+                $totales[$value['tipo_de_caso']]++;
+            }
+            else {
+                $totales[$value['tipo_de_caso']] = 1;
+            }
+        }
+
+        return $totales;
+    }
+
+    /**
+     * @param $array Arreglo con los datos del archivo de la muestra.
+     * @return Array Arreglo con los totales de cada area encontrada en el el archivo de la muestra.
+     * 
+     * Permite obtener el total de cada area que sea detectada en el archivo de la muestra, haciendo
+     * un conteo por cada area.
+     */
+    private function cantidad_por_area($array) {
+        $totales = array();
+
+        $areas = Area::pluck('descriptivo', 'id');
+
+        foreach($array as $key => $value) {
+            $nombre = $areas[$value['codigo_area']];
+
+            if(isset($totales[$nombre])) {
+                $totales[$nombre]++;
+            }
+            else {
+                $totales[$nombre] = 1;
+            }
+        }
+
+        return $totales;
+    }
+
+    /**
+     * @param $array Arreglo con los datos del archivo.
+     * @return Array Arreglo con los totales por agrupacion encontrados en el archivo.
+     * 
+     * Permite Obtener el total de casos por cada agrupacion que se haya detectado en el archivo de
+     * la muestra que se carga al sistema.
+     */
+    private function cantidad_por_agrupacion($array) {
+        $totales = array();
+
+        $agrupaciones = Agrupacion::allData()->pluck('nombre', 'id');
+
+        foreach($array as $key => $value) {
+            $nombre = $agrupaciones[$value['codigo_agrupacion']];
+
+            if(isset($totales[$nombre])) {
+                $totales[$nombre]++;
+            }
+            else {
+                $totales[$nombre] = 1;
+            }
+        }
+
+        return $totales;
+    }
+
+    public function importar_desde_excel(Request $request) {
         /** Si viene un archivo en el request
          * 'archivo_nuevo' => es el nombre del campo que tiene el formulario
          * en la página html.
          */
         if($request->hasFile('archivo_nuevo')) {
-            //Llama a la función para guardar desde el excel a la BD
+
+            $tiempo_inicio = microtime(true);
+            
+            /* 
+             * LLAMA A LA FUNCION QUE LEE EL ARCHIVO DE EXCEL PARA GUARDAR LOS DATOS
+             */
             self::guardar_a_base_de_datos($request);
 
-            $reporte = $this->obtenerReporteArchivo();
-            $data_file = $this->data_file;
-
-            /* SE GUARDAN LOS DATOS DEL EXCEL EN UNA VARIABLE DE SESION*/
-            // session(['data_excel' => $data_file]);
-            session()->put('data_excel',$data_file);
-            
-            /* Cuando el arreglo de reporte tenga solo un dato, es porque solo se almacenó
-            la variable de contador de entrevistas guardadas, por lo que no será
-            necesario enviar alguna alerta. */
-            if(sizeof($reporte) == 1) {
-                $numeroDeCasos = 0;
-
-                $total_por_sexo = array();
-                $universidades = array();
-                $totales_por_tipo_de_caso = array();
-                $totales_por_agrupacion = array();
-
-                $agrupaciones = Agrupacion::allData()->pluck('nombre', 'id');
-
-                foreach($data_file as $data ) {
-
-                    if(isset($totales_por_tipo_de_caso[$data['tipo_de_caso']])) {
-                        $totales_por_tipo_de_caso[$data['tipo_de_caso']]++;
-                    }
-                    else {
-                        $totales_por_tipo_de_caso[$data['tipo_de_caso']] = 1;
-                    }
-
-                    if(isset($total_por_sexo[$data['sexo']])) {
-                        $total_por_sexo[$data['sexo']]++;
-                    }
-                    else {
-                        $total_por_sexo[$data['sexo']] = 1;
-                    }
-
-                    if(isset($totales_por_agrupacion[$agrupaciones[$data['codigo_agrupacion']]])) {
-                        $totales_por_agrupacion[$agrupaciones[$data['codigo_agrupacion']]]++;
-                    }
-                    else {
-                        $totales_por_agrupacion[$agrupaciones[$data['codigo_agrupacion']]] = 1;
-                    }
-
-                    $numeroDeCasos++;
-                }
-
-                $area = Area::find($data_file[0]['codigo_area']);
-                $disciplina = Disciplina::find($data_file[0]['codigo_disciplina']);
-
-                $report = [
-                    'cantidad_de_casos' => $numeroDeCasos,
-                    'total_por_sexo'=> $total_por_sexo,
-                    'totales_por_tipo_de_caso' => $totales_por_tipo_de_caso,
-                    'totales_por_agrupacion' => $totales_por_agrupacion,
-                    'area'=>$area->descriptivo,
-                    'disciplina'=>$disciplina->descriptivo
-                ];
-
-                // dd($report);
-                // Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
-                // return redirect(route('encuestas-graduados.index'));
-                return view('excel.confirmacion-muestra')->with('report', $report);
-            }
-            /* Cuando el arreglo tiene mas de un dato, quiere decir que hubo errores al leer los datos del
-            archivo de excel, por lo que deben ser mostrados en una vista que indique todo los sucedido. */
-            else {
-                return view('excel.informe-de-errores', compact('reporte', 'data_file'));
+            /* 
+             * SI ALGUNO DE LOS DATOS DE LA CARERRA NO HA SIDO ENCONTRADO POR CODIGO, SE ENVIARA EL REPORTE
+             * DE LOS ERRORES A LA VISTA SIN GUARDAR EL ARCHIVO. 
+             */
+            if( sizeof($this->datos_incorrectos) > 0) {
+                Flash::error('Ha ocurrido un error en cuanto a datos faltantes en los registros del sistema. Por favor, revise de nuevo el archivo y corrija los errores que aparecen a continuación.');
+                return view('excel.error-carga-archivo')->with('informe', $this->datos_incorrectos);
             }
 
-            Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
-            return redirect(route('encuestas-graduados.index'));
+            $repetidos = $this->buscar_segundas_carreras($this->array_datos_archivo);
+
+            $tokens = $this->buscar_tokens_duplicados($this->array_datos_archivo);
+
+            // dd($tokens);
+            $areas = $this->cantidad_por_area($this->array_datos_archivo);
+
+            $agrupaciones = $this->cantidad_por_agrupacion($this->array_datos_archivo);
+            $tiempo_fin = microtime(true);
+
+            $report = [
+                'tiempo_consumido' => round(($tiempo_fin - $tiempo_inicio),2).' segundos',
+                'cedulas_repetidas' => [sizeof($repetidos), $repetidos],
+                'tokens_duplicados' => [sizeof($tokens), $tokens],
+                'totales_por_area'=> [sizeof($areas), $areas],
+                'totales_por_agrupacion' => [sizeof($agrupaciones), $agrupaciones],
+                'totales_por_caso' => $this->cantidad_por_tipo_de_caso($this->array_datos_archivo),
+                'total_de_casos' => sizeof($this->array_datos_archivo)
+            ];
+
+            session()->put('data_excel', $this->array_datos_archivo);
+
+            return view('excel.confirmacion-muestra')->with('report', $report);
         }
         else {
             Flash::success('No ha enviado un archivo');
@@ -370,27 +411,69 @@ class ExportImportExcelController extends Controller
         }
     }// Fin de la funcion importar_desde_excel
 
+    private function obtener_indices_tokens_duplicados($array) {
+        $posiciones = array();
+
+        $repetidos = $this->buscar_tokens_duplicados($array);
+
+        foreach ($repetidos as $key_1 => $value_1) {
+            foreach($array as $key_2 => $value_2) {
+                if($key_1 == $value_2['token']) {
+                    $posiciones[$key_1][] = $key_2;
+                }
+            }
+        }
+
+        return $posiciones;
+    }
+
     public function respuesta_archivo_muestra($respuesta) {
         if(isset($respuesta)){
             if($respuesta == 'SI') {
 
                 $data_file = session()->get('data_excel');
                 
+                /* ELIMINA LOS TOKENS DUPLICADOS, DEJANDO SOLO UNO */
+                $repetidos = $this->obtener_indices_tokens_duplicados($data_file);
+
+                foreach($repetidos as $key => $value) {
+                    foreach($value as $key_2 => $value_2){
+                        if($key_2 != 0) {
+                            unset($data_file[$value_2]);
+                        }
+                    }
+                }
+                $data_file = array_values($data_file);
+
                 DB::beginTransaction();
                 try {
-                    foreach($data_file as $data ) {
+                    
+                    foreach($data_file as $key => $data ) {
                         $entrevista = Entrevista::create($data);
                         $entrevista->asignarEstado($this->id_estado);
                     }
-
                     DB::commit();
+
+                    // Guardar el registro en la bitacora
+                    $bitacora = [
+                        'transaccion'            =>'I',
+                        'tabla'                  =>'tbl_graduados',
+                        'id_registro_afectado'   =>null,
+                        'dato_original'          =>null,
+                        'dato_nuevo'             =>('El archivo de la muestra ha sido cargado en la base de datos del sistema.'),
+                        'fecha_hora_transaccion' =>Carbon::now(),
+                        'id_usuario'             =>Auth::user()->id,
+                        'created_at'             =>Carbon::now()
+                    ];
+            
+                    DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
                     Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
                     return redirect(route('encuestas-graduados.index'));
                 }
                 catch(\Exception $ex) {
                     DB::rollback();
-                    Flash::overlay('Error en el sistema', $ex)->error();
+                    Flash::error('Error en el sistema.<br>Excepcion: '.$ex->getMessage());
                     return redirect(url('home'));
                 }
             }
@@ -426,8 +509,6 @@ class ExportImportExcelController extends Controller
     public function createArchivoContactos() {
         return view('excel.subir-archivo-contactos');
     }
-
-
 
     public function subirArchivoExcelContactos(Request $request) {
         if($request->hasFile('archivo_contactos')) {
