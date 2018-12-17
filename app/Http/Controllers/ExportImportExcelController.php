@@ -11,15 +11,16 @@ use App\DetalleContacto;
 use App\Universidad;
 use App\Disciplina;
 use App\Agrupacion;
+use App\Asignacion;
 use Carbon\Carbon;
 use App\Carrera;
 use App\Sector;
 use App\Estado;
 use App\Grado;
 use App\Area;
+use App\User;
 use Flash;
 use DB;
-
 /*
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
@@ -131,6 +132,13 @@ class ExportImportExcelController extends Controller
             $sector_codigos = Sector::allData()->pluck('codigo', 'id');
             $sector_etiquetas = Sector::allData()->pluck('nombre', 'id');
 
+            $encuesta_estado = Asignacion::pluck('id_estado', 'id_graduado');
+            $estados = Estado::pluck('estado', 'id');
+            $usuarios = User::pluck('user_code', 'id');
+
+            $asignado_a = Asignacion::pluck('id_encuestador', 'id_graduado');
+            $asignado_por = Asignacion::pluck('id_supervisor', 'id_graduado');
+            $fecha_estado = Asignacion::pluck('updated_at', 'id_graduado');
 
             foreach($data as $key => $encuesta) {
 
@@ -156,12 +164,18 @@ class ExportImportExcelController extends Controller
                 $temp_entrevistas['codigo_sector'] = $sector_codigos[$encuesta->codigo_sector];
                 $temp_entrevistas['etiqueta_sector'] = $sector_codigos[$encuesta->codigo_sector];
                 $temp_entrevistas['tipo_de_caso'] = $encuesta->tipo_de_caso;
+                $temp_entrevistas['asignada_a'] = $asignado_a[$encuesta->id] == "" ? "SIN ASIGNAR" : $usuarios[$asignado_a[$encuesta->id]];
+                $temp_entrevistas['asignada_por'] = $asignado_por[$encuesta->id] == "" ? "SIN ASIGNAR" : $usuarios[$asignado_por[$encuesta->id]];
+                $temp_entrevistas['estado'] = $estados[$encuesta_estado[$encuesta->id]];
+                $temp_entrevistas['fecha_estado'] = $fecha_estado[$encuesta->id];
 
                 $nueva_data[] = $temp_entrevistas;
             }
             $data = $nueva_data;
+            
             //Se crea el archivo de excel
             Excel::create('Filtro de Encuestas', function($excel) use($data){
+                
                 //Se crea una hoja del libro de excel
                 $excel->sheet('Encuestas', function($sheet) use($data) {
                     //Se insertan los datos en la hoja con el metodo with o fromArray
@@ -175,7 +189,7 @@ class ExportImportExcelController extends Controller
                 });
                 /** Se descarga el archivo a la extension deseada, xlsx, xls */
             })->download('xlsx');
-    
+            
             Flash::success('Se ha descargado el archivo correctamente.');
             return redirect(route('encuestas-graduados.index'));
         }

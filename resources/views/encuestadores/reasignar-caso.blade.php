@@ -4,13 +4,16 @@
 
 @section('content')
     <div class="content">
+
+        <div class="clearfix"></div>
+
+        @include('flash::message')
+
+        <div class="clearfix"></div>
+
         <div class="box box-primary">
             <div class="box-body with-border">
-                Entrevista: {!! $id_entrevista !!}
-                <br>
-                Encuestador: {!! $id_encuestador !!}
-                <br>
-                <br>
+                
                 <div class="row">
                     {!! Form::open(['route'=>['asignar-encuestas.reasignar-caso-post', $id_entrevista, $id_encuestador], 'class'=>'']) !!}
                         <div class="col-md-12 form-group">

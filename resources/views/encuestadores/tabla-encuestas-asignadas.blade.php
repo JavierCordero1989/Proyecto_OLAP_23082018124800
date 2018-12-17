@@ -396,12 +396,18 @@
                         filtro = filtro.filter(el => el.codigo_disciplina.toLowerCase().includes(this.disciplina.toLowerCase()))
                     }
                     if(this.grado != '') {
-                        if(this.grado == 'PREGRADO')
-                        {
-                            filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes('diplomado') || el.codigo_grado.toLowerCase().includes('profesorado'))
-                        }
-                        else {
-                            filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes(this.grado.toLowerCase()))
+                        switch(this.grado) {
+                            case '3':
+                                filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes('diplomado') || el.codigo_grado.toLowerCase().includes('profesorado'))
+                            break;
+
+                            case '4':
+                                filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes("bachillerato"))
+                            break;
+
+                            case '5':
+                                filtro = filtro.filter(el => el.codigo_grado.toLowerCase().includes("licenciatura"))
+                            break;
                         }
                     }
 

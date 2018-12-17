@@ -123,6 +123,11 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion')->name('encuestas-graduados.hacer-sustitucion');
   Route::post('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion_post')->name('encuestas-graduados.hacer-sustitucion-post');
   Route::get('buscar-encuesta', 'EncuestaGraduadoController@buscar_encuesta')->name('encuestas-graduados.buscar-encuesta');
+  Route::get('cambiar-estado-entrevista/{id_entrevista}', 'EncuestaGraduadoController@cambiar_estado_entrevista')->name('encuestas-graduados.cambiar-estado-entrevista')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
+  Route::post('cambiar-estado-entrevista/{id_entrevista}', 'EncuestaGraduadoController@cambiar_estado_entrevista_post')->name('encuestas-graduados.cambiar-estado-entrevista-post')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
+  Route::get('asignar-encuesta/{id_encuesta}', 'EncuestaGraduadoController@asignar_entrevista_get')->name('encuestas-graduados.asignar-entrevista-get')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
+  Route::post('asignar-encuesta/{id_encuesta}', 'EncuestaGraduadoController@asignar_entrevista_post')->name('encuestas-graduados.asignar-entrevista-post')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
+  Route::get('administrar-contactos/{id_encuesta}', 'EncuestaGraduadoController@administrar_contactos_get')->name('encuestas-graduados.administrar-contactos-get');
 });
 
 //Encuestas de los graduados
@@ -144,8 +149,8 @@ Route::group(['middleware'=>['auth']], function() {
   Route::post('guardar-detalle-contacto/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@guardar_detalle_contacto')                         ->name('asignar-encuestas.guardar-detalle-contacto');
   Route::patch('actualizar-detalle-contacto/{id_detalle_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_detalle_contacto')          ->name('asignar-encuestas.actualizar-detalle-contacto');
   Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}', 'EncuestaGraduadoController@actualizar_contacto_entrevista') ->name('asignar-encuestas.actualizar-contacto-entrevista');
-  Route::get('reasignar-caso-encuestador/{id_entrevista}/{id_encuestador}', 'EncuestaGraduadoController@reasignar_caso')->name('asignar-encuestas.reasignar-caso');
-  Route::post('reasignar-caso-encuestador/{id_entrevista}/{id_encuestador}', 'EncuestaGraduadoController@reasignar_caso_post')->name('asignar-encuestas.reasignar-caso-post');
+  Route::get('reasignar-caso-encuestador/{id_entrevista}/{id_encuestador}', 'EncuestaGraduadoController@reasignar_caso')->name('asignar-encuestas.reasignar-caso')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
+  Route::post('reasignar-caso-encuestador/{id_entrevista}/{id_encuestador}', 'EncuestaGraduadoController@reasignar_caso_post')->name('asignar-encuestas.reasignar-caso-post')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
 });
 
 //Gráficos

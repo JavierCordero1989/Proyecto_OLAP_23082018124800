@@ -96,7 +96,7 @@
                         <!-- Campo del sexo -->
                         <div class="form-group col-sm-4 {{--col-sm-offset-3--}}">
                             {!! Form::label('sexo', 'Sexo:') !!}
-                            {!! Form::text('sexo', ($entrevista->sexo == 'M' ? 'MASCULINO' : ($entrevista->sexo == 'F' ? 'FEMENINO' : 'INDEFINIDO')), ['class' => 'form-control', 'disabled']) !!}
+                            {!! Form::text('sexo', ($entrevista->sexo == 'M' ? 'Hombre' : ($entrevista->sexo == 'F' ? 'Mujer' : 'Sin Clasificar')), ['class' => 'form-control', 'disabled']) !!}
                         </div>
 
                         <!-- Campo de la carrera -->

@@ -224,7 +224,7 @@ class EncuestaGraduadoController extends Controller
     //     ];
 
     //     return $paginacion;
-    //     // return view('encuestas_graduados.index', compact('paginacion'));
+    //     // return view('encuestas-graduados.index', compact('paginacion'));
     // }
 
     public function edit($id) {
@@ -962,6 +962,165 @@ class EncuestaGraduadoController extends Controller
             'user_code'=>$request->user_code
         ];
 
-        dd($data);
+        $new_user = User::where('user_code', $request->user_code)->first();
+
+        if(empty($new_user)) {
+            Flash::error('El usuario que busca no ha sido encontrado.');
+            return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
+        }
+
+        $entrevista = EncuestaGraduado::where('id', $id_entrevista)->first();
+
+        if(empty($entrevista)) {
+            Flash::error('La entrevista que busca no ha sido encontrada.');
+            return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
+        }
+        
+        $encuestador = User::find($id_encuestador);
+
+        if(empty($encuestador)) {
+            Flash::error('El encuestador que busca no ha sido encontrado.');
+            return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
+        }
+
+        $asignacion = Asignacion::where('id_graduado', $entrevista->id)
+            ->where('id_encuestador', $encuestador->id)
+            ->first();
+
+        /* 
+            13 => ENTREVISTA COMPLETA.
+            7  => FALLECIDO.
+            6  => ILOCALIZABLE.
+            5  => FUERA DEL PAÍS
+         */
+        if($asignacion->id_estado == 13 || $asignacion->id_estado == 7 || $asignacion->id_estado == 6 || $asignacion->id_estado == 5) {
+            Flash::error('La entrevista en cuestión no puede ser reasignada.<br>Esto se puede deber a que el estado sea uno de los siguientes:<br>-ENTREVISTA COMPLETA.<br>-FALLECIDO.<br>-ILOCALIZABLE.<br>-FUERA DEL PAÍS.');
+            return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
+        }
+
+        /* HACER LA REASIGNACIÓN. */
+        $asignacion->id_encuestador = $new_user->id;
+        $asignacion->id_supervisor = Auth::user()->id;
+        $asignacion->save();
+
+        Flash::success('La entrevista ha sido reasignada correctamente.');
+        return redirect(route('home'));
+    }
+
+    public function cambiar_estado_entrevista($id_entrevista) {
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+
+        if(empty($entrevista)) {
+            Flash::error('No se ha encontrado la entrevista que seleccionó');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $asignacion = Asignacion::where('id_graduado', $entrevista->id)->first();
+        $estados_disponibles = Estado::whereNotIn('id', [1,8])->pluck('estado', 'id');
+        $estado_actual = Estado::where('id', $asignacion->id_estado)->first();
+
+        if(is_null($asignacion->id_encuestador) || is_null($asignacion->id_supervisor)) {
+            Flash::error('No puede cambiar el estado de una entrevista que no ha sido asignada.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        return view('encuestas_graduados.cambiar-estado-encuesta', compact('estados_disponibles', 'estado_actual', 'id_entrevista'));
+    }
+
+    public function cambiar_estado_entrevista_post($id_entrevista, Request $request) {
+        $entrevista = EncuestaGraduado::find($id_entrevista);
+
+        if(empty($entrevista)) {
+            Flash::error('No se ha encontrado la entrevista que seleccionó');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $asignacion = Asignacion::where('id_graduado', $entrevista->id)->first();
+
+        if(empty($asignacion)) {
+            Flash::error('No se ha encontrado una asignación para la encuesta solicitada.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        if(is_null($asignacion->id_encuestador) || is_null($asignacion->id_supervisor)) {
+            Flash::error('A la encuesta solicitada no le puede cambiar el estado, porque aún no ha sido asignada.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $asignacion->id_estado = $request->estado;
+        $asignacion->save();
+
+        Flash::success('El estado de la entrevista ha sido cambiado correctamente.');
+        return redirect(route('encuestas-graduados.index'));
+    }
+
+    public function asignar_entrevista_get($id) {
+        $entrevista = EncuestaGraduado::find($id);
+
+        if(empty($entrevista)) {
+            Flash::error('La entrevista que seleccionó no existe.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $asignacion = Asignacion::where('id_graduado', $entrevista->id)->first();
+
+        if(empty($asignacion)) {
+            Flash::error('La asignación para esta entrevista no existe.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        if($asignacion->id_estado != 1) {
+            Flash::error('La entrevista que seleccionó ya se encuentra asignada.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        return view('encuestas_graduados.asignar-entrevista')->with('entrevista', $entrevista);
+    }
+
+    public function asignar_entrevista_post($id, Request $request) {
+        $user = User::where('user_code', $request->user_code)->first();
+
+        if(empty($user)) {
+            Flash::error('El usuario que busca no existe.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $entrevista = EncuestaGraduado::find($id);
+
+        if(empty($entrevista)) {
+            Flash::error('La entrevista que seleccionó no existe.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $asignacion = Asignacion::where('id_graduado', $entrevista->id)->first();
+
+        if(empty($asignacion)) {
+            Flash::error('La asignación para la entrevista que seleccionó no existe.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        $asignacion->id_encuestador = $user->id;
+        $asignacion->id_supervisor = Auth::user()->id;
+        $asignacion->id_estado = 2; //Estado 2 => ASIGNADA
+        $asignacion->save();
+
+        Flash::success('Se ha asignado correctamente la entrevista.');
+        return redirect(route('encuestas-graduados.index'));
+    }
+
+    public function administrar_contactos_get($id) {
+        $entrevista = EncuestaGraduado::find($id);
+
+        if(sizeof($entrevista->contactos) <= 0) {
+            Flash::error('La entrevista que ha seleccionado no tiene contactos.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        if(empty($entrevista)) {
+            Flash::error('La entrevista que ha seleccionado no se encuentra.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+
+        return view('encuestas_graduados.administrar-contactos')->with('entrevista', $entrevista);
     }
 }

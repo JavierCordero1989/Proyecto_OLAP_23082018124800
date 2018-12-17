@@ -43,6 +43,11 @@
                                     <i class="far fa-user"></i>
                                 </a>
                             </div>
+                            <div class="btn-group-vertical">
+                                <a href="{!! route('encuestas-graduados.cambiar-estado-entrevista', $encuesta->id) !!}" class="btn btn-info btn-xs" data-toggle="tooltip" title="Cambiar estado" data-placement="left"><i class="fas fa-exchange-alt"></i></a>
+                                <a href="{!! route('encuestas-graduados.asignar-entrevista-get', $encuesta->id) !!}" class="btn btn-info btn-xs" data-toggle="tooltip" title="Asignar encuesta" data-placement="left"><i class="fas fa-hand-point-right"></i></a>
+                                <a href="{!! route('encuestas-graduados.administrar-contactos-get', $encuesta->id) !!}" class="btn btn-info btn-xs"data-toggle="tooltip" title="Administrar contactos" data-placement="left"><i class="fas fa-phone-square"></i></a>
+                            </div>
                         @if (Auth::user()->hasRole('Super Admin'))
                             {!! Form::close() !!}
                         @endif
