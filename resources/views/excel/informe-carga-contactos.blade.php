@@ -17,8 +17,43 @@
                     <hr>
                     <div class="clearfix"></div>
 
-                    {!! Form::label('', 'Registros con cédulas repetidas:') !!}
-                    <p>{!! $informe['registros_cedula_repetida'] !!}</p>
+                    @if (sizeof($informe['cedulas_repetidas']) > 0)
+                        {!! Form::label('', 'Registros con cédulas repetidas:') !!}
+                        <p>{!! $informe['registros_cedula_repetida'] !!}</p>
+                        
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#report-panel" href="#panel-cedulas-repetidas">
+                                        <i class="fas fa-angle-down"></i>
+                                        Cédulas repetidas
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="panel-cedulas-repetidas" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <th>Cédula</th>
+                                                <th>Ocurrencias</th>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($informe['cedulas_repetidas'] as $key => $value)
+                                                    <tr>
+                                                        <td>{!! $key !!}</td>
+                                                        <td>{!! $value !!}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    @endif
+
 
                     @if (sizeof($informe['cedulas_sin_coincidencias']) > 0)
                         <hr>

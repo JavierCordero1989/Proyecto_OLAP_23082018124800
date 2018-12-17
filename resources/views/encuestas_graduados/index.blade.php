@@ -21,9 +21,16 @@
                                 <i class="fas fa-sort-down" data-toggle="tooltip" title="Pulse para ver los campos de búsqueda" data-placement="top"></i>
                             </button>
 
-                            <a href="{!! route('encuestas-graduados.index') !!}" style="margin-top: -10px;margin-bottom: 5px;" class="btn btn-primary pull-right" data-toggle="tooltip" title="Pulse para limpiar la búsqueda" data-placement="bottom">
+                            <a href="{!! route('encuestas-graduados.index') !!}" style="margin-top: -10px;margin-bottom: 5px;" class="btn btn-primary pull-left" data-toggle="tooltip" title="Pulse para limpiar la búsqueda" data-placement="bottom">
                                 <i class="fas fa-brush"></i>
                             </a>
+
+                            @if (Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
+                                <a href="{!! route('excel.descargar-filtro-encuestas') !!}" class="btn btn-success pull-right" style="margin-top: -10px;margin-bottom: 5px;" data-toggle="tooltip" title="Pulse para descargar" data-placement="bottom">
+                                    <i class="fas fa-file-excel"></i>
+                                    Descargar
+                                </a>
+                            @endif
                         </h1>
                         {{-- <h1 class="pull-left">Lista de encuestas</h1> --}}
                         @if (Auth::user()->hasRole('Super Admin'))

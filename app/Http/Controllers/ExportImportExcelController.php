@@ -92,6 +92,99 @@ class ExportImportExcelController extends Controller
     //     return redirect(route('ruta_a_dirigir'));
     // }// Fin de la funcion exportar_a_excel
 
+    public function exportar_filtro_encuestas_a_excel() {
+        //Se deben tomar los datos que se quieren exportar al archivo excel
+        $ids_encuestas = session()->get('ids_encuestas_filtradas');
+        
+        if(isset($ids_encuestas)) {
+            // session()->forget('ids_encuestas_filtradas');
+            $data = Entrevista::whereIn('id', $ids_encuestas)->get();
+            // $data = Model::all();
+    
+            /** Si no existen datos almacenados, se devuelve un mensaje de error. */
+            if(empty($data)) {
+                Flash::error('No se han encontrado datos para exportar a Excel.');
+                return redirect(route('encuestas-graduados.index'));
+            }
+    
+            $temp_entrevistas = array();
+            $nueva_data = array();
+
+            $carrera_codigos = Carrera::allData()->pluck('codigo', 'id');
+            $carrera_etiqueta = Carrera::allData()->pluck('nombre', 'id');
+
+            $universidad_codigos = Universidad::allData()->pluck('codigo', 'id');
+            $universidad_etiquetas = Universidad::allData()->pluck('nombre', 'id');
+
+            $grado_codigos = Grado::allData()->pluck('codigo', 'id');
+            $grado_etiquetas = Grado::allData()->pluck('nombre', 'id');
+
+            $disciplina_codigos = Disciplina::pluck('codigo', 'id');
+            $disciplina_etiquetas = Disciplina::pluck('descriptivo', 'id');
+
+            $area_codigos = Area::pluck('codigo', 'id');
+            $area_etiquetas = Area::pluck('descriptivo', 'id');
+
+            $agrupacion_codigos = Agrupacion::allData()->pluck('codigo', 'id');
+            $agrupacion_etiquetas = Agrupacion::allData()->pluck('nombre', 'id');
+
+            $sector_codigos = Sector::allData()->pluck('codigo', 'id');
+            $sector_etiquetas = Sector::allData()->pluck('nombre', 'id');
+
+
+            foreach($data as $key => $encuesta) {
+
+                $temp_entrevistas['id'] = $key+1;
+                $temp_entrevistas['identificacion'] = $encuesta->identificacion_graduado;
+                $temp_entrevistas['token'] = $encuesta->token;
+                $temp_entrevistas['nombre']= $encuesta->nombre_completo;
+                $temp_entrevistas['año'] = $encuesta->annio_graduacion;
+                $temp_entrevistas['link'] = $encuesta->link_encuesta;
+                $temp_entrevistas['sexo'] = $encuesta->sexo == 'M' ? "Hombre" : ($encuesta->sexo == 'F' ? "Mujer" : "Sin Clasificar");
+                $temp_entrevistas['codigo_carrera'] = $carrera_codigos[$encuesta->codigo_carrera];
+                $temp_entrevistas['etiqueta_carrera'] = $carrera_etiqueta[$encuesta->codigo_carrera];
+                $temp_entrevistas['codigo_universidad'] = $universidad_codigos[$encuesta->codigo_universidad];
+                $temp_entrevistas['etiqueta_universidad'] = $universidad_etiquetas[$encuesta->codigo_universidad];
+                $temp_entrevistas['codigo_grado'] = $grado_codigos[$encuesta->codigo_grado];
+                $temp_entrevistas['etiqueta_grado'] = $grado_etiquetas[$encuesta->codigo_grado];
+                $temp_entrevistas['codigo_disciplina'] = $disciplina_codigos[$encuesta->codigo_disciplina];
+                $temp_entrevistas['etiqueta_disciplina'] = $disciplina_etiquetas[$encuesta->codigo_disciplina];
+                $temp_entrevistas['codigo_area'] = $area_codigos[$encuesta->codigo_area];
+                $temp_entrevistas['etiqueta_area'] = $area_etiquetas[$encuesta->codigo_area];
+                $temp_entrevistas['codigo_agrupacion'] = $agrupacion_codigos[$encuesta->codigo_agrupacion];
+                $temp_entrevistas['etiqueta_agrupacion'] = $agrupacion_etiquetas[$encuesta->codigo_agrupacion];
+                $temp_entrevistas['codigo_sector'] = $sector_codigos[$encuesta->codigo_sector];
+                $temp_entrevistas['etiqueta_sector'] = $sector_codigos[$encuesta->codigo_sector];
+                $temp_entrevistas['tipo_de_caso'] = $encuesta->tipo_de_caso;
+
+                $nueva_data[] = $temp_entrevistas;
+            }
+            $data = $nueva_data;
+            //Se crea el archivo de excel
+            Excel::create('Filtro de Encuestas', function($excel) use($data){
+                //Se crea una hoja del libro de excel
+                $excel->sheet('Encuestas', function($sheet) use($data) {
+                    //Se insertan los datos en la hoja con el metodo with o fromArray
+                    /* Parametros:
+                    1: datos a guardar,
+                    2: valores del encabezado de la columna,
+                    3: celda de inicio,
+                    4: comparacionn estricta de los valores del encabezado,
+                    5: impresion de los encabezados */
+                    $sheet->with($data, null, 'A1', false, false);
+                });
+                /** Se descarga el archivo a la extension deseada, xlsx, xls */
+            })->download('xlsx');
+    
+            Flash::success('Se ha descargado el archivo correctamente.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+        else {
+            Flash::error('No hay datos para exportar el archivo.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+    }// Fin de la funcion exportar_a_excel
+
     protected function guardar_a_base_de_datos(Request $request) {
         /* SE SOLICITA EL ARCHIVO DEL REQUEST */
         $archivo = $request->file('archivo_nuevo');

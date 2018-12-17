@@ -870,7 +870,7 @@ class ArchivosExcelController extends Controller
 
                         $graduado = EncuestaGraduado::where('identificacion_graduado', $row->identificacion)
                             ->whereNull('deleted_at')
-                            ->where('tipo_de_caso', '<>', 'REEMPLAZO')
+                            // ->where('tipo_de_caso', '<>', 'REEMPLAZO')
                             ->with('contactos')
                             ->get();
 
@@ -1341,18 +1341,24 @@ class ArchivosExcelController extends Controller
             }
 
             $fin = microtime(true);
-            echo 'Total de tiempo: ' . round(($fin - $inicio), 2) . ' segundos<br>';
+            // echo 'Total de tiempo: ' . round(($fin - $inicio), 2) . ' segundos<br>';
 
             $conta_cedula = 0;
+            $temp_cedulas_repetidas = array();
 
-            foreach($this->cedulas as $cedula) {
-                if($cedula > 1) {
+            foreach($this->cedulas as $cedula => $veces) {
+                if($veces > 1) {
+                    $temp_cedulas_repetidas[$cedula] = $veces;
                     $conta_cedula++;
                 }
             }
 
+            $this->cedulas = $temp_cedulas_repetidas;
+
             $informe = [
+                'tiempo_invertido' => round(($fin - $inicio),2),
                 'registros_cedula_repetida'=>$conta_cedula,
+                'cedulas_repetidas' => $this->cedulas,
                 'cedulas_sin_coincidencias'=>$this->cedulas_sin_coincidencia,
                 'total_de_registros'=>$this->total_de_registros,
                 'total_de_contactos'=>$this->total_de_contactos,
@@ -1361,6 +1367,7 @@ class ArchivosExcelController extends Controller
                 'de_otro'=>$this->contactos_encontrados['de_otro']
             ];
             
+            // dd($informe);
             Flash::success('El archivo de contactos se ha subido correctamente. Podrá ver un informe de la situación a continuación.');
             return view('excel.informe-carga-contactos')->with('informe', $informe);
         }
@@ -1444,7 +1451,7 @@ class ArchivosExcelController extends Controller
                     foreach($temp_contactos_nuevos as $contacto) {
                         $this->total_contactos_guardados++;
                         $detalle = DetalleContacto::create([
-                            'contacto'=>$contacto,
+                            'contacto'=>(string)$contacto,
                             'observacion'=>'',
                             'estado'=>'F',
                             'id_contacto_graduado'=>$contacto_nuevo->id,

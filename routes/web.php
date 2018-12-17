@@ -74,6 +74,7 @@ Route::group(['middleware'=>'auth'], function(){
   // Route::post('importar-archivo-contactos', 'ExportImportExcelController@subirArchivoExcelContactos')->name('excel.subir-archivo-contactos');
   Route::get('confirmacion/archivos/excel/{respuesta}', 'ExportImportExcelController@respuesta_archivo_muestra')->name('excel.respuesta-archivo');
   Route::post('importar-archivo-contactos', 'ArchivosExcelController@subir_archivo_de_contactos')->name('excel.subir-archivo-contactos');
+  Route::get('exportar-filtro-encuestas','ExportImportExcelController@exportar_filtro_encuestas_a_excel')->name('excel.descargar-filtro-encuestas');
 });
 
 //Encuestadores

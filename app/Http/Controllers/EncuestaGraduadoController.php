@@ -33,6 +33,8 @@ class EncuestaGraduadoController extends Controller
             return redirect(url('home'));
         }
 
+        session()->forget('ids_encuestas_filtradas');
+
         $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('identificacion_graduado', 'ASC')->paginate(25);
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
@@ -171,13 +173,21 @@ class EncuestaGraduadoController extends Controller
                 }
             }
 
-            if(sizeof($ids) > 0) {
-                $encuestas = $encuestas->whereIn('id', $ids);
-            }
+            $encuestas = $encuestas->whereIn('id', $ids);
+        }
+        
+        $ids_encuestas = array();
+
+        foreach($encuestas->get() as $encuesta) {
+            $ids_encuestas[] = $encuesta->id;
         }
 
         /* DE LAS ENTREVISTAS OBTENIDAS, SE PAGINAN DE 15 EN 15, Y SE ORDENAN ASCENDENTEMENTE POR EL ID */
         $encuestas = $encuestas->orderBy('id', 'ASC')->paginate(15);
+
+
+        // se guardan los ids, para cuando se quiera descargar el reporte en excel.
+        session()->put('ids_encuestas_filtradas', $ids_encuestas);
 
         return view('encuestas_graduados.index')->with('encuestas', $encuestas);
     }
