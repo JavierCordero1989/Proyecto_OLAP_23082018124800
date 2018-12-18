@@ -488,6 +488,10 @@ class EncuestaGraduado extends Model
         return $estado_encuesta;
     }
 
+    public function asignacion() {
+        return $this->hasOne(Asignacion::class, 'id_graduado', 'id');
+    }
+
     public function encuestadorAsignado() {
         $asignacion = Asignacion::where('id_graduado', $this->id)->first();
 

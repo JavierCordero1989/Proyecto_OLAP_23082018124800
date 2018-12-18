@@ -10,130 +10,116 @@
                 <div class="row" style="padding-left: 20px">
                     <div class="col-xs-12">
                         <!-- Caja para el estado actual de la encuesta -->
-                        <div class="col-xs-6">
-                            {!! Form::label('estado_encuesta', 'Estado actual:') !!}
-                            <p>{!! $encuesta->estado()->estado !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Estado actual:</u> {!! $encuesta->estado()->estado !!}</p>
                         </div>
 
                         <!-- Identificación del graduado de la entrevista -->
-                        <div class="col-xs-6">
-                            {!! Form::label('identificacion_graduado', 'Identificación del graduado:') !!}
-                            <p>{!! $encuesta->identificacion_graduado !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Identificación del graduado:</u> {!! $encuesta->identificacion_graduado !!}</p>
                         </div>
 
                         <!-- Nombre completo del graduado -->
-                        <div class="col-xs-6">
-                            {!! Form::label('nombre_completo', 'Nombre completo:') !!}
-                            <p>{!! $encuesta->nombre_completo !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Nombre completo:</u> {!! $encuesta->nombre_completo !!}</p>
                         </div>
 
                         <!-- Token del graduado -->
-                        <div class="col-xs-6">
-                            {!! Form::label('token', 'Token:') !!}
-                            <p>{!! $encuesta->token !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Token:</u> {!! $encuesta->token !!}</p>
                         </div>
     
                         <!-- Año de graduación -->
-                        <div class="col-xs-6">
-                            {!! Form::label('annio_graduacion', 'Año de graduación:') !!}
-                            <p>{!! $encuesta->annio_graduacion !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Año de graduación:</u>{!! $encuesta->annio_graduacion !!}</p>
                         </div>
     
                         <!-- Link para la encuesta -->
-                        <div class="col-xs-6">
-                            {!! Form::label('link_encuesta', 'Link de la encuesta:') !!}
-                            <a href="{!! $encuesta->link_encuesta !!}" target="_blank">{!! $encuesta->link_encuesta !!}</a>
+                        <div class="col-md-6">
+                            <p><u>Link de la encuesta:</u> <a href="{!! $encuesta->link_encuesta !!}" target="_blank">{!! $encuesta->link_encuesta !!}</a></p>
                         </div>
     
                         <!-- Sexo del graduado -->
-                        <div class="col-xs-6">
-                            {!! Form::label('sexo', 'Sexo:') !!}
-                            <p>{!! $encuesta->sexo == 'M' ? 'Hombre' : ($encuesta->sexo == 'F' ? 'Mujer' : 'ND') !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Sexo:</u> {!! $encuesta->sexo == 'M' ? 'Hombre' : ($encuesta->sexo == 'F' ? 'Mujer' : 'Sin Clasificar') !!}</p>
                         </div>
     
                         <!-- Modal para ver la información de detalle de los contactos que pertenecen a la entrevista -->
-                        <div class="col-xs-6">
-                            {!! Form::label('info_de_contacto', 'Información de contacto') !!}
-
-                            @if(sizeof($encuesta->contactos) <= 0)
-                                <p class="text-danger text-uppercase">Esta entrevista no tiene información de contacto</p>
-                            @else
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <i class="fas fa-address-card"></i>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
-                                        <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
-                                        @foreach($encuesta->contactos as $contacto)
-                                            <li>
-                                                @if ($contacto->nombre_referencia != "")
-                                                    <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
-                                                @else
-                                                    <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->parentezco !!}</a>
-                                                @endif
-                                            </li>
+                        <div class="col-md-6">
+                            <p><u>Información de contacto:</u>
+                                @if(sizeof($encuesta->contactos) <= 0)
+                                    <p class="text-danger text-uppercase">Esta entrevista no tiene información de contacto</p>
+                                @else
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownEnlacesInfoContacto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <i class="fas fa-address-card"></i>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownEnlacesInfoContacto">
+                                            <!-- Se agrega un boton por cada registro de contacto que tenga cada encuesta, mediante un foreach -->
+                                            @foreach($encuesta->contactos as $contacto)
+                                                <li>
+                                                    @if ($contacto->nombre_referencia != "")
+                                                        <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->nombre_referencia !!}</a>
+                                                    @else
+                                                        <a href="#modal-{!! $contacto->id !!}" data-toggle="modal" ><i class="fas fa-eye"></i>{!! $contacto->parentezco !!}</a>
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        <!-- Se agregan los modales mediante un foreach -->
+                                        @foreach($encuesta->contactos as $contacto) 
+                                            @include('modals.modal_info_de_contacto')
                                         @endforeach
-                                    </ul>
-                                    <!-- Se agregan los modales mediante un foreach -->
-                                    @foreach($encuesta->contactos as $contacto) 
-                                        @include('modals.modal_info_de_contacto')
-                                    @endforeach
-                                </div>
-                            @endif
+                                    </div>
+                                @endif
+                            </p>
                         </div>
 
                         <!-- Carrera -->
-                        <div class="col-xs-6">
-                            {!! Form::label('codigo_carrera', 'Carrera:') !!}
-                            <p>{!! $encuesta->carrera->nombre !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Carrera:</u> {!! $encuesta->carrera->nombre !!}</p>
                         </div>
     
                         <!-- Universidad -->
-                        <div class="col-xs-6">
-                            {!! Form::label('codigo_universidad', 'Universidad:') !!}
-                            <p>{!! $encuesta->universidad->nombre !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Universidad:</u> {!! $encuesta->universidad->nombre !!}</p>
                         </div>
     
                         <!-- Grado -->
-                        <div class="col-xs-6">
-                            {!! Form::label('codigo_grado', 'Grado:') !!}
-                            <p>{!! $encuesta->grado->nombre !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Grado:</u> {!! $encuesta->grado->nombre !!}</p>
                         </div>
     
                         <!-- Disciplina -->
-                        <div class="col-xs-6">
-                            {!! Form::label('codigo_disciplina', 'Disciplina:') !!}
-                            <p>{!! $encuesta->disciplina->descriptivo !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Disciplina</u> {!! $encuesta->disciplina->descriptivo !!}</p>
                         </div>
     
                         <!-- Área -->
-                        <div class="col-xs-6">
-                            {!! Form::label('codigo_area', 'Área:') !!}
-                            <p>{!! $encuesta->area->descriptivo !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Área</u> {!! $encuesta->area->descriptivo !!}</p>
                         </div>
     
                         {{-- <!-- Agrupación -->
-                        <div class="col-xs-6">
+                        <div class="col-md-6">
                             {!! Form::label('codigo_agrupacion', 'Agrupación:') !!}
                             <p>{!! $encuesta->agrupacion->nombre !!}</p>
                         </div> --}}
     
                         <!-- Sector -->
-                        <div class="col-xs-6">
-                            {!! Form::label('codigo_sector', 'Sector:') !!}
-                            <p>{!! $encuesta->sector->nombre !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Sector:</u> {!! $encuesta->sector->nombre !!}</p>
                         </div>
     
                         <!-- Tipo de caso -->
-                        <div class="col-xs-6">
-                            {!! Form::label('tipo_de_caso', 'Tipo de caso:') !!}
-                            <p>{!! $encuesta->tipo_de_caso !!}</p>
+                        <div class="col-md-6">
+                            <p><u>Tipo de caso:</u> {!! $encuesta->tipo_de_caso !!}</p>
                         </div>
     
                         <!-- Indicador de otras carreras -->
                         @if (!is_null($encuesta->otrasCarreras()))
-                            <div class="col-xs-6">
+                            <div class="col-md-6">
                                 @php
                                     $ids = '';
                                     $otras = $encuesta->otrasCarreras();
@@ -148,20 +134,19 @@
                                     }
                                 @endphp
 
-                                {!! Form::label('otras_carreras', 'Este usuario posee otras carreras: ') !!}
-                                <a href="{!! route('encuestas-graduados.otras-carreras', $ids) !!}">Ir a las entrevistas</a>
+                                <p><u>Este usuario posee otras carreras:</u> <a href="{!! route('encuestas-graduados.otras-carreras', $ids) !!}">Ir a las entrevistas</a></p>
 
                                 {{-- <p>{!! $encuesta->otrasCarreras() !!}</p> <!-- TODO --> --}}
                             </div>
                         @endif
                         {{-- <!-- Created At Field -->
-                        <div class="col-xs-6">
+                        <div class="col-md-6">
                             {!! Form::label('created_at', 'Creado el:') !!}
                             <p>{!! $encuesta->created_at !!}</p>
                         </div>
     
                         <!-- Updated At Field -->
-                        <div class="col-xs-6">
+                        <div class="col-md-6">
                             {!! Form::label('updated_at', 'Modificado el:') !!}
                             <p>{!! $encuesta->updated_at !!}</p>
                         </div> --}}

@@ -130,6 +130,11 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('administrar-contactos/{id_encuesta}', 'EncuestaGraduadoController@administrar_contactos_get')->name('encuestas-graduados.administrar-contactos-get');
 });
 
+Route::group(['prefix'=>'contactos', 'middleware'=>'auth'], function(){
+  Route::get('agregar-nuevo/{id_entrevista}/{id_contacto}', 'ContactosController@agregar_contacto_get')->name('contactos.agregar-contacto-get');
+  // Route::post('', 'ContactosController@')->name('contactos.');
+});
+
 //Encuestas de los graduados
 Route::group(['middleware'=>['auth']], function() {
   Route::get('asignar-encuestas/{id_supervisor}/{id_encuestador}', 'EncuestaGraduadoController@asignar')                                               ->name('asignar-encuestas.asignar')  /*->middleware('permission:')*/;

@@ -51,6 +51,10 @@
         <div v-if="encuesta_encontrada" class="box box-primary">
             <div id="survey-body" class="box-body with-border">
                 <div class="col-md-6">
+                    <p><u>Estado actual: </u> @{{ encuesta.estado_actual }}</p>
+                </div>
+
+                <div class="col-md-6">
                     <p><u>Identificación del graduado:</u> @{{ encuesta.identificacion_graduado }}</p>
                 </div>
 

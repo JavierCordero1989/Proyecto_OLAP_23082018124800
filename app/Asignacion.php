@@ -23,4 +23,8 @@ class Asignacion extends Model
     public function supervisores() {
         return $this->hasOne(User::class, 'id', 'id_supervisor');
     }
+
+    public function entrevista() {
+        return $this->hasOne(EncuestaGraduado::class, 'id');
+    }
 }

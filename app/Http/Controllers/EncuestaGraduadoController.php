@@ -266,6 +266,10 @@ class EncuestaGraduadoController extends Controller
         return redirect(route('encuestas-graduados.index'));
     }
 
+    /**
+     * Elimina una entrevista del sistema, cambiando la fecha de la encuesta eliminada, para no borrarla por completo.
+     * Verifica que la entrevistra no se encuentre asignada a algún encuestador.
+     */
     public function destroy($id) {
         $encuesta = EncuestaGraduado::find($id);
 
@@ -274,28 +278,53 @@ class EncuestaGraduadoController extends Controller
             return redirect(route('encuestas-graduados.index'));
         }
 
-        $datoViejo = $encuesta->deleted_at;
+        $asignacion = Asignacion::where('id_graduado', $encuesta->id)->first();
 
-        /* Se modifica el dato de la fecha de eliminacion, para que no aparezca más */
-        $encuesta->deleted_at = carbon::now();
-        $encuesta->save();
+        try {
+            if(!is_null($asignacion->id_encuestador) || !is_null($asignacion->id_supervisor)) {
+                Flash::error('La entrevista se encuentra asignada al encuestador con código '.User::find($asignacion->id_encuestador)->user_code.'<br>Por favor, remueva este caso del encuestador antes de eliminarlo.');
+                return redirect(route('encuestas-graduados.index'));
+            }
 
-        //En la tabla de bitácora se registra el cambio
-        $bitacora = [
-            'transaccion'            =>'D',
-            'tabla'                  =>'tbl_graduados',
-            'id_registro_afectado'   =>$encuesta->id,
-            'dato_original'          =>$datoViejo,
-            'dato_nuevo'             =>('Se ha eliminado el registro de la encuesta de la BD. Nuevo dato: deleted_at => '.$encuesta->deleted_at),
-            'fecha_hora_transaccion' =>Carbon::now(),
-            'id_usuario'             =>Auth::user()->id,
-            'created_at'             =>Carbon::now()
-        ];
+            DB::beginTransaction(); /* INICIA LA TRANSACCIÓN SQL */
 
-        DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+            $datoViejo = $encuesta->deleted_at;
+    
+            /* Se modifica el dato de la fecha de eliminacion, para que no aparezca más */
+            $encuesta->deleted_at = carbon::now();
+            $encuesta->save();
+    
+            //En la tabla de bitácora se registra el cambio
+            $bitacora = [
+                'transaccion'            =>'D',
+                'tabla'                  =>'tbl_graduados',
+                'id_registro_afectado'   =>$encuesta->id,
+                'dato_original'          =>$datoViejo,
+                'dato_nuevo'             =>('Se ha eliminado el registro de la encuesta de la BD. Nuevo dato: deleted_at => '.$encuesta->deleted_at),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
 
-        Flash::success('Se ha eliminado la encuesta del sistema.');
-        return redirect(route('encuestas-graduados.index'));
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+    
+            DB::commit();
+
+            Flash::success('Se ha eliminado la encuesta del sistema.');
+            return redirect(route('encuestas-graduados.index'));
+        }
+        catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: destroy().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestas-graduados.index'));
+        }
     }
 
     public function create() {
@@ -874,7 +903,7 @@ class EncuestaGraduadoController extends Controller
             else {
                 /* SI LA ENCUESTA EXISTE Y CORRESPONDE A UN CASO DE CENSO, SE MOSTRARÁ UN ERROR */
                 if($encuesta->tipo_de_caso != 'MUESTRA') {
-                    Flash::error('El caso que busca corresponde a Censo o un Reemplazo, no se puede sustituir.');
+                    Flash::error('El caso que busca corresponde a Censo o un Reemplazo o ya ha sido reemplazada con anterioridad, no se puede sustituir.');
                     // Flash::overlay('El caso que busca corresponde a Censo, no se puede sustituir.', 'Error de tipo de caso')->error();
                     return redirect(route($ruta));
                 }
@@ -919,10 +948,8 @@ class EncuestaGraduadoController extends Controller
                         $encuesta_nueva->tipo_de_caso = $encuesta->tipo_de_caso;
                         $save = $encuesta_nueva->save();
 
-                        /* A LA ENCUESTA ENCONTRADA POR TOKEN, SE LE CAMBIA EL TIPO DE CASO */
-                        $estado = Asignacion::where('id_graduado', $encuesta->id)->first();
-                        $estado = Estado::find($estado->id_estado);
-                        $encuesta->tipo_de_caso = $estado->estado;
+                        $encuesta->tipo_de_caso = 'REEMPLAZADA';
+                        $encuesta->deleted_at = Carbon::now();
                         $encuesta->save();
 
                         DB::commit();
@@ -930,6 +957,20 @@ class EncuestaGraduadoController extends Controller
                         /* SI TODO SALE BIEN,  */
                         $mensaje_éxito = 'La sustitución se ha realizado con éxito.';
                         $mensaje_éxito .= '<br>Token reemplazo: ' . $encuesta_nueva->token;
+
+                        // Guardar el registro en la bitacora
+                        $bitacora = [
+                            'transaccion'            =>'U',
+                            'tabla'                  =>'tbl_graduados',
+                            'id_registro_afectado'   =>$encuesta->id,
+                            'dato_original'          =>null,
+                            'dato_nuevo'             =>'La encuesta con token '.$encuesta->token.' ha sido reemplazada por la encuesta con token '.$encuesta_nueva->token.'.',
+                            'fecha_hora_transaccion' =>Carbon::now(),
+                            'id_usuario'             =>Auth::user()->user_code,
+                            'created_at'             =>Carbon::now()
+                        ];
+                
+                        DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
                         Flash::success($mensaje_éxito);
                         return redirect(route('home'));
@@ -953,83 +994,7 @@ class EncuestaGraduadoController extends Controller
 
             Flash::error($mensaje);
             return redirect(route($ruta));
-        }
-
-
-        // dd($request->all());
-        $ruta = 'encuestas-graduados.hacer-sustitucion';
-
-        /* SE BUSCA LA ENCUESTA POR MEDIO DEL TOKEN INGRESADO */
-        $encuesta = EncuestaGraduado::where('token', $request->token_entrevista)->first();
-
-        /* SI LA ENCUESTA NO EXISTE, SE DEVOLVERÁ UN ERROR */
-        if(empty($encuesta)) {
-            Flash::error('La entrevista que busca por token, no corresponde con los registros del sistema.');
-            // Flash::overlay('La entrevista que busca por token, no corresponde con los registros del sistema.', 'Error de búsqueda')->error();
-            return redirect(route($ruta));
-        }
-        else {
-            /* SI LA ENCUESTA EXISTE Y CORRESPONDE A UN CASO DE CENSO, SE MOSTRARÁ UN ERROR */
-            if($encuesta->tipo_de_caso == 'CENSO' || $encuesta->tipo_de_caso == 'SUSTITUCION') {
-                Flash::error('El caso que busca corresponde a Censo o una Sustitucion, no se puede sustituir.');
-                // Flash::overlay('El caso que busca corresponde a Censo, no se puede sustituir.', 'Error de tipo de caso')->error();
-                return redirect(route($ruta));
-            }
-            else {
-                $asignacion = Asignacion::pluck('id_estado', 'id_graduado');
-
-                /**
-                 * 5 = FUERA DEL PAÍS
-                 * 6 = ILOCALIZABLE
-                 * 7 = FALLECIDO
-                 * 8 = EXTRANJERO
-                 */
-                if(
-                    $asignacion[$encuesta->id] == 5
-                    ||
-                    $asignacion[$encuesta->id] == 6
-                    ||
-                    $asignacion[$encuesta->id] == 7
-                    ||
-                    $asignacion[$encuesta->id] == 8
-                ) {
-                    /* SI LA ENCUESTA EXISTE Y NO ES CENSO, SE HARÁ UNA BÚSQUEDA PARA ENCONTRAR EL REEMPLAZO */
-                    $tipo_de_caso = 'REEMPLAZO';
-        
-                    $encuesta_nueva = EncuestaGraduado::where('codigo_grado', $encuesta->codigo_grado)
-                        ->where('codigo_disciplina', $encuesta->codigo_disciplina)
-                        ->where('codigo_area', $encuesta->codigo_area)
-                        ->where('codigo_agrupacion', $encuesta->codigo_agrupacion)
-                        ->where('tipo_de_caso', $tipo_de_caso)
-                        ->first();
-        
-                    /* SI EL REEMPLAZO NO SE ENCUENTRA, MOSTRARÁ UN ERROR */
-                    if(empty($encuesta_nueva)) {
-                        Flash::error('No se ha encontrado una sustitución que coincida con las características.');
-                        // Flash::overlay('No se ha encontrado una sustitución que coincida con las características.', 'Error en la búsqueda de sustituciones')->error();
-                        return redirect(route($ruta));
-                    }
-
-                    /* SI EXISTE EL REEMPLAZO, SE LE CAMBIA EL ESTADO */
-                    $encuesta_nueva->tipo_de_caso = $encuesta->tipo_de_caso;
-                    $save = $encuesta_nueva->save();
-
-                    /* A LA ENCUESTA ENCONTRADA POR TOKEN, SE LE CAMBIA EL TIPO DE CASO */
-                    $estado = Asignacion::where('id_graduado', $encuesta->id)->first();
-                    $estado = Estado::find($estado->id);
-                    $encuesta->tipo_de_caso = $estado->estado;
-                    $encuesta->save();
-
-                    /* SI TODO SALE BIEN,  */
-                    Flash::success('La sustitución se ha realizado con éxito.');
-                    return redirect(route('home'));
-                }
-                else {
-                    Flash::error('La encuesta que intenta sustituir, no posee un estado para realizar dicha acción.');
-                    return redirect(route($ruta));
-                }
-            }
-        }       
+        }   
     }
 
     /* Permite buscar una entrevista por TOKEN, devolviendo el resultado en forma de array, esto porque
@@ -1053,25 +1018,51 @@ class EncuestaGraduadoController extends Controller
             return array('encontrada'=> false, 'encuesta'=>null, 'mensaje'=>'La encuesta encontrada pertenece a una SUSTITUCION, no se puede hacer el reemplazo con la misma.');
         }
 
-        /* CARGA LOS DATOS ACADÉMICOS DE LA ENTREVISTA, PARA MOSTRARLOS EN LA VISTA */
-        $universidad = Universidad::buscarPorId($encuesta->codigo_universidad)->first();
-        $carrera = Carrera::buscarPorId($encuesta->codigo_carrera)->first();
-        $area = Area::find($encuesta->codigo_area);
-        $disciplina = Disciplina::find($encuesta->codigo_disciplina);
-        $grado = Grado::buscarPorId($encuesta->codigo_grado)->first();
-        $agrupacion = Agrupacion::buscarPorId($encuesta->codigo_agrupacion)->first();
-        $sector = Sector::buscarPorId($encuesta->codigo_sector)->first();
+        $asignacion = Asignacion::where('id_graduado', $encuesta->id)->first();
 
-        $encuesta->codigo_universidad = $universidad->nombre;
-        $encuesta->codigo_carrera = $carrera->nombre;
-        $encuesta->codigo_area = $area->descriptivo;
-        $encuesta->codigo_disciplina = $disciplina->descriptivo;
-        $encuesta->codigo_grado = $grado->nombre;
-        $encuesta->codigo_agrupacion = $agrupacion->nombre;
-        $encuesta->codigo_sector = $sector->nombre;
+        /**
+         * 5 = FUERA DELPAÍS
+         * 6 = ILOCALIZABLE
+         * 7 = FALLECIDO
+         * 8 = EXTRANJERO
+         */
+        if(
+            $asignacion->id_estado == 5
+            ||
+            $asignacion->id_estado == 6
+            ||
+            $asignacion->id_estado == 7
+            ||
+            $asignacion->id_estado == 8
+        ) {
+            $estado = Estado::find($asignacion->id_estado);
 
-        /* si ninguna de las condiciones nteriores se cumple, se devuelve la informacion correcta */
-        return array('encontrada'=> true, 'encuesta'=>$encuesta, 'mensaje'=>'Se ha encontrado la entrevista.');
+            /* CARGA LOS DATOS ACADÉMICOS DE LA ENTREVISTA, PARA MOSTRARLOS EN LA VISTA */
+            $universidad = Universidad::buscarPorId($encuesta->codigo_universidad)->first();
+            $carrera = Carrera::buscarPorId($encuesta->codigo_carrera)->first();
+            $area = Area::find($encuesta->codigo_area);
+            $disciplina = Disciplina::find($encuesta->codigo_disciplina);
+            $grado = Grado::buscarPorId($encuesta->codigo_grado)->first();
+            $agrupacion = Agrupacion::buscarPorId($encuesta->codigo_agrupacion)->first();
+            $sector = Sector::buscarPorId($encuesta->codigo_sector)->first();
+            
+            $encuesta->estado_actual = $estado->estado;
+            $encuesta->codigo_universidad = $universidad->nombre;
+            $encuesta->codigo_carrera = $carrera->nombre;
+            $encuesta->codigo_area = $area->descriptivo;
+            $encuesta->codigo_disciplina = $disciplina->descriptivo;
+            $encuesta->codigo_grado = $grado->nombre;
+            $encuesta->codigo_agrupacion = $agrupacion->nombre;
+            $encuesta->codigo_sector = $sector->nombre;
+
+            /* si ninguna de las condiciones nteriores se cumple, se devuelve la informacion correcta */
+            return array('encontrada'=> true, 'encuesta'=>$encuesta, 'mensaje'=>'Se ha encontrado la entrevista.');
+        }
+        else {
+            return array('encontrada'=> false, 'encuesta'=>null, 'mensaje'=>"La encuesta encontrada debe tener uno de los siguientes estados para ser reemplazada:\n - FUERA DEL PAÍS.\n - ILOCALIZABLE.\n - FALLECIDO.\n - EXTRANJERO.");
+        }
+
+        
     }
 
     public function reasignar_caso($id_entrevista, $id_encuestador) {

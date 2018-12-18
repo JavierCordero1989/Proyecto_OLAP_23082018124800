@@ -19,28 +19,37 @@
         <div class="box box-primary">
             <div class="box-body with-border">
                 <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Agregar nuevo
+                        </a>
+                    </div>
                     @foreach ($entrevista->contactos as $contacto)
                         <div class="col-md-12">
                             <div class="box box-default">
                                 <div class="box-body with-border">
+                                    
+                                    <a href="{!! route('contactos.agregar-contacto-get', [$entrevista->id, $contacto->id]) !!}" class="btn btn-default btn-xs" data-toggle="tooltip" title="Editar información del contacto" data-placement="right"><i class="far fa-edit"></i></a>
+
+                                    @if ($contacto->nombre_referencia != "")
+                                        <h3 class="text-info text-capitalize">{!! $contacto->nombre_referencia !!}</h3>
+                                    @endif
+
                                     @if ($contacto->identificacion_referencia != "")
-                                        <h3 class="text-info">{!! $contacto->identificacion_referencia !!}</h3>
+                                        <h4 class="text-info text-capitalize">{!! $contacto->identificacion_referencia !!}</h4>
                                     @endif
         
-                                    @if ($contacto->nombre_referencia != "")
-                                        <h3 class="text-info">{!! $contacto->nombre_referencia !!}</h3>
-                                    @endif
         
                                     @if ($contacto->parentezco != "")
-                                        <h3 class="text-info">{!! $contacto->parentezco !!}</h3>
+                                        <h4 class="text-info text-capitalize">{!! $contacto->parentezco !!}</h4>
                                     @endif
         
                                     <table class="table table-condensed table-striped">
                                         <thead>
-                                            <th>Contacto</th>
-                                            <th>Observacion</th>
-                                            <th>Estado</th>
-                                            <th>Opciones</th>
+                                            <th><u>Contacto</u></th>
+                                            <th><u>Observacion</u></th>
+                                            <th><u>Estado</u></th>
+                                            <th><u>Opciones</u></th>
                                         </thead>
                                         <tbody>
                                             @foreach ($contacto->detalle as $detalle)
