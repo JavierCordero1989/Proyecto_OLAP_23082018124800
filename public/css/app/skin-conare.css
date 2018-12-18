@@ -315,3 +315,7 @@ b {
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 0;
 }
+
+.small-box h3, .small-box p {
+  color: #fff !important;
+}

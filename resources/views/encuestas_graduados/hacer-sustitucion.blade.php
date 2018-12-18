@@ -25,7 +25,7 @@
                             'v-on:click'=>'find_survey_by_token()'
                         ]) !!}
 
-                        {!! Form::button('<i class="fas fa-exchange-alt"></i> Sustituir', [
+                        {!! Form::button('<i class="fas fa-exchange-alt"></i> Reemplazar', [
                             'class'=>'btn btn-primary',
                             'type'=>'submit',
                             'onclick'=>'return verificar_solicitud();',
@@ -51,70 +51,57 @@
         <div v-if="encuesta_encontrada" class="box box-primary">
             <div id="survey-body" class="box-body with-border">
                 <div class="col-md-6">
-                    <label for="">Identificación del graduado:</label>
-                    <p>@{{ encuesta.identificacion_graduado }}</p>
+                    <p><u>Identificación del graduado:</u> @{{ encuesta.identificacion_graduado }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Nombre completo:</label>
-                    <p>@{{ encuesta.nombre_completo }}</p>
+                    <p><u>Nombre completo:</u> @{{ encuesta.nombre_completo }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Año de graduación:</label>
-                    <p>@{{ encuesta.annio_graduacion }}</p>
+                    <p><u>Año de graduación:</u> @{{ encuesta.annio_graduacion }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Link de la encuesta:</label>
-                    <p><a :href="encuesta.link_encuesta" target="_blank">@{{ encuesta.link_encuesta }}</a></p>
+                    <p><u>Link de la encuesta:</u> <a :href="encuesta.link_encuesta" target="_blank">@{{ encuesta.link_encuesta }}</a></p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Sexo:</label>
-                    <p v-if="encuesta.sexo == 'M'">Hombre</p>
-                    <p v-else-if="encuesta.sexo == 'F'">Mujer</p>
-                    <p v-else>Sin Clasificar</p>
+                    <p v-if="encuesta.sexo == 'M'"><u>Sexo:</u> Hombre</p>
+                    <p v-else-if="encuesta.sexo == 'F'"><u>Sexo:</u> Mujer</p>
+                    <p v-else><u>Sexo:</u> Sin Clasificar</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Carrera:</label>
-                    <p>@{{ encuesta.codigo_carrera }}</p>
+                    <p><u>Carrera:</u> @{{ encuesta.codigo_carrera }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Universidad:</label>
-                    <p>@{{ encuesta.codigo_universidad }}</p>
+                    <p><u>Universidad:</u> @{{ encuesta.codigo_universidad }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Grado:</label>
-                    <p>@{{ encuesta.codigo_grado }}</p>
+                    <p><u>Grado:</u> @{{ encuesta.codigo_grado }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Disciplina</label>
-                    <p>@{{ encuesta.codigo_disciplina }}</p>
+                    <p><u>Disciplina:</u> @{{ encuesta.codigo_disciplina }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Área:</label>
-                    <p>@{{ encuesta.codigo_area }}</p>
+                    <p><u>Área:</u> @{{ encuesta.codigo_area }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Agrupación</label>
-                    <p>@{{ encuesta.codigo_agrupacion }}</p>
+                    <p><u>Agrupación:</u> @{{ encuesta.codigo_agrupacion }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Sector:</label>
-                    <p>@{{ encuesta.codigo_sector }}</p>
+                    <p><u>Sector:</u> @{{ encuesta.codigo_sector }}</p>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="">Tipo de caso</label>
-                    <p>@{{ encuesta.tipo_de_caso }}</p>
+                    <p><u>Tipo de caso:</u> @{{ encuesta.tipo_de_caso }}</p>
                 </div>
             </div>
         </div>

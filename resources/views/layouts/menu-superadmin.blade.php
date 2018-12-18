@@ -7,9 +7,9 @@
         </span>
     </a>
     <ul class="treeview-menu">
-        <li><a href="{!! route('excel.create') !!}"><i class="fa fa-file" aria-hidden="true"></i><span>&nbsp;Archivo de muestra</span></a></li>
+        <li><a href="{!! route('excel.create') !!}"><i class="fas fa-file" aria-hidden="true"></i><span>&nbsp;Archivo de muestra</span></a></li>
 
-        <li><a href="{!! route('excel.subir-contactos') !!}"><i class="fa fa-file" aria-hidden="true"></i><span>&nbsp;Archivo de contactos</span></a></li>
+        <li><a href="{!! route('excel.subir-contactos') !!}"><i class="fas fa-file" aria-hidden="true"></i><span>&nbsp;Archivo de contactos</span></a></li>
 
         <li><a href="{!! route('catalogo.subir') !!}"><i class="fas fa-file" aria-hidden="true"></i><span>&nbsp;Archivos de catálogos</span></a></li>
     </ul>

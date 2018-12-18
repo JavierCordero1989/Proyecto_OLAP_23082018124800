@@ -59,7 +59,47 @@ class ExportImportExcelController extends Controller
         // $this->id_estado = $this->id_estado->id;
     }
 
+    /**
+     * Muestra la vista para subir el archivo de la muestra, pero antes valida que existan
+     * áreas, disciplinas, universidades y carreras en la base de datos del sistema, para
+     * poder subir el arcivo mencionado. 
+     */
     public function create() {
+        /* LAS SIGUIENTES VALIDACIONES SON PARA COMPROBAR QUE EL ARCHIVO DE LA MUESTRA, NO SE VA
+        A CARGAR SIN HABER CARGADO PRIMERO LOS CATÁLOGOS DE ÁREAS, DISCIPLINAS, UNIVERSIDADES Y CARRERAS.
+        */
+        $areas = Area::count();
+        $disciplinas = Disciplina::count();
+        $universidades = Universidad::allData()->count();
+        $carreras = Carrera::allData()->count();
+        $mensaje = 'Debe cargar los siguientes catálogos para poder cargar el archivo de la muestra:<br>';
+        $faltante_datos = false;
+
+        if($areas <= 0) {
+            $mensaje .= '- Áreas.<br>';
+            $faltante_datos = true;
+        }
+
+        if($disciplinas <= 0) {
+            $mensaje .= '- Disciplinas.<br>';
+            $faltante_datos = true;
+        }
+
+        if($universidades <= 0) {
+            $mensaje .= '- Universidades.<br>';
+            $faltante_datos = true;
+        }
+
+        if($carreras <= 0) {
+            $mensaje .= '- Carreras.<br>';
+            $faltante_datos = true;
+        }
+        
+        if($faltante_datos) {
+            Flash::error($mensaje);
+            return redirect(route('home'));
+        }
+
         return view('excel.create');
     }
 
@@ -188,7 +228,7 @@ class ExportImportExcelController extends Controller
                     $sheet->with($data, null, 'A1', false, false);
                 });
                 /** Se descarga el archivo a la extension deseada, xlsx, xls */
-            })->download('xlsx');
+            })->download('xls');
             
             Flash::success('Se ha descargado el archivo correctamente.');
             return redirect(route('encuestas-graduados.index'));
@@ -613,7 +653,19 @@ class ExportImportExcelController extends Controller
         }
     }
 
+    /**
+     * Muestra la vista para cargar el archivo de contactos en el sistema, pero antes verifica que
+     * la muestra haya sido cargada con anterioridad, para poder mostrar dicha vista, de lo contrario,
+     * se muestra un error informando al usuario.
+     */
     public function createArchivoContactos() {
+        $graduados = Entrevista::count();
+
+        if($graduados <= 0) {
+            Flash::error('Para poder cargar el archivo de contactos, debe haber cargado el archivo de la muestra con anterioridad.');
+            return redirect(route('home'));
+        }
+
         return view('excel.subir-archivo-contactos');
     }
 
