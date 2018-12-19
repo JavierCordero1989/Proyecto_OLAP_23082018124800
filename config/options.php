@@ -48,7 +48,7 @@
             '11' =>	'LINK AL CORREO',
             '12' =>	'INFORMACIÓN POR CORREO',
             '13' =>	'ENTREVISTA COMPLETA',
-            '14' =>	'RECORDATORIO',
+            // '14' =>	'RECORDATORIO',
             '15' =>	'DISCIPLINA NO CORRESPONDE',
         ],
         'survey_estatuses_used' => [

@@ -178,7 +178,7 @@
             $('[name="estados"]').on('change', function() {
                 let value = $(this).val()
 
-                if(value == 14) {
+                if(value == 9) {
                     $(this).attr('disabled', true)
                     alert('Se muestra el modal para agendar la cita')
                     window.location.href = '{{ route("encuestas-graduados.index") }}'
