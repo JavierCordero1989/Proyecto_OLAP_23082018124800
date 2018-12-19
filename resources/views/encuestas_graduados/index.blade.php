@@ -26,10 +26,12 @@
                             </a>
 
                             @if (Auth::user()->hasRole(['Super Admin', 'Supervisor 1']))
-                                <a href="{!! route('excel.descargar-filtro-encuestas') !!}" class="btn btn-success pull-right" style="margin-top: -10px;margin-bottom: 5px;" data-toggle="tooltip" title="Pulse para descargar" data-placement="bottom">
-                                    <i class="fas fa-file-excel"></i>
-                                    Descargar
-                                </a>
+                                @if (Session::has('ids_encuestas_filtradas'))
+                                    <a href="{!! route('excel.descargar-filtro-encuestas') !!}" class="btn btn-success pull-right" style="margin-top: -10px;margin-bottom: 5px;" data-toggle="tooltip" title="Pulse para descargar" data-placement="bottom">
+                                        <i class="fas fa-file-excel"></i>
+                                        Descargar
+                                    </a>
+                                @endif
                             @endif
                         </h1>
                         {{-- <h1 class="pull-left">Lista de encuestas</h1> --}}
@@ -38,6 +40,13 @@
                                 <a id="btn-search" class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('encuestas-graduados.create') !!}">Agregar nueva</a>
                             </h1>
                         @endif
+                    </div>
+                    <div class="col-md-12">
+                        <h3>
+                            @if (Session::has('ids_encuestas_filtradas'))
+                                Total de casos encontrados : {!! $encuestas->total() !!}
+                            @endif
+                        </h3>
                     </div>
                 </div>
 

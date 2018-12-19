@@ -174,7 +174,18 @@
     <!-- Script para validar que se elija un estado antes de guardar y que además se consulta si el campo para 
     observaciones está vacío. -->
     <script>
-        
+        $(function() {
+            $('[name="estados"]').on('change', function() {
+                let value = $(this).val()
+
+                if(value == 14) {
+                    $(this).attr('disabled', true)
+                    alert('Se muestra el modal para agendar la cita')
+                    window.location.href = '{{ route("encuestas-graduados.index") }}'
+                }
+            })
+        })
+
         function revisar_estado() {
             var valor_estado = $('#estados').val();
 

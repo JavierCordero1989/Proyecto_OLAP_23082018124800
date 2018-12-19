@@ -36,8 +36,14 @@ class CatalogoController extends Controller
 
                 /** El método load permite cargar el archivo definido como primer parámetro */
                 Excel::load($archivo, function ($reader) {
+                    $areas = Area::pluck('codigo')->toArray();
+
                     foreach ($reader->get() as $key => $row) {
                         if($row->cod_area_olap == "" || $row->nombre_area_olap == "") {
+                            continue;
+                        }
+
+                        if(in_array($row->cod_area_olap, $areas)) {
                             continue;
                         }
 
@@ -82,8 +88,15 @@ class CatalogoController extends Controller
 
                 /** El método load permite cargar el archivo definido como primer parámetro */
                 Excel::load($archivo, function ($reader) {
+                    $disciplinas = Disciplina::pluck('codigo')->toArray();
+
                     foreach ($reader->get() as $key => $row) {
+                        
                         if($row->cod_disciplina_olap == "" || $row->nombre_disciplina_olap == "" || $row->cod_area_olap == "") {
+                            continue;
+                        }
+
+                        if(in_array($row->cod_disciplina_olap, $disciplinas)) {
                             continue;
                         }
 
@@ -129,8 +142,14 @@ class CatalogoController extends Controller
 
                 /** El método load permite cargar el archivo definido como primer parámetro */
                 Excel::load($archivo, function ($reader) {
+                    $universidades = Universidad::allData()->pluck('codigo')->toArray();
+
                     foreach ($reader->get() as $key => $row) {
                         if($row->id_universidad == "" || $row->nombre_universidad == "") {
+                            continue;
+                        }
+
+                        if(in_array($row->id_universidad, $universidades)) {
                             continue;
                         }
 
@@ -176,8 +195,14 @@ class CatalogoController extends Controller
 
                 /** El método load permite cargar el archivo definido como primer parámetro */
                 Excel::load($archivo, function ($reader) {
+                    $carreras = Carrera::allData()->pluck('codigo')->toArray();
+
                     foreach ($reader->get() as $key => $row) {
                         if($row->cod_carrera_conare == "" || $row->nombre_carrera_universidad_conare == "") {
+                            continue;
+                        }
+
+                        if(in_array($row->cod_carrera_conare, $carreras)) {
                             continue;
                         }
 
