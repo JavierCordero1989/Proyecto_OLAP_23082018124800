@@ -139,8 +139,6 @@ Route::group(['prefix'=>'contactos', 'middleware'=>'auth'], function(){
   Route::post('guardar-detalle-de-contacto/{id_entrevista}/{id_contacto}', 'ContactosController@guardar_detalle_contacto_post')->name('contactos.guardar-detalle-contacto-post');
   Route::get('editar-detalle-de-contacto/{id_entrevista}/{id_detalle}', 'ContactosController@editar_detalle_contacto_get')->name('contactos.editar-detalle-contacto-get');
   Route::patch('editar-detalle-de-contacto/{id_entrevista}/{id_detalle}', 'ContactosController@editar_detalle_contacto_post')->name('contactos.editar-detalle-contacto-post');
-
-  // Route::post('', 'ContactosController@')->name('contactos.');
 });
 
 //Encuestas de los graduados

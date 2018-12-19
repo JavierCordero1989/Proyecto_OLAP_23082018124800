@@ -1115,24 +1115,24 @@ class EncuestaGraduadoController extends Controller
             ->where('id_encuestador', $encuestador->id)
             ->first();
 
-        /* 
-            13 => ENTREVISTA COMPLETA.
-            7  => FALLECIDO.
-            6  => ILOCALIZABLE.
-            5  => FUERA DEL PAÍS
-         */
-        if($asignacion->id_estado == 13 || $asignacion->id_estado == 7 || $asignacion->id_estado == 6 || $asignacion->id_estado == 5) {
-            Flash::error('La entrevista en cuestión no puede ser reasignada.<br>Esto se puede deber a que el estado sea uno de los siguientes:<br>-ENTREVISTA COMPLETA.<br>-FALLECIDO.<br>-ILOCALIZABLE.<br>-FUERA DEL PAÍS.');
-            return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
-        }
+        // /* 
+        //     13 => ENTREVISTA COMPLETA.
+        //     7  => FALLECIDO.
+        //     6  => ILOCALIZABLE.
+        //     5  => FUERA DEL PAÍS
+        //  */
+        // if($asignacion->id_estado == 13 || $asignacion->id_estado == 7 || $asignacion->id_estado == 6 || $asignacion->id_estado == 5) {
+        //     Flash::error('La entrevista en cuestión no puede ser reasignada.<br>Esto se puede deber a que el estado sea uno de los siguientes:<br>-ENTREVISTA COMPLETA.<br>-FALLECIDO.<br>-ILOCALIZABLE.<br>-FUERA DEL PAÍS.');
+        //     return view('encuestadores.reasignar-caso', compact('id_entrevista', 'id_encuestador'));
+        // }
 
         /* HACER LA REASIGNACIÓN. */
         $asignacion->id_encuestador = $new_user->id;
         $asignacion->id_supervisor = Auth::user()->id;
         $asignacion->save();
 
-        Flash::success('La entrevista ha sido reasignada correctamente.');
-        return redirect(route('home'));
+        Flash::success('La entrevista ha sido reasignada correctamente. Al encuestador ' . $new_user->name);
+        return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $encuestador->id));
     }
 
     public function cambiar_estado_entrevista($id_entrevista) {

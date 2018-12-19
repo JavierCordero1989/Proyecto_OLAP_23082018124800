@@ -11,6 +11,7 @@
 
         <div class="clearfix"></div>
             <div v-show="lista_de_encuestas.length > 0" class="row">
+                
                 <div class="form-group">
                     <button v-on:click="collapsePanel" class="btn btn-info" data-toggle="collapse" data-target="#panel-collapse">
                         <span class="fas fa-angle-down" data-toggle="tooltip" title="Pulse para mostrar/ocultar los campos de búsqueda" data-placement="right"></span>
@@ -59,6 +60,8 @@
                 </div>
             </div>
             <div v-else>
+                <h3>Total de encuestas asignadas: @{{ lista_de_encuestas.length }}</h3>
+
                 <div class="col-xs-12 text-center">
                     <h3>@{{ encuestador.name }}</h3>
                 </div>

@@ -27,7 +27,7 @@
                                 'class'=>'btn btn-primary'
                             ]) !!}
         
-                            <a href="#" class="btn btn-default">
+                            <a href="{!! route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador) !!}" class="btn btn-default">
                                 <i class="fas fa-arrow-left"></i>
                                 Cancelar
                             </a>
