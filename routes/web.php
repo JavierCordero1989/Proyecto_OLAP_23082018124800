@@ -131,7 +131,15 @@ Route::group(['middleware'=>['auth']], function() {
 });
 
 Route::group(['prefix'=>'contactos', 'middleware'=>'auth'], function(){
-  Route::get('agregar-nuevo/{id_entrevista}/{id_contacto}', 'ContactosController@agregar_contacto_get')->name('contactos.agregar-contacto-get');
+  Route::get('editar/{id_entrevista}/{id_contacto}', 'ContactosController@editar_contacto_get')->name('contactos.editar-contacto-get');
+  Route::patch('editar/{id_entrevista}/{id_contacto}', 'ContactosController@editar_contacto_post')->name('contactos.editar-contacto-post');
+  Route::get('guardar-contacto/{id_entrevista}', 'ContactosController@guardar_contacto_get')->name('contactos.guardar-contacto-get');
+  Route::post('guardar-contacto/{id_entrevista}', 'ContactosController@guardar_contacto_post')->name('contactos.guardar-contacto-post');
+  Route::get('guardar-detalle-de-contacto/{id_entrevista}/{id_contacto}', 'ContactosController@guardar_detalle_contacto_get')->name('contactos.guardar-detalle-contacto-get');
+  Route::post('guardar-detalle-de-contacto/{id_entrevista}/{id_contacto}', 'ContactosController@guardar_detalle_contacto_post')->name('contactos.guardar-detalle-contacto-post');
+  Route::get('editar-detalle-de-contacto/{id_entrevista}/{id_detalle}', 'ContactosController@editar_detalle_contacto_get')->name('contactos.editar-detalle-contacto-get');
+  Route::patch('editar-detalle-de-contacto/{id_entrevista}/{id_detalle}', 'ContactosController@editar_detalle_contacto_post')->name('contactos.editar-detalle-contacto-post');
+
   // Route::post('', 'ContactosController@')->name('contactos.');
 });
 
