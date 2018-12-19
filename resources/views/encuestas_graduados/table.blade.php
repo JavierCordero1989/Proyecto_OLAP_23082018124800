@@ -40,17 +40,22 @@
                                     </a>
                                 @endif
                                 
-                                <a href="{!! route('encuestas-graduados.agregar-contacto', $encuesta->id) !!}" class="btn btn-default btn-xs" data-toggle="tooltip" title="Agregar contacto" data-placement="left">
-                                    {{-- <i class="fas fa-phone-square"></i> --}}
-                                    <i class="far fa-user"></i>
-                                </a>
+                                @if ($encuesta->contactos->count() <= 0)
+                                    <a href="{!! route('encuestas-graduados.agregar-contacto', $encuesta->id) !!}" class="btn btn-default btn-xs" data-toggle="tooltip" title="Agregar contacto" data-placement="left">
+                                        {{-- <i class="fas fa-phone-square"></i> --}}
+                                        <i class="far fa-user"></i>
+                                    </a>
+                                @endif
+
                             </div>
                             <div class="btn-group-vertical">
                                 @if ($encuesta->tipo_de_caso != "REEMPLAZADA") 
                                     <a href="{!! route('encuestas-graduados.cambiar-estado-entrevista', $encuesta->id) !!}" class="btn btn-info btn-xs" data-toggle="tooltip" title="Cambiar estado" data-placement="left"><i class="fas fa-exchange-alt"></i></a>
+                                    
                                     @if ($encuesta->estado()->estado == "NO ASIGNADA")
                                         <a href="{!! route('encuestas-graduados.asignar-entrevista-get', $encuesta->id) !!}" class="btn btn-info btn-xs" data-toggle="tooltip" title="Asignar encuesta" data-placement="left"><i class="fas fa-hand-point-right"></i></a>
                                     @endif
+                                    
                                     @if ($encuesta->contactos->count() > 0)
                                         <a href="{!! route('encuestas-graduados.administrar-contactos-get', $encuesta->id) !!}" class="btn btn-info btn-xs"data-toggle="tooltip" title="Administrar contactos" data-placement="left"><i class="fas fa-phone-square"></i></a>
                                     @endif

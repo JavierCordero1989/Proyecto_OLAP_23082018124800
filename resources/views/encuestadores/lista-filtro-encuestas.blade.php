@@ -28,7 +28,7 @@
 
                         <div class="form-group col-sm-6">
                             {!! Form::label('agrupacion', 'Agrupación:') !!}
-                            {!! Form::select('agrupacion', config('options.group_types'), null, ['class' => 'form-control', 'placeholder'=>'Elija una agrupación']) !!}
+                            {!! Form::select('agrupacion', config('options.group_types'), null, ['class' => 'form-control']) !!}
                         </div>
 
                         <div class="form-group col-sm-6">
