@@ -12,7 +12,7 @@
                     {{ $message['important'] ? 'alert-important' : '' }}
                     alert-dismissible"
         >
-            <button class="close" type="button" data-dismiss="alert" aria-hidden="true">x</button>
+            <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times</button>
             @if ($message['important'])
                 <button type="button"
                         class="close"

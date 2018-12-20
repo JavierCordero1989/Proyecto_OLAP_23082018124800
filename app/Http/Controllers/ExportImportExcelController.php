@@ -133,6 +133,10 @@ class ExportImportExcelController extends Controller
     //     return redirect(route('ruta_a_dirigir'));
     // }// Fin de la funcion exportar_a_excel
 
+    /**
+     * Descarga las encuestas que han sido filtradas, mediante la lista de encuestas general, esto en un
+     * archivo de excel en versiòn 97-2003.
+     */
     public function exportar_filtro_encuestas_a_excel() {
         //Se deben tomar los datos que se quieren exportar al archivo excel
         $ids_encuestas = session()->get('ids_encuestas_filtradas');
@@ -239,6 +243,9 @@ class ExportImportExcelController extends Controller
         }
     }// Fin de la funcion exportar_a_excel
 
+    private $token_duplicados = array();
+    private $links_duplicados = array();
+
     protected function guardar_a_base_de_datos(Request $request) {
         /* SE SOLICITA EL ARCHIVO DEL REQUEST */
         $archivo = $request->file('archivo_nuevo');
@@ -255,21 +262,52 @@ class ExportImportExcelController extends Controller
             $disciplina = 0;
             $tipo_de_caso = 0;
 
-            $carreras = Carrera::allData()->pluck('id', 'codigo');
-            $universidades = Universidad::allData()->pluck('id', 'codigo');
-            $grados = Grado::allData()->pluck('id', 'codigo');
-            $disciplinas = Disciplina::pluck('id', 'codigo');
-            $areas = Area::pluck('id', 'codigo');
-            $agrupaciones = Agrupacion::allData()->pluck('id', 'codigo');
-            $sector = Sector::allData()->pluck('id', 'codigo');
+            /* se obtienen los siguientes datos del catálogo, para almacenarlos en
+            arreglos, y no consumir tiempo haciendo consultas por cada iteración
+            del archivo.  */
+            $graduados_token = Entrevista::pluck('token')->toArray();
+            $graduados_links = Entrevista::pluck('link_encuesta')->toArray();
+            $carreras        = Carrera::allData()->pluck('id', 'codigo');
+            $universidades   = Universidad::allData()->pluck('id', 'codigo');
+            $grados          = Grado::allData()->pluck('id', 'codigo');
+            $disciplinas     = Disciplina::pluck('id', 'codigo');
+            $areas           = Area::pluck('id', 'codigo');
+            $agrupaciones    = Agrupacion::allData()->pluck('id', 'codigo');
+            $sector          = Sector::allData()->pluck('id', 'codigo');
 
             /**
-             * $reader->get() nos permite obtener todas las filas de nuestro archivo
+             * $reader->get() permite obtener todas las filas de nuestro archivo
              */
             foreach ($reader->get() as $key => $row) {
 
                 $data_excel_file = array();
                 
+                if(in_array($row['token'], $graduados_token)) {
+                    if(isset($this->token_duplicados[$row['token']])) {
+                        $this->token_duplicados[$row['token']]++;
+                    }
+                    else {
+                        $this->token_duplicados[$row['token']] = 1;
+                    }
+                    continue;
+                }
+                else {
+                    $graduados_token[] = $row['token'];
+                }
+
+                if(in_array($row['link'], $graduados_links)) {
+                    if(isset($this->links_duplicados[$row['link']])) {
+                        $this->links_duplicados[$row['link']]++;
+                    }
+                    else {
+                        $this->links_duplicados[$row['link']] = 1;
+                    }
+                    continue;
+                }
+                else {
+                    $graduados_links[] = $row['link'];
+                }
+
                 $data_excel_file['identificacion_graduado'] = (string)$row['identificacion'];
                 $data_excel_file['nombre_completo'] = $row['nombre'];
                 $data_excel_file['annio_graduacion'] = $row['ano'];
@@ -280,7 +318,7 @@ class ExportImportExcelController extends Controller
                 /* 
                  * LAS SIGUIENTES EXCEPCIONES, CONTROLAN QUE LOS CÓDIGOS PARA LAS CARRERAS, UNIVERSIDADES,
                  * GRADOS, DISCIPLINAS, AREAS, AGRUPACION Y SECTORES, EXISTAN EN LOS REGISTROS DE LA BASE
-                 * DE DATOS, ES DECIR, QUE ESTÉN EN EL CATÁLOGO. pOR LO QUE AL NO EXISTIR, SE LANZARÁ UNA
+                 * DE DATOS, ES DECIR, QUE ESTÉN EN EL CATÁLOGO. POR LO QUE AL NO EXISTIR, SE LANZARÁ UNA
                  * EXCEPCIÓN QUE GUARDARÁ UN DATO EN UN ARRAY PARA PASARLO A UNA VISTA Y ASÍ INFORMAR
                  * AL USUARIO QUE CARGA EL ARCHIVO. 
                  */
@@ -289,6 +327,7 @@ class ExportImportExcelController extends Controller
                 }
                 catch(\Exception $e) {
 
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['carreras'][$row['codigo_carrera']])) {
                         $this->datos_incorrectos['carreras'][$row['codigo_carrera']] = 1;
                     }
@@ -301,6 +340,7 @@ class ExportImportExcelController extends Controller
                     $data_excel_file['codigo_universidad'] = $universidades[$row['codigo_universidad']];
                 }
                 catch(\Exception $ex) {
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['universidades'][$row['codigo_universidad']])) {
                         $this->datos_incorrectos['universidades'][$row['codigo_universidad']] = 1;
                     }
@@ -313,6 +353,7 @@ class ExportImportExcelController extends Controller
                     $data_excel_file['codigo_grado'] = $grados[$row['codigo_grado']];
                 }
                 catch(\Exception $ex) {
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['grados'][$row['codigo_grado']])) {
                         $this->datos_incorrectos['grados'][$row['codigo_grado']] = 1;
                     }
@@ -325,6 +366,7 @@ class ExportImportExcelController extends Controller
                     $data_excel_file['codigo_disciplina'] = $disciplinas[$row['codigo_disciplina']];
                 }
                 catch(\Exception $ex) {
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['disciplinas'][$row['codigo_disciplina']])) {
                         $this->datos_incorrectos['disciplinas'][$row['codigo_disciplina']] = 1;
                     }
@@ -337,6 +379,7 @@ class ExportImportExcelController extends Controller
                     $data_excel_file['codigo_area'] = $areas[$row['codigo_area']];
                 }
                 catch(\Exception $ex) {
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['areas'][$row['codigo_area']])) {
                         $this->datos_incorrectos['areas'][$row['codigo_area']] = 1;
                     }
@@ -349,6 +392,7 @@ class ExportImportExcelController extends Controller
                     $data_excel_file['codigo_agrupacion'] = $agrupaciones[$row['codigo_agrupacion']];
                 }
                 catch(\Exception $ex) {
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['agrupaciones'][$row['codigo_agrupacion']])) {
                         $this->datos_incorrectos['agrupaciones'][$row['codigo_agrupacion']] = 1;
                     }
@@ -361,6 +405,7 @@ class ExportImportExcelController extends Controller
                     $data_excel_file['codigo_sector'] = $sector[$row['codigo_sector']];
                 }
                 catch(\Exception $ex) {
+                    /* SI EL DATO NO ESTÁ SETEADO, LE COLOCA UNO, DE LO CONTARIO SUMA UNO. */
                     if(!isset($this->datos_incorrectos['sectores'][$row['codigo_sector']])) {
                         $this->datos_incorrectos['sectores'][$row['codigo_sector']] = 1;
                     }
@@ -530,7 +575,8 @@ class ExportImportExcelController extends Controller
 
             $repetidos = $this->buscar_segundas_carreras($this->array_datos_archivo);
 
-            $tokens = $this->buscar_tokens_duplicados($this->array_datos_archivo);
+            // $tokens = $this->buscar_tokens_duplicados($this->array_datos_archivo);
+            $tokens = $this->token_duplicados;
 
             // dd($tokens);
             $areas = $this->cantidad_por_area($this->array_datos_archivo);
@@ -542,13 +588,16 @@ class ExportImportExcelController extends Controller
                 'tiempo_consumido' => round(($tiempo_fin - $tiempo_inicio),2).' segundos',
                 'cedulas_repetidas' => [sizeof($repetidos), $repetidos],
                 'tokens_duplicados' => [sizeof($tokens), $tokens],
+                'links_duplicados' => [sizeof($this->links_duplicados), $this->links_duplicados],
                 'totales_por_area'=> [sizeof($areas), $areas],
                 'totales_por_agrupacion' => [sizeof($agrupaciones), $agrupaciones],
                 'totales_por_caso' => $this->cantidad_por_tipo_de_caso($this->array_datos_archivo),
                 'total_de_casos' => sizeof($this->array_datos_archivo)
             ];
 
-            session()->put('data_excel', $this->array_datos_archivo);
+            if($report['total_de_casos'] > 0) {
+                session()->put('data_excel', $this->array_datos_archivo);
+            }
 
             return view('excel.confirmacion-muestra')->with('report', $report);
         }
@@ -574,6 +623,15 @@ class ExportImportExcelController extends Controller
         return $posiciones;
     }
 
+    /**
+     * @param $respuesta Respuesta del usuario al cargar el archivo de la muestra.
+     * 
+     * Recibe una respuesta por parte del usuario para guardar o denegar el archivo de 
+     * la muestra. Los datos recolectados en el archivo de excel se guardan en una
+     * variable de sesión, si el usuario acepta el archivo, los datos se recogen de dicha
+     * variable para almacenarlos en la base de datos; si no lo acepta, la variable
+     * es olvidada para no consumir espacio.
+     */
     public function respuesta_archivo_muestra($respuesta) {
         if(isset($respuesta)){
             if($respuesta == 'SI') {
@@ -599,8 +657,7 @@ class ExportImportExcelController extends Controller
                         $entrevista = Entrevista::create($data);
                         $entrevista->asignarEstado($this->id_estado);
                     }
-                    DB::commit();
-
+                    
                     // Guardar el registro en la bitacora
                     $bitacora = [
                         'transaccion'            =>'I',
@@ -614,6 +671,9 @@ class ExportImportExcelController extends Controller
                     ];
             
                     DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+                    DB::commit();
+                    session()->forget('data_excel');
 
                     Flash::success('El archivo se ha guardado correctamente en la Base de Datos');
                     return redirect(route('encuestas-graduados.index'));
