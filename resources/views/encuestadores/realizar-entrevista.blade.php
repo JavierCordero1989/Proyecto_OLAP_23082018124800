@@ -37,6 +37,16 @@
                 <a href="{!! route('calendario.agendar-cita', [Auth::user()->id, '0a', $entrevista->id, '0b']) !!}" class="btn btn-primary btn-sm col-sm-12">
                     <i class="far fa-calendar-plus"></i> Agendar cita
                 </a>
+                {{-- @if ($entrevista->contactos->count() > 0)
+                    <!-- Botón para agendar cita -->
+                    <a href="{!! route('calendario.agendar-cita', [Auth::user()->id, '0a', $entrevista->id, '0b']) !!}" class="btn btn-primary btn-sm col-sm-12">
+                        <i class="far fa-calendar-plus"></i> Agendar cita
+                    </a>
+                @else
+                    <a href="#" class="btn btn-primary btn-sm col-sm-12" disabled data-toggle="tooltip" title="Debe agregar un contacto primero" data-placement="left">
+                        <i class="far fa-calendar-plus"></i> Agendar cita
+                    </a>
+                @endif --}}
             </div>
         </div>
     </section>

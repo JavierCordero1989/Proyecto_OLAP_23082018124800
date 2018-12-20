@@ -57,7 +57,7 @@
                                     @endif
                                     
                                     @if ($encuesta->contactos->count() > 0)
-                                        <a href="{!! route('encuestas-graduados.administrar-contactos-get', $encuesta->id) !!}" class="btn btn-info btn-xs"data-toggle="tooltip" title="Administrar contactos" data-placement="left"><i class="fas fa-phone-square"></i></a>
+                                        <a href="{!! route('encuestas-graduados.administrar-contactos-get', $encuesta->id) !!}" class="btn btn-info btn-xs" data-toggle="tooltip" title="Administrar contactos" data-placement="left"><i class="fas fa-phone-square"></i></a>
                                     @endif
                                 @endif
                             </div>

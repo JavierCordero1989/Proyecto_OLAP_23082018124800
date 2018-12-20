@@ -33,10 +33,23 @@
                         {{-- <input type="text" class="form-control" v-model="agrupacion" placeholder="Agrupación..."> --}}
                     </div>
                     <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                        <input type="text" class="form-control" v-model="area" placeholder="Área...">
+                        {{-- @php
+                            $temp = array();
+                            foreach($areas as $key => $value) {
+                                $temp[$value] = $value;
+                            }
+                            $areas = $temp;
+                        @endphp --}}
+                        {!! Form::select('codigo_area', $areas, null, ['class' => 'form-control', 'id'=>'codigo_area', 'placeholder'=>'Elija una área', 'v-model'=>'area', 'v-on:change'=>'obtener_disciplinas']) !!}
+
+                        {{-- <input type="text" class="form-control" v-model="area" placeholder="Área..."> --}}
                     </div>
                     <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
-                        <input type="text" class="form-control" v-model="disciplina" placeholder="Disciplina...">
+                        <select class="form-control" v-model="disciplina" id="codigo_disciplina">
+                            <option value="">Elija una disciplina</option>
+                        </select>
+
+                        {{-- <input type="text" class="form-control" v-model="disciplina" placeholder="Disciplina..."> --}}
                     </div>
                     <div class="form-group col-xs-12 col-sm-8 col-sm-offset-2 col-md-3 col-md-offset-0">
                         {!! Form::select('grado', config('options.grade_types'), null, ['class'=>'form-control', 'v-model'=>'grado']) !!}
@@ -323,6 +336,7 @@
 @section('scripts')
     {{-- @include('layouts.datatables_js') --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+
     <script>
         new Vue({
             el: '#app',
@@ -334,7 +348,8 @@
                 lista_de_encuestas: '',
                 encuestador: '',
                 connectedUser: '',
-                lista_agrupaciones: []
+                lista_agrupaciones: [],
+                lista_disciplinas: []
             },
             created: function() {
                 this.getList()
@@ -343,6 +358,30 @@
                 this.lista_agrupaciones = [{id:'', name:'- - - AGRUPACIÓN - - -'},{id:'UCR', name:'UCR'},{id:'UNA', name:'UNA'},{id:'UNED', name:'UNED'},{id:'ITCR', name:'ITCR'},{id:'UTN', name:'UTN'},{id:'PRIVADO', name:'PRIVADO'}]
             },
             methods: {
+                obtener_disciplinas: function() {
+                    if(this.area != "") {
+                        let url = '{{ route("disciplinas.axios", ":id") }}'
+                        url = url.replace(":id", this.area)
+
+                        axios.get(url).then(response => {
+                            let disciplinas = response.data
+                            
+                            $('#codigo_disciplina').empty()
+                            $('#codigo_disciplina').append('<option value="">Elija una disciplina</option>')
+                            
+                            $.each(disciplinas, function(index, item) {
+                                $.each(item, function(a,b) {
+                                    $('#codigo_disciplina').append('<option value="'+b.id+'">'+b.nombre+'</option>')
+                                })
+                            })
+
+                        });
+                    }
+                    else {
+                        $('#codigo_disciplina').empty()
+                        $('#codigo_disciplina').append('<option value="">Elija una disciplina</option>')
+                    }
+                },
                 getList: function() {
                     this.lista_de_encuestas = <?php echo json_encode($listaDeEncuestas); ?>
                 },

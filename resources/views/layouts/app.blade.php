@@ -132,15 +132,30 @@
         @yield('content')
     </div>
 
+    @include('modals.modal-info-creador')
+
     <!-- Main Footer -->
     <footer class="main-footer" style="max-height: 100px;text-align: center">
         <p class="text-center">
-            <strong>Copyright © 2018</strong>
-            <a href="{!! config('global.link_correo_institucional') !!}" target="_blank">{!! config('global.texto_correo_institucional') !!}</a>
-            &nbsp; | &nbsp;
-            <a href="{!! config('global.link_olap') !!}" target="_blank">{!! config('global.texto_olap') !!}</a>
-            &nbsp; | &nbsp;
-            <a href="{!! config('global.link_conare') !!}" target="_blank">{!! config('global.texto_conare') !!}</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Copyright © 2018</strong>
+                    <a href="{!! config('global.link_correo_institucional') !!}" target="_blank">{!! config('global.texto_correo_institucional') !!}</a>
+                    &nbsp; | &nbsp;
+                    <a href="{!! config('global.link_olap') !!}" target="_blank">{!! config('global.texto_olap') !!}</a>
+                    &nbsp; | &nbsp;
+                    <a href="{!! config('global.link_conare') !!}" target="_blank">{!! config('global.texto_conare') !!}</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>Elaborado por: 
+                        <a href="#info-creador-sistema" data-toggle="modal">
+                            <span class="text-success">José Javier Cordero León</span>
+                        </a>
+                    </strong>
+                </div>
+            </div>
         </p>
         {{-- <strong>Copyright © 2018 <a href="{{ config('global.footer_link') }}" target="_blank">{{ config('global.footer_text') }}</a>.</strong> Derechos Reservados. --}}
     </footer>

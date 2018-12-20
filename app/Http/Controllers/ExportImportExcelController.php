@@ -25,7 +25,7 @@ use DB;
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
 */ 
-set_time_limit(600);
+set_time_limit(1800);
 
 class ExportImportExcelController extends Controller
 {

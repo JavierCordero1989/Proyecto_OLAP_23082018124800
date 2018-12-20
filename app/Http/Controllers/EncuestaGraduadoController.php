@@ -35,12 +35,15 @@ class EncuestaGraduadoController extends Controller
 
         session()->forget('ids_encuestas_filtradas');
 
+        $areas = Area::pluck('descriptivo', 'id')->toArray();
+
         $encuestas = EncuestaGraduado::listaDeGraduados()->orderBy('identificacion_graduado', 'ASC')->paginate(25);
-        return view('encuestas_graduados.index')->with('encuestas', $encuestas);
+        return view('encuestas_graduados.index')->with('encuestas', $encuestas)->with('areas', $areas);
     }
 
     /* FUNCION QUE FILTRA LAS ENCUESTAS POR LOS DATOS QUE EL USUARIO INGRESE EN LOS CAMPOS */
     public function filtro_encuestas(Request $request) {
+        // dd($request->all());
         // se sacan todas las encuestas de la base de datos.
         $encuestas = EncuestaGraduado::listaDeGraduados();
 
@@ -129,18 +132,20 @@ class EncuestaGraduadoController extends Controller
         /* COMPRUEBA QUE EL CODIGO DE LA DISCIPLINA TENGA DATOS, LO QUE VIENE ES EL NOMBRE */
         if(isset($request->codigo_disciplina)) {
             //buscar primero las carreras que coincidan con los nombres para obtener los codigos
-            $disciplinas = Disciplina::buscarPorDescriptivo($request->codigo_disciplina)->pluck('id');
+            // $disciplinas = Disciplina::buscarPorDescriptivo($request->codigo_disciplina)->pluck('id');
 
             //buscar las encuestas que coincidan con los codigos encontrados
-            $encuestas = $encuestas->whereIn('codigo_disciplina', $disciplinas);
+            // $encuestas = $encuestas->whereIn('codigo_disciplina', $disciplinas);
+            $encuestas = $encuestas->where('codigo_disciplina', $request->codigo_disciplina);
         }
         /* COMPRUEBA QUE EL CODIGO DEL ÁREA TENGA DATOS, LO QUE VIENE ES EL NOMBRE */
         if(isset($request->codigo_area)) {
             //buscar primero las carreras que coincidan con los nombres para obtener los codigos
-            $areas = Area::buscarPorDescriptivo($request->codigo_area)->pluck('id');
+            // $areas = Area::buscarPorDescriptivo($request->codigo_area)->pluck('id');
 
             //buscar las encuestas que coincidan con los codigos encontrados
-            $encuestas = $encuestas->whereIn('codigo_area', $areas);
+            // $encuestas = $encuestas->whereIn('codigo_area', $areas);
+            $encuestas = $encuestas->where('codigo_area', $request->codigo_area);
         }
         /* COMPRUEBA QUE EL TIPO DE CASO TENGA DATOS, LO QUE VIENE ES EL TIPO DE CASO COMO TAL */
         if(isset($request->tipo_de_caso)) {
@@ -183,13 +188,14 @@ class EncuestaGraduadoController extends Controller
         }
 
         /* DE LAS ENTREVISTAS OBTENIDAS, SE PAGINAN DE 15 EN 15, Y SE ORDENAN ASCENDENTEMENTE POR EL ID */
-        $encuestas = $encuestas->orderBy('id', 'ASC')->paginate(15);
+        $encuestas = $encuestas->orderBy('identificacion_graduado', 'ASC')->paginate(15);
 
 
         // se guardan los ids, para cuando se quiera descargar el reporte en excel.
         session()->put('ids_encuestas_filtradas', $ids_encuestas);
+        $areas = Area::pluck('descriptivo', 'id')->toArray();
 
-        return view('encuestas_graduados.index')->with('encuestas', $encuestas);
+        return view('encuestas_graduados.index')->with('encuestas', $encuestas)->with('areas', $areas);
     }
 
     public function ver_otras_carreras($ids) {
@@ -600,8 +606,8 @@ class EncuestaGraduadoController extends Controller
         */
 
         $encuestador = User::find($id_encuestador);
-
-        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas', 'encuestador'));
+        $areas = Area::pluck('descriptivo', 'id')->toArray();
+        return view('encuestadores.tabla-encuestas-asignadas', compact('listaDeEncuestas', 'encuestador', 'areas'));
     }
 
     /** Permite obtenet todas las encuestas que tienen por estado NO ASIGNADA, mediante los filtros

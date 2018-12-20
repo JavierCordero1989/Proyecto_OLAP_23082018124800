@@ -44,7 +44,11 @@
                             <div class="inputGroupContainer col-xs-6">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fas fa-phone"></i></span>
-                                    {!! Form::select('numero_contacto', $datos_a_vista['contactos'], null, ['class'=>'form-control']) !!}
+                                    @if (sizeof($datos_a_vista['contactos']) > 0)
+                                        {!! Form::select('numero_contacto', $datos_a_vista['contactos'], null, ['class'=>'form-control']) !!}
+                                    @else
+                                        {!! Form::text('numero_contacto', null, ['class'=>'form-control']) !!}
+                                    @endif
                                     {{-- {!! Form::text('numero_contacto', null, ['class'=>'form-control']) !!} --}}
                                 </div>
                             </div>

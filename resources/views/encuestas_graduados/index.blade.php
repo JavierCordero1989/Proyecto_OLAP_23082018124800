@@ -78,12 +78,18 @@
                                 {{-- <input type="text" name="codigo_grado" id="codigo_grado" class="form-control" placeholder="Grado..."> --}}
                             </div>
                             <div class="col-xs-12 col-sm-3">
-                                <input type="text" name="codigo_area" id="codigo_area" class="form-control" placeholder="Área...">
+                                {!! Form::select('codigo_area', $areas, null, ['class' => 'form-control', 'id'=>'codigo_area', 'placeholder'=>'Elija una área']) !!}
                             </div>
+                            {{-- <div class="col-xs-12 col-sm-3">
+                                <input type="text" name="codigo_area" id="codigo_area" class="form-control" placeholder="Área...">
+                            </div> --}}
                         </div>
                         <div class="panel-body">
                             <div class="col-xs-12 col-sm-3">
-                                <input type="text" name="codigo_disciplina" id="codigo_disciplina" class="form-control" placeholder="Disciplina...">
+                                <select class="form-control" name="codigo_disciplina" id="codigo_disciplina">
+                                    <option value="">Elija una disciplina</option>
+                                </select>
+                                {{-- <input type="text" name="codigo_disciplina" id="codigo_disciplina" class="form-control" placeholder="Disciplina..."> --}}
                             </div>
                             <div class="col-xs-12 col-sm-3">
                                 {!! Form::select('tipo_de_caso', config('options.case_types'), null, ['class'=>'form-control', 'id'=>'tipo_de_caso']) !!}
@@ -130,6 +136,38 @@
                 evento.preventDefault();
             }
         });
+
+        $('[name="codigo_area"]').on('change', function() {
+            let value = $(this).val()
+            if(value != "") {
+                // llenar el select con las disciplinas seleccionadas
+                let lista = obtenerDisciplinas(value)
+            }
+            else {
+                $('#codigo_disciplina').empty()
+                $('#codigo_disciplina').append('<option value="">Elija una disciplina</option>')
+            }
+        }) 
+
+        function obtenerDisciplinas(area) {
+            
+            let url = '{{ route("disciplinas.axios", ":id") }}'
+            url = url.replace(":id", area)
+
+            axios.get(url).then(response => {
+                let disciplinas = response.data
+
+                $('#codigo_disciplina').empty()
+                $('#codigo_disciplina').append('<option value="">Elija una disciplina</option>')
+                
+                $.each(disciplinas, function(index, item) {
+                    $.each(item, function(a,b) {
+                        $('#codigo_disciplina').append('<option value="'+b.id+'">'+b.nombre+'</option>')
+                    })
+                })
+                //cargar el select
+            }); 
+        }
 
         function eventoForm(evento) {
             if($('#btn-show').find('i').hasClass('fa-sort-down') && verificarBlancos()){

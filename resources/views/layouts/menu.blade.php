@@ -93,7 +93,7 @@
     <a href="{!! route('ver-calendario', Auth::user()->id) !!}"><i class="far fa-calendar-alt"></i><span> Calendario de citas</span></a>
 </li>
 
-<li class="treeview">
+{{-- <li class="treeview">
     <a href="#">
         <i class="fas fa-clipboard-list"></i>
         <span>Reportes</span>
@@ -110,4 +110,4 @@
             <a href="{!! route('reportes.index') !!}"><i class="fa fa-edit"></i><span>Filtro</span></a>
         </li>
     </ul>
-</li>
+</li> --}}

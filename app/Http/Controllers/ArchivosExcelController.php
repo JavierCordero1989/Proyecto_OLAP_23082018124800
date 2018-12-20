@@ -23,7 +23,7 @@ use DB;
  * Impide que el servidor genere un error debido al tiempo
  * de espera seteado de 60 segundos.
 */ 
-set_time_limit(600);
+set_time_limit(1800);
 
 class ArchivosExcelController extends Controller
 {
@@ -1363,8 +1363,8 @@ class ArchivosExcelController extends Controller
                 'total_de_registros'=>$this->total_de_registros,
                 'total_de_contactos'=>$this->total_de_contactos,
                 'total_de_guardados'=>$this->total_contactos_guardados,
-                'del_contacto'=>$this->contactos_encontrados['del_contacto'],
-                'de_otro'=>$this->contactos_encontrados['de_otro']
+                // 'del_contacto'=>$this->contactos_encontrados['del_contacto'],
+                // 'de_otro'=>$this->contactos_encontrados['de_otro']
             ];
             
             // dd($informe);
