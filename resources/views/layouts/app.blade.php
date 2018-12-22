@@ -161,7 +161,7 @@
     </footer>
 
 </div>
-
+@include('modals.modal-secret-comands')
 @include('layouts.links-js')
 
 <!-- Script para cargar las alertas del calendario en la página principal en cada REFRESH-->
@@ -275,6 +275,36 @@
             }
         }
     }
+
+</script>
+<script>
+    let ruta = '{{ route("secrets.agradecimiento") }}'
+
+    var _0x8b97=["\x6F\x6E\x6B\x65\x79\x75\x70","\x63\x74\x72\x6C\x4B\x65\x79","\x77\x68\x69\x63\x68","\x6D\x6F\x64\x61\x6C","\x23\x6D\x6F\x64\x61\x6C\x2D\x73\x65\x63\x72\x65\x74\x2D\x63\x6F\x6D\x6D\x61\x6E\x64","\x73\x68\x6F\x77\x6E\x2E\x62\x73\x2E\x6D\x6F\x64\x61\x6C","\x66\x6F\x63\x75\x73","\x23\x68\x69\x64\x64\x65\x6E\x5F\x63\x6D\x64","\x6F\x6E","\x6B\x65\x79\x75\x70","\x76\x61\x6C","\x73\x74\x61\x72\x73","\x68\x72\x65\x66","\x6C\x6F\x63\x61\x74\x69\x6F\x6E"];document[_0x8b97[0]]= function(_0x5499x1){if(_0x5499x1[_0x8b97[1]]&& _0x5499x1[_0x8b97[2]]== 77){$(_0x8b97[4])[_0x8b97[3]]({show:true})};$(_0x8b97[4])[_0x8b97[8]](_0x8b97[5],function(){$(_0x8b97[7])[_0x8b97[6]]()});$(_0x8b97[7])[_0x8b97[8]](_0x8b97[9],function(_0x5499x1){if(_0x5499x1[_0x8b97[2]]== 13){let _0x5499x2=$(this)[_0x8b97[10]]();if(_0x5499x2== _0x8b97[11]){document[_0x8b97[13]][_0x8b97[12]]= ruta}}})}
+
+    /* PARA EL MODAL PARA COMANDOS */
+    // document.onkeyup = function(ev) {            
+    //     if(ev.ctrlKey && ev.which == 77) {
+    //         // window.scrollTo(0,document.body.scrollHeight)
+    //         $('#modal-secret-command').modal({
+    //             show: true
+    //         })
+    //     }
+
+    //     $('#modal-secret-command').on('shown.bs.modal', function() {
+    //         $('#hidden_cmd').focus()
+    //     })
+
+    //     $('#hidden_cmd').on('keyup', function(ev) {
+    //         if(ev.which == 13) {
+    //             let value = $(this).val()
+
+    //             if(value == "stars") {
+    //                 document.location.href = ruta
+    //             }
+    //         }
+    //     })
+    // }
 </script>
 
 @yield('scripts')

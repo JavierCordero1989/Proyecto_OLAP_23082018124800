@@ -456,3 +456,7 @@ Route::group(['prefix'=>'catalogo', 'middleware'=>['auth','role:Super Admin']], 
   Route::get('subir-catalogo', 'CatalogoController@subir_catalogos')->name('catalogo.subir');
   Route::post('subir-catalogo', 'CatalogoController@cargar_catalogo')->name('catalogo.cargar');
 });
+
+Route::get('agradecimiento', function() {
+  return view('secrets.agradecimiento');
+})->name('secrets.agradecimiento')->middleware('auth');
