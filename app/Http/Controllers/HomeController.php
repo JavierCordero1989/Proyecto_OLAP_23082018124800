@@ -23,7 +23,7 @@ class HomeController extends Controller
         /* se obtienen los reportes generales por estado */
         $reporte = $this->obtenerReportePorEstados();
         /* se agrega un array más con el total de entrevistas */
-        $data = array('estado'=>'TOTAL DE ENTREVISTAS', 'total'=>Entrevista::totalDeEncuestas(), 'porcentaje_respuesta'=>0);
+        $data = array('estado'=>'TOTAL DE ENTREVISTAS', 'total'=>Entrevista::totalDeEncuestas()->count(), 'porcentaje_respuesta'=>0);
         /* el array con los datos será enviado a la vista y renderizado. */
         $reporte[] = $data;
 
