@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use App\ObservacionesGraduado;
 use Illuminate\Http\Request;
 use App\EncuestaGraduado;
 use App\ContactoGraduado;
 use App\DetalleContacto;
-use App\ObservacionesGraduado;
 use Carbon\Carbon;
+use Faker\Factory;
 use Flash;
 use DB;
-use Faker\Factory;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class EncuestadorController extends Controller
 {
     public function mis_entrevistas($id_encuestador) {
@@ -38,7 +42,6 @@ class EncuestadorController extends Controller
     }
 
     public function actualizar_entrevista($id_entrevista, Request $request) {
-        // dd($request->all());
 
         $entrevista = EncuestaGraduado::find($id_entrevista);
 
@@ -47,41 +50,80 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
         }
 
-        //Cambiar el estado de la entrevista por el del request
-        $cambio_estado = $entrevista->cambiarEstadoDeEncuesta($request->estados);
+        try {
+            DB::beginTransaction();
 
-        if(!$cambio_estado) {
-            Flash::error('No se ha podido cambiar el estado de la entrevista');
-            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
-        }
+            $temp = $entrevista->__toString();
 
-        //si no existen observaciones, agregarla, de lo contrario modificar la existente.
-        $observaciones_entrevista = $entrevista->observaciones;
+            //Cambiar el estado de la entrevista por el del request
+            $cambio_estado = $entrevista->cambiarEstadoDeEncuesta($request->estados);
+    
+            if(!$cambio_estado) {
+                DB::rollback();
 
-        if(sizeof($observaciones_entrevista) == 0) {
-            //Agregar la observación
-            $nueva_observacion = ObservacionesGraduado::create([
-                'id_graduado' => $entrevista->id,
-                'id_usuario' => Auth::user()->id,
-                'observacion' => $request->observacion,
-                'created_at' => Carbon::now()
-            ]);
-        }
-        else {
-            //Modificar la existente
-            $observacion_existente = ObservacionesGraduado::where('id_graduado', $entrevista->id)->first();
-            $observacion_existente->observacion = $request->observacion;
-            $observacion_existente->updated_at = Carbon::now();
-            $cambio_observacion = $observacion_existente->save();
-
-            if(!$cambio_observacion) {
-                Flash::error('No se ha podido agregar la observación a la entrevista');
+                Flash::error('No se ha podido cambiar el estado de la entrevista');
                 return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
             }
-        }
+    
+            //si no existen observaciones, agregarla, de lo contrario modificar la existente.
+            $observaciones_entrevista = $entrevista->observaciones;
+    
+            if(sizeof($observaciones_entrevista) == 0) {
+                //Agregar la observación
+                $nueva_observacion = ObservacionesGraduado::create([
+                    'id_graduado' => $entrevista->id,
+                    'id_usuario' => Auth::user()->id,
+                    'observacion' => $request->observacion,
+                    'created_at' => Carbon::now()
+                ]);
+            }
+            else {
+                //Modificar la existente
+                $observacion_existente = ObservacionesGraduado::where('id_graduado', $entrevista->id)->first();
+                $observacion_existente->observacion = $request->observacion;
+                $observacion_existente->updated_at = Carbon::now();
+                $cambio_observacion = $observacion_existente->save();
+    
+                if(!$cambio_observacion) {
+                    DB::rollback();
 
-        Flash::success('Se han guardado correctamente los cambios');
-        return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
+                    Flash::error('No se ha podido agregar la observación a la entrevista');
+                    return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+                }
+            }
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_graduados',
+                'id_registro_afectado'   =>$entrevista->id,
+                'dato_original'          =>$temp,
+                'dato_nuevo'             =>$entrevista->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('Se han guardado correctamente los cambios');
+            return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
+        }
+        catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: actualizar_entrevista().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
+        }
     }
 
     public function agregar_contacto($id_entrevista) {
@@ -89,19 +131,50 @@ class EncuestadorController extends Controller
     }
 
     public function guardar_contacto($id_entrevista, $id_encuestador, Request $request) {
-        
-        $contacto = ContactoGraduado::create([
-            'identificacion_referencia' => $request->identificacion_referencia,
-            'nombre_referencia'         => $request->nombre_referencia,
-            'parentezco'                => $request->parentezco,
-            'id_graduado'               => $id_entrevista,
-            'created_at'                => \Carbon\Carbon::now()
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $contacto->agregarDetalle($request->informacion_contacto, $request->observacion_contacto);
+            $contacto = ContactoGraduado::create([
+                'identificacion_referencia' => $request->identificacion_referencia,
+                'nombre_referencia'         => $request->nombre_referencia,
+                'parentezco'                => $request->parentezco,
+                'id_graduado'               => $id_entrevista,
+                'created_at'                => Carbon::now()
+            ]);
+    
+            $contacto->agregarDetalle($request->informacion_contacto, $request->observacion_contacto);
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_contactos_graduados',
+                'id_registro_afectado'   =>$contacto->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$contacto->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
-        Flash::success('Se ha guardado correctamente la nueva información de contacto.');
-        return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+            DB::commit();
+
+            Flash::success('Se ha guardado correctamente la nueva información de contacto.');
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
+        catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: guardar_contacto().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
     }
 
     public function agregar_detalle_contacto($id_contacto, $id_entrevista) {
@@ -116,10 +189,43 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
         }
 
-        $contacto->agregarDetalle($request->contacto, $request->observacion);
+        try {
+            DB::beginTransaction();
 
-        Flash::success('Se ha agregado información al contacto correctamente.');
-        return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+            $temp = $contacto->__toString();
+
+            $contacto->agregarDetalle($request->contacto, $request->observacion);
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_detalle_contacto',
+                'id_registro_afectado'   =>$contacto->id,
+                'dato_original'          =>$temp,
+                'dato_nuevo'             =>$contacto->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('Se ha agregado información al contacto correctamente.');
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: guardar_detalle_contacto().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
     }
 
     public function editar_detalle_contacto($id_detalle_contacto, $id_entrevista) {
@@ -141,13 +247,46 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
         }
 
-        $detalle->contacto = $request->contacto;
-        $detalle->observacion = $request->observacion;
-        $detalle->updated_at = Carbon::now();
-        $detalle->save();
+        try {
+            DB::beginTransaction();
 
-        Flash::success('La información del contacto se ha modificado correctamente.');
-        return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+            $temp = $detalle->__toString();
+
+            $detalle->contacto = $request->contacto;
+            $detalle->observacion = $request->observacion;
+            $detalle->updated_at = Carbon::now();
+            $detalle->save();
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_detalle_contacto',
+                'id_registro_afectado'   =>$detalle->id,
+                'dato_original'          =>$temp,
+                'dato_nuevo'             =>$detalle->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+            
+            Flash::success('La información del contacto se ha modificado correctamente.');
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: actualizar_detalle_contacto().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
     }
 
     public function borrar_detalle_contacto($id_detalle_contacto, $id_entrevista) {
@@ -158,12 +297,43 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
         }
 
-        $detalle->estado = 'E';
-        $detalle->deleted_at = Carbon::now();
-        $detalle->save();
+        try {
+            DB::beginTransaction();
 
-        Flash::success('La información del contacto se ha eliminado.');
-        return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+            $detalle->estado = 'E';
+            $detalle->deleted_at = Carbon::now();
+            $detalle->save();
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'D',
+                'tabla'                  =>'tbl_detalle_contacto',
+                'id_registro_afectado'   =>$detalle->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$detalle->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('La información del contacto se ha eliminado.');
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: borrar_detalle_contacto().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
     }
 
     public function editar_contacto_entrevista($id_contacto, $id_entrevista) {
@@ -185,14 +355,47 @@ class EncuestadorController extends Controller
             return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
         }
 
-        $contacto->identificacion_referencia = $request->identificacion_referencia;
-        $contacto->nombre_referencia = $request->nombre_referencia;
-        $contacto->parentezco = $request->parentezco;
-        $contacto->updated_at = Carbon::now();
-        $contacto->save();
+        try {
+            DB::beginTransaction();
 
-        Flash::success('El contacto ha sido actualizado correctamente.');
-        return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+            $temp = $contacto->__toString();
+
+            $contacto->identificacion_referencia = $request->identificacion_referencia;
+            $contacto->nombre_referencia = $request->nombre_referencia;
+            $contacto->parentezco = $request->parentezco;
+            $contacto->updated_at = Carbon::now();
+            $contacto->save();
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_contactos_graduados',
+                'id_registro_afectado'   =>$contacto->id,
+                'dato_original'          =>$temp,
+                'dato_nuevo'             =>$contacto->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('El contacto ha sido actualizado correctamente.');
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: actualizar_contacto_entrevista().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.realizar-entrevista', $id_entrevista));
+        }
     }
 
     public function reportes_de_encuestador($id_encuestador) {

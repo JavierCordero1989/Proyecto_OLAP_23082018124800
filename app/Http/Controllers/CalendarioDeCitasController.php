@@ -2,26 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\EncuestaGraduado as Entrevista;
-use App\User as Usuario;
-use Flash;
-use Carbon\Carbon;
 use App\CitaCalendario as Cita;
-
-/* para utilizar un begin transaction, se usa al inicio de la sentencia 
-DB::beginTransaction();
-
-para despues de eso, cuando las transacciones han sido completadas, usar
-
-DB::commit();
-
-Pero si las transacciones salen mal por algun motivo, se puede usar un
-
-DB::rollback();
-
-*/
-
+use Illuminate\Http\Request;
+use App\User as Usuario;
+use Carbon\Carbon;
+use Flash;
+use DB;
 
 /**
  * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
@@ -29,17 +16,25 @@ DB::rollback();
  */
 class CalendarioDeCitasController extends Controller
 {
+    /**variable para guardar la ruta de la vista para agendar cita */
     private $vista_agendar_cita;
 
+    /** constructor de la clase, para iniciar la variable de la ruta para la vista */
     public function __construct() {
         $this->vista_agendar_cita = 'calendario-de-citas.agendar-cita-entrevista';
     }
 
+    /**
+     * @param $id_usuario ID del usuario que se desea obtener las citas.
+     * Permite obtener las citas del calendario agendadas por medio del ID del usuario, y
+     * si el usuario es encuestador, solo mostrará las citas de ese usuario.
+     */
     public function ver_calendario($id_usuario) {
 
         $user = Usuario::find($id_usuario);
 
         if(empty($user)) {
+            Flash::error('No se ha encontrado el usuario');
             return redirect(route('home'));
         }
 
@@ -53,10 +48,19 @@ class CalendarioDeCitasController extends Controller
             $citas = Cita::all();
         }
 
+        /* se devuelven las citas en formato JSON para cargarlas por la vista */
         return view('calendario-de-citas.calendario')->with('citas', json_encode($citas));
         // return view('calendario-de-citas.calendario', compact('citas'));
     }
 
+    /**
+     * @param $encuestador     Encuestador que hace la encuesta
+     * @param $mal_encuestador ID para regresar a una vista determinada
+     * @param $entrevista      Entrevista a realizarse
+     * @param $mal_entrevista  ID para regresar a una vista determinada
+     * 
+     * Permite agendar una entrevista en el calendario
+     */
     public function agendar_cita_a_entrevista($encuestador, $mal_encuestador, $entrevista, $mal_entrevista) {
 
         /* Busca la entrevista en la base de datos */
@@ -65,7 +69,6 @@ class CalendarioDeCitasController extends Controller
         /* Si la entrevista encontrada es un objeto vacio devuelve un error*/
         if(empty($entrevista_cita)) {
             Flash::error('La entrevista que busca no existe');
-            // return redirect(route($this->validar_ruta_mala_entrevista($mal_entrevista), $entrevista));
             return redirect(route(config('calendar-routes.'.$mal_entrevista), $entrevista));
         }
 
@@ -116,21 +119,54 @@ class CalendarioDeCitasController extends Controller
      */
     public function guardar_cita_de_entrevista($entrevista, $encuestador, Request $request) {
 
-        $fecha_hora = Carbon::createFromFormat('Y-m-d H:i', ($request->datepicker.' '.$request->timepicker))->format('Y-m-d H:i:s');
+        try {
+            DB::beginTransaction();
 
-        $cita = Cita::create([
-            'fecha_hora' => $fecha_hora,
-            'numero_contacto' => $request->numero_contacto,
-            'observacion' => $request->observacion_de_cita,
-            'estado' => 'P',
-            'id_encuestador' => $encuestador,
-            'id_entrevista' => $entrevista,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
+            $fecha_hora = Carbon::createFromFormat('Y-m-d H:i', ($request->datepicker.' '.$request->timepicker))->format('Y-m-d H:i:s');
 
-        Flash::success('La cita ha sido guardada con éxito.');
-        return redirect(route('ver-calendario', $encuestador));
+            $cita = Cita::create([
+                'fecha_hora' => $fecha_hora,
+                'numero_contacto' => $request->numero_contacto,
+                'observacion' => $request->observacion_de_cita,
+                'estado' => 'P',
+                'id_encuestador' => $encuestador,
+                'id_entrevista' => $entrevista,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_calendario_de_citas',
+                'id_registro_afectado'   =>$cita->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$cita->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+            
+            DB::commit();
+
+            Flash::success('La cita ha sido guardada con éxito.');
+            return redirect(route('ver-calendario', $encuestador));
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: guardar_cita_de_entrevista().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('home'));
+        }
     }
 
     public function cambiar_estado_de_cita($id_cita, $encuestador, Request $request) {
@@ -141,40 +177,100 @@ class CalendarioDeCitasController extends Controller
             return redirect(route('ver-calendario', $encuestador));
         }
 
-        $cita->estado = $request->estado_nuevo;
-        $cita->save();
+        try {
+            DB::beginTransaction();
 
-        Flash::success('Ha cambiado el estado de la cita');
-        return redirect(route('ver-calendario', $encuestador));
+            $temp = $cita;
+
+            $cita->estado = $request->estado_nuevo;
+            $cita->updated_at = Carbon::now();
+            $cita->save();
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_calendario_de_citas',
+                'id_registro_afectado'   =>$cita->id,
+                'dato_original'          =>$temp->__toString(),
+                'dato_nuevo'             =>$cita->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('Ha cambiado el estado de la cita');
+            return redirect(route('ver-calendario', $encuestador));    
+        } catch (\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: cambiar_estado_de_cita().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('home'));
+        }
     }
 
     public function agendar_cita_desde_calendario(Request $request) {
 
         // dd($request->all());
 
-        $fecha = Carbon::createFromFormat('Y-m-d H:i', ($request->fecha_seleccionada.' '.$request->timepicker))->format('Y-m-d H:i:s');
-        // $array = explode('T', $request->fecha_seleccionada);
+        try {
+            DB::beginTransaction();
+    
+            $fecha = Carbon::createFromFormat('Y-m-d H:i', ($request->fecha_seleccionada.' '.$request->timepicker))->format('Y-m-d H:i:s');
+    
+            $data = [
+                'fecha_hora'        => $fecha,
+                'numero_contacto'   => $request->numero_contacto,
+                'observacion'       => $request->observacion_de_cita,
+                'estado'            => 'P',
+                'id_encuestador'    => $request->usuario,
+                'id_entrevista'     => null
+            ];
+    
+            $cita_creada = Cita::create($data);
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_calendario_de_citas',
+                'id_registro_afectado'   =>$cita_creada->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>'Cita nueva agregada: ' . $cita_creada->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
-        // La fecha obtenida se pasa a un formato para poder convertirla a formato de mysql
-        // $fecha = Carbon::createFromFormat('Y-m-d', $array[0])->format('d-m-Y');
-        // Se obtiene la hora ingresada en el form y se pasa a formato de mysql
-        // $hora = $this->convertir_hora_24($request->hora_de_cita);
-        // Se unen la fecha y la hora en formato mysql
-        // $fecha_hora = $this->fecha_hora_mysql($fecha, $hora);
+            DB::commit();
 
-        $data = [
-            'fecha_hora'        => $fecha,
-            'numero_contacto'   => $request->numero_contacto,
-            'observacion'       => $request->observacion_de_cita,
-            'estado'            => 'P',
-            'id_encuestador'    => $request->usuario,
-            'id_entrevista'     => null
-        ];
+            Flash::success('La cita ha sido agendada');
+            return redirect(route('ver-calendario', $request->usuario));
 
-        $cita_creada = Cita::create($data);
+        } catch (\Exception $ex) {
+            DB::rollback();
 
-        Flash::success('La cita ha sido agendada');
-        return redirect(route('ver-calendario', $request->usuario));
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: agendar_cita_desde_calendario().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('home'));
+        }
     }
 
     public function obtener_citas_calendario(Request $request) {
@@ -187,6 +283,8 @@ class CalendarioDeCitasController extends Controller
                 'count'=>0,
                 'citas'=>[]
             ];
+
+            return $data;
         }
 
         $citas = null;
@@ -218,53 +316,6 @@ class CalendarioDeCitasController extends Controller
 
         return $data;
     }
-
-    // /** Este método permite obtener mediante AJAX las citas del día, para que aparezcan las mismas
-    //  * en la vista principal. Cada vez que la aplicación se refresque, se llama a este método.
-    //  * @param Request $request Datos enviados por la petición AJAX
-    //  * @return response Una respuesta con datos en formato JSON.
-    //  */
-    // public function obtener_citas_calendario(Request $request) {
-    //     if($request->ajax()) {
-    //         dd($request->all());
-    //         $usuario = Usuario::find($request->id);
-
-    //         if(empty($usuario)) {
-    //             $data = [
-    //                 'count' => 0,
-    //                 'citas' => []
-    //             ];
-    //         }
-
-    //         $citas;
-
-    //         if($usuario->hasRole('Encuestador')) {
-    //             $citas = Cita::listaDePendientes()->where('id_encuestador', $usuario->id)->get();
-    //         }
-    //         else {
-    //             $citas = Cita::listaDePendientes()->get(); // Se obtienen todas las citas pendientes.
-    //         }
-
-    //         $citas_del_dia = []; //Arreglo con las citas que se filtrarán por fecha
-
-    //         //Se recorren las citas obtenidas de la BD
-    //         foreach($citas as $cita) {
-    //             // Se compara cada fecha de la cita contra la fecha del día
-    //             if($cita->getFecha() == Carbon::now()->format('Y-m-d')) {
-    //                 $citas_del_dia[] = $cita; //Se guarda la fecha dentro del array
-    //             }
-    //         }
-
-    //         // Se crea un nuevo array con los datos que se necesitan en la vista
-    //         $data = [
-    //             'count' => count($citas_del_dia),
-    //             'citas' => $citas_del_dia
-    //         ];
-
-    //         //Se regresa la respuesta a la petición AJAX
-    //         return response()->json($data);
-    //     }
-    // }
 
     /** Convierte la fecha obtenida en un formato para guardarlo en MYSQL */
     private function convertir_fecha_mysql($fecha) {

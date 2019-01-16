@@ -18,6 +18,10 @@ use DB;
 */ 
 set_time_limit(1800);
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class CatalogoController extends Controller
 {
     private $archivos_subidos = array();
@@ -28,8 +32,8 @@ class CatalogoController extends Controller
     }
 
     public function cargar_catalogo(Request $request) {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             /* COMPROBAR QUE VIENE UN ARCHIVO DE AREAS */
             if(isset($request->catalogo_areas)) {
                 $archivo = $request->file('catalogo_areas');
@@ -250,7 +254,15 @@ class CatalogoController extends Controller
         }
         catch(\Exception $ex) {
             DB::rollback();
-            Flash::error('Ha ocurrido un error en la carga. Contacte al administrador y proporcione la siguiente información:<br><br>ERROR: '. $ex->getMessage());
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: cargar_catalogo().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
             return view('catalogo.subir-catalogos');
         }
     }

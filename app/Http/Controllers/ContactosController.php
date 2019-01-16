@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ContactoGraduado;
-use Flash;
 use App\EncuestaGraduado;
-use DB;
 use App\DetalleContacto;
+use Carbon\Carbon;
+use Flash;
+use DB;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class ContactosController extends Controller
 {
     /**
@@ -59,24 +64,61 @@ class ContactosController extends Controller
             return redirect(route('encuestas-graduados.administrar-contactos-get', $entrevista->id));
         }
 
-        if(isset($request->identificacion_referencia)) {
-            $contacto->identificacion_referencia = $request->identificacion_referencia;
-        }
-        if(isset($request->nombre_referencia)) {
-            $contacto->nombre_referencia = $request->nombre_referencia;
-        }
-        if(isset($request->parentezco)) {
-            $contacto->parentezco = $request->parentezco;
-        }
+        try {
+            DB::beginTransaction();
 
-        $actualizo = $contacto->save();
+            $temp = $contacto;
 
-        if($actualizo) {
-            Flash::success('La información ha sido actualizada correctamente.');
-            return redirect(route('encuestas-graduados.administrar-contactos-get', $entrevista->id));
+            if(isset($request->identificacion_referencia)) {
+                $contacto->identificacion_referencia = $request->identificacion_referencia;
+            }
+            if(isset($request->nombre_referencia)) {
+                $contacto->nombre_referencia = $request->nombre_referencia;
+            }
+            if(isset($request->parentezco)) {
+                $contacto->parentezco = $request->parentezco;
+            }
+    
+            $actualizo = $contacto->save();
+    
+            if($actualizo) {
+                // Guardar el registro en la bitacora
+                $bitacora = [
+                    'transaccion'            =>'U',
+                    'tabla'                  =>'tbl_contactos_graduados',
+                    'id_registro_afectado'   =>$contacto->id,
+                    'dato_original'          =>$temp->__toString(),
+                    'dato_nuevo'             =>$contacto->__toString(),
+                    'fecha_hora_transaccion' =>Carbon::now(),
+                    'id_usuario'             =>Auth::user()->user_code,
+                    'created_at'             =>Carbon::now()
+                ];
+        
+                DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+                DB::commit();
+
+                Flash::success('La información ha sido actualizada correctamente.');
+                return redirect(route('encuestas-graduados.administrar-contactos-get', $entrevista->id));
+            }
+            else {
+                DB::rollback();
+
+                Flash::warning('Ha ocurrido un error y no se ha podido actualizar la información. Revise su conexión a internet o contacte al administrador');
+                return redirect(route('encuestas-graduados.administrar-contactos-get', $entrevista->id));
+            }
         }
-        else {
-            Flash::warning('Ha ocurrido un error y no se ha podido actualizar la información. Revise su conexión a internet o contacte al administrador');
+        catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: editar_contacto_post().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
             return redirect(route('encuestas-graduados.administrar-contactos-get', $entrevista->id));
         }
     } // Cierre de la función editar_contacto_post.
@@ -134,6 +176,20 @@ class ContactosController extends Controller
 
             $detalle = DetalleContacto::create($data);
 
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_contactos_graduados',
+                'id_registro_afectado'   =>$contacto->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$contacto->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
             DB::commit();
 
             Flash::success('Se ha agregado la información correctamente.');
@@ -146,7 +202,7 @@ class ContactosController extends Controller
             $mensaje .= $ex->getMessage();
             $mensaje .= '</u>.<br>Controlador: ';
             $mensaje .= $ex->getFile();
-            $mensaje .= '<br>Función: guardar_contacto_post.<br>Línea: ';
+            $mensaje .= '<br>Función: guardar_contacto_post().<br>Línea: ';
             $mensaje .= $ex->getLine();
 
             Flash::error($mensaje);
@@ -214,6 +270,20 @@ class ContactosController extends Controller
     
             $detalle = DetalleContacto::create($data);
 
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_detalle_contacto',
+                'id_registro_afectado'   =>$detalle->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$detalle->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
             DB::commit();
 
             Flash::success('Se ha agregado la información correctamente.');
@@ -226,7 +296,7 @@ class ContactosController extends Controller
             $mensaje .= $ex->getMessage();
             $mensaje .= '</u>.<br>Controlador: ';
             $mensaje .= $ex->getFile();
-            $mensaje .= '<br>Función: guardar_contacto_post.<br>Línea: ';
+            $mensaje .= '<br>Función: guardar_detalle_contacto_post().<br>Línea: ';
             $mensaje .= $ex->getLine();
 
             Flash::error($mensaje);
@@ -283,11 +353,27 @@ class ContactosController extends Controller
         try {
             DB::beginTransaction();
         
+            $temp = $detalle;
+
             /* se actualiza el registro de detalle encontrado. */
             $detalle->contacto = $request->contacto;
             $detalle->observacion = $request->observacion;
             $detalle->estado = $request->estado;
             $detalle->save();
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_detalle_contacto',
+                'id_registro_afectado'   =>$detalle->id,
+                'dato_original'          =>$temp->__toString(),
+                'dato_nuevo'             =>$detalle->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
             DB::commit();
 
@@ -300,7 +386,7 @@ class ContactosController extends Controller
             $mensaje .= $ex->getMessage();
             $mensaje .= '</u>.<br>Controlador: ';
             $mensaje .= $ex->getFile();
-            $mensaje .= '<br>Función: guardar_contacto_post.<br>Línea: ';
+            $mensaje .= '<br>Función: editar_detalle_contacto_post().<br>Línea: ';
             $mensaje .= $ex->getLine();
 
             Flash::error($mensaje);

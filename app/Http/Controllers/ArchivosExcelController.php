@@ -25,807 +25,15 @@ use DB;
 */ 
 set_time_limit(1800);
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class ArchivosExcelController extends Controller
 {
     private $reporte = array();
     private $registros_totales = 0;
     private $cedula_graduado = '';
-
-    // public function subir_archivo_de_contactos(Request $request) {
-    //     if($request->hasFile('archivo_contactos')) {
-    //         $archivo = $request->file('archivo_contactos');
-
-    //         Excel::load($archivo, function ($reader) {
-    //             foreach ($reader->get() as $key => $row) {
-
-                    
-
-    //                 /* se obtiene la cedula de la columna */
-    //                 $identificacion = $row['identificacion'];
-    //                 $this->cedula_graduado = $row['identificacion'];
-    //                 $ids_graduados = $this->buscar_graduado($identificacion);
-
-    //                 /* si no se encuentra un registro con la cedula obtenida, se salta el registro de informacion. */
-    //                 if(sizeof($ids_graduados) <= 0) {
-    //                     $this->reporte['graduados_no_encontrados'][] = 'El graduado con cédula '.$identificacion.' no ha sido encontrado en los registros.';
-    //                     continue;
-    //                 }
-
-    //                 /* suma uno a los registros para un conteo. */
-    //                 $this->registros_totales++;
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS RESIDENCIALES ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['residencial_1'])){
-    //                     $contactos[] = $row['residencial_1'];
-    //                 }
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['residencial_2'])) {
-    //                     $contactos[] = $row['residencial_2'];
-    //                 }
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['residencial_3'])) {
-    //                     $contactos[] = $row['residencial_3'];
-    //                 }
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['residencial_4'])) {
-    //                     $contactos[] = $row['residencial_4'];
-    //                 }
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['residencial_5'])) {
-    //                     $contactos[] = $row['residencial_5'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Residencial',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE TIPO RESIDENCIAL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS CELULARES ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_1'])){
-    //                     $contactos[] = $row['celular_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_2'])){
-    //                     $contactos[] = $row['celular_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_3'])){
-    //                     $contactos[] = $row['celular_3'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_4'])){
-    //                     $contactos[] = $row['celular_4'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_5'])){
-    //                     $contactos[] = $row['celular_5'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Celular',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE TIPO CELULAR */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS CORREOS ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_1'])){
-    //                     $contactos[] = $row['correo_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_2'])){
-    //                     $contactos[] = $row['correo_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_3'])){
-    //                     $contactos[] = $row['correo_3'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_4'])){
-    //                     $contactos[] = $row['correo_4'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Correo electrónico',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE TIPO CORREO ELECTRONICO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-                    
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DE LA MADRE ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_madre_1'])){
-    //                     $contactos[] = $row['telefono_madre_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_madre_2'])){
-    //                     $contactos[] = $row['telefono_madre_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_madre_1'])){
-    //                     $contactos[] = $row['celular_madre_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_madre_2'])){
-    //                     $contactos[] = $row['celular_madre_2'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) { 
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_madre'],
-    //                         'nombre_referencia' => $row['nombre_madre'],
-    //                         'parentezco' => 'Madre',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LA MADRE */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL PADRE ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_padre_1'])){
-    //                     $contactos[] = $row['telefono_padre_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_padre_2'])){
-    //                     $contactos[] = $row['telefono_padre_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_padre_1'])){
-    //                     $contactos[] = $row['celular_padre_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_padre_2'])){
-    //                     $contactos[] = $row['celular_padre_2'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_padre'],
-    //                         'nombre_referencia' => $row['nombre_padre'],
-    //                         'parentezco' => 'Padre',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL PADRE */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL CONYUGE ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_conyuge_1'])){
-    //                     $contactos[] = $row['telefono_conyuge_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_conyuge_2'])){
-    //                     $contactos[] = $row['telefono_conyuge_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_conyuge_1'])){
-    //                     $contactos[] = $row['celular_conyuge_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_conyuge_2'])){
-    //                     $contactos[] = $row['celular_conyuge_2'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_conyuge'],
-    //                         'nombre_referencia' => $row['nombre_conyuge'],
-    //                         'parentezco' => 'Conyuge',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL CONYUGE */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HIJO 1 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_1_a'])){
-    //                     $contactos[] = $row['telefono_hijo_1_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['telefono_hijo_1_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['celular_hijo_1_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['celular_hijo_1_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => ,
-    //                         'nombre_referencia' => ,
-    //                         'parentezco' => 'Hijo 1',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HIJO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HIJO 2 ----- */
-    //                 $contactos = array();
-
-    
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_2_a'])){
-    //                     $contactos[] = $row['telefono_hijo_2_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_2_b'])){
-    //                     $contactos[] = $row['telefono_hijo_2_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_2_c'])){
-    //                     $contactos[] = $row['celular_hijo_2_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_2_d'])){
-    //                     $contactos[] = $row['celular_hijo_2_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hijo_2'],
-    //                         'nombre_referencia' => $row['nombre_hijo_2'],
-    //                         'parentezco' => 'Hijo 2',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HIJO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HIJO 3 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_3_a'])){
-    //                     $contactos[] = $row['telefono_hijo_3_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_3_b'])){
-    //                     $contactos[] = $row['telefono_hijo_3_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_3_c'])){
-    //                     $contactos[] = $row['celular_hijo_3_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_3_d'])){
-    //                     $contactos[] = $row['celular_hijo_3_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hijo_3'],
-    //                         'nombre_referencia' => $row['nombre_hijo_3'],
-    //                         'parentezco' => 'Hijo 3',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HIJO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HIJO 4 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_4_a'])){
-    //                     $contactos[] = $row['telefono_hijo_4_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_4_b'])){
-    //                     $contactos[] = $row['telefono_hijo_4_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_4_c'])){
-    //                     $contactos[] = $row['celular_hijo_4_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_4_d'])){
-    //                     $contactos[] = $row['celular_hijo_4_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hijo_4'],
-    //                         'nombre_referencia' => $row['nombre_hijo_4'],
-    //                         'parentezco' => 'Hijo 4',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HIJO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HIJO 5 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_5_a'])){
-    //                     $contactos[] = $row['telefono_hijo_5_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hijo_5_b'])){
-    //                     $contactos[] = $row['telefono_hijo_5_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_5_c'])){
-    //                     $contactos[] = $row['celular_hijo_5_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hijo_5_d'])){
-    //                     $contactos[] = $row['celular_hijo_5_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hijo_5'],
-    //                         'nombre_referencia' => $row['nombre_hijo_5'],
-    //                         'parentezco' => 'Hijo 5',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HIJO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HERMANO 1 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_1_a'])){
-    //                     $contactos[] = $row['telefono_hermano_1_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_1_b'])){
-    //                     $contactos[] = $row['telefono_hermano_1_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_1_c'])){
-    //                     $contactos[] = $row['celular_hermano_1_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_1_d'])){
-    //                     $contactos[] = $row['celular_hermano_1_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hermano_1'],
-    //                         'nombre_referencia' => $row['nombre_hermano_1'],
-    //                         'parentezco' => 'Hermano 1',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HERMANO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HERMANO 2 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_2_a'])){
-    //                     $contactos[] = $row['telefono_hermano_2_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_2_b'])){
-    //                     $contactos[] = $row['telefono_hermano_2_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_2_c'])){
-    //                     $contactos[] = $row['celular_hermano_2_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_2_d'])){
-    //                     $contactos[] = $row['celular_hermano_2_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hermano_2'],
-    //                         'nombre_referencia' => $row['nombre_hermano_2'],
-    //                         'parentezco' => 'Hermano 2',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HERMANO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HERMANO 3 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_3_a'])){
-    //                     $contactos[] = $row['telefono_hermano_3_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_3_b'])){
-    //                     $contactos[] = $row['telefono_hermano_3_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_3_c'])){
-    //                     $contactos[] = $row['celular_hermano_3_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_3_d'])){
-    //                     $contactos[] = $row['celular_hermano_3_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hermano_3'],
-    //                         'nombre_referencia' => $row['nombre_hermano_3'],
-    //                         'parentezco' => 'Hermano 3',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HERMANO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HERMANO 4 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_4_a'])){
-    //                     $contactos[] = $row['telefono_hermano_4_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_4_b'])){
-    //                     $contactos[] = $row['telefono_hermano_4_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_4_c'])){
-    //                     $contactos[] = $row['celular_hermano_4_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_4_d'])){
-    //                     $contactos[] = $row['celular_hermano_4_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hermano_4'],
-    //                         'nombre_referencia' => $row['nombre_hermano_4'],
-    //                         'parentezco' => 'Hermano 4',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HERMANO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS Y CELULARES DEL HERMANO 5 ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_5_a'])){
-    //                     $contactos[] = $row['telefono_hermano_5_a'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_hermano_5_b'])){
-    //                     $contactos[] = $row['telefono_hermano_5_b'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_5_c'])){
-    //                     $contactos[] = $row['celular_hermano_5_c'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['celular_hermano_5_d'])){
-    //                     $contactos[] = $row['celular_hermano_5_d'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => $row['cedula_hermano_5'],
-    //                         'nombre_referencia' => $row['nombre_hermano_5'],
-    //                         'parentezco' => 'Hermano 5',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DEL HERMANO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS CORREOS DE CONTACTO DE PERFIL ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_p_1'])){
-    //                     $contactos[] = $row['correo_p_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_p_2'])){
-    //                     $contactos[] = $row['correo_p_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_p_3'])){
-    //                     $contactos[] = $row['correo_p_3'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_p_4'])){
-    //                     $contactos[] = $row['correo_p_4'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Correos Perfil',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS CORREOS DEL ARCHIVO DE PERFIL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-                    
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DEL ARCHIVO DE PERFIL ----- */
-    //                 $contactos = array();
-    
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_1'])){
-    //                     $contactos[] = $row['telefono_p_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_2'])){
-    //                     $contactos[] = $row['telefono_p_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_3'])){
-    //                     $contactos[] = $row['telefono_p_3'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_4'])){
-    //                     $contactos[] = $row['telefono_p_4'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_5'])){
-    //                     $contactos[] = $row['telefono_p_5'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_6'])){
-    //                     $contactos[] = $row['telefono_p_6'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_7'])){
-    //                     $contactos[] = $row['telefono_p_7'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_8'])){
-    //                     $contactos[] = $row['telefono_p_8'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_p_9'])){
-    //                     $contactos[] = $row['telefono_p_9'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Teléfonos Perfil',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS TELEFONOS DEL ARCHIVO DE PERFIL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-                    
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DE CONTACTO DEL ARCHIVO DE PERFIL ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['otro_p_numero_1'])){
-    //                     $contactos[] = $row['otro_p_numero_1'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => $row['otro_p_nombre_1'],
-    //                         'parentezco' => 'Teléfono Contacto 1 Perfil',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS TELEFONOS DEL ARCHIVO DE PERFIL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DE CONTACTO DEL ARCHIVO DE PERFIL ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['otro_p_numero_2'])){
-    //                     $contactos[] = $row['otro_p_numero_2'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => $row['otro_p_nombre_2'],
-    //                         'parentezco' => 'Teléfono Contacto 2 Perfil',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS TELEFONOS DEL ARCHIVO DE PERFIL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DE CONTACTO DEL ARCHIVO DE PERFIL ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['otro_p_numero_3'])){
-    //                     $contactos[] = $row['otro_p_numero_3'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => $row['otro_p_nombre_3'],
-    //                         'parentezco' => 'Teléfono Contacto 2 Perfil',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS TELEFONOS DEL ARCHIVO DE PERFIL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DE CONTACTO DEL ARCHIVO DE PERFIL ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['otro_p_numero_4'])){
-    //                     $contactos[] = $row['otro_p_numero_4'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => $row['otro_p_nombre_4'],
-    //                         'parentezco' => 'Teléfono Contacto 2 Perfil',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS TELEFONOS DEL ARCHIVO DE PERFIL */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DE CONTACTO DEL ARCHIVO DE COLEGIO ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_colegio_1'])){
-    //                     $contactos[] = $row['telefono_colegio_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_colegio_2'])){
-    //                     $contactos[] = $row['telefono_colegio_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['telefono_colegio_3'])){
-    //                     $contactos[] = $row['telefono_colegio_3'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Teléfonos Colegio',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS TELEFONOS DEL ARCHIVO DE ESCUELA Y COLEGIO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS CORREOS DE CONTACTO DEL ARCHIVO DE COLEGIO ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_colegio_1'])){
-    //                     $contactos[] = $row['correo_colegio_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, $row['correo_colegio_2'])){
-    //                     $contactos[] = $row['correo_colegio_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['correo_colegio_3'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Correos Colegio',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS CORREOS DEL ARCHIVO DE ESCUELA Y COLEGIO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS TELEFONOS DE CONTACTO DEL ARCHIVO DE ESCUELA ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['telefono_escuela_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['telefono_escuela_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['telefono_escuela_3'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Teléfonos Escuela',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS CORREOS DEL ARCHIVO DE ESCUELA Y COLEGIO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 /* ----- SE GUARDA LA INFORMACION DE CONTACTO DE LOS CORREOS DE CONTACTO DEL ARCHIVO DE ESCUELA ----- */
-    //                 $contactos = array();
-
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['correo_escuela_1'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['correo_escuela_2'];
-    //                 }
-    //                 if($this->verificar_contacto($ids_graduados, )){
-    //                     $contactos[] = $row['correo_escuela_3'];
-    //                 }
-
-    //                 if(sizeof($contactos) > 0) {
-    //                     $contactoGraduado = [
-    //                         'identificacion_referencia' => '',
-    //                         'nombre_referencia' => '',
-    //                         'parentezco' => 'Correos Escuela',
-    //                         'id_graduado' => $ids_graduados[0]
-    //                     ];
-    
-    //                     /* SE GUARDA EL CONTACTO DE LA INFORMACION DE LOS CORREOS DEL ARCHIVO DE ESCUELA Y COLEGIO */
-    //                     $this->guardar_contacto($contactoGraduado ,$contactos);
-    //                 }
-
-    //                 //FIN DEL ARCHIVO
-    //             }
-    //         });
-
-    //         $reporte['total_de_registros'] = $this->registros_totales;
-
-    //         dd($reporte);
-
-    //         Flash::success('Se ha guardado el archivo de contactos. Abajo verá un reporte de los datos.');
-    //         return view('excel.reporte-archivo-contactos')->with('reporte', $reporte);
-    //     }
-    // }
-
-    private function buscar_graduado($identificacion) {
-        $graduado = EncuestaGraduado::where('identificacion_graduado', $identificacion)->pluck('id');
-
-        return $graduado;
-    }
-
-    private function verificar_contacto($ids_graduados, $contacto_excel) {
-        $encontrados = DetalleContacto::where('contacto', $contacto_excel)->with('contacto_graduado')->first();
-        $guardar = false;
-
-        if(empty($encontrados)) {
-            //Guardar el numero.
-            $guardar = true;
-        }
-        else {
-            foreach($encontrados as $detalle) {
-                // verifica que el ID del graduado encontrado con el contacto, no se encuentre en
-                // los IDS enocntrados por la cedula.
-                if(in_array($detalle->contacto_graduado->id_graduado, $ids_graduados->toArray())){
-                    //guardar un mensaje haciendo constar que el numero ya pertenece a ese graduado.
-                    $this->reporte['contactos_ya_registrados'][] = 'El contacto ' . $detalle->contacto . ' ya se encuentra registrado con el graduado con cédula ' . $this->cedula_graduado . '.';
-                    $guardar = false;
-                }
-                else {
-                    // guardar un mensaje haciendo constar que el contacto pertenece a otro graduado.
-                    $graduado = EncuestaGraduado::find($detalle->contacto_graduado->id_graduado);
-                    $this->reporte['contactos_ya_registrados'][] = 'El contacto ' . $detalle->contacto . ' ya se encuentra registrado  con el graduado con cedula ' . $graduado->identificacion_graduado . '.';
-                    $guardar = false;
-                }
-            }
-        }
-
-        return $guardar;
-    }
-
-    /**
-     * Guarda el contacto en la base de datos con los datos suministrados por cada registro en el archivo
-     * de excel.
-     * @param $contactoGraduado Arreglo con la informacion de contacto.
-     * @param $detalle Numeros de contacto que pertenecen al arreglo $contactoGraduado.
-     */
-    private function guardar_contacto($contactoGraduado, $detalle) {
-        $contactoNuevo = ContactoGraduado::create($contactoGraduado);
-
-        foreach($detalle as $contacto) {
-            $detalleContactoNuevo = DetalleContacto::create([
-                'contacto' => $contacto,
-                'observacion' => '',
-                'estado' => 'F',
-                'id_contacto_graduado' =>$contactoNuevo->id
-            ]);
-        }
-    }
 
 
     private $cedulas_sin_coincidencia = array();
@@ -835,6 +43,11 @@ class ArchivosExcelController extends Controller
     private $total_contactos_guardados = 0;
     private $cedulas = array();
 
+    /**
+     * @param $arreglo_contactos Arreglo con los telefonos del archivo de Excel.
+     * Permite limpiar el arreglo y devolver un arreglo con los datos que no
+     * están vacíos dentro del arreglo por parámetro.
+     */
     private function limpiar_arreglo_contactos($arreglo_contactos) {
         $temp = array();
 
@@ -845,22 +58,35 @@ class ArchivosExcelController extends Controller
         }
 
         return $temp;
-    }
+    } // fin de la función limpiar_arreglo_contactos
 
+    /**
+     * @param $request Datos provenientes del formulario.
+     */
     public function subir_archivo_de_contactos(Request $request) {
+        /* se consulta si en los datos del formulario, viene un archivo */
         if($request->hasFile('archivo_contactos')) {
+            /* se obtiene el archivo de los datos del formulario */
             $archivo = $request->file('archivo_contactos');
 
+            /* solo para obtener el tiempo de ejecución antes de iniciar la ejecución */
             $inicio = microtime(true);
 
+            /* se lee el archivo de Excel con la función load */
             Excel::load($archivo, function ($reader) {
                 /* Se obtienen todos los numeros de la tabla de detalle */
                 $contactosBD = DetalleContacto::pluck('contacto')->toArray();
 
+                /* se inicia una transacción sql para guardar en la base de datos*/
                 DB::beginTransaction();
+
+                /* se abre un try-catch para capturar cualquier excepción que suceda en el proceso */
                 try {
 
+                    /* se lee cada fila del archivo de excel */
                     foreach ($reader->get() as $key => $row) {
+                        /* si en el campo de cédula hay datos, se acumula en contador,
+                        para saber cuales contactos aparecen más de una vez. */
                         if(isset($this->cedulas[$row->identificacion])) {
                             $this->cedulas[$row->identificacion]++;
                         }
@@ -868,12 +94,15 @@ class ArchivosExcelController extends Controller
                             $this->cedulas[$row->identificacion] = 1;
                         }
 
+                        /* se busca el graduado por cédula en la base de datos. */
                         $graduado = EncuestaGraduado::where('identificacion_graduado', $row->identificacion)
                             ->whereNull('deleted_at')
                             // ->where('tipo_de_caso', '<>', 'REEMPLAZO')
                             ->with('contactos')
                             ->get();
 
+                        /* si el contacto no se encuentra por cédula, se salta al siguiente registro
+                        del archivo de Excel */
                         if(empty($graduado)) {
                             $this->cedulas_sin_coincidencia[] = $row->identificacion;
                             continue;
@@ -1315,17 +544,21 @@ class ArchivosExcelController extends Controller
                         $this->total_de_registros++;
                     }// Fin del foreach que recorre los registros
 
+                    /* después de leído el archivo, se hace un commit a la
+                    base de datos, para asegurar la transacción */
                     DB::commit();
                 }
                 catch(\Exception $ex) {
+                    /* si alguna excepción ocurre, los datos almacenados, serán borrados */
                     DB::rollback();
                     Flash::error('Error en el sistema.<br>Excepcion: '.$ex->getMessage());
                     return redirect(url('home'));
                 }
             });
 
+            /* si hay mas de un contacto guardado, se guarda el registro de la acción
+            en la bitácora de la base de datos. */
             if($this->total_contactos_guardados > 0) {
-                // Guardar el registro en la bitacora
                 $bitacora = [
                     'transaccion'            =>'I',
                     'tabla'                  =>'tbl_contactos_graduados',
@@ -1340,21 +573,28 @@ class ArchivosExcelController extends Controller
                 DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
             }
 
+            /* se captura el tiempo, para saber cuanto tiempo duró el script ejecutandose */
             $fin = microtime(true);
-            // echo 'Total de tiempo: ' . round(($fin - $inicio), 2) . ' segundos<br>';
 
+            /* se crea un contador y un array para saber la cantidad de cédulas repetidas */
             $conta_cedula = 0;
             $temp_cedulas_repetidas = array();
 
+            /* se recorren la cédulas guardadas del archivo de Excel */
             foreach($this->cedulas as $cedula => $veces) {
+                /* si cada cédula se repite más de una vez, se guarda y se incrementa el contador */
                 if($veces > 1) {
                     $temp_cedulas_repetidas[$cedula] = $veces;
                     $conta_cedula++;
                 }
             }
 
+            /* se reemplaza el arreglo de cédulas del archivo, por las que se repiten más de 
+            una vez */
             $this->cedulas = $temp_cedulas_repetidas;
 
+            /* se crea un arreglo con los datos obtenidos de resumen, para mostrarlos al
+            final de recorrido todo el archivo de contactos */
             $informe = [
                 'tiempo_invertido' => round(($fin - $inicio),2),
                 'registros_cedula_repetida'=>$conta_cedula,
@@ -1362,16 +602,14 @@ class ArchivosExcelController extends Controller
                 'cedulas_sin_coincidencias'=>$this->cedulas_sin_coincidencia,
                 'total_de_registros'=>$this->total_de_registros,
                 'total_de_contactos'=>$this->total_de_contactos,
-                'total_de_guardados'=>$this->total_contactos_guardados,
-                // 'del_contacto'=>$this->contactos_encontrados['del_contacto'],
-                // 'de_otro'=>$this->contactos_encontrados['de_otro']
+                'total_de_guardados'=>$this->total_contactos_guardados
             ];
             
-            // dd($informe);
+            /* se muestra un mensaje de éxito, y se muestra la vista con el informe del proceso */
             Flash::success('El archivo de contactos se ha subido correctamente. Podrá ver un informe de la situación a continuación.');
             return view('excel.informe-carga-contactos')->with('informe', $informe);
         }
-    }
+    } // fin de la función subir_archivo_de_contactos
 
     /** 
      * @param $arreglo_contactos    Arreglo con los contactos provenientes del excel.
@@ -1465,5 +703,5 @@ class ArchivosExcelController extends Controller
         /* al arreglo con los contactos de la BD, se le agregan todos los numeros nuevos, por
         lo que se devuelve para ser actualizado.*/
         return $arreglo_contactos_bd;
-    }
+    } // fin de la función guardar
 }

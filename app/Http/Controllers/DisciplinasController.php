@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\DatosCarreraGraduado;
 use Illuminate\Http\Request;
 use App\Disciplina;
+use Carbon\Carbon;
 use App\Area;
 use Flash;
+use DB;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class DisciplinasController extends Controller
 {
     public function disciplinasPorAreaAxios($id) {
@@ -39,7 +45,6 @@ class DisciplinasController extends Controller
     }
 
     public function index() {
-        // $disciplinas = DatosCarreraGraduado::porDisciplina()->get();
         $disciplinas = Disciplina::all();
 
         return view('disciplinas.index')->with('disciplinas', $disciplinas);
@@ -50,24 +55,60 @@ class DisciplinasController extends Controller
     }
 
     public function store(Request $request) {
-        $id_tipo = \App\TiposDatosCarrera::disciplina()->first()->id;
+        $disciplina = Disciplina::where('codigo', $request->codigo)->whereNull('deleted_at')->first();
 
-        $input = $request->all();
+        if(!empty($disciplina)) {
+            Flash::error('El código de la disciplina que intenta registrar, ya se encuentra en uso.');
+            return redirect(route('disciplinas.index'));
+        }
 
-        $nueva_disciplina = DatosCarreraGraduado::create([
-            'codigo' => $input['codigo'],
-            'nombre' => $input['nombre'],
-            'id_tipo' => $id_tipo
-        ]);
+        try {
+            DB::beginTransaction();
 
-        /** Mensaje de exito que se carga en la vista. */
-        Flash::success('Se ha guardado la disciplina satisfactoriamente.');
-        /** Se direcciona a la ruta del index, para volver a cargar los datos. */
-        return redirect(route('disciplinas.index'));
+            // TODO: falta agregar el area a la que pertenece la disciplina
+            $disciplina = Disciplina::create([
+                'codigo' => $request->codigo,
+                'descriptivo' => $request->nombre,
+                'id_area' => $request->id_area
+            ]);
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_disciplinas',
+                'id_registro_afectado'   =>$disciplina->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$disciplina->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Mensaje de exito que se carga en la vista. */
+            Flash::success('Se ha guardado la disciplina satisfactoriamente.');
+            /** Se direcciona a la ruta del index, para volver a cargar los datos. */
+            return redirect(route('disciplinas.index'));
+        }
+        catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: store().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('disciplinas.index'));
+        }
     }
 
     public function show($id) {
-        $disciplina = DatosCarreraGraduado::find($id);
+        $disciplina = Disciplina::find($id);
 
         if(empty($disciplina)) {
             Flash::error('Disciplina no encontrada');
@@ -78,7 +119,7 @@ class DisciplinasController extends Controller
     }
 
     public function edit($id) {
-        $disciplina = DatosCarreraGraduado::find($id);
+        $disciplina = Disciplina::find($id);
 
         if(empty($disciplina)) {
             Flash::error('Disciplina no encontrada');
@@ -89,24 +130,61 @@ class DisciplinasController extends Controller
     }
 
     public function update($id, Request $request) {
-        $disciplina = DatosCarreraGraduado::find($id);
+        $disciplina = Disciplina::find($id);
 
         if(empty($disciplina)) {
-            Flash::error('Disciplina no encontrado');
+            Flash::error('Disciplina no encontrada');
             return redirect(route('disciplinas.index'));
         }
 
-        $disciplina->codigo = $request->codigo;
-        $disciplina->nombre = $request->nombre;
-        $disciplina->save();
+        try {
+            DB::beginTransaction();
 
-        /** Se genera un mensaje de exito y se redirige a la ruta index */
-        Flash::success('Se ha modificado la disciplina satisfactoriamente.');
-        return redirect(route('disciplinas.index'));
+            $temp = $disciplina;
+
+            //  TODO: falta agregar el area al formulario
+            $disciplina->codigo = $request->codigo;
+            $disciplina->descriptivo = $request->nombre;
+            $disciplina->id_area = $request->id_area;
+            $disciplina->updated_at = Carbon::now();
+            $disciplina->save();
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_disciplinas',
+                'id_registro_afectado'   =>$disciplina->id,
+                'dato_original'          =>$temp->__toString(),
+                'dato_nuevo'             =>$disciplina->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Se genera un mensaje de exito y se redirige a la ruta index */
+            Flash::success('Se ha modificado la disciplina satisfactoriamente.');
+            return redirect(route('disciplinas.index'));
+        }
+        catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: update().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('disciplinas.index'));
+        }
     }
 
     public function destroy($id) {
-        $disciplina = DatosCarreraGraduado::find($id);
+        $disciplina = Disciplina::find($id);
 
         if(empty($disciplina)) {
             Flash::error('Disciplina no encontrado');
@@ -114,17 +192,48 @@ class DisciplinasController extends Controller
         }
 
         /* VALIDA QUE la disciplina NO POSEA ENCUESTAS ASIGNADAS ANTES DE ELIMINAR */
-        if(sizeof($disciplina->graduadoDisciplina) > 0) {
+        if(sizeof($disciplina->entrevistas) > 0) {
             Flash::error('No es posible eliminar esta disciplina debido a que posee entrevistas que están relacionadas a este dato.');
             return redirect(route('disciplinas.index'));
         }
         
-        /** Se borra el objeto encontrado */
-        $disciplina->deleted_at = \Carbon\Carbon::now();
-        $disciplina->save();
+        try {
+            DB::beginTransaction();
 
-        /** Se genera un mensaje de exito y se redirige a la ruta index */
-        Flash::success('Se ha eliminado la disciplina '.$disciplina->nombre.' correctamente.');
-        return redirect(route('disciplinas.index'));
+            /** Se borra el objeto encontrado */
+            $disciplina->deleted_at = Carbon::now();
+            $disciplina->save();
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'D',
+                'tabla'                  =>'tbl_disciplinas',
+                'id_registro_afectado'   =>$disciplina->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$disciplina->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Se genera un mensaje de exito y se redirige a la ruta index */
+            Flash::success('Se ha eliminado la disciplina '.$disciplina->nombre.' correctamente.');
+            return redirect(route('disciplinas.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: destroy().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('disciplinas.index'));
+        }
     }
 }

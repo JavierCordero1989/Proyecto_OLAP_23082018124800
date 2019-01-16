@@ -122,6 +122,7 @@ Route::group(['middleware'=>['auth']], function() {
   Route::get('ver-otras-entrevistas/{ids}', 'EncuestaGraduadoController@ver_otras_carreras')->name('encuestas-graduados.otras-carreras');
   Route::get('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion')->name('encuestas-graduados.hacer-sustitucion');
   Route::post('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion_post')->name('encuestas-graduados.hacer-sustitucion-post');
+  Route::get('realizar-reemplazo/{respuesta}', 'EncuestaGraduadoController@realizar_reemplazo')->name('encuestas-graduados.realizar-reemplazo');
   Route::get('buscar-encuesta', 'EncuestaGraduadoController@buscar_encuesta')->name('encuestas-graduados.buscar-encuesta');
   Route::get('cambiar-estado-entrevista/{id_entrevista}', 'EncuestaGraduadoController@cambiar_estado_entrevista')->name('encuestas-graduados.cambiar-estado-entrevista')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');
   Route::post('cambiar-estado-entrevista/{id_entrevista}', 'EncuestaGraduadoController@cambiar_estado_entrevista_post')->name('encuestas-graduados.cambiar-estado-entrevista-post')->middleware('role:Super Admin|Supervisor 1|Supervisor 2');

@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\DatosCarreraGraduado;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Flash;
+use DB;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class CarrerasController extends Controller
 {
     public function index() {
@@ -19,20 +25,53 @@ class CarrerasController extends Controller
     }
 
     public function store(Request $request) {
-        $id_tipo = \App\TiposDatosCarrera::carrera()->first()->id;
 
-        $input = $request->all();
+        try {
+            DB::beginTransaction();
 
-        $nueva_carrera = DatosCarreraGraduado::create([
-            'codigo' => $input['codigo'],
-            'nombre' => $input['nombre'],
-            'id_tipo' => $id_tipo
-        ]);
+            $id_tipo = \App\TiposDatosCarrera::carrera()->first()->id;
+    
+            $input = $request->all();
+    
+            $nueva_carrera = DatosCarreraGraduado::create([
+                'codigo' => $input['codigo'],
+                'nombre' => $input['nombre'],
+                'id_tipo' => $id_tipo
+            ]);
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'tbl_datos_carrera_graduado',
+                'id_registro_afectado'   =>$nueva_carrera->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>'Carrera nueva agregada: ' . $nueva_carrera->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
-        /** Mensaje de exito que se carga en la vista. */
-        Flash::success('Se ha guardado la carrera satisfactoriamente.');
-        /** Se direcciona a la ruta del index, para volver a cargar los datos. */
-        return redirect(route('carreras.index'));
+            DB::commit();
+
+            /** Mensaje de exito que se carga en la vista. */
+            Flash::success('Se ha guardado la carrera satisfactoriamente.');
+            /** Se direcciona a la ruta del index, para volver a cargar los datos. */
+            return redirect(route('carreras.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: store().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('carreras.index'));
+        }
     }
 
     public function show($id) {
@@ -65,13 +104,48 @@ class CarrerasController extends Controller
             return redirect(route('carreras.index'));
         }
 
-        $carrera->codigo = $request->codigo;
-        $carrera->nombre = $request->nombre;
-        $carrera->save();
+        try {
+            DB::beginTransaction();
 
-        /** Se genera un mensaje de exito y se redirige a la ruta index */
-        Flash::success('Se ha modificado la carrera satisfactoriamente.');
-        return redirect(route('carreras.index'));
+            $temp = $carrera;
+
+            $carrera->codigo = $request->codigo;
+            $carrera->nombre = $request->nombre;
+            $carrera->save();
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_datos_carrera_graduado',
+                'id_registro_afectado'   =>$carrera->id,
+                'dato_original'          =>$temp->__toString(),
+                'dato_nuevo'             =>$carrera->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Se genera un mensaje de exito y se redirige a la ruta index */
+            Flash::success('Se ha modificado la carrera satisfactoriamente.');
+            return redirect(route('carreras.index'));
+
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: update().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+            $mensaje .= '<br><br>Este error se debe al estado de la entrevista que se consultó por token.';
+
+            Flash::error($mensaje);
+            return redirect(route('carreras.index'));
+        }
     }
 
     public function destroy($id) {
@@ -88,12 +162,44 @@ class CarrerasController extends Controller
             return redirect(route('carreras.index'));
         }
         
-        /** Se borra el objeto encontrado */
-        $carrera->deleted_at = \Carbon\Carbon::now();
-        $carrera->save();
+        try {
+            DB::beginTransaction();
 
-        /** Se genera un mensaje de exito y se redirige a la ruta index */
-        Flash::success('Se ha eliminado la carrera '.$carrera->nombre.' correctamente.');
-        return redirect(route('carreras.index'));
+            /** Se borra el objeto encontrado */
+            $carrera->deleted_at = \Carbon\Carbon::now();
+            $carrera->save();
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'D',
+                'tabla'                  =>'tbl_datos_carrera_graduado',
+                'id_registro_afectado'   =>$carrera->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>'La siguiente carrera fue eliminada: '.$carrera->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Se genera un mensaje de exito y se redirige a la ruta index */
+            Flash::success('Se ha eliminado la carrera '.$carrera->nombre.' correctamente.');
+            return redirect(route('carreras.index'));
+
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: destroy().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('carreras.index'));
+        }
     }
 }
