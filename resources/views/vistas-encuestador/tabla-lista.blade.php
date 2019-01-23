@@ -43,6 +43,24 @@
                                     <p>Cédula: {!! $entrevista->identificacion_graduado !!}</p>
                                     <p>{!! $entrevista->carrera->nombre !!} - {!! $entrevista->universidad->nombre !!}</p>
                                     <p>Año de graduación: {!! $entrevista->annio_graduacion !!}</p>
+
+                                    @if (!is_null($entrevista->otrasCarreras()))
+                                        @php
+                                            $ids = '';
+                                            $otras = $entrevista->otrasCarreras();
+
+                                            for($i=0; $i<sizeof($otras); $i++) {
+                                                if($i >= sizeof($otras)-1) {
+                                                    $ids .= $otras[$i];
+                                                }
+                                                else {
+                                                    $ids .= $otras[$i].'-';
+                                                }
+                                            }
+                                        @endphp
+
+                                        <p>Tiene otras carreras: <a href="{!! route('encuestador.indicador-otras-carreras', $ids) !!}">ver las entrevistas</a></p>
+                                    @endif
                                 </div>
                             </div>
         

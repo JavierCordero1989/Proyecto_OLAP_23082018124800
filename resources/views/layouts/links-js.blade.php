@@ -16,5 +16,7 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/js/app.min.js"></script> --}}
 {{-- <script src="{{ asset('js/app/app.min.js') }}"></script> --}}
 <script src="{{ config('global.js.link_app') }}"></script>
+{{-- <script src="{!! asset('js/vue.min.js') !!}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+{{-- <script src="{!! asset('js/axios.min.js') !!}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>

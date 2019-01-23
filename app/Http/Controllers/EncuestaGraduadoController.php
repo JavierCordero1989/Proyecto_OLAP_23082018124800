@@ -25,6 +25,10 @@ use App\User;
 use Flash;
 use DB;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class EncuestaGraduadoController extends Controller
 {
     public function index() {
@@ -203,35 +207,10 @@ class EncuestaGraduadoController extends Controller
         
         $encuestas = EncuestaGraduado::whereIn('id', $ids)->orderBy('identificacion_graduado', 'ASC')->paginate(25);
 
-        return view('encuestas_graduados.index')->with('encuestas', $encuestas);
+        $areas = Area::pluck('descriptivo', 'id')->toArray();
+
+        return view('encuestas_graduados.index')->with('encuestas', $encuestas)->with('areas', $areas);
     }
-
-    /* METODO USADO PARA PAGINAR CON VUE.JS, NO FUNCIONO DE ACUERDO A LAS ESPECTATIVAS */
-    // public function listaDeEncuestas(Request $request) {
-    //     $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->orderBy('id', 'ASC')->with('contactos')->paginate(25);
-        
-    //     //NUEVA FORMA DE OBTENER LAS ENCUESTAS
-    //     // $encuestas = EncuestaGraduado::listaDeGraduados()->whereNull('deleted_at')->with('contactos')->get();
-
-    //     foreach ($encuestas as $encuesta) {
-    //         $encuesta->changeCodesByNames();
-    //     }
-
-    //     $paginacion = [
-    //         'pagination' => [
-    //             'total'=>$encuestas->total(),
-    //             'current_page'=>$encuestas->currentPage(),
-    //             'per_page'=>$encuestas->perPage(),
-    //             'last_page'=>$encuestas->lastPage(),
-    //             'from'=>$encuestas->firstItem(),
-    //             'to'=>$encuestas->lastPage(),
-    //         ],
-    //         'encuestas' => $encuestas
-    //     ];
-
-    //     return $paginacion;
-    //     // return view('encuestas-graduados.index', compact('paginacion'));
-    // }
 
     public function edit($id) {
         $encuesta = EncuestaGraduado::find($id);
@@ -264,12 +243,44 @@ class EncuestaGraduadoController extends Controller
             return redirect(route('encuestas-graduados.index'));
         }
 
-        // dd($request->all());
+        try {
+            DB::beginTransaction();
 
-        $encuesta->update($request->all());
+            $temp = $encuesta->__toString();
 
-        Flash::success('Los datos de la encuesta han sido actualizados correctamente.');
-        return redirect(route('encuestas-graduados.index'));
+            $encuesta->update($request->all());
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_graduados',
+                'id_registro_afectado'   =>$encuesta->id,
+                'dato_original'          =>$temp,
+                'dato_nuevo'             =>$encuesta->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('Los datos de la encuesta han sido actualizados correctamente.');
+            return redirect(route('encuestas-graduados.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: update().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestas-graduados.index'));
+        }
     }
 
     /**
@@ -385,7 +396,7 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function store(Request $request) {
-
+        //TODO: revisar la funcionalidad de esta funcion
         dd($request->all());
         /* VALIDAR TODOS LOS CAMPOS UNICOS DE LA BD */
         $encuesta = EncuestaGraduado::where('token', $request->token)->first();
@@ -396,8 +407,6 @@ class EncuestaGraduadoController extends Controller
         }
 
         $encuesta = EncuestaGraduado::create($request->all());
-
-        // dd($encuesta);
 
         Flash::success('Encuesta agregada con éxito al sistema.');
         return back();
@@ -434,6 +443,7 @@ class EncuestaGraduadoController extends Controller
             Flash::overlay('No se ha encontrado un usuario con el ID especificado', 'Error en la búsqueda')->error();
             return redirect(url('/home'));
         }
+
         $rol_usuario = $user->hasRole('Encuestador') ? 'Encuestador' : 'Supervisor';
 
         if(EncuestaGraduado::totalDeEncuestas()->count() <= 0) {
@@ -513,25 +523,56 @@ class EncuestaGraduadoController extends Controller
 
         $encuestas_no_encontradas = [];
 
-        /** Se hace una busqueda de la encuesta */
-        foreach($request->encuestas as $id_graduado) {
-            $registro_encuesta = EncuestaGraduado::find($id_graduado);
+        try {
+            DB::beginTransaction();
 
-            if(empty($registro_encuesta)) {
-                array_push($encuestas_no_encontradas, $id_graduado);
+            /** Se hace una busqueda de la encuesta */
+            foreach($request->encuestas as $id_graduado) {
+                $registro_encuesta = EncuestaGraduado::find($id_graduado);
+
+                if(empty($registro_encuesta)) {
+                    array_push($encuestas_no_encontradas, $id_graduado);
+                }
+
+                $update = $registro_encuesta->asignarEncuesta($id_supervisor, $id_encuestador, $id_estado_sin_asignar->id, $id_estado_asignada->id);
             }
 
-            $update = $registro_encuesta->asignarEncuesta($id_supervisor, $id_encuestador, $id_estado_sin_asignar->id, $id_estado_asignada->id);
-        }
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_asignaciones',
+                'id_registro_afectado'   =>0,
+                'dato_original'          =>'El supervisor '.$supervisor->user_code.' ha asignado entrevistas al encuestador '.$encuestador->user_code,
+                'dato_nuevo'             =>null,
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
-        if(sizeof($encuestas_no_encontradas) <= 0) {
-            Flash::success('Se han asignado las encuestas correctamente.');
-        }
-        else {
-            Flash::warning('Algunas encuestas no han sido asignadas: '.$encuestas_no_encontradas);
-        }
+            DB::commit();
 
-        return redirect(route('encuestadores.index'));
+            if(sizeof($encuestas_no_encontradas) <= 0) {
+                Flash::success('Se han asignado las encuestas correctamente.');
+            }
+            else {
+                Flash::warning('Algunas encuestas no han sido asignadas: '.$encuestas_no_encontradas);
+            }
+            return redirect(route('encuestadores.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: crearAsignacion().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestadores.index'));
+        }
     }
 
     public function encuestasAsignadasPorEncuestador($id_encuestador) {
@@ -677,38 +718,117 @@ class EncuestaGraduadoController extends Controller
     }
 
     public function removerEncuestas($id_encuestador, Request $request) {
-
         $encuestasAsignadas = Asignacion::where('id_encuestador', $id_encuestador)->get();
         $id_no_asignada = DB::table('tbl_estados_encuestas')->select('id')->where('estado', 'NO ASIGNADA')->first();
 
-        foreach($encuestasAsignadas as $encuesta) {
-            // echo 'Encuesta: '.$encuesta->id.'<br>';
-            foreach($request->encuestas as $id_desasignada) {
-                if($encuesta->id_graduado == $id_desasignada) {
-                    $encuesta->id_encuestador = null;
-                    $encuesta->id_supervisor = null;
-                    $encuesta->id_estado = $id_no_asignada->id;
-                    $encuesta->updated_at = \Carbon\Carbon::now();
-                    $encuesta->save();
-                }
-            }
+        $encuestador = User::find($id_encuestador);
+
+        if(empty($encuestador)) {
+            Flash::error('El encuestador no existe');
+            return redirect(route('home'));
         }
 
-        Flash::success('Se han eliminado las encuestas de este encuestador');
-        return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+        try {
+            DB::beginTransaction();
+
+            foreach($encuestasAsignadas as $encuesta) {
+                // echo 'Encuesta: '.$encuesta->id.'<br>';
+                foreach($request->encuestas as $id_desasignada) {
+                    if($encuesta->id_graduado == $id_desasignada) {
+                        $encuesta->id_encuestador = null;
+                        $encuesta->id_supervisor = null;
+                        $encuesta->id_estado = $id_no_asignada->id;
+                        $encuesta->updated_at = \Carbon\Carbon::now();
+                        $encuesta->save();
+                    }
+                }
+            }
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_asignaciones',
+                'id_registro_afectado'   =>0,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>'Se han desasignado las encuestas del usuario con código '.$encuestador->user_code,
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            Flash::success('Se han eliminado las encuestas de este encuestador');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+
+        } catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: removerEncuestas().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('home'));
+        }
     }
 
     public function remover_encuestas_a_encuestador($id_entrevista, $id_encuestador) {
         $entrevista = EncuestaGraduado::find($id_entrevista);
-        $quito_entrevista = $entrevista->desasignarEntrevista();
-        
-        if($quito_entrevista) {
-            Flash::success('Se ha eliminado la entrevista de este encuestador');
-            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+
+        if(empty($entrevista)) {
+            Flash::error('No se ha encontrado la entrevista que busca.');
+            return back();
         }
-        else {
-            Flash::error('No se ha podido eliminar la entrevista de este encuestador');
-            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+
+        try {
+            DB::beginTransaction();
+
+            $quito_entrevista = $entrevista->desasignarEntrevista();
+
+            if($quito_entrevista) {
+                // Guardar el registro en la bitacora
+                $bitacora = [
+                    'transaccion'            =>'U',
+                    'tabla'                  =>'tbl_asignaciones',
+                    'id_registro_afectado'   =>$entrevista->id,
+                    'dato_original'          =>null,
+                    'dato_nuevo'             =>'Se ha desasignado la entrevista con token ' . $entrevista->token,
+                    'fecha_hora_transaccion' =>Carbon::now(),
+                    'id_usuario'             =>Auth::user()->user_code,
+                    'created_at'             =>Carbon::now()
+                ];
+        
+                DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+                DB::commit();
+
+                Flash::success('Se ha eliminado la entrevista de este encuestador');
+                return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+            }
+            else {
+                DB::rollback();
+
+                Flash::error('No se ha podido eliminar la entrevista de este encuestador');
+                return redirect(route('asignar-encuestas.lista-encuestas-asignadas', $id_encuestador));
+            }
+        } catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: remover_encuestas_a_encuestador().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('home'));
         }
     }
 
@@ -739,41 +859,75 @@ class EncuestaGraduadoController extends Controller
             return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
         }
 
-        //Cambiar el estado de la entrevista por el del request
-        $cambio_estado = $entrevista->cambiarEstadoDeEncuesta($request->estados);
+        try {
+            DB::beginTransaction();
 
-        if(!$cambio_estado) {
-            Flash::error('No se ha podido cambiar el estado de la entrevista');
-            return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
-        }
-
-        //si no existen observaciones, agregarla, de lo contrario modificar la existente.
-        $observaciones_entrevista = $entrevista->observaciones;
-
-        if(sizeof($observaciones_entrevista) == 0) {
-            //Agregar la observación
-            $nueva_observacion = ObservacionesGraduado::create([
-                'id_graduado' => $entrevista->id,
-                'id_usuario' => Auth::user()->id,
-                'observacion' => $request->observacion,
-                'created_at' => Carbon::now()
-            ]);
-        }
-        else {
-            //Modificar la existente
-            $observacion_existente = ObservacionesGraduado::where('id_graduado', $entrevista->id)->first();
-            $observacion_existente->observacion = $request->observacion;
-            $observacion_existente->updated_at = Carbon::now();
-            $cambio_observacion = $observacion_existente->save();
-
-            if(!$cambio_observacion) {
-                Flash::error('No se ha podido agregar la observación a la entrevista');
+            //Cambiar el estado de la entrevista por el del request
+            $cambio_estado = $entrevista->cambiarEstadoDeEncuesta($request->estados);
+    
+            if(!$cambio_estado) {
+                DB::rollback();
+                Flash::error('No se ha podido cambiar el estado de la entrevista');
                 return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
             }
-        }
+    
+            //si no existen observaciones, agregarla, de lo contrario modificar la existente.
+            $observaciones_entrevista = $entrevista->observaciones;
+    
+            if(sizeof($observaciones_entrevista) == 0) {
+                //Agregar la observación
+                $nueva_observacion = ObservacionesGraduado::create([
+                    'id_graduado' => $entrevista->id,
+                    'id_usuario' => Auth::user()->id,
+                    'observacion' => $request->observacion,
+                    'created_at' => Carbon::now()
+                ]);
+            }
+            else {
+                //Modificar la existente
+                $observacion_existente = ObservacionesGraduado::where('id_graduado', $entrevista->id)->first();
+                $observacion_existente->observacion = $request->observacion;
+                $observacion_existente->updated_at = Carbon::now();
+                $cambio_observacion = $observacion_existente->save();
+    
+                if(!$cambio_observacion) {
+                    DB::rollback();
+                    Flash::error('No se ha podido agregar la observación a la entrevista');
+                    return redirect(route('asignar-encuestas.realizar-entrevista', $id_entrevista));
+                }
+            }
+    
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'tbl_graduados',
+                'id_registro_afectado'   =>$entrevista->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$entrevista->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
 
-        Flash::success('Se han guardado correctamente los cambios');
-        return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
+            DB::commit();
+
+            Flash::success('Se han guardado correctamente los cambios');
+            return redirect(route('asignar-encuestas.lista-encuestas-asignadas', Auth::user()->id));
+        } catch(\Exception $ex) {
+            DB::rollback();
+
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: actualizar_entrevista().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestador.mis-entrevistas', Auth::user()->id));
+        }
     }
 
     public function agregar_detalle_contacto($id_contacto, $id_entrevista) {

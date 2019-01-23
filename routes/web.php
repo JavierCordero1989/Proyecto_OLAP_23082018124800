@@ -253,6 +253,7 @@ Route::group(['prefix'=>'encuestador', 'middleware'=>'auth'], function() {
   Route::get('editar-contacto-entrevista/{id_contacto}/editar/{id_entrevista}',                     'EncuestadorController@editar_contacto_entrevista')     ->name('encuestador.modificar-contacto-entrevista');
   Route::patch('actualizar-contacto-entrevista/actualizar/{id_contacto}/{id_entrevista}',           'EncuestadorController@actualizar_contacto_entrevista') ->name('encuestador.actualizar-contacto-entrevista');
   Route::get('reportes-de-encuestador/graficos/{id_encuestador}' ,                                  'EncuestadorController@reportes_de_encuestador')        ->name('encuestador.reportes-de-encuestador');
+  Route::get('indicador-otras-carreras/{ids}', 'EncuestadorController@indicador_otras_carreras')->name('encuestador.indicador-otras-carreras');
 });
 
 // Rutas para el supervisor 2

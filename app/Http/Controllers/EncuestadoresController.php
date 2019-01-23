@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\User;
 use Flash;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Auth;
+use DB;
 
+/**
+ * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
+ * @version 1.0
+ */
 class EncuestadoresController extends Controller
 {
     /** Metodo index que carga la vista de inicio con los datos de la base de datos. */
@@ -69,22 +74,53 @@ class EncuestadoresController extends Controller
             return redirect(route('encuestadores.index'));
         }
 
-        // Si no existe ni el código ni el correo en otro usuario, se guarda en la base de datos.
-        $nuevo_encuestador = User::create([
-            'user_code' => $input['user_code'],
-            'extension'=> $input['extension'],
-            'mobile'=> $input['mobile'],
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => bcrypt($input['password'])
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $nuevo_encuestador->assignRole('Encuestador');
+            // Si no existe ni el código ni el correo en otro usuario, se guarda en la base de datos.
+            $nuevo_encuestador = User::create([
+                'user_code' => $input['user_code'],
+                'extension'=> $input['extension'],
+                'mobile'=> $input['mobile'],
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => bcrypt($input['password'])
+            ]);
 
-        /** Mensaje de exito que se carga en la vista. */
-        Flash::success('Se ha guardado el encuestador');
-        /** Se direcciona a la ruta del index, para volver a cargar los datos. */
-        return redirect(route('encuestadores.index'));
+            $nuevo_encuestador->assignRole('Encuestador');
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'I',
+                'tabla'                  =>'users',
+                'id_registro_afectado'   =>$nuevo_encuestador->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$nuevo_encuestador->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Mensaje de exito que se carga en la vista. */
+            Flash::success('Se ha guardado el encuestador');
+            /** Se direcciona a la ruta del index, para volver a cargar los datos. */
+            return redirect(route('encuestadores.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: store().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestadores.index'));
+        }
     } //Fin de la funcion store.
 
     /** Metodo show, que muestra los datos de un objeto que posea el ID asociado por 
@@ -126,13 +162,21 @@ class EncuestadoresController extends Controller
      *  por parametros, modificandolo con los datos del Request.
      */
     public function update($id, Request $request) {
-        // $validar_encuestador_repetido = User::where('user_code', $request->user_code)->first();
+        // Se verifica que el código ingresado no exista
+        $encuestador = User::findByUserCode($input['user_code'])->first();
 
-        // if(!is_null($validar_encuestador_repetido)) {
-        //     Flash::error('Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.');
-        //     return redirect(route('encuestadores.edit', $id));
-        //     // return redirect(route('encuestadores.edit', $id))->withErrors(['user_code'=>'Intenta ingresar un código que ya está registrado para otro encuestador.<br>Intente de nuevo.']);
-        // }
+        if(!empty($usuario_consultado)) {
+            Flash::error('El código que registró ya existe para otro usuario.');
+            return redirect(route('encuestadores.index'));
+        }
+
+        // Se verifica que el correo ingresado no exista.
+        $encuestador = User::findByEmail($input['email'])->first();
+
+        if(!empty($usuario_consultado)) {
+            Flash::error('El email que registró ya existe para otro usuario.');
+            return redirect(route('encuestadores.index'));
+        }
 
         /** Se obtiene el objeto que corresponda al ID */
         $encuestador = User::find($id);
@@ -143,22 +187,56 @@ class EncuestadoresController extends Controller
             return redirect(route('encuestadores.index'));
         }
 
-        $encuestador->user_code = $request->user_code;
-        $encuestador->extension = $request->extension;
-        $encuestador->mobile = $request->mobile;
-        $encuestador->name = $request->name;
-        $encuestador->email = $request->email;
+        try {
+            DB::beginTransaction();
 
-        if($request->password != null) {
-            $encuestador->password = bcrypt($request->password);
-            /** Se modifican los datos del objeto enontrado con los datos del Request */
+            $temp = $encuestador->__toString();
+
+            $encuestador->user_code = $request->user_code;
+            $encuestador->extension = $request->extension;
+            $encuestador->mobile = $request->mobile;
+            $encuestador->name = $request->name;
+            $encuestador->email = $request->email;
+            $encuestador->updated_at = Carbon::now();
+
+            if($request->password != null) {
+                $encuestador->password = bcrypt($request->password);
+                /** Se modifican los datos del objeto enontrado con los datos del Request */
+            }
+
+            $encuestador->save();
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'U',
+                'tabla'                  =>'users',
+                'id_registro_afectado'   =>$encuestador->id,
+                'dato_original'          =>$temp,
+                'dato_nuevo'             =>$encuestador->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Se genera un mensaje de exito y se redirige a la ruta index */
+            Flash::success('Se ha modificado con éxito');
+            return redirect(route('encuestadores.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: update().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestadores.index'));
         }
-
-        $encuestador->save();
-
-        /** Se genera un mensaje de exito y se redirige a la ruta index */
-        Flash::success('Se ha modificado con exito');
-        return redirect(route('encuestadores.index'));
     } //Fin de la funcion update
 
     public function destroy($id) {
@@ -177,13 +255,44 @@ class EncuestadoresController extends Controller
             return redirect(route('encuestadores.index'));
         }
 
-        /** Se borra el objeto encontrado */
-        $encuestador->deleted_at = Carbon::now();
-        $encuestador->save();
+        try {
+            DB::beginTransaction();
 
-        /** Se genera un mensaje de exito y se redirige a la ruta index */
-        Flash::success('Se ha eliminado el encuestador '.$encuestador->name.' correctamente.');
-        return redirect(route('encuestadores.index'));
+            /** Se borra el objeto encontrado */
+            $encuestador->deleted_at = Carbon::now();
+            $encuestador->save();
+
+            // Guardar el registro en la bitacora
+            $bitacora = [
+                'transaccion'            =>'D',
+                'tabla'                  =>'users',
+                'id_registro_afectado'   =>$encuestador->id,
+                'dato_original'          =>null,
+                'dato_nuevo'             =>$encuestador->__toString(),
+                'fecha_hora_transaccion' =>Carbon::now(),
+                'id_usuario'             =>Auth::user()->user_code,
+                'created_at'             =>Carbon::now()
+            ];
+    
+            DB::table('tbl_bitacora_de_cambios')->insert($bitacora);
+
+            DB::commit();
+
+            /** Se genera un mensaje de exito y se redirige a la ruta index */
+            Flash::success('Se ha eliminado el encuestador '.$encuestador->name.' correctamente.');
+            return redirect(route('encuestadores.index'));
+        } catch(\Exception $ex) {
+            DB::rollback();
+            $mensaje = 'Comuniquese con el administrador o creador del sistema para el siguiente error: <u>';
+            $mensaje .= $ex->getMessage();
+            $mensaje .= '</u>.<br>Controlador: ';
+            $mensaje .= $ex->getFile();
+            $mensaje .= '<br>Función: destroy().<br>Línea: ';
+            $mensaje .= $ex->getLine();
+
+            Flash::error($mensaje);
+            return redirect(route('encuestadores.index'));
+        }
     } //Fin de la funcion destroy
 
     public function cambiar_contrasennia($id_encuestador) {
@@ -199,6 +308,7 @@ class EncuestadoresController extends Controller
     }
 
     public function actualizar_contrasennia($id_encuestador, Request $request) {
+        //TODO: revisar funcionalidad del metodo
         $encuestador = User::find($id_encuestador);
 
         if(Hash::check($request->old_password, $encuestador->password)) {

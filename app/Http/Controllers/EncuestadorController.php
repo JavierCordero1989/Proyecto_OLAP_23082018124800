@@ -417,4 +417,12 @@ class EncuestadorController extends Controller
         //Llama la vista y le pasa los datos.
         return view('vistas-encuestador.reportes-encuestador', compact('etiquetas', 'datos', 'colores'));
     }
+
+    public function indicador_otras_carreras($ids) {
+        $ids = explode('-', $ids);
+        
+        $encuestas = EncuestaGraduado::whereIn('id', $ids)->orderBy('identificacion_graduado', 'ASC')->paginate(25);
+
+        return view('vistas-encuestador.lista-entrevistas')->with('encuestas', $encuestas);
+    }
 }
