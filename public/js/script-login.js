@@ -34,7 +34,7 @@ function recrear_cajas_logos() {
 			class: "col-xs-6 col-sm-4 caja_de_imagen"
 		}).append(
 			$("<img>", {
-				src: "img/logo_oficial_conare_transparente.png",
+				src: imagen_conare,
 				alt: "logo del OLaP",
 				class: "imagen"
 			})
@@ -47,7 +47,7 @@ function recrear_cajas_logos() {
 			class: "col-xs-6 col-sm-4 caja_de_imagen"
 		}).append(
 			$("<img>", {
-				src: "img/logo_oficial_olap_transparente.png",
+				src: imagen_olap,
 				alt: "logo del CONARE",
 				class: "imagen"
 			})

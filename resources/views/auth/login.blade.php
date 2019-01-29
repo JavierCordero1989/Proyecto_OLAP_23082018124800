@@ -62,7 +62,7 @@
             </form>
 
             <a href="{{ route('security.remember-password') }}">Olvidé mi contraseña</a><br>
-            <a href="{{ route('usuarios') }}">Usuarios</a><br>
+            {{-- <a href="{{ route('usuarios') }}">Usuarios</a><br> --}}
 
         </div>
         <!-- /.login-box-body -->

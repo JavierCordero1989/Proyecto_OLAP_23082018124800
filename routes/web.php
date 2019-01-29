@@ -18,11 +18,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 Route::get('/home/reporte-general', 'HomeController@reportes_generales')->name('home.reporte-general')->middleware('auth');
 
 //Rutas para los roles
-Route::group(['middleware'=>['auth']], function() {
+Route::group(['middleware'=>['auth', 'role:Super Admin']], function() {
   Route::get('roles', 'RolesController@index')          ->name('roles.index');
   Route::get('roles/create', 'RolesController@create')  ->name('roles.create');
   Route::post('roles/store', 'RolesController@store')   ->name('roles.store');
@@ -33,7 +33,7 @@ Route::group(['middleware'=>['auth']], function() {
 });
 
 //Rutas para los permisos
-Route::group(['middleware'=>['auth']], function() {
+Route::group(['middleware'=>['auth', 'role:Super Admin']], function() {
   Route::get('permisos', 'PermissionsController@index')          ->name('permisos.index');
   Route::get('permisos/create', 'PermissionsController@create')  ->name('permisos.create');
   Route::post('permisos/store', 'PermissionsController@store')   ->name('permisos.store');

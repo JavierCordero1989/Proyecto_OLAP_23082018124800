@@ -147,7 +147,7 @@
                     <a href="{!! config('global.link_conare') !!}" target="_blank">{!! config('global.texto_conare') !!}</a>
                 </div>
             </div>
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-md-12">
                     <strong>Elaborado por: 
                         <a href="#info-creador-sistema" data-toggle="modal">
@@ -155,7 +155,7 @@
                         </a>
                     </strong>
                 </div>
-            </div>
+            </div> --}}
         </p>
         {{-- <strong>Copyright © 2018 <a href="{{ config('global.footer_link') }}" target="_blank">{{ config('global.footer_text') }}</a>.</strong> Derechos Reservados. --}}
     </footer>

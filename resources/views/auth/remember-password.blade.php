@@ -1,18 +1,22 @@
 @extends('layouts.app-logout')
 
-@section('css')
-    <link rel="stylesheet" href="{!! asset('css/estilos-login.css') !!}">
-@endsection
-
 @section('title', 'Cambio de contraseña')
 
+@section('css')
+    <link rel="stylesheet" href="{!! asset('css/estilos-app.min.css') !!}">    
+@endsection
+
 @section('content')
+    <div id="logo_1" class="col-xs-6 col-sm-4 caja_de_imagen">
+        <img src="{!! asset(config('global.conare_login')) !!}" alt="logo del OLaP" class="imagen">
+    </div>
+
     {{-- <div id="logo_1" class="col-xs-6 col-sm-4 caja_de_imagen">
         <img src="{!! asset(config('global.olap_login')) !!}" alt="logo del OLaP" class="imagen">
     </div> --}}
 
     {{-- <div class="login-box"> --}}
-    <div id="login" class="login-box {{--col-xs-12 col-sm-4 caja-login--}}">
+    <div id="login" class="col-xs-12 col-sm-4 caja-login">
         <div class="login-logo">
             <a href="{{ url('/home') }}"><b>CONARE </b>OLaP</a>
         </div>
@@ -49,6 +53,10 @@
 
         </div>
         <!-- /.login-box-body -->
+    </div>
+
+    <div id="logo_2" class="col-xs-6 col-sm-4 caja_de_imagen">
+        <img src="{!! asset(config('global.olap_login')) !!}" alt="logo del CONARE" class="imagen">
     </div>
 
     @include('components.error-message')
