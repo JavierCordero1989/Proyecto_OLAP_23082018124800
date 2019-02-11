@@ -327,27 +327,27 @@ Route::group(['prefix'=>'security'], function(){
   Route::post('reset-password/{id}', 'ResetPasswordController@realizar_cambio_de_contrasennia')->name('security.reset-password');
 });
 
-Route::post('pruebas', function(\Illuminate\Http\Request $request) {
-  $datos_encontrados = [];
+// Route::post('pruebas', function(\Illuminate\Http\Request $request) {
+//   $datos_encontrados = [];
 
-  if(isset($request->disciplinas)) {
-    $disciplinas = $request->disciplinas;
+//   if(isset($request->disciplinas)) {
+//     $disciplinas = $request->disciplinas;
 
-    foreach($disciplinas as $disciplina) {
-      $area = \App\Area::buscarPorDescriptivo($disciplina)->first();
+//     foreach($disciplinas as $disciplina) {
+//       $area = \App\Area::buscarPorDescriptivo($disciplina)->first();
 
-      if(empty($area)) {
-        $datos_encontrados[] = \App\Disciplina::buscarPorCodigo($disciplina)->first();
-      }
-      else {
-        foreach($area->disciplinas as $disc_por_area) {
-          $datos_encontrados[] = $disc_por_area;
-        }
-      }
-    }
-  }
-  dd($datos_encontrados);
-})->name('pruebas.from');
+//       if(empty($area)) {
+//         $datos_encontrados[] = \App\Disciplina::buscarPorCodigo($disciplina)->first();
+//       }
+//       else {
+//         foreach($area->disciplinas as $disc_por_area) {
+//           $datos_encontrados[] = $disc_por_area;
+//         }
+//       }
+//     }
+//   }
+//   dd($datos_encontrados);
+// })->name('pruebas.from');
 
 //Plantilla rutas
 // Route::group(['middleware'=>['auth']], function() {
@@ -366,32 +366,32 @@ Route::post('pruebas', function(\Illuminate\Http\Request $request) {
 
 
 
-Route::get('usuarios', function() {
+// Route::get('usuarios', function() {
 
-  $usuarios = \App\User::all();
+//   $usuarios = \App\User::all();
 
-  $encuestadores= [];
-  $supervisores_2 = [];
-  $supervisores_1 = [];
-  $administradores = [];
+//   $encuestadores= [];
+//   $supervisores_2 = [];
+//   $supervisores_1 = [];
+//   $administradores = [];
 
-  foreach($usuarios as $usuario) {
-    if($usuario->hasRole('Encuestador')) { $encuestadores[] = $usuario->email; }
-    if($usuario->hasRole('Supervisor 2')) { $supervisores_2[] = $usuario->email; }
-    if($usuario->hasRole('Supervisor 1')) { $supervisores_1[] = $usuario->email; }
-    if($usuario->hasRole('Super Admin')) { $administradores[] = $usuario->email; }
-  }
+//   foreach($usuarios as $usuario) {
+//     if($usuario->hasRole('Encuestador')) { $encuestadores[] = $usuario->email; }
+//     if($usuario->hasRole('Supervisor 2')) { $supervisores_2[] = $usuario->email; }
+//     if($usuario->hasRole('Supervisor 1')) { $supervisores_1[] = $usuario->email; }
+//     if($usuario->hasRole('Super Admin')) { $administradores[] = $usuario->email; }
+//   }
 
-  $datos = array(
-    'encuestadores' => $encuestadores,
-    'supervisores_2' => $supervisores_2,
-    'supervisores_1' => $supervisores_1,
-    'administradores' => $administradores
-  );
+//   $datos = array(
+//     'encuestadores' => $encuestadores,
+//     'supervisores_2' => $supervisores_2,
+//     'supervisores_1' => $supervisores_1,
+//     'administradores' => $administradores
+//   );
 
-  return view('pruebas.usuarios')
-    ->with('datos', $datos);
-})->name('usuarios');
+//   return view('pruebas.usuarios')
+//     ->with('datos', $datos);
+// })->name('usuarios');
 
 
 
@@ -444,14 +444,14 @@ Route::get('findUserByEmail', function(\Illuminate\Http\Request $request) {
 })->name('findUserByEmail');
 
 
-Route::get('prueba-archivo', function() {
-  $list = App\EncuestaGraduado::all();
+// Route::get('prueba-archivo', function() {
+//   $list = App\EncuestaGraduado::all();
 
-  foreach($list as $el) {
-    echo $el->identificacion_graduado . '<br>';
-  }
+//   foreach($list as $el) {
+//     echo $el->identificacion_graduado . '<br>';
+//   }
 
-});
+// });
 
 /** Ruta para abrir el modulo para subir el catalogo */
 Route::group(['prefix'=>'catalogo', 'middleware'=>['auth','role:Super Admin|Supervisor 1']], function(){
