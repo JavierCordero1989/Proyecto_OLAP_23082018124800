@@ -144,14 +144,14 @@
                 // },
                 eventClick: function(event) {
                     
-                    let url = "{{ route('cambiar-estado-de-cita', [':date', ':user']) }}";
-                    url = url.replace(':date', event.id);
-                    url = url.replace(':user', '{{ Auth::user()->id }}');
+                    // let url = "{{ route('cambiar-estado-de-cita', [':date', ':user']) }}";
+                    // url = url.replace(':date', event.id);
+                    // url = url.replace(':user', '{{ Auth::user()->id }}');
 
-                    $('#modal-cambiar-estado-cita').modal('show');
-                    $('#modal-cambiar-estado-cita').find('#numero_contacto_cita').text(getCita(citas, event.id).numero_contacto);
-                    $('#modal-cambiar-estado-cita').find('#observacion_contacto_cita').text(getCita(citas, event.id).observacion);
-                    $('#modal-cambiar-estado-cita').find('#form_cambiar_estado').attr('action', url);
+                    // $('#modal-cambiar-estado-cita').modal('show');
+                    // $('#modal-cambiar-estado-cita').find('#numero_contacto_cita').text(getCita(citas, event.id).numero_contacto);
+                    // $('#modal-cambiar-estado-cita').find('#observacion_contacto_cita').text(getCita(citas, event.id).observacion);
+                    // $('#modal-cambiar-estado-cita').find('#form_cambiar_estado').attr('action', url);
                 },
                 select: function(start, end, event) {
                     selected = moment(start.format())
@@ -173,6 +173,13 @@
         });
 
         function getCita(array, id_cita) {
+            console.clear()
+
+            array.forEach(function(item, value) {
+                console.log(item)
+            })
+            console.log('selected: ' + id_cita)
+
             return array[id_cita-1];
         }
 

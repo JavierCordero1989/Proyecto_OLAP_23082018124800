@@ -314,11 +314,12 @@
                                     <!-- FINALIZA EL MODAL PARA EL DETALLE DE LA ENCUESTA -->
                                 </div>
 
-                                <div v-if="isUser" class="col-xs-6" style="margin-top: 15px;">
+                                <div v-if="isUser()" class="col-xs-6" style="margin-top: 15px;">
                                     <a :href="performInterview(encuesta.id)" class="btn btn-primary btn-sm col-xs-12">
                                         <i class="fa fa-plus-square"></i> Realizar encuesta
                                     </a>
                                 </div>
+
                                 <div class="col-xs-6" style="margin-top: 15px;">
                                     <a :href="rutaReasignar(encuesta.id)" class="btn btn-info btn-sm col-xs-12">
                                         <i class="fas fa-exchange-alt"></i> Reasignar caso
@@ -395,6 +396,7 @@
                     return route
                 },
                 isUser: function() {
+                    console.log('Encuestador ID: ' + this.encuestador.id)
                     return this.connectedUser == this.encuestador.id
                 },
                 performInterview: function(id) {

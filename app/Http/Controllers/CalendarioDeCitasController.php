@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\EncuestaGraduado as Entrevista;
+use Illuminate\Support\Facades\Auth;
 use App\CitaCalendario as Cita;
 use Illuminate\Http\Request;
 use App\User as Usuario;
 use Carbon\Carbon;
 use Flash;
 use DB;
-
 /**
  * @author José Javier Cordero León - Estudiante de la Universidad de Costa Rica - 2018
  * @version 1.0
@@ -170,6 +170,8 @@ class CalendarioDeCitasController extends Controller
     }
 
     public function cambiar_estado_de_cita($id_cita, $encuestador, Request $request) {
+        dd($request->all());
+        
         $cita = Cita::find($id_cita);
 
         if(empty($cita)) {

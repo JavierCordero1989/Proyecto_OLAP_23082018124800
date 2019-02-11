@@ -120,7 +120,7 @@ Route::group(['middleware'=>['auth']], function() {
   // Route::get('lista-de-encuestas', 'EncuestaGraduadoController@listaDeEncuestas')->name('encuestas-graduados.lista-de-encuestas');
   Route::get('filtro-encuestas', 'EncuestaGraduadoController@filtro_encuestas')->name('encuestas-graduados.filtro');
   Route::get('ver-otras-entrevistas/{ids}', 'EncuestaGraduadoController@ver_otras_carreras')->name('encuestas-graduados.otras-carreras');
-  Route::get('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion')->name('encuestas-graduados.hacer-sustitucion');
+  Route::get('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion')->name('encuestas-graduados.hacer-sustitucion')->middleware('role:Super Admin|Supervisor 1');
   Route::post('hacer-sustitucion/encuestas-graduados', 'EncuestaGraduadoController@hacer_sustitucion_post')->name('encuestas-graduados.hacer-sustitucion-post');
   Route::get('realizar-reemplazo/{respuesta}', 'EncuestaGraduadoController@realizar_reemplazo')->name('encuestas-graduados.realizar-reemplazo');
   Route::get('buscar-encuesta', 'EncuestaGraduadoController@buscar_encuesta')->name('encuestas-graduados.buscar-encuesta');
@@ -454,7 +454,7 @@ Route::get('prueba-archivo', function() {
 });
 
 /** Ruta para abrir el modulo para subir el catalogo */
-Route::group(['prefix'=>'catalogo', 'middleware'=>['auth','role:Super Admin']], function(){
+Route::group(['prefix'=>'catalogo', 'middleware'=>['auth','role:Super Admin|Supervisor 1']], function(){
   Route::get('subir-catalogo', 'CatalogoController@subir_catalogos')->name('catalogo.subir');
   Route::post('subir-catalogo', 'CatalogoController@cargar_catalogo')->name('catalogo.cargar');
 });
